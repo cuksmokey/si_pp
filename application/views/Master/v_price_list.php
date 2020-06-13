@@ -47,37 +47,113 @@
 
                             <!-- box form -->
                             <div class="box-form">
-                                <center><div id="judul"></div></center>
+                                <div id="judul"></div>
                                 <table width="70%">
-                                   
+                                <tr>
+                                      <th style="border:0;padding:5px;width:15%"></th>
+                                      <th style="border:0;padding:5px;width:1%"></th>
+                                      <th style="border:0;padding:5px;width:30%"></th>
+                                      <th style="border:0;padding:5px"></th>
+                                    </tr>
                                     <tr>
-                                        <td>Pimpinan</td>
+                                        <td>Tanggal </td>
                                         <td>:</td>
-                                        <td  colspan="2">
-                                            <input type="text" id="pimpinan" value="" class="form-control" style="width: 40%">
+                                        <td>
+                                            <input type="date" id="tgl" value="<?php echo date('Y-m-d') ?>"  class="form-control">
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>Nama Perusahaan</td>
+                                        <td>Kode Barang</td>
                                         <td>:</td>
-                                        <td colspan="2">
-                                          <input type="hidden" id="id" value="" class="form-control" style="width: 40%">
-                                          <input type="text" id="nm_perusahaan" value="" class="form-control" style="width: 40%">
-                                          <input type="hidden" id="nm_perusahaan_lama" value="" class="form-control" style="width: 40%">
+                                        <td>
+                                            <input type="text" id="kode_barang" autocomplete="off" class="form-control">
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>Alamat</td>
+                                        <td>Nama Barang</td>
                                         <td>:</td>
-                                        <td colspan="2">
-                                          <textarea id="alamat" cols="30" rows="5" class="form-control"></textarea> 
+                                        <td>
+                                            <input type="text" id="nama_barang" autocomplete="off" class="form-control">
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>No Telepon</td>
+                                        <td>Merek</td>
                                         <td>:</td>
-                                        <td colspan="2">
-                                            <input type="text" class="form-control" placeholder=""  id="no_telp"> 
+                                        <td>
+                                            <input type="text" id="merek" autocomplete="off" class="form-control">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Spesifikasi</td>
+                                        <td>:</td>
+                                        <td>
+                                            <input type="text" id="spesifikasi" autocomplete="off" class="form-control">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Supplier</td>
+                                        <td>:</td>
+                                        <td>
+                                            <input type="text" id="supplier" autocomplete="off" class="form-control">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4"><hr>Perhitungan<hr></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Harga Barang</td>
+                                        <td>:</td>
+                                        <td>
+                                            <input type="text" id="harga_awal_barang" autocomplete="off" placeholder="0" class="form-control" style="text-align:right" onkeypress="return hanyaAngka(event)" onKeyUp="hitung_awal()">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Profit</td>
+                                        <td>:</td>
+                                        <td>
+                                            <input type="text" id="profit" autocomplete="off" placeholder="0" class="form-control" style="text-align:right" onKeyUp="hitung_awal()">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Ongkos Kirim</td>
+                                        <td>:</td>
+                                        <td>
+                                            <input type="text" id="ongkir" autocomplete="off" placeholder="0" class="form-control" style="text-align:right" onkeypress="return hanyaAngka(event)" onKeyUp="hitung_awal()">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>HJ Netto</td>
+                                        <td>:</td>
+                                        <td>
+                                            <input type="text" id="hasil_harga_awal" autocomplete="off" placeholder="0" class="form-control" style="text-align:right;background:#ddd;color:#000" disabled="true" onKeyUp="hitung_awal()">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Mark Up</td>
+                                        <td>:</td>
+                                        <td>
+                                            <input type="text" id="mark_up" autocomplete="off" placeholder="0" class="form-control" style="text-align:right" onKeyUp="hitung_mark_up()">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Harga Sementara</td>
+                                        <td>:</td>
+                                        <td>
+                                            <input type="text" id="harga_sementara" autocomplete="off" placeholder="0" class="form-control" style="text-align:right;background:#ddd;color:#000" disabled="true" onKeyUp="hitung_mark_up()">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Pembulatan</td>
+                                        <td>:</td>
+                                        <td>
+                                            <input type="text" id="pembulatan" autocomplete="off" placeholder="0" class="form-control" style="text-align:right" onkeypress="return hanyaAngka(event)" onKeyUp="hitung_pembulatan()">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Harga Price List</td>
+                                        <td>:</td>
+                                        <td>
+                                            <input type="text" id="harga_price_list" autocomplete="off" placeholder="0" class="form-control" style="text-align:right;background:#ddd;color:#000" disabled="true" onKeyUp="hitung_pembulatan()">
                                         </td>
                                     </tr>
                                     <tr>
@@ -88,8 +164,6 @@
                                     </tr>
                                 </table>
                                
-
-                                <!-- <button type="button" class="btn-kembali btn btn-dark btn-sm waves-effect waves-circle waves-float"> -->
                                 <button type="button" class="btn-kembali btn btn-dark btn-default btn-sm waves-effect">
                                     <i class="material-icons">arrow_back</i>
                                     <b><span>BACK</span></b>
@@ -129,7 +203,7 @@
         // getmax();
         $(".box-data").hide();
         $(".box-form").show();
-        $("#judul").html('<h3> Form Tambah Data</h3>');
+        $("#judul").html('<h3>Form Tambah Data Price List</h3>');
       $('.box-form').animateCss('fadeInDown');
     });
 
@@ -170,42 +244,51 @@
 
 
     function simpan(){
-      roll = $("#id1").val()+"/"+$("#id2").val()+"/"+$("#id3").val()+"/"+$("#id4").val();
-      
       pimpinan     = $("#pimpinan").val();
       nm_perusahaan  = $("#nm_perusahaan").val();
       nm_perusahaan_lama  = $("#nm_perusahaan_lama").val();
       no_telp    = $("#no_telp").val();
       alamat    = $("textarea#alamat").val();
       id    = $("#id").val();
-        
-        if (nm_perusahaan == "" || alamat == ""|| no_telp == ""|| pimpinan == "")  {
-          showNotification("alert-info", "Harap Lengkapi Form", "bottom", "center", "", ""); return;
-        }
 
-        $("#btn-simpan").prop("disabled",true);
-        
+      harga_awal_barang = $("#harga_awal_barang").val();
+      profit = $("#profit").val();
+      ongkir = $("#ongkir").val();
+      hasil_harga_awal = $("#hasil_harga_awal").val();
+      mark_up = $("#mark_up").val();
+      harga_sementara = $("#harga_sementara").val();
+      pembulatan = $("#pembulatan").val();
+      harga_price_list = $("#harga_price_list").val();
 
-        $.ajax({
-            type     : "POST",
-            url      : '<?php echo base_url(); ?>Master/'+status,
-            data     : ({id:id , pimpinan:pimpinan , nm_perusahaan:nm_perusahaan ,nm_perusahaan_lama:nm_perusahaan_lama , alamat:alamat , no_telp:no_telp ,jenis : "Perusahaan" }),
-            dataType : "json",
-            success  : function(data){
-              $("#btn-simpan").prop("disabled",true);
-              if (data.data == true) {
-                
-                reloadTable();
-                showNotification("alert-success", "Berhasil", "bottom", "center", "", "");
-                
-               status = 'update';
+      alert("Harga Awal:"+harga_awal_barang+". P:"+profit+". Ongkir:"+ongkir);
 
-              }else{
-                showNotification("alert-danger", "Nama Perusahaan Sudah Ada", "bottom", "center", "", "");
-              }
+      // if (nm_perusahaan == "" || alamat == ""|| no_telp == ""|| pimpinan == "")  {
+      //   showNotification("alert-info", "Harap Lengkapi Form", "bottom", "center", "", ""); return;
+      // }
+
+      // $("#btn-simpan").prop("disabled",true);
+      
+
+      // $.ajax({
+      //     type     : "POST",
+      //     url      : '<?php echo base_url(); ?>Master/'+status,
+      //     data     : ({id:id , pimpinan:pimpinan , nm_perusahaan:nm_perusahaan ,nm_perusahaan_lama:nm_perusahaan_lama , alamat:alamat , no_telp:no_telp ,jenis : "Perusahaan" }),
+      //     dataType : "json",
+      //     success  : function(data){
+      //       $("#btn-simpan").prop("disabled",true);
+      //       if (data.data == true) {
               
-            }
-        });
+      //         reloadTable();
+      //         showNotification("alert-success", "Berhasil", "bottom", "center", "", "");
+              
+      //         status = 'update';
+
+      //       }else{
+      //         showNotification("alert-danger", "Nama Perusahaan Sudah Ada", "bottom", "center", "", "");
+      //       }
+            
+      //     }
+      // });
     }
 
     function tampil_edit(id){
@@ -284,6 +367,112 @@
 
       $("#btn-simpan").prop("disabled",false);
       $("#txt-btn-simpan").html("Simpan");
+    }
+
+    function hanyaAngka(evt) {
+		  var charCode = (evt.which) ? evt.which : event.keyCode
+		   if (charCode > 31 && (charCode < 48 || charCode > 57))
+		    return false;
+		  return true;
+		}
+ 
+		function formatRupiah(angka){
+			var number_string = angka.replace(/[^,\d]/g, '').toString(),
+			split   		= number_string.split(','),
+			sisa     		= split[0].length % 3,
+			rupiah     		= split[0].substr(0, sisa),
+			ribuan     		= split[0].substr(sisa).match(/\d{3}/gi);
+ 
+			// tambahkan titik jika yang di input sudah menjadi angka ribuan
+			if(ribuan){
+				separator = sisa ? '.' : '';
+				rupiah += separator + ribuan.join('.');
+			}
+ 
+			return rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+			// return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
+    }
+    
+    function tampilIdr(angka){
+			var number_string = angka.toString(),
+			sisa     	     	  = number_string.length % 3,
+			rupiah     		    = number_string.substr(0, sisa),
+			ribuan     		    = number_string.substr(sisa).match(/\d{3}/gi);
+ 
+			// tambahkan titik jika yang di input sudah menjadi angka ribuan
+			if(ribuan){
+				separator = sisa ? '.' : '';
+				rupiah += separator + ribuan.join('.');
+			}
+ 
+			// return rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+			return rupiah == undefined ? rupiah : (rupiah ? rupiah : '');
+		}
+
+    var i_harga_awal_barang = document.getElementById('harga_awal_barang');
+		i_harga_awal_barang.addEventListener('keyup', function(e){
+			i_harga_awal_barang.value = formatRupiah(this.value);
+    });
+    
+    var ongkir = document.getElementById('ongkir');
+		ongkir.addEventListener('keyup', function(e){
+			ongkir.value = formatRupiah(this.value);
+    });
+    
+    function hitung_awal(){
+      // harga awal
+      var get_hab = document.getElementById('harga_awal_barang').value.split(".").join("");
+      var t_hab = Number.parseInt(get_hab);
+
+      // profit
+      var get_p = Number.parseFloat(document.getElementById('profit').value);
+
+      //ongkir
+      var get_o = document.getElementById('ongkir').value.split(".").join("");
+      var t_o = Number.parseInt(get_o);
+
+      // perhitungan
+      var hab = Math.floor((t_hab / get_p) + t_o);
+
+      if(isNaN(t_hab) || isNaN(get_p) || isNaN(t_o)){
+        document.getElementById('hasil_harga_awal').value = "0";
+      }else{
+        document.getElementById('hasil_harga_awal').value = tampilIdr(hab);
+      }
+    }
+
+    function hitung_mark_up(){
+      // ambil harga awal
+      var get_hha = document.getElementById('hasil_harga_awal').value.split(".").join("");
+      var t_hha = Number.parseInt(get_hha);
+
+      // mark_up
+      var get_mu = Number.parseFloat(document.getElementById('mark_up').value);
+
+      // perhitungan
+      var hs = Math.floor(t_hha / get_mu);
+      if(isNaN(t_hha) || isNaN(get_mu)){
+        document.getElementById('harga_sementara').value = "0";
+      }else{
+        document.getElementById('harga_sementara').value = tampilIdr(hs);
+      }
+    }
+
+    function hitung_pembulatan(){
+      // ambil harga awal
+      var get_hs = document.getElementById('harga_sementara').value.split(".").join("");
+      var t_hs = Number.parseInt(get_hs);
+
+      // mark_up
+      var get_pembulatan = Number.parseInt(document.getElementById('pembulatan').value);
+
+      // perhitungan
+      var a_harga_price_list = Number.parseInt(t_hs + get_pembulatan);
+      if(isNaN(t_hs) || isNaN(get_pembulatan)){
+        document.getElementById('harga_price_list').value = "0";
+      }else{
+        document.getElementById('harga_price_list').value = tampilIdr(a_harga_price_list);
+      }
     }
     
 </script>

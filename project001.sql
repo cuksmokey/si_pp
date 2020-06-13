@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 13, 2020 at 11:40 AM
+-- Generation Time: Jun 13, 2020 at 08:57 PM
 -- Server version: 10.1.38-MariaDB
 -- PHP Version: 5.6.40
 
@@ -59,9 +59,7 @@ INSERT INTO `m_barang` (`id`, `tgl`, `kode_barang`, `nama_barang`, `merek`, `spe
 (13, '2020-06-09', 'KD/BARANG/006', 'NAMA BARANG ENAM', 'MEREK ENAM', 'SPEC ENAM', 'SUPP ENAM', 60000, 'PCS', 60000, '006', '2020-06-09 06:11:08', 'developer', '0000-00-00 00:00:00', 'developer'),
 (14, '2020-06-01', 'KD/BARANG/007', 'NAMA BARANG TUJUH', 'MEREK TUJUH', 'SPEC TUJUH', 'SUPP TUJUH', 70000, 'PCS', 7000, '007', '2020-06-09 06:11:58', 'developer', '0000-00-00 00:00:00', 'developer'),
 (15, '2020-05-01', 'KD/BARANG/008', 'BARANG DELAPAN', 'MEREK DELAPAN', 'SPEC DELAPAN', 'SUPP DELAPAN', 500, 'Box', 10000, '008', '2020-06-13 04:19:17', 'developer', '0000-00-00 00:00:00', 'developer'),
-(16, '2020-04-30', 'KD/BARANG/009', 'BARANGA SEMBILAN', 'MEREK SEMBILAN', 'SPEC SEMBILAN', 'SUPP SEMBILAN', 900, 'Batang', 90000, '009', '2020-06-13 04:21:38', 'developer', '0000-00-00 00:00:00', 'developer'),
-(17, '2020-02-13', 'KD/BARANG/010', 'BARANG SEPULUH', 'MEREK SEPULUH', 'SPEC SEPULUH', 'SUPP SEPULUH', 1000, 'Batang', 70000, '001', '2020-06-13 04:23:23', 'developer', '0000-00-00 00:00:00', NULL),
-(18, '2020-06-13', 'KD/BARANG/011', 'BARANG SEBELAS', 'MEREK SEBELAS', 'SPEC SEBELAS', 'SUPP SEBELAS', 121212, 'Kaleng', 919191, '010203', '2020-06-13 09:11:09', 'developer', '2020-06-12 21:14:51', 'developer');
+(16, '2020-04-30', 'KD/BARANG/009', 'BARANGA SEMBILAN', 'MEREK SEMBILAN', 'SPEC SEMBILAN', 'SUPP SEMBILAN', 900, 'Batang', 90000, '009', '2020-06-13 04:21:38', 'developer', '0000-00-00 00:00:00', 'developer');
 
 -- --------------------------------------------------------
 
@@ -95,12 +93,12 @@ INSERT INTO `m_perusahaan` (`id`, `pimpinan`, `nm_perusahaan`, `alamat`, `no_tel
 
 CREATE TABLE `m_price_list` (
   `id` int(11) NOT NULL,
+  `tgl` date DEFAULT NULL,
   `kode_barang` varchar(99) NOT NULL,
-  `nm_barang` varchar(99) DEFAULT NULL,
+  `nama_barang` varchar(99) DEFAULT NULL,
   `merek` varchar(99) DEFAULT NULL,
   `spesifikasi` varchar(99) DEFAULT NULL,
   `supplier` varchar(99) DEFAULT NULL,
-  `tgl` date DEFAULT NULL,
   `harga_price_list` int(11) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `created_by` varchar(99) DEFAULT NULL,
@@ -112,10 +110,10 @@ CREATE TABLE `m_price_list` (
 -- Dumping data for table `m_price_list`
 --
 
-INSERT INTO `m_price_list` (`id`, `kode_barang`, `nm_barang`, `merek`, `spesifikasi`, `supplier`, `tgl`, `harga_price_list`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
-(4, 'KD/BARANG/001', 'BARANG SATU', 'MEREK SATU', 'SPEC SATU', 'SUPP SATU', '2020-06-07', 10329500, '2020-06-07 20:57:44', 'developer', '0000-00-00 00:00:00', NULL),
-(5, 'KD/BARANG/002', 'BARANG DUA', 'MEREK  DUA', 'SPEC DUA', 'SUPP DUA', '2020-06-06', 431400, '2020-06-07 21:00:20', 'developer', '0000-00-00 00:00:00', NULL),
-(6, 'KD/BARANG/003', 'BARANG TIGA', 'MEREK TIGA', 'SPEC TIGA', 'SUPP TIGA', '2020-06-05', 150000, '2020-06-10 21:54:27', 'developer', '0000-00-00 00:00:00', NULL);
+INSERT INTO `m_price_list` (`id`, `tgl`, `kode_barang`, `nama_barang`, `merek`, `spesifikasi`, `supplier`, `harga_price_list`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
+(4, '2020-06-07', 'KD/BARANG/001', 'BARANG SATU', 'MEREK SATU', 'SPEC SATU', 'SUPP SATU', 10329500, '2020-06-07 20:57:44', 'developer', '0000-00-00 00:00:00', NULL),
+(5, '2020-06-06', 'KD/BARANG/002', 'BARANG DUA', 'MEREK  DUA', 'SPEC DUA', 'SUPP DUA', 431400, '2020-06-07 21:00:20', 'developer', '0000-00-00 00:00:00', NULL),
+(6, '2020-06-05', 'KD/BARANG/003', 'BARANG TIGA', 'MEREK TIGA', 'SPEC TIGA', 'SUPP TIGA', 150000, '2020-06-10 21:54:27', 'developer', '0000-00-00 00:00:00', NULL);
 
 -- --------------------------------------------------------
 
