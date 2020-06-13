@@ -297,6 +297,11 @@ class M_master extends CI_Model{
         return $this->db->query($query);
     }
 
+    function get_load_barang(){
+        $query = "SELECT * FROM m_barang ORDER BY kode_barang ASC";
+        return $this->db->query($query);
+    }
+
     function get_po_master(){
         // $query = "SELECT * FROM po_master";
         $query = "SELECT b.nm_perusahaan,a.* FROM po_master a
@@ -314,6 +319,25 @@ class M_master extends CI_Model{
                 'created_by'      => $this->session->userdata('username')
             );
         $result= $this->db->insert("m_perusahaan",$data);
+
+        return $result;
+    }
+
+    function insert_load_barang(){
+        $data = array(
+            'tgl' => $_POST['tgl'],
+            'kode_barang' => $_POST['kode_barang'],
+            'nama_barang' => $_POST['nama_barang'],
+            'merek' => $_POST['merek'],
+            'spesifikasi' => $_POST['spesifikasi'],
+            'supplier' => $_POST['supplier'],
+            'qty' => $_POST['qty'],
+            'qty_ket' => $_POST['qty_ket'],
+            'harga' => $_POST['harga'],
+            'no_nota' => $_POST['no_nota'],
+            'created_by' => $this->session->userdata('username')
+        );
+        $result= $this->db->insert("m_barang",$data);
 
         return $result;
     }
