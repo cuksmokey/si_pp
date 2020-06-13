@@ -51,6 +51,12 @@ class Master extends CI_Controller {
         $this->load->view('footer');
     }
 
+    public function Price_List() {
+        $this->load->view('header');
+        $this->load->view('Master/v_price_list');
+        $this->load->view('footer');
+    }
+
     public function Invoice()
     {
         $this->load->view('header');
@@ -503,6 +509,50 @@ class Master extends CI_Controller {
                         }
                             
                         // $i++;
+                    }
+                }
+                $output = array("data" => $data);
+            }else if ($jenis == "load_price_list") {
+
+                $query = $this->m_master->get_load_price_list();
+
+                if ($query->num_rows() == 0) {
+                    $data[] =  ["","","","","","","","",""];
+                }else{
+                    $i=1;
+
+                    foreach ($query->result() as $r) {
+                        $id = "'$r->id'";
+                        $row = array();
+                        $row[] = $i;
+                        $row[] = $r->tgl;
+                        $row[] = $r->kode_barang;
+                        $row[] = $r->nama_barang;
+                        $row[] = $r->merek;
+                        $row[] = $r->spesifikasi;
+                        $row[] = $r->supplier;
+                        $row[] = "Rp. ".number_format($r->harga_price_list);
+
+                        $aksi ="";
+
+                        if ($this->session->userdata('level') == "SuperAdmin") {
+                            $aksi = '   
+                            <button type="button" onclick="tampil_edit('.$id.')" class="btn bg-orange btn-circle waves-effect waves-circle waves-float">
+                                <i class="material-icons">edit</i>
+                            </button>
+                          <button type="button" onclick="deleteData('.$id.','."".')" class="btn btn-danger btn-circle waves-effect waves-circle waves-float">
+                                <i class="material-icons">delete</i>
+                            </button>';
+
+                            $row[] = $aksi;
+                            $data[] = $row;
+                            
+                        }else{
+                            $aksi .='-';
+                            $row[] = $aksi;
+                            $data[] = $row;
+                        }
+                        $i++;
                     }
                 }
                 $output = array("data" => $data);

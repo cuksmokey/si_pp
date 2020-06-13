@@ -140,10 +140,16 @@
                             </li>
                         </ul>
                     </li>
-                    <li>
+                    <!-- <li>
                         <a href="<?php echo base_url('Master/Packing_list') ?>">
                             <i class="material-icons">list</i>
                             <span>Packing List</span>
+                        </a>
+                    </li> -->
+                    <li>
+                        <a href="<?php echo base_url('Master/Price_List') ?>">
+                            <i class="material-icons">list</i>
+                            <span>Price List</span>
                         </a>
                     </li>
                     <li>

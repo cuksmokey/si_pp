@@ -297,6 +297,11 @@ class M_master extends CI_Model{
         return $this->db->query($query);
     }
 
+    function get_load_price_list(){
+        $query = "SELECT * FROM m_price_list ORDER BY kode_barang ASC";
+        return $this->db->query($query);
+    }
+
     function get_load_barang(){
         $query = "SELECT * FROM m_barang ORDER BY kode_barang ASC";
         return $this->db->query($query);
