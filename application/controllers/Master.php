@@ -528,14 +528,10 @@ class Master extends CI_Controller {
                         $row[] = number_format($r->qty)." ".$r->qty_ket;
                         $row[] = "Rp. ".number_format($r->harga);
                         $row[] = $r->no_nota;
-
                         $aksi ="";
 
                         if ($this->session->userdata('level') == "SuperAdmin") {
-                        
-
                             $aksi = '   
-                            
                             <button type="button" onclick="tampil_edit('.$id.')" class="btn bg-orange btn-circle waves-effect waves-circle waves-float">
                                 <i class="material-icons">edit</i>
                             </button>
@@ -545,13 +541,11 @@ class Master extends CI_Controller {
 
                             $row[] = $aksi;
                             $data[] = $row;
-                            
                         }else{
                             $aksi .='-';
                             $row[] = $aksi;
                             $data[] = $row;
                         }
-                            
                         $i++;
                     }
                 }
@@ -1010,6 +1004,9 @@ class Master extends CI_Controller {
             echo "1";
         }else if ($jenis == "Perusahaan") {
             $return = $this->m_master->delete("m_perusahaan","id",$id);
+            echo "1";
+        }else if ($jenis == "hapus_barang") {
+            $return = $this->m_master->delete("m_barang","id",$id);
             echo "1";
         }else if ($jenis == "PoMaster") {
             $return = $this->m_master->delete("po_master","id",$id);

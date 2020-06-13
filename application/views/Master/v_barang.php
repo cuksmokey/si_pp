@@ -330,23 +330,23 @@
           closeOnCancel: false
         },
         function(isConfirm) {
-          if (isConfirm) {
+          if(isConfirm) {
             $.ajax({
               url   : '<?php echo base_url(); ?>Master/hapus/',
               type  : "POST",
-              data  : {id: id,jenis:"Perusahaan"},
+              data  : {
+                id:id,
+                jenis:"hapus_barang"},
               success : function(data){
                 if (data == 1) {
                 swal("Berhasil", "", "success");
                 reloadTable();
-
                 }else{
-                  swal("Data Sudah dilakukan transaksi", "", "error");
+                  swal("Gagal", "", "error");
                 }
               }
-            });
-            
-          } else {
+            }); 
+          }else{
             swal("", "Data Batal dihapus", "error");
           }
         });
