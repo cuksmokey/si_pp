@@ -525,7 +525,7 @@ class Master extends CI_Controller {
                         $row[] = $r->merek;
                         $row[] = $r->spesifikasi;
                         $row[] = $r->supplier;
-                        $row[] = $r->qty." ".$r->qty_ket;
+                        $row[] = number_format($r->qty)." ".$r->qty_ket;
                         $row[] = "Rp. ".number_format($r->harga);
                         $row[] = $r->no_nota;
 
@@ -810,7 +810,6 @@ class Master extends CI_Controller {
             if ($jenis == "Timbangan") {
                 $result= $this->m_master->update_timbangan();
                 echo json_encode(array('data' =>  TRUE));
-                
             }else if ($jenis == "Perusahaan") {
                 $id      = $this->input->post('nm_perusahaan');
                 $id_lama      = $this->input->post('nm_perusahaan_lama');
@@ -822,28 +821,12 @@ class Master extends CI_Controller {
                     $result= $this->m_master->update_perusahaan();
                     echo json_encode(array('data' =>  TRUE));
                 }
-                
+            }else if ($jenis == "Simpan_Barang") {
+                $result= $this->m_master->update_load_barang();
+                echo json_encode(array('data' =>  TRUE));
             }else if ($jenis == "PoMaster") {
-
-                // $id_perusahaan = $this->input->post('id_perusahaan');
-                // $g_label       = $this->input->post('g_label');
-                // $width         = $this->input->post('width');
-                // $no_po         = $this->input->post('no_po');
-
-                // $cek = $this->m_master->get_data_po_master("po_master","id_perusahaan",$id_perusahaan,"g_label",$g_label,"width",$width,"no_po",$no_po)->num_rows();
-
-                // $id      = $this->input->post('id_perusahaan');
-                // $id_lama      = $this->input->post('nm_perusahaan_lama');
-                
-                // $cek = $this->m_master->get_data_one("po_master","id",$id)->num_rows();
-
-                // if ($cek > 0) {
-                //     echo json_encode(array('data' =>  FALSE));
-                // }else{
-                    $result= $this->m_master->update_master_po();
-                    echo json_encode(array('data' =>  TRUE));
-                // }
-                
+                $result= $this->m_master->update_master_po();
+                echo json_encode(array('data' =>  TRUE));
             }else if ($jenis == "PL") {
                 $no_surat      = $this->input->post('no_surat');
                 $no_so      = $this->input->post('no_so');
@@ -1054,6 +1037,9 @@ class Master extends CI_Controller {
             echo json_encode($data);
         }else if ($jenis == "Perusahaan") {
             $data =  $this->m_master->get_data_one("m_perusahaan", "id", $id)->row();
+            echo json_encode($data);
+        }else if ($jenis == "edit_barang") {
+            $data =  $this->m_master->get_data_one("m_barang", "id", $id)->row();
             echo json_encode($data);
         }else if ($jenis == "PoMaster") {
             $data =  $this->m_master->get_data_one("po_master", "id", $id)->row();

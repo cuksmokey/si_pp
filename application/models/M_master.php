@@ -368,6 +368,24 @@ class M_master extends CI_Model{
         return $result;
     }
 
+    function update_load_barang(){
+        
+        $this->db->set('tgl', $_POST['tgl']);
+        $this->db->set('nama_barang', $_POST['nama_barang']);
+        $this->db->set('merek', $_POST['merek']);
+        $this->db->set('spesifikasi', $_POST['spesifikasi']);
+        $this->db->set('supplier', $_POST['supplier']);
+        $this->db->set('qty', $_POST['qty']);
+        $this->db->set('qty_ket', $_POST['qty_ket']);
+        $this->db->set('harga', $_POST['harga']);
+        $this->db->set('no_nota', $_POST['no_nota']);
+        $this->db->set('updated_at', date("Y-m-d h:i:s"));
+        $this->db->set('updated_by', $this->session->userdata('username'));
+        $this->db->where('kode_barang', $_POST['kode_barang']);
+        $result = $this->db->update('m_barang');
+        return $result;
+    }
+
     function update_master_po(){
             
         // $this->db->set('id_perusahaan', $_POST['id_perusahaan']);

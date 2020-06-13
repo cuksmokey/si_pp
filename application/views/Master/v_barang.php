@@ -107,7 +107,7 @@
                                         <td>QTY</td>
                                         <td>:</td>
                                         <td>
-                                            <input type="text" id="qty" placeholder="0" autocomplete="off" class="form-control">
+                                            <input type="text" id="qty" placeholder="0" autocomplete="off" class="form-control" onkeypress="return hanyaAngka(event)">
                                         </td>
                                         <td>
                                             <select name="" id="qty_ket" class="form-control" style="width:20%">
@@ -128,7 +128,7 @@
                                         <td>Harga</td>
                                         <td>:</td>
                                         <td>
-                                            <input type="text" id="harga" placeholder="0" autocomplete="off" class="form-control">
+                                            <input type="text" id="harga" placeholder="0" autocomplete="off" class="form-control" onkeypress="return hanyaAngka(event)">
                                         </td>
                                     </tr>
                                     <tr>
@@ -231,7 +231,6 @@
                });
     }
 
-
     function simpan(){
       tgl = $("#tgl").val();
       kode_barang = $("#kode_barang").val();
@@ -239,16 +238,20 @@
       merek = $("#merek").val();
       spesifikasi = $("#spesifikasi").val();
       supplier = $("#supplier").val();
-      qty = $("#qty").val();
+      i_qty = $("#qty").val();
       qty_ket = $("#qty_ket").val();
-      harga = $("#harga").val();
+      i_harga = $("#harga").val();
       no_nota = $("#no_nota").val();
-        
+
+      qty = i_qty.split(".").join("");
+      harga = i_harga.split(".").join("");
       if (kode_barang == "" || nama_barang == ""|| merek == "" || spesifikasi == "" || supplier == "" || qty == "" ||  qty == 0 || qty_ket == "" || qty_ket == 0 || harga == "" || harga == 0 || no_nota == "")  {
         showNotification("alert-info", "Harap Lengkapi Form", "bottom", "center", "", ""); return;
       }
 
       $("#btn-simpan").prop("disabled",true);
+
+      // alert(qty+" "+harga);
 
       $.ajax({
           type     : "POST",
@@ -284,32 +287,35 @@
     }
 
     function tampil_edit(id){
-    $(".box-data").hide();
-    $(".box-form").show();
-    $('.box-form').animateCss('fadeInDown');
-    $("#judul").html('<h3>Form Edit Data</h3>');
+      $(".box-data").hide();
+      $(".box-form").show();
+      $('.box-form').animateCss('fadeInDown');
+      $("#judul").html('<h3>Form Edit Data Barang</h3>');
 
-    
+      status = "update";
 
-    status = "update";
+      $.ajax({
+          url : '<?php echo base_url('Master/get_edit'); ?>',
+          type: 'POST',
+          data: {
+            id: id,
+            jenis:"edit_barang"},
+      })
+      .done(function(data) {
+          json = JSON.parse(data);
 
-         $.ajax({
-              url: '<?php echo base_url('Master/get_edit'); ?>',
-              type: 'POST',
-              data: {id: id,jenis:"Perusahaan"},
-          })
-          .done(function(data) {
-               json = JSON.parse(data);
-
-              $("#nm_perusahaan").val(json.nm_perusahaan);
-              $("#nm_perusahaan_lama").val(json.nm_perusahaan);
-              $("#no_telp").val(json.no_telp);
-              $("#pimpinan").val(json.pimpinan);
-              $("#id").val(json.id);
-              $("textarea#alamat").val(json.alamat);
-
-          }) 
-
+          $("#btn-simpan").prop("disabled",false);
+          $("#tgl").val(json.tgl);
+          $("#kode_barang").val(json.kode_barang).prop("disabled",true);
+          $("#nama_barang").val(json.nama_barang);
+          $("#merek").val(json.merek);
+          $("#spesifikasi").val(json.spesifikasi);
+          $("#supplier").val(json.supplier);
+          $("#qty").val(json.qty);
+          $("#qty_ket").val(json.qty_ket);
+          $("#harga").val(json.harga);
+          $("#no_nota").val(json.no_nota);
+      })
     }
     function deleteData(id,nm){
         swal({
@@ -352,7 +358,7 @@
       status = "insert";
 
       $("#tgl").val("");
-      $("#kode_barang").val("");
+      $("#kode_barang").val("").prop("disabled",false);
       $("#nama_barang").val("");
       $("#merek").val("");
       $("#spesifikasi").val("");
@@ -365,5 +371,41 @@
       $("#btn-simpan").prop("disabled",false);
       $("#txt-btn-simpan").html("SIMPAN");
     }
+
+    function hanyaAngka(evt) {
+		  var charCode = (evt.which) ? evt.which : event.keyCode
+		   if (charCode > 31 && (charCode < 48 || charCode > 57))
+ 
+		    return false;
+		  return true;
+		}
+ 
+		/* Fungsi formatRupiah */
+		function formatRupiah(angka){
+			var number_string = angka.replace(/[^,\d]/g, '').toString(),
+			split   		= number_string.split(','),
+			sisa     		= split[0].length % 3,
+			rupiah     		= split[0].substr(0, sisa),
+			ribuan     		= split[0].substr(sisa).match(/\d{3}/gi);
+ 
+			// tambahkan titik jika yang di input sudah menjadi angka ribuan
+			if(ribuan){
+				separator = sisa ? '.' : '';
+				rupiah += separator + ribuan.join('.');
+			}
+ 
+			return rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+			// return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
+		}
+
+    let qty = document.getElementById('qty');
+		qty.addEventListener('keyup', function(e){
+			qty.value = formatRupiah(this.value);
+		});
+
+    let harga = document.getElementById('harga');
+		harga.addEventListener('keyup', function(e){
+			harga.value = formatRupiah(this.value);
+		});
     
 </script>
