@@ -97,6 +97,16 @@ class Master extends CI_Controller {
                     echo json_encode(array('data' =>  TRUE));
                 }
                 
+            }else if ($jenis == "Simpan_Price_List") {
+                $id      = $this->input->post('id');
+                $cek = $this->m_master->get_data_one("m_perusahaan","nm_perusahaan",$id)->num_rows();
+                if ($cek > 0 ) {
+                    echo json_encode(array('data' =>  FALSE));
+                }else{
+                    $result     = $this->m_master->insert_perusahaan();    
+                    echo json_encode(array('data' =>  TRUE));
+                }
+                
             }else if ($jenis == "Simpan_Barang") {
                 $id      = $this->input->post('kode_barang');
                 $cek = $this->m_master->get_data_one("m_barang","kode_barang",$id)->num_rows();
