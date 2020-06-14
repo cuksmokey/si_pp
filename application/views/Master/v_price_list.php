@@ -56,7 +56,7 @@
                                       <th style="border:0;padding:5px"></th>
                                     </tr>
                                     <tr>
-                                        <td>Tanggal </td>
+                                        <td>Tanggal</td>
                                         <td>:</td>
                                         <td>
                                             <input type="date" id="tgl" value="<?php echo date('Y-m-d') ?>"  class="form-control">
@@ -66,35 +66,37 @@
                                         <td>Kode Barang</td>
                                         <td>:</td>
                                         <td>
-                                            <input type="text" id="kode_barang" autocomplete="off" class="form-control">
+                                            <!-- <input type="text" id="kode_barang" autocomplete="off" class="form-control"> -->
+                                            <select class="form-control" id="kode_barang" style="width:100%">
+                                           </select>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>Nama Barang</td>
                                         <td>:</td>
                                         <td>
-                                            <input type="text" id="nama_barang" autocomplete="off" class="form-control">
+                                            <input type="text" id="nama_barang" autocomplete="off" class="form-control" disabled="true">
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>Merek</td>
                                         <td>:</td>
                                         <td>
-                                            <input type="text" id="merek" autocomplete="off" class="form-control">
+                                            <input type="text" id="merek" autocomplete="off" class="form-control" disabled="true">
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>Spesifikasi</td>
                                         <td>:</td>
                                         <td>
-                                            <input type="text" id="spesifikasi" autocomplete="off" class="form-control">
+                                            <input type="text" id="spesifikasi" autocomplete="off" class="form-control" disabled="true">
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>Supplier</td>
                                         <td>:</td>
                                         <td>
-                                            <input type="text" id="supplier" autocomplete="off" class="form-control">
+                                            <input type="text" id="supplier" autocomplete="off" class="form-control" disabled="true">
                                         </td>
                                     </tr>
                                     <tr>
@@ -189,12 +191,11 @@
     $(document).ready(function(){
       $(".box-form").hide();
      load_data();
+     load_perusahaan();
 
     $("input.angka").keypress(function(event) { //input text number only
             return /\d/.test(String.fromCharCode(event.keyCode));
       });
-
-     
     });
 
     $(".btn-add").click(function(){
@@ -245,19 +246,22 @@
 
     function simpan(){
       tgl = $("#tgl").val();
-      kode_barang = $("#kode_barang").val();
+      // kode_barang = $("#kode_barang").val();
+      data = $('#kode_barang').select2('data');
+      kode_barang = data[0].text;
       nama_barang = $("#nama_barang").val();
       merek = $("#merek").val();
       spesifikasi = $("#spesifikasi").val();
-      Supplier = $("#Supplier").val();
-      harga_price_list = $("#harga_price_list").val();
+      supplier = $("#supplier").val();
+      harga_price_list = $("#harga_price_list").val().split(".").join("");
 
-      if (tgl == "" || kode_barang == "" || nama_barang == "" || merek == "" || spesifikasi == "" || Supplier == "" || harga_awal_barang == "" || profit == "" || ongkir == "" || hasil_harga_awal == "" || mark_up == "" || harga_sementara == "" || pembulatan == "" || harga_price_list == "")  {
+      if (tgl == "" || kode_barang == "" || nama_barang == "" || merek == "" || spesifikasi == "" || supplier == "" || harga_awal_barang == "" || profit == "" || ongkir == "" || hasil_harga_awal == "" || mark_up == "" || harga_sementara == "" || pembulatan == "" || harga_price_list == "")  {
         showNotification("alert-info", "Harap Lengkapi Form", "bottom", "center", "", ""); return;
       }
 
       $("#btn-simpan").prop("disabled",true);
 
+      // alert(kode_barang);
       $.ajax({
           type     : "POST",
           url      : '<?php echo base_url(); ?>Master/'+status,
@@ -267,7 +271,7 @@
             nama_barang : nama_barang,
             merek : merek,
             spesifikasi : spesifikasi,
-            Supplier : Supplier,
+            supplier : supplier,
             harga_price_list : harga_price_list,
             jenis : "Simpan_Price_List" }),
           dataType : "json",
@@ -281,9 +285,8 @@
               status = 'update';
 
             }else{
-              showNotification("alert-danger", "Nama Perusahaan Sudah Ada", "bottom", "center", "", "");
+              showNotification("alert-danger", "Kode Barang Sudah Dipakai", "bottom", "center", "", "");
             }
-            
           }
       });
     }
@@ -293,8 +296,6 @@
     $(".box-form").show();
     $('.box-form').animateCss('fadeInDown');
     $("#judul").html('<h3> Form Edit Data</h3>');
-
-    
 
     status = "update";
 
@@ -316,6 +317,7 @@
           }) 
 
     }
+
     function deleteData(id,nm){
         swal({
           title: "Apakah Anda Yakin ?",
@@ -374,6 +376,48 @@
       $("#btn-simpan").prop("disabled",false);
       $("#txt-btn-simpan").html("SIMPAN");
     }
+
+    function load_perusahaan(){
+    
+    $('#kode_barang').select2({
+         // minimumInputLength: 3,
+         allowClear: true,
+         placeholder: '--select--',
+         ajax: {
+            dataType: 'json',
+            url      : '<?php echo base_url(); ?>/Master/load_m_barang_pl',
+            delay: 800,
+            data: function(params) {
+              if (params.term == undefined) {
+                return {
+                  search: ""
+                }  
+              }else{
+                return {
+                  search: params.term
+                }
+              }
+              
+            },
+            processResults: function (data, page) {
+            return {
+              results: data
+            };
+          },
+        }
+    });
+
+ }
+
+ $('#kode_barang').on('change', function() {
+    data = $('#kode_barang').select2('data');
+    // $("#tgl").val(data[0].tgl);
+    $("#nama_barang").val(data[0].nama_barang);
+    $("#merek").val(data[0].merek);
+    $("#spesifikasi").val(data[0].spesifikasi);
+    $("#supplier").val(data[0].supplier);
+    $("#harga_awal_barang").val(data[0].harga);
+  });
 
     function hanyaAngka(evt) {
 		  var charCode = (evt.which) ? evt.which : event.keyCode

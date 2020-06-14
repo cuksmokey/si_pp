@@ -281,7 +281,6 @@
             }else{
               showNotification("alert-danger", "Kode Barang Sudah Ada", "bottom", "center", "", "");
             }
-            
           }
       });
     }

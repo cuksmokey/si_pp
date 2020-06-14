@@ -86,27 +86,24 @@ class Master extends CI_Controller {
                     $result     = $this->m_master->insert_timbangan();    
                     echo json_encode(array('data' =>  TRUE));
                 }
-                
             }else if ($jenis == "Perusahaan") {
                 $id      = $this->input->post('id');
                 $cek = $this->m_master->get_data_one("m_perusahaan","nm_perusahaan",$id)->num_rows();
                 if ($cek > 0 ) {
                     echo json_encode(array('data' =>  FALSE));
                 }else{
-                    $result     = $this->m_master->insert_perusahaan();    
+                    $result = $this->m_master->insert_perusahaan();    
                     echo json_encode(array('data' =>  TRUE));
                 }
-                
             }else if ($jenis == "Simpan_Price_List") {
-                $id      = $this->input->post('id');
-                $cek = $this->m_master->get_data_one("m_perusahaan","nm_perusahaan",$id)->num_rows();
+                $id  = $this->input->post('kode_barang');
+                $cek = $this->m_master->get_data_one("m_price_list","kode_barang",$id)->num_rows();
                 if ($cek > 0 ) {
                     echo json_encode(array('data' =>  FALSE));
                 }else{
-                    $result     = $this->m_master->insert_perusahaan();    
+                    $result = $this->m_master->insert_price_list();    
                     echo json_encode(array('data' =>  TRUE));
                 }
-                
             }else if ($jenis == "Simpan_Barang") {
                 $id      = $this->input->post('kode_barang');
                 $cek = $this->m_master->get_data_one("m_barang","kode_barang",$id)->num_rows();
@@ -116,7 +113,6 @@ class Master extends CI_Controller {
                     $result     = $this->m_master->insert_load_barang();    
                     echo json_encode(array('data' =>  TRUE));
                 }
-                
             }else if ($jenis == "PoMaster") {
                 $id_perusahaan = $this->input->post('id_perusahaan');
                 $g_label       = $this->input->post('g_label');
@@ -130,7 +126,6 @@ class Master extends CI_Controller {
                     $result     = $this->m_master->insert_po_master();    
                     echo json_encode(array('data' =>  TRUE));
                 }
-                
             }elseif ($jenis == "PL") {
                 $no_surat      = $this->input->post('no_surat');
                 $no_so      = $this->input->post('no_so');
@@ -147,7 +142,6 @@ class Master extends CI_Controller {
                     $result     = $this->m_master->insert_pl();    
                     echo json_encode(array('data' =>  TRUE));
                 }
-                
             }elseif ($jenis == "Invoice") {
                 $id      = $this->input->post('id');
 
@@ -159,9 +153,7 @@ class Master extends CI_Controller {
                     $result     = $this->m_master->insert_invoice();    
                     echo json_encode(array('data' =>  TRUE));
                 }
-                
             }
-            
     }
 
     function insert_file(){
@@ -854,8 +846,17 @@ class Master extends CI_Controller {
       $response = $this->m_master->list_perusahaan($searchTerm);
 
       echo json_encode($response);
-
     }
+
+    function load_m_barang_pl(){
+        $searchTerm = $_GET['search'];
+  
+        // Get users
+        $response = $this->m_master->list_m_barang_pl($searchTerm);
+  
+        echo json_encode($response);
+  
+      }
     
     function update(){
 

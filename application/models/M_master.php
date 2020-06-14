@@ -328,6 +328,23 @@ class M_master extends CI_Model{
         return $result;
     }
 
+    function insert_price_list(){
+        
+        $data = array(
+            'tgl' => $_POST['tgl'],
+            'kode_barang' => $_POST['kode_barang'],
+            'nama_barang' => $_POST['nama_barang'],
+            'merek' => $_POST['merek'],
+            'spesifikasi' => $_POST['spesifikasi'],
+            'supplier' => $_POST['supplier'],
+            'harga_price_list' => $_POST['harga_price_list'],
+            'created_by' => $this->session->userdata('username')
+        );
+        $result= $this->db->insert("m_price_list",$data);
+
+        return $result;
+    }
+
     function insert_load_barang(){
         $data = array(
             'tgl' => $_POST['tgl'],
@@ -407,9 +424,6 @@ class M_master extends CI_Model{
     }
 
     function list_perusahaan($searchTerm=""){
-
-     
-
      $users = $this->db->query("SELECT * FROM m_perusahaan WHERE pimpinan like '%$searchTerm%' or  nm_perusahaan like '%$searchTerm%' ORDER BY pimpinan ")->result_array();
 
      // Initialize Array with fetched data
@@ -424,6 +438,27 @@ class M_master extends CI_Model{
         );
      }
      return $data;
+    }
+
+    function list_m_barang_pl($searchTerm=""){
+    $users = $this->db->query("SELECT * FROM m_barang WHERE kode_barang like '%$searchTerm%' or nama_barang like '%$searchTerm%' ORDER BY kode_barang ASC")->result_array();
+
+    // Initialize Array with fetched data
+    $data = array();
+    foreach($users as $user){
+        $data[] = array(
+            // harus kasih id agar muncul
+            "id" =>$user['id'],
+            // "tgl" =>$user['tgl'],
+            "text" =>$user['kode_barang'],
+            "nama_barang" =>$user['nama_barang'],
+            "merek" =>$user['merek'],
+            "spesifikasi" =>$user['spesifikasi'],
+            "supplier" =>$user['supplier'],
+            "harga" =>$user['harga']
+        );
+    }
+    return $data;
     }
 
     function list_sj($searchTerm=""){
