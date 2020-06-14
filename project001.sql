@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 13, 2020 at 08:57 PM
+-- Generation Time: Jun 14, 2020 at 12:09 PM
 -- Server version: 10.1.38-MariaDB
 -- PHP Version: 5.6.40
 
@@ -113,7 +113,9 @@ CREATE TABLE `m_price_list` (
 INSERT INTO `m_price_list` (`id`, `tgl`, `kode_barang`, `nama_barang`, `merek`, `spesifikasi`, `supplier`, `harga_price_list`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
 (4, '2020-06-07', 'KD/BARANG/001', 'BARANG SATU', 'MEREK SATU', 'SPEC SATU', 'SUPP SATU', 10329500, '2020-06-07 20:57:44', 'developer', '0000-00-00 00:00:00', NULL),
 (5, '2020-06-06', 'KD/BARANG/002', 'BARANG DUA', 'MEREK  DUA', 'SPEC DUA', 'SUPP DUA', 431400, '2020-06-07 21:00:20', 'developer', '0000-00-00 00:00:00', NULL),
-(6, '2020-06-05', 'KD/BARANG/003', 'BARANG TIGA', 'MEREK TIGA', 'SPEC TIGA', 'SUPP TIGA', 150000, '2020-06-10 21:54:27', 'developer', '0000-00-00 00:00:00', NULL);
+(6, '2020-06-05', 'KD/BARANG/003', 'BARANG TIGA', 'MEREK TIGA', 'SPEC TIGA', 'SUPP TIGA', 150000, '2020-06-10 21:54:27', 'developer', '0000-00-00 00:00:00', NULL),
+(7, '2020-06-14', 'KD/BARANG/004', 'BARANG EMPAT', 'MEREK EMPAT', 'SPEC EMPAT', 'SUPP EMPAT', 15000000, '2020-06-14 09:48:13', NULL, '0000-00-00 00:00:00', NULL),
+(8, '2020-06-14', 'KD/BARANG/005', 'BARANG LIMA', 'MEREK LIMA', 'SPEC LIMA', 'SUPP LIMA', 16000000, '2020-06-14 09:49:37', 'developer', '0000-00-00 00:00:00', NULL);
 
 -- --------------------------------------------------------
 
@@ -366,7 +368,7 @@ ALTER TABLE `m_perusahaan`
 -- AUTO_INCREMENT for table `m_price_list`
 --
 ALTER TABLE `m_price_list`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `m_timbangan`
