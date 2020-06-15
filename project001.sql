@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 14, 2020 at 12:09 PM
--- Server version: 10.1.38-MariaDB
--- PHP Version: 5.6.40
+-- Waktu pembuatan: 15 Jun 2020 pada 12.06
+-- Versi server: 10.1.38-MariaDB
+-- Versi PHP: 5.6.40
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -25,7 +25,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `m_barang`
+-- Struktur dari tabel `m_barang`
 --
 
 CREATE TABLE `m_barang` (
@@ -47,7 +47,7 @@ CREATE TABLE `m_barang` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `m_barang`
+-- Dumping data untuk tabel `m_barang`
 --
 
 INSERT INTO `m_barang` (`id`, `tgl`, `kode_barang`, `nama_barang`, `merek`, `spesifikasi`, `supplier`, `qty`, `qty_ket`, `harga`, `no_nota`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
@@ -64,7 +64,7 @@ INSERT INTO `m_barang` (`id`, `tgl`, `kode_barang`, `nama_barang`, `merek`, `spe
 -- --------------------------------------------------------
 
 --
--- Table structure for table `m_perusahaan`
+-- Struktur dari tabel `m_perusahaan`
 --
 
 CREATE TABLE `m_perusahaan` (
@@ -78,7 +78,7 @@ CREATE TABLE `m_perusahaan` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `m_perusahaan`
+-- Dumping data untuk tabel `m_perusahaan`
 --
 
 INSERT INTO `m_perusahaan` (`id`, `pimpinan`, `nm_perusahaan`, `alamat`, `no_telp`, `created_at`, `created_by`) VALUES
@@ -88,7 +88,7 @@ INSERT INTO `m_perusahaan` (`id`, `pimpinan`, `nm_perusahaan`, `alamat`, `no_tel
 -- --------------------------------------------------------
 
 --
--- Table structure for table `m_price_list`
+-- Struktur dari tabel `m_price_list`
 --
 
 CREATE TABLE `m_price_list` (
@@ -107,20 +107,20 @@ CREATE TABLE `m_price_list` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `m_price_list`
+-- Dumping data untuk tabel `m_price_list`
 --
 
 INSERT INTO `m_price_list` (`id`, `tgl`, `kode_barang`, `nama_barang`, `merek`, `spesifikasi`, `supplier`, `harga_price_list`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
-(4, '2020-06-07', 'KD/BARANG/001', 'BARANG SATU', 'MEREK SATU', 'SPEC SATU', 'SUPP SATU', 10329500, '2020-06-07 20:57:44', 'developer', '0000-00-00 00:00:00', NULL),
-(5, '2020-06-06', 'KD/BARANG/002', 'BARANG DUA', 'MEREK  DUA', 'SPEC DUA', 'SUPP DUA', 431400, '2020-06-07 21:00:20', 'developer', '0000-00-00 00:00:00', NULL),
-(6, '2020-06-05', 'KD/BARANG/003', 'BARANG TIGA', 'MEREK TIGA', 'SPEC TIGA', 'SUPP TIGA', 150000, '2020-06-10 21:54:27', 'developer', '0000-00-00 00:00:00', NULL),
+(4, '2020-06-07', 'KD/BARANG/001', 'BARANG SATU', 'MEREK SATU', 'SPEC SATU', 'SUPP SATU', 10329600, '2020-06-07 20:57:44', 'developer', '0000-00-00 00:00:00', 'developer'),
+(5, '2020-06-06', 'KD/BARANG/002', 'BARANG DUA', 'MEREK  DUA', 'SPEC DUA', 'SUPP DUA', 2000000, '2020-06-07 21:00:20', 'developer', '0000-00-00 00:00:00', 'developer'),
+(6, '2020-06-05', 'KD/BARANG/003', 'BARANG TIGA', 'MEREK TIGA', 'SPEC TIGA', 'SUPP TIGA', 3000000, '2020-06-10 21:54:27', 'developer', '0000-00-00 00:00:00', 'developer'),
 (7, '2020-06-14', 'KD/BARANG/004', 'BARANG EMPAT', 'MEREK EMPAT', 'SPEC EMPAT', 'SUPP EMPAT', 15000000, '2020-06-14 09:48:13', NULL, '0000-00-00 00:00:00', NULL),
 (8, '2020-06-14', 'KD/BARANG/005', 'BARANG LIMA', 'MEREK LIMA', 'SPEC LIMA', 'SUPP LIMA', 16000000, '2020-06-14 09:49:37', 'developer', '0000-00-00 00:00:00', NULL);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `m_timbangan`
+-- Struktur dari tabel `m_timbangan`
 --
 
 CREATE TABLE `m_timbangan` (
@@ -148,7 +148,7 @@ CREATE TABLE `m_timbangan` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `perusahaan`
+-- Struktur dari tabel `perusahaan`
 --
 
 CREATE TABLE `perusahaan` (
@@ -158,7 +158,7 @@ CREATE TABLE `perusahaan` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `perusahaan`
+-- Dumping data untuk tabel `perusahaan`
 --
 
 INSERT INTO `perusahaan` (`nama`, `daerah`, `email`) VALUES
@@ -167,7 +167,7 @@ INSERT INTO `perusahaan` (`nama`, `daerah`, `email`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `pl`
+-- Struktur dari tabel `pl`
 --
 
 CREATE TABLE `pl` (
@@ -194,7 +194,7 @@ CREATE TABLE `pl` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `po_history`
+-- Struktur dari tabel `po_history`
 --
 
 CREATE TABLE `po_history` (
@@ -212,7 +212,7 @@ CREATE TABLE `po_history` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `po_master`
+-- Struktur dari tabel `po_master`
 --
 
 CREATE TABLE `po_master` (
@@ -228,7 +228,7 @@ CREATE TABLE `po_master` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `th_invoice`
+-- Struktur dari tabel `th_invoice`
 --
 
 CREATE TABLE `th_invoice` (
@@ -251,7 +251,7 @@ CREATE TABLE `th_invoice` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tr_invoice`
+-- Struktur dari tabel `tr_invoice`
 --
 
 CREATE TABLE `tr_invoice` (
@@ -267,7 +267,7 @@ CREATE TABLE `tr_invoice` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `user`
+-- Struktur dari tabel `user`
 --
 
 CREATE TABLE `user` (
@@ -279,7 +279,7 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `user`
+-- Dumping data untuk tabel `user`
 --
 
 INSERT INTO `user` (`id`, `username`, `password`, `nm_user`, `level`) VALUES
@@ -292,116 +292,116 @@ INSERT INTO `user` (`id`, `username`, `password`, `nm_user`, `level`) VALUES
 --
 
 --
--- Indexes for table `m_barang`
+-- Indeks untuk tabel `m_barang`
 --
 ALTER TABLE `m_barang`
   ADD PRIMARY KEY (`id`,`kode_barang`);
 
 --
--- Indexes for table `m_perusahaan`
+-- Indeks untuk tabel `m_perusahaan`
 --
 ALTER TABLE `m_perusahaan`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `m_price_list`
+-- Indeks untuk tabel `m_price_list`
 --
 ALTER TABLE `m_price_list`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `m_timbangan`
+-- Indeks untuk tabel `m_timbangan`
 --
 ALTER TABLE `m_timbangan`
   ADD PRIMARY KEY (`id`,`roll`);
 
 --
--- Indexes for table `pl`
+-- Indeks untuk tabel `pl`
 --
 ALTER TABLE `pl`
   ADD PRIMARY KEY (`no_surat`,`no_so`),
   ADD KEY `id` (`id`);
 
 --
--- Indexes for table `po_history`
+-- Indeks untuk tabel `po_history`
 --
 ALTER TABLE `po_history`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `po_master`
+-- Indeks untuk tabel `po_master`
 --
 ALTER TABLE `po_master`
   ADD PRIMARY KEY (`id`),
   ADD KEY `id` (`id`);
 
 --
--- Indexes for table `th_invoice`
+-- Indeks untuk tabel `th_invoice`
 --
 ALTER TABLE `th_invoice`
   ADD PRIMARY KEY (`no_invoice`),
   ADD KEY `id` (`id`);
 
 --
--- Indexes for table `user`
+-- Indeks untuk tabel `user`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`id`,`username`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT untuk tabel yang dibuang
 --
 
 --
--- AUTO_INCREMENT for table `m_barang`
+-- AUTO_INCREMENT untuk tabel `m_barang`
 --
 ALTER TABLE `m_barang`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
--- AUTO_INCREMENT for table `m_perusahaan`
+-- AUTO_INCREMENT untuk tabel `m_perusahaan`
 --
 ALTER TABLE `m_perusahaan`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
--- AUTO_INCREMENT for table `m_price_list`
+-- AUTO_INCREMENT untuk tabel `m_price_list`
 --
 ALTER TABLE `m_price_list`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
--- AUTO_INCREMENT for table `m_timbangan`
+-- AUTO_INCREMENT untuk tabel `m_timbangan`
 --
 ALTER TABLE `m_timbangan`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `pl`
+-- AUTO_INCREMENT untuk tabel `pl`
 --
 ALTER TABLE `pl`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `po_history`
+-- AUTO_INCREMENT untuk tabel `po_history`
 --
 ALTER TABLE `po_history`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `po_master`
+-- AUTO_INCREMENT untuk tabel `po_master`
 --
 ALTER TABLE `po_master`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `th_invoice`
+-- AUTO_INCREMENT untuk tabel `th_invoice`
 --
 ALTER TABLE `th_invoice`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `user`
+-- AUTO_INCREMENT untuk tabel `user`
 --
 ALTER TABLE `user`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
