@@ -99,7 +99,7 @@ class Master extends CI_Controller {
                 $id  = $this->input->post('kode_barang');
                 $cek = $this->m_master->get_data_one("m_price_list","kode_barang",$id)->num_rows();
                 if ($cek > 0 ) {
-                    echo json_encode(array('data' =>  FALSE));
+                    echo json_encode(array('data' =>  FALSE,'msg' => 'Kode Barang Sudah Dipakai'));
                 }else{
                     $result = $this->m_master->insert_price_list();    
                     echo json_encode(array('data' =>  TRUE));
@@ -859,7 +859,6 @@ class Master extends CI_Controller {
       }
     
     function update(){
-
             $jenis      = $_POST['jenis'];
             
             if ($jenis == "Timbangan") {
@@ -874,6 +873,17 @@ class Master extends CI_Controller {
                     echo json_encode(array('data' =>  FALSE));
                 }else{
                     $result= $this->m_master->update_perusahaan();
+                    echo json_encode(array('data' =>  TRUE));
+                }
+            }else if ($jenis == "Simpan_Price_List") {
+                $id      = $this->input->post('kode_barang');
+                $id_lama = $this->input->post('kode_barang_lama');
+                $cek = $this->m_master->get_data_one("m_price_list","kode_barang",$id)->num_rows();
+
+                if ($id <> $id_lama) {
+                    echo json_encode(array('data' =>  FALSE,'msg' => 'Kode Barang Lain'));
+                }else{
+                    $result= $this->m_master->update_price_list();
                     echo json_encode(array('data' =>  TRUE));
                 }
             }else if ($jenis == "Simpan_Barang") {
@@ -1095,6 +1105,9 @@ class Master extends CI_Controller {
             echo json_encode($data);
         }else if ($jenis == "Perusahaan") {
             $data =  $this->m_master->get_data_one("m_perusahaan", "id", $id)->row();
+            echo json_encode($data);
+        }else if ($jenis == "edit_price_list") {
+            $data =  $this->m_master->get_data_one("m_price_list", "id", $id)->row();
             echo json_encode($data);
         }else if ($jenis == "edit_barang") {
             $data =  $this->m_master->get_data_one("m_barang", "id", $id)->row();

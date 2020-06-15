@@ -69,6 +69,7 @@
                                             <!-- <input type="text" id="kode_barang" autocomplete="off" class="form-control"> -->
                                             <select class="form-control" id="kode_barang" style="width:100%">
                                            </select>
+                                           <input type="hidden" id="kode_barang_lama" value="">
                                         </td>
                                     </tr>
                                     <tr>
@@ -250,6 +251,7 @@
       data = $('#kode_barang').select2('data');
       kode_barang = data[0].text;
       nama_barang = $("#nama_barang").val();
+      kode_barang_lama = $("#kode_barang_lama").val();
       merek = $("#merek").val();
       spesifikasi = $("#spesifikasi").val();
       supplier = $("#supplier").val();
@@ -261,13 +263,14 @@
 
       $("#btn-simpan").prop("disabled",true);
 
-      // alert(kode_barang);
+      // alert(kode_barang_lama);
       $.ajax({
           type     : "POST",
           url      : '<?php echo base_url(); ?>Master/'+status,
           data     : ({
             tgl : tgl,
             kode_barang : kode_barang,
+            kode_barang_lama : kode_barang_lama,
             nama_barang : nama_barang,
             merek : merek,
             spesifikasi : spesifikasi,
@@ -285,7 +288,7 @@
               status = 'update';
 
             }else{
-              showNotification("alert-danger", "Kode Barang Sudah Dipakai", "bottom", "center", "", "");
+              showNotification("alert-danger", data.msg, "bottom", "center", "", "");
             }
           }
       });
@@ -302,18 +305,28 @@
          $.ajax({
               url: '<?php echo base_url('Master/get_edit'); ?>',
               type: 'POST',
-              data: {id: id,jenis:"Perusahaan"},
+              data: {id: id,jenis:"edit_price_list"},
           })
           .done(function(data) {
-               json = JSON.parse(data);
+              json = JSON.parse(data);
+              $("#btn-simpan").prop("disabled",false);
 
-              $("#nm_perusahaan").val(json.nm_perusahaan);
-              $("#nm_perusahaan_lama").val(json.nm_perusahaan);
-              $("#no_telp").val(json.no_telp);
-              $("#pimpinan").val(json.pimpinan);
-              $("#id").val(json.id);
-              $("textarea#alamat").val(json.alamat);
+              $("#profit").val("");
+              $("#ongkir").val("");
+              $("#hasil_harga_awal").val("");
+              $("#mark_up").val("");
+              $("#harga_sementara").val("");
+              $("#pembulatan").val("");
+              $("#harga_price_list").val("");
 
+              $("#tgl").val(json.tgl);
+              $("#kode_barang").val(json.kode_barang);
+              $("#kode_barang_lama").val(json.kode_barang);
+              $("#nama_barang").val(json.nama_barang);
+              $("#merek").val(json.merek);
+              $("#spesifikasi").val(json.spesifikasi);
+              $("#supplier").val(json.supplier);
+              $("#harga_awal_barang").val(json.harga_price_list);
           }) 
 
     }
@@ -363,7 +376,7 @@
       $("#nama_barang").val("");
       $("#merek").val("");
       $("#spesifikasi").val("");
-      $("#Supplier").val("");
+      $("#supplier").val("");
       $("#harga_awal_barang").val("");
       $("#profit").val("");
       $("#ongkir").val("");

@@ -390,6 +390,19 @@ class M_master extends CI_Model{
         return $result;
     }
 
+    function update_price_list(){
+        $this->db->set('tgl', $_POST['tgl']);
+        $this->db->set('nama_barang', $_POST['nama_barang']);
+        $this->db->set('merek', $_POST['merek']);
+        $this->db->set('spesifikasi', $_POST['spesifikasi']);
+        $this->db->set('supplier', $_POST['supplier']);
+        $this->db->set('harga_price_list', $_POST['harga_price_list']);
+        $this->db->set('updated_by', $this->session->userdata('username'));
+        $this->db->where('kode_barang', $_POST['kode_barang']);
+        $result = $this->db->update('m_price_list');
+        return $result;
+    }
+
     function update_load_barang(){
         
         $this->db->set('tgl', $_POST['tgl']);
