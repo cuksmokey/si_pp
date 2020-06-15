@@ -348,7 +348,7 @@
             $.ajax({
               url   : '<?php echo base_url(); ?>Master/hapus/',
               type  : "POST",
-              data  : {id: id,jenis:"Perusahaan"},
+              data  : {id: id,jenis:"Hapus_price_list"},
               success : function(data){
                 if (data == 1) {
                 swal("Berhasil", "", "success");
