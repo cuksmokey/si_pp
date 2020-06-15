@@ -153,6 +153,12 @@
                         </a>
                     </li>
                     <li>
+                        <a href="<?php echo base_url('Master/PL_Price_List') ?>">
+                            <i class="material-icons">list</i>
+                            <span>Packing List</span>
+                        </a>
+                    </li>
+                    <li>
                         <a href="<?php echo base_url('Master/Invoice') ?>">
                             <i class="material-icons">list</i>
                             <span>Invoice</span>

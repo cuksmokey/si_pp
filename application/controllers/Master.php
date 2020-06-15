@@ -57,6 +57,12 @@ class Master extends CI_Controller {
         $this->load->view('footer');
     }
 
+    public function PL_Price_List() {
+        $this->load->view('header');
+        $this->load->view('Master/v_pl_price_list');
+        $this->load->view('footer');
+    }
+
     public function Invoice()
     {
         $this->load->view('header');
@@ -300,8 +306,6 @@ class Master extends CI_Controller {
                                 "data" => $data,
                         );
                 
-                
-
             }else if ($jenis == "list_timbangan") {
                 $query = $this->m_master->get_timbangan();
                 $i=1;
@@ -338,6 +342,39 @@ class Master extends CI_Controller {
                         $data[] = $row;
 
                         // $i++;
+                    }
+                }
+
+                $output = array(
+                                "data" => $data,
+                        );
+
+            }else if ($jenis == "list_pl_barang") {
+                $query = $this->m_master->get_pl_barang();
+                $i=1;
+
+                if ($query->num_rows() == 0) {
+                    $data[] =  ["","","","","",""];
+                }else{
+
+                    foreach ($query->result() as $r) {
+                        $id = "$r->id";
+
+                        $row = array();
+                        $row[] = $r->kode_barang;
+                        $row[] = $r->nama_barang;
+                        $row[] = "Rp. ".number_format($r->harga_price_list);
+                        $row[] = number_format($r->qty);
+                        $row[] = '<input type="text" class="angka form-control" id="i_qty'.$i.'" >';
+
+                        $aksi = '<a type="button" onclick="addToCart('."'".$r->kode_barang."'".','."'".$r->harga_price_list."'".','."'".$r->qty."'".')" class="btn bg-brown btn-circle waves-effect waves-circle waves-float">
+                        <i class="material-icons">check</i>
+                        </a>';
+                            
+                        $row[] = $aksi;
+                        $data[] = $row;
+
+                        $i++;
                     }
                 }
 
@@ -462,6 +499,75 @@ class Master extends CI_Controller {
                         $data[] = $row;
 
                         // $i++;
+                    }
+                }
+
+                $output = array("data" => $data);
+                
+
+            }else if ($jenis == "PL_price_list") {
+                $i=1;
+                $query = $this->m_master->get_PL_price_list();
+                
+                if ($query->num_rows() == 0) {
+                    $data[] =  ["","","","","","","",""];
+                }else{
+
+                    foreach ($query->result() as $r) {
+                        $id = "'$r->id'";
+                        // $print = base_url("Master/print_pl?id=").$r->id;
+
+                        $row = array();
+                        $row[] = $i;
+                        $row[] = $r->tgl;
+                        $row[] = $r->no_surat;
+                        $row[] = $r->no_so;
+                        $row[] = $r->kepada;
+                        $row[] = $r->no_po;
+                        $row[] = "";
+                        // $row[] = '
+                        // <a type="button" onclick=view_timbang('.$r->id.') class="btn btn-default btn-circle waves-effect waves-circle waves-float">
+                        //         '.$r->jml_timbang.'
+                        //     </a>
+                        // ' ;
+
+                        $aksi ="";
+
+                        $superbtn = '<button type="button" onclick="view_detail('.$id.')" class="btn btn-info btn-circle waves-effect waves-circle waves-float">
+                                <i class="material-icons">remove_red_eye</i>
+                            </button> 
+                            <button type="button" onclick="tampil_edit('.$id.')" class="btn bg-orange btn-circle waves-effect waves-circle waves-float">
+                                <i class="material-icons">edit</i>
+                            </button>
+                          <button type="button" onclick="deleteData('.$id.','."".')" class="btn btn-danger btn-circle waves-effect waves-circle waves-float">
+                                <i class="material-icons">delete</i>
+                            </button>';
+                            
+                        $superbtn2 = '<button type="button" onclick="view_detail('.$id.')" class="btn btn-info btn-circle waves-effect waves-circle waves-float">
+                                <i class="material-icons">remove_red_eye</i>
+                            </button>';
+
+
+                            // CEK PO PL SATU UKURAN FIX
+                            $uk_fix = $this->m_master->get_cek_po_pl($r->id,$r->no_pkb);
+
+                        if ($this->session->userdata('level') == "SuperAdmin") {
+                            $aksi = ''.$superbtn.'
+                            <a type="button" onclick="confirmCekPo('.$id.','."".')" class="btn bg-green btn-circle waves-effect waves-circle waves-float">
+                                <i class="material-icons">check</i>
+                            </a>';
+                        }else{
+                            // <a type="button" href="'.$print.'" target="blank" class="btn btn-default btn-circle waves-effect waves-circle waves-float">
+                            //     <i class="material-icons">print</i>
+                            // </a>
+
+                            $aksi = ''.$superbtn.'';
+                        }    
+                            
+                        $row[] = $aksi;
+                        $data[] = $row;
+
+                        $i++;
                     }
                 }
 

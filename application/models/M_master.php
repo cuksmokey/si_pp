@@ -152,6 +152,12 @@ class M_master extends CI_Model{
         return $this->db->query($query);
     }
 
+    function get_pl_barang(){
+        $query = "SELECT a.id AS id,a.kode_barang AS kode_barang,a.nama_barang AS nama_barang,a.harga_price_list AS harga_price_list,b.qty AS qty FROM m_price_list a
+        INNER JOIN m_barang b ON a.kode_barang = b.kode_barang";
+        return $this->db->query($query);
+    }
+
     function get_view_timbangan($id){
         $query = "SELECT * FROM m_timbangan WHERE id_pl = '$id' ";
         return $this->db->query($query);
@@ -159,6 +165,11 @@ class M_master extends CI_Model{
 
     function get_PL(){
         $query = "SELECT a.*,(SELECT COUNT(id_pl) FROM m_timbangan WHERE id_pl = a.id) AS jml_timbang FROM pl a ";
+        return $this->db->query($query);
+    }
+
+    function get_PL_price_list(){
+        $query = "SELECT * FROM m_pl_price_list ";
         return $this->db->query($query);
     }
 
