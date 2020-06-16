@@ -361,6 +361,7 @@ class Master extends CI_Controller {
                         );
 
             }else if ($jenis == "list_pl_barang") {
+                //
                 $query = $this->m_master->get_pl_barang();
                 $i=1;
 
@@ -376,7 +377,8 @@ class Master extends CI_Controller {
                         $row[] = $r->nama_barang;
                         $row[] = "Rp. ".number_format($r->harga_price_list);
                         $row[] = '<div style="text-align:right">'.$r->qty.'</div>';
-                        $row[] = '<input type="text" class="angka form-control" id="i_qty'.$i.'" placeholder="0" >';
+                        $row[] = '<input type="text" class="angka form-control" id="i_qty'.$i.'" placeholder="0" autocomplete="off" onkeypress="return hanyaAngka(event)">
+                        <input type="hidden" id="qty'.$i.'" value="'.$r->qty.'">';
 
                         $aksi = '<a type="button" onclick="addToCart('."'".$r->kode_barang."'".','."'".$r->harga_price_list."'".','."'".$r->qty."'".','."'".$i."'".')" class="btn bg-brown btn-circle waves-effect waves-circle waves-float">
                         <i class="material-icons">check</i>
@@ -521,19 +523,18 @@ class Master extends CI_Controller {
                 $query = $this->m_master->get_PL_price_list();
                 
                 if ($query->num_rows() == 0) {
-                    $data[] =  ["","","","","","","",""];
+                    $data[] =  ["","","","","","",""];
                 }else{
 
                     foreach ($query->result() as $r) {
                         $id = "'$r->id'";
-                        // $print = base_url("Master/print_pl?id=").$r->id;
 
                         $row = array();
                         $row[] = $i;
                         $row[] = $r->tgl;
                         $row[] = $r->no_surat;
                         $row[] = $r->no_so;
-                        $row[] = $r->kepada;
+                        // $row[] = $r->kepada;
                         $row[] = $r->no_po;
                         $row[] = "";
                         // $row[] = '
@@ -558,20 +559,12 @@ class Master extends CI_Controller {
                                 <i class="material-icons">remove_red_eye</i>
                             </button>';
 
-
-                            // CEK PO PL SATU UKURAN FIX
-                            $uk_fix = $this->m_master->get_cek_po_pl($r->id,$r->no_pkb);
-
                         if ($this->session->userdata('level') == "SuperAdmin") {
                             $aksi = ''.$superbtn.'
                             <a type="button" onclick="confirmCekPo('.$id.','."".')" class="btn bg-green btn-circle waves-effect waves-circle waves-float">
                                 <i class="material-icons">check</i>
                             </a>';
                         }else{
-                            // <a type="button" href="'.$print.'" target="blank" class="btn btn-default btn-circle waves-effect waves-circle waves-float">
-                            //     <i class="material-icons">print</i>
-                            // </a>
-
                             $aksi = ''.$superbtn.'';
                         }    
                             
@@ -1070,7 +1063,7 @@ class Master extends CI_Controller {
     }
 
     function show_cart_plpl(){ //Fungsi untuk menampilkan Cart
-        //
+        
         $output = '';
         $no = 0;
 
@@ -1132,8 +1125,8 @@ class Master extends CI_Controller {
         echo $this->show_cart(); //tampilkan cart setelah added
     }
 
-    function add_to_cart_pl_barang(){ //fungsi Add To Cart
-        //
+    function add_to_cart_pl_barang(){
+
         $data = array(
             'id' => str_replace("/", "_", $_POST['kode_barang']), 
             'name' => str_replace("/", "_", $_POST['kode_barang']),

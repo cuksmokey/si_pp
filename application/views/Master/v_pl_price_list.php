@@ -33,7 +33,7 @@
                                             <th>Tanggal</th>
                                             <th>No Surat Jalan</th>
                                             <th>No SO</th>
-                                            <th>Kepada</th>
+                                            <!-- <th>Kepada</th> -->
                                             <th>No PO</th>
                                             <th width="5%">Jumlah Barang</th>
                                             <th width="20%">Aksi</th>
@@ -704,10 +704,17 @@
     }
 
     function addToCart(kode_barang,harga_price_list,qty,i){
+      qty = $("#qty"+i).val();
       i_qty = $("#i_qty"+i).val();
-      //
+
+      ss_stok = qty - i_qty;
+
+      // alert(qty+" "+i_qty+". stok: "+ss_stok);
+
       if(i_qty == 0 || i_qty == ""){
         swal("Input QTY Tidak Boleh Kosong", "", "error");
+      }else if(ss_stok < 0){
+        swal("Melebihi STOK", "", "error");
       }else{
         $.ajax({
           url : "<?php echo base_url();?>Master/add_to_cart_pl_barang",
@@ -792,6 +799,11 @@
       $("#no_telp").val(data[0].no_telp);
     });
 
-
+    function hanyaAngka(evt) {
+		  var charCode = (evt.which) ? evt.which : event.keyCode
+		   if (charCode > 31 && (charCode < 48 || charCode > 57))
+		    return false;
+		  return true;
+		}
     
 </script>

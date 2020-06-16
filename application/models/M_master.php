@@ -228,7 +228,7 @@ class M_master extends CI_Model{
     }
 
     function insert_pl_pl_b(){
-        
+        // insert packing list
         $data = array(
             'tgl' => $_POST['tgl'],
             'no_surat' => $_POST['no_surat'],
@@ -243,6 +243,7 @@ class M_master extends CI_Model{
         $no_surat = $_POST['no_surat'];
         $plpl = $this->db->query("SELECT id,tgl FROM m_pl_price_list WHERE no_surat = '$no_surat'")->row();
 
+        // insert pl list barang
         foreach ($this->cart->contents() as $items) {
             $data_list = array(
                 'tgl' => $plpl->tgl,
@@ -253,6 +254,12 @@ class M_master extends CI_Model{
                 'created_by' => $this->session->userdata('username')
             );
             $result= $this->db->insert("m_pl_list_barang",$data_list);
+
+            // update stok 
+            $sisa = $items['options']['stok'] - $items['qty'];
+            $this->db->set('qty', $sisa);
+            $this->db->where('kode_barang', $items['options']['kode_barang']);
+            $result = $this->db->update('m_barang');
         }
 
         return $result;
