@@ -128,10 +128,10 @@
                               <table class="table" style="background-color: grey; color:white">
                                   <thead>
                                     <tr>
+                                      <th>No</th>
                                       <th>Kode Barang</th>
-                                      <th>Nama Barang</th>
                                       <th>Harga Price List</th>
-                                      <th>STOK</th>
+                                      <th>Sisa Stok</th>
                                       <th>Input QTY</th>
                                       <th>Aksi</th>
                                     </tr>
@@ -452,7 +452,7 @@
     $('.box-form').animateCss('fadeInDown');
     $("#judul").html('<h3> Form Edit Data</h3>');
 
-    $('#detail_cart').load("<?php echo base_url();?>Master/destroy_cart");
+    $('#detail_cart').load("<?php echo base_url();?>Master/destroy_cart_plpl");
 
     status = "update";
 
@@ -621,7 +621,7 @@
       $("#no_po").val("");
 
       $("#txt-btn-simpan").html("Simpan");
-      $('#detail_cart').load("<?php echo base_url();?>Master/destroy_cart");
+      $('#detail_cart').load("<?php echo base_url();?>Master/destroy_cart_plpl");
     }
 
     function view_timbang(id){
@@ -683,19 +683,28 @@
                });
     }
 
-    function addToCart(kode_barang,harga_price_list,qty){
+    function addToCart(kode_barang,harga_price_list,qty,i){
+      i_qty = $("#i_qty"+i).val();
 
-       $.ajax({
-         url : "<?php echo base_url();?>Master/add_to_cart_pl_barang",
-         method : "POST",
-         data : {roll: roll},
-         success: function(data){
+      if(i_qty == 0 || i_qty == ""){
+        swal("Input QTY Tidak Boleh Kosong", "", "error");
+      }else{
+        $.ajax({
+          url : "<?php echo base_url();?>Master/add_to_cart_pl_barang",
+          method : "POST",
+          data : {
+            kode_barang:kode_barang,
+            harga_price_list:harga_price_list,
+            qty:qty,
+            i_qty:i_qty
+          },
+          success: function(data){
           swal("Berhasil Ditambahkan", "", "success");
-           // $('#btn-cek'+nou).prop('disabled', true);
-           $('#detail_cart').html(data);
-         }
-       });
-   
+            // $('#btn-cek'+nou).prop('disabled', true);
+            $('#detail_cart').html(data);
+          }
+        });
+      }
     }
 
     function addToCart_edit(roll){
@@ -714,7 +723,7 @@
     $(document).on('click','.hapus_cart',function(){
        var row_id=$(this).attr("id"); //mengambil row_id dari artibut id
        $.ajax({
-         url : "<?php echo base_url();?>Master/hapus_cart",
+         url : "<?php echo base_url();?>Master/hapus_cart_plpl",
          method : "POST",
          data : {row_id : row_id},
          success :function(data){

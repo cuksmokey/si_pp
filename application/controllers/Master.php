@@ -367,7 +367,7 @@ class Master extends CI_Controller {
                         $row[] = number_format($r->qty);
                         $row[] = '<input type="text" class="angka form-control" id="i_qty'.$i.'" >';
 
-                        $aksi = '<a type="button" onclick="addToCart('."'".$r->kode_barang."'".','."'".$r->harga_price_list."'".','."'".$r->qty."'".')" class="btn bg-brown btn-circle waves-effect waves-circle waves-float">
+                        $aksi = '<a type="button" onclick="addToCart('."'".$r->kode_barang."'".','."'".$r->harga_price_list."'".','."'".$r->qty."'".','."'".$i."'".')" class="btn bg-brown btn-circle waves-effect waves-circle waves-float">
                         <i class="material-icons">check</i>
                         </a>';
                             
@@ -1027,6 +1027,11 @@ class Master extends CI_Controller {
         echo $this->show_cart();
     }
 
+    function destroy_cart_plpl(){
+        $this->cart->destroy();
+        echo $this->show_cart_plpl();
+    }
+
     function destroy_cart_barang(){
         $this->cart->destroy();
         echo $this->show_cart_barang();
@@ -1043,6 +1048,31 @@ class Master extends CI_Controller {
                 <tr>
                     <td>'.$no.'</td>
                     <td>'.str_replace("_", "/", $items['name']).'</td>
+                    <td><button type="button" id="'.$items['rowid'].'" class="hapus_cart btn btn-danger btn-xs">Batal</button></td>
+                </tr>
+            ';
+        }
+        
+
+        return $output;
+    }
+
+    function show_cart_plpl(){ //Fungsi untuk menampilkan Cart
+
+        $output = '';
+        $no = 0;
+
+        foreach ($this->cart->contents() as $items) {
+            $no++;
+            $sisa_stok = $items['options']['stok'] - $items['qty'];
+
+            $output .='
+                <tr>
+                    <td>'.$no.'</td>
+                    <td>'.$items['options']['kode_barang'].'</td>
+                    <td>Rp. '.number_format($items['price']).'</td>
+                    <td>'.number_format($sisa_stok).'</td>
+                    <td>'.$items['qty'].'</td>
                     <td><button type="button" id="'.$items['rowid'].'" class="hapus_cart btn btn-danger btn-xs">Batal</button></td>
                 </tr>
             ';
@@ -1090,6 +1120,22 @@ class Master extends CI_Controller {
         echo $this->show_cart(); //tampilkan cart setelah added
     }
 
+    function add_to_cart_pl_barang(){ //fungsi Add To Cart
+        
+        $data = array(
+            'id' => str_replace("/", "_", $_POST['kode_barang']), 
+            'name' => str_replace("/", "_", $_POST['kode_barang']),
+            'price' => $_POST['harga_price_list'], 
+            'qty' => $_POST['i_qty'],
+            'options' => array(
+                'kode_barang' => $_POST['kode_barang'],
+                'stok' => $_POST['qty']
+            )
+        );
+        $this->cart->insert($data);
+        echo $this->show_cart_plpl(); //tampilkan cart setelah added
+    }
+
     function add_to_cart_barang(){ //fungsi Add To Cart baran
     
         $data = array(
@@ -1112,6 +1158,15 @@ class Master extends CI_Controller {
         );
         $this->cart->update($data);
         echo $this->show_cart();
+    }
+
+    function hapus_cart_plpl(){ //fungsi untuk menghapus item cart
+        $data = array(
+            'rowid' => $this->input->post('row_id'), 
+            'qty' => 0, 
+        );
+        $this->cart->update($data);
+        echo $this->show_cart_plpl();
     }
 
     function hapus_cart_barang(){ //fungsi untuk menghapus item cart
