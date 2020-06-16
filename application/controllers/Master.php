@@ -148,6 +148,9 @@ class Master extends CI_Controller {
                     $result     = $this->m_master->insert_pl();    
                     echo json_encode(array('data' =>  TRUE));
                 }
+            }elseif ($jenis == "PL_pl_barang") {
+                $result     = $this->m_master->insert_pl_pl_b();    
+                echo json_encode(array('data' =>  TRUE));
             }elseif ($jenis == "Invoice") {
                 $id      = $this->input->post('id');
 
@@ -364,8 +367,8 @@ class Master extends CI_Controller {
                         $row[] = $r->kode_barang;
                         $row[] = $r->nama_barang;
                         $row[] = "Rp. ".number_format($r->harga_price_list);
-                        $row[] = number_format($r->qty);
-                        $row[] = '<input type="text" class="angka form-control" id="i_qty'.$i.'" >';
+                        $row[] = '<div style="text-align:right">'.$r->qty.'</div>';
+                        $row[] = '<input type="text" class="angka form-control" id="i_qty'.$i.'" placeholder="0" >';
 
                         $aksi = '<a type="button" onclick="addToCart('."'".$r->kode_barang."'".','."'".$r->harga_price_list."'".','."'".$r->qty."'".','."'".$i."'".')" class="btn bg-brown btn-circle waves-effect waves-circle waves-float">
                         <i class="material-icons">check</i>
@@ -591,6 +594,7 @@ class Master extends CI_Controller {
                         $row[] = $r->pimpinan;
                         $row[] = $r->nm_perusahaan;
                         $row[] = $r->alamat;
+                        $row[] = $r->npwp;
                         $row[] = $r->no_telp;
 
                         $aksi ="";

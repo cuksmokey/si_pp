@@ -227,6 +227,39 @@ class M_master extends CI_Model{
         return $result;
     }
 
+    function insert_pl_pl_b(){
+        
+        $data = array(
+                'tgl'      => $_POST['tgl'],
+                'no_surat'      => str_replace(" ", "", $_POST['no_surat']),
+                'no_so'       => $_POST['no_so'],
+                'no_pkb'      => $_POST['no_pkb'],
+                'no_kendaraan'      => $_POST['no_kendaraan'],
+                'nama'       => $_POST['nama'],
+                'id_perusahaan'       => $_POST['id_perusahaan'],
+                'nm_perusahaan'       => $_POST['nm_perusahaan'],
+                'alamat_perusahaan'      => $_POST['alamat_perusahaan'],
+                'no_telp'      => $_POST['no_telp'],
+                'no_po'      => $_POST['no_po']
+            );
+
+
+        $result= $this->db->insert("pl",$data);
+
+        $no_surat = $_POST['no_surat'];
+        $id = $this->db->query("SELECT id FROM pl WHERE no_surat = '$no_surat'")->row('id');
+
+        foreach ($this->cart->contents() as $items) {
+            $this->db->set('status', "1");
+            $this->db->set('id_pl', $id);
+
+            $this->db->where('roll', str_replace("_", "/", $items['name']));
+            $result= $this->db->update('m_timbangan');
+        }
+
+        return $result;
+    }
+
     function update_timbangan(){
         
         $this->db->set('nm_ker', $_POST['nm_ker']);
@@ -331,6 +364,7 @@ class M_master extends CI_Model{
                 'pimpinan'      => $_POST['pimpinan'],
                 'nm_perusahaan'       => $_POST['nm_perusahaan'],
                 'alamat'      => $_POST['alamat'],
+                'npwp'      => $_POST['npwp'],
                 'no_telp'      => $_POST['no_telp'],
                 'created_by'      => $this->session->userdata('username')
             );
@@ -396,6 +430,7 @@ class M_master extends CI_Model{
         $this->db->set('nm_perusahaan', $_POST['nm_perusahaan']);
         $this->db->set('alamat', $_POST['alamat']);
         $this->db->set('no_telp', $_POST['no_telp']);
+        $this->db->set('npwp', $_POST['npwp']);
         $this->db->where('id', $_POST['id']);
         $result = $this->db->update('m_perusahaan');
         return $result;
@@ -448,17 +483,18 @@ class M_master extends CI_Model{
     }
 
     function list_perusahaan($searchTerm=""){
-     $users = $this->db->query("SELECT * FROM m_perusahaan WHERE pimpinan like '%$searchTerm%' or  nm_perusahaan like '%$searchTerm%' ORDER BY pimpinan ")->result_array();
+     $users = $this->db->query("SELECT * FROM m_perusahaan WHERE pimpinan like '%$searchTerm%' or nm_perusahaan like '%$searchTerm%' ORDER BY pimpinan ")->result_array();
 
      // Initialize Array with fetched data
      $data = array();
      foreach($users as $user){
         $data[] = array(
             "id"=>$user['id'], 
-            "text"=>$user['pimpinan'], 
+            "text"=>$user['nm_perusahaan'],
+            "pimpinan"=>$user['pimpinan'], 
             "no_telp"=>$user['no_telp'], 
-            "alamat"=>$user['alamat'], 
-            "nm_perusahaan"=>$user['nm_perusahaan']
+            "npwp"=>$user['npwp'], 
+            "alamat"=>$user['alamat']
         );
      }
      return $data;

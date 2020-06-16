@@ -50,10 +50,10 @@
                                 <div id="judul"></div>
                                 <table width="50%">
                                     <tr>
-                                      <th style="border:1px solid #000;padding:5px;width:10%"></th>
-                                      <th style="border:1px solid #000;padding:5px;width:1%"></th>
-                                      <th style="border:1px solid #000;padding:5px;width:21%"></th>
-                                      <th style="border:1px solid #000;padding:5px;width:18%"></th>
+                                      <th style="border:0;padding:5px;width:10%"></th>
+                                      <th style="border:0;padding:5px;width:1%"></th>
+                                      <th style="border:0;padding:5px;width:21%"></th>
+                                      <th style="border:0;padding:5px;width:18%"></th>
                                     </tr>
                                     <tr>
                                         <td>Tanggal </td>
@@ -80,11 +80,29 @@
                                         <td></td>
                                     </tr>
                                     <tr>
+                                        <td>No. PO</td>
+                                        <td>:</td>
+                                        <td>
+                                            <input type="text" class="form-control" id="no_po"> 
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4"><hr>Dikirim Ke<hr></td>
+                                    </tr>
+                                    <tr>
                                         <td>Kepada</td>
                                         <td>:</td>
                                         <td colspan="2">
-                                          <select class="form-control" id="kepada">
+                                          <select class="form-control" id="kepada" style="width:100%">
                                           </select>
+                                    </tr>
+                                    <tr>
+                                        <td>Pimpinan</td>
+                                        <td>:</td>
+                                        <td colspan="2">
+                                            <input type="text" class="form-control" id="pimpinan" disabled="true">
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>NPWP</td>
@@ -93,7 +111,7 @@
                                             <input type="text" class="form-control" id="npwp" disabled="true">
                                         </td>
                                     </tr>
-                                    <tr>
+                                    <tr style="vertical-align: top">
                                         <td>Alamat</td>
                                         <td>:</td>
                                         <td colspan="2">
@@ -101,13 +119,12 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>No. PO</td>
+                                        <td>No. Telepon</td>
                                         <td>:</td>
                                         <td colspan="2">
-                                            <input type="text" class="form-control" id="no_po" disabled="true"> 
+                                            <input type="text" class="form-control" id="no_telp" disabled="true"> 
                                         </td>
                                     </tr>
-                                    
                                     <tr>
                                         <td colspan="4" align="right">
                                             <br>
@@ -390,60 +407,53 @@
                    },
                "order": [[ 0, "desc" ]]
                });
-
-     
-
     }
 
-
     function simpan(){
-      
-      tgl     = $("#tgl").val();
-      no_surat  = $("#no_surat").val();
-      no_so    = $("#no_so").val();
-      no_surat_lama  = $("#no_surat_lama").val();
-      no_so_lama    = $("#no_so_lama").val();
-      no_pkb = $("#no_pkb").val();
-      no_kendaraan   = $("#no_kendaraan").val();
-      // nama   = $("#nama").val();
-      // nama   = "-";
-      nm_perusahaan = $("#nm_perusahaan").val();
-      alamat_perusahaan    = $("textarea#alamat_perusahaan").val();
-      no_telp    = $("#no_telp").val();
-      no_po    = $("#no_po").val();
-      data = $('#nama').select2('data');
-      nama = data[0].text;
-      id_perusahaan = data[0].id;
+      data = $('#kepada').select2('data');
+      kepada = data[0].text;
+      tgl = $("#tgl").val();
+      no_surat = $("#no_surat").val();
+      no_so = $("#no_so").val();
+      no_po = $("#no_po").val();
+      pimpinan = $("#pimpinan").val();
+      npwp = $("#npwp").val();
+      alamat = $("#alamat").val();
+      no_telp = $("#no_telp").val();
+
       cart = $('#detail_cart').html();
+      
+      if (cart == "" || tgl == "" || no_surat == "" || no_so == "" || no_po == "" || kepada == "" || pimpinan == "" || npwp == "" || alamat == "" || no_telp == "")  {
+        showNotification("alert-info", "Harap Lengkapi Form", "bottom", "center", "", ""); return;
+      }
 
-        if (cart == "" || no_surat == "" || no_so == ""|| no_pkb == ""|| no_kendaraan == ""|| nama == "" || nm_perusahaan == ""|| alamat_perusahaan == ""|| no_telp == ""|| no_po == "")  {
-          showNotification("alert-info", "Harap Lengkapi Form", "bottom", "center", "", ""); return;
-        }
+      $("#btn-simpan").prop("disabled",true);
 
-        $("#btn-simpan").prop("disabled",true);
-        
-
-        $.ajax({
-            type     : "POST",
-            url      : '<?php echo base_url(); ?>Master/'+status,
-            data     : ({tgl:tgl , no_surat:no_surat ,no_surat_lama:no_surat_lama , no_so:no_so ,no_so_lama:no_so_lama , no_pkb:no_pkb , no_kendaraan:no_kendaraan, nama:nama , id_perusahaan:id_perusahaan, nm_perusahaan:nm_perusahaan , alamat_perusahaan:alamat_perusahaan ,no_telp:no_telp ,no_po:no_po ,jenis : "PL" }),
-            // data     : ({tgl:tgl , no_surat:no_surat ,no_surat_lama:no_surat_lama , no_so:no_so ,no_so_lama:no_so_lama , no_pkb:no_pkb , no_kendaraan:no_kendaraan, nama:nama , nm_perusahaan:nm_perusahaan , alamat_perusahaan:alamat_perusahaan ,no_telp:no_telp ,no_po:no_po ,jenis : "PL" }),
+      $.ajax({
+          type     : "POST",
+          url      : '<?php echo base_url(); ?>Master/'+status,
+          data     : ({
+            tgl:tgl,
+            no_surat:no_surat,
+            no_so:no_so,
+            no_po:no_po,
+            kepada:kepada,
+            jenis : "PL_pl_barang"}),
             dataType : "json",
-            success  : function(data){
-              $("#btn-simpan").prop("disabled",false);
-              if (data.data == true) {
-                
-                // reloadTable();
-                showNotification("alert-success", "Berhasil", "bottom", "center", "", "");
-                // location.reload(true);
-                
-                kosong();
-              }else{
-                showNotification("alert-danger", data.msg, "bottom", "center", "", "");
-              }
+          success  : function(data){
+            $("#btn-simpan").prop("disabled",false);
+            if (data.data == true) {
               
+              // reloadTable();
+              showNotification("alert-success", "Berhasil", "bottom", "center", "", "");
+              // location.reload(true);
+              
+              kosong();
+            }else{
+              showNotification("alert-danger", data.msg, "bottom", "center", "", "");
             }
-        });
+          }
+      });
     }
 
     function tampil_edit(id){
@@ -608,19 +618,17 @@
       $("#btn-print").hide();
       status = "insert";
 
-      // $("#acc").prop("disabled",false);
-
+      $("#tgl").val("");
       $("#no_surat").val("");
       $("#no_so").val("");
-      $("#no_pkb").val("");
-      $("#no_kendaraan").val("");
-      $("#nama").val("");
-      $("#nm_perusahaan").val("");
-      $("textarea#alamat_perusahaan").val("");
-      $("#no_telp").val("");
       $("#no_po").val("");
+      $("#kepada").val("");
+      $("#pimpinan").val("");
+      $("#npwp").val("");
+      $("#alamat").val("");
+      $("#no_telp").val("");
 
-      $("#txt-btn-simpan").html("Simpan");
+      $("#txt-btn-simpan").html("SIMPAN");
       $('#detail_cart').load("<?php echo base_url();?>Master/destroy_cart_plpl");
     }
 
@@ -662,25 +670,25 @@
     function load_barang(){
       var table = $('#datatable-add').DataTable();
 
-         table.destroy();
+      table.destroy();
 
-         tabel = $('#datatable-add').DataTable({
+      tabel = $('#datatable-add').DataTable({
 
-               "processing": true,
-               "pageLength":true,
-               "paging": true,
-               "ajax": {
-                   "url" : '<?php echo base_url(); ?>Master/load_data' ,
-                   "data" : ({jenis:"list_pl_barang"}),
-                   "type": "POST"
-               },
-               responsive: true,
-               "pageLength": 10,
-               "language": {
-                       "emptyTable":     "Tidak ada data.."
-                   },
-               "order": [[ 2, "asc" ]]
-               });
+            "processing": true,
+            "pageLength":true,
+            "paging": true,
+            "ajax": {
+                "url" : '<?php echo base_url(); ?>Master/load_data' ,
+                "data" : ({jenis:"list_pl_barang"}),
+                "type": "POST"
+            },
+            responsive: true,
+            "pageLength": 10,
+            "language": {
+                    "emptyTable": "Tidak ada data.."
+                },
+            "order": [[ 0, "asc" ]]
+            });
     }
 
     function addToCart(kode_barang,harga_price_list,qty,i){
@@ -734,7 +742,7 @@
 
     function load_perusahaan(){
     
-      $('#nama').select2({
+      $('#kepada').select2({
            // minimumInputLength: 3,
            allowClear: true,
            placeholder: '--select--',
@@ -761,15 +769,15 @@
             },
           }
       });
-
    }
 
-   $('#nama').on('change', function() {
-      data = $('#nama').select2('data');
+   $('#kepada').on('change', function() {
+      data = $('#kepada').select2('data');
       // $("#nama").val(data[0].text);
-      $("#nm_perusahaan").val(data[0].nm_perusahaan);
+      $("#pimpinan").val(data[0].pimpinan);
+      $("#npwp").val(data[0].npwp);
+      $("textarea#alamat").val(data[0].alamat);
       $("#no_telp").val(data[0].no_telp);
-      $("textarea#alamat_perusahaan").val(data[0].alamat);
     });
 
 

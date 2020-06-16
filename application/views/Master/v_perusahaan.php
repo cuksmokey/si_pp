@@ -32,10 +32,11 @@
                                 <table id="datatable11" class="table table-bordered table-striped table-hover dataTable ">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
+                                            <th>No</th>
                                             <th>Pimpinan</th>
                                             <th>Nama Perusahaan</th>
                                             <th>Alamat</th>
+                                            <th>NPWP</th>
                                             <th>No Telepon</th>
                                             <th width="15%">Aksi</th>
                                         </tr>
@@ -72,6 +73,13 @@
                                         <td>:</td>
                                         <td colspan="2">
                                           <textarea id="alamat" cols="30" rows="5" class="form-control"></textarea> 
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>NPWP</td>
+                                        <td>:</td>
+                                        <td colspan="2">
+                                            <input type="text" class="form-control" placeholder=""  id="npwp"> 
                                         </td>
                                     </tr>
                                     <tr>
@@ -172,23 +180,6 @@
                    },
                "order": [[ 0, "asc" ]]
                });
-
-     /*var table = $('#datatable11').DataTable();
-
-         table.destroy();
-
-     tabel = $('#datatable11').DataTable({
-
-                ordering: false,
-                processing: true,
-                serverSide: true,
-                ajax: {
-                  url: '<?php echo base_url(); ?>Master/load_data',
-                  data : ({jenis:"Timbangan"}),
-                  type:'POST',
-                }
-           });*/
-
     }
 
 
@@ -199,6 +190,7 @@
       nm_perusahaan  = $("#nm_perusahaan").val();
       nm_perusahaan_lama  = $("#nm_perusahaan_lama").val();
       no_telp    = $("#no_telp").val();
+      npwp    = $("#npwp").val();
       alamat    = $("textarea#alamat").val();
       id    = $("#id").val();
         
@@ -208,11 +200,10 @@
 
         $("#btn-simpan").prop("disabled",true);
         
-
         $.ajax({
             type     : "POST",
             url      : '<?php echo base_url(); ?>Master/'+status,
-            data     : ({id:id , pimpinan:pimpinan , nm_perusahaan:nm_perusahaan ,nm_perusahaan_lama:nm_perusahaan_lama , alamat:alamat , no_telp:no_telp ,jenis : "Perusahaan" }),
+            data     : ({id:id , pimpinan:pimpinan , nm_perusahaan:nm_perusahaan ,nm_perusahaan_lama:nm_perusahaan_lama , alamat:alamat , no_telp:no_telp,npwp:npwp,jenis : "Perusahaan" }),
             dataType : "json",
             success  : function(data){
               $("#btn-simpan").prop("disabled",true);
@@ -236,7 +227,7 @@
     $(".box-form").show();
     $('.box-form').animateCss('fadeInDown');
     $("#judul").html('<h3> Form Edit Data</h3>');
-
+    $("#btn-simpan").prop("disabled",false);
     
 
     status = "update";
@@ -252,6 +243,7 @@
               $("#nm_perusahaan").val(json.nm_perusahaan);
               $("#nm_perusahaan_lama").val(json.nm_perusahaan);
               $("#no_telp").val(json.no_telp);
+              $("#npwp").val(json.npwp);
               $("#pimpinan").val(json.pimpinan);
               $("#id").val(json.id);
               $("textarea#alamat").val(json.alamat);
@@ -304,6 +296,7 @@
       $("textarea#alamat").val("");
       $("#pimpinan").val("");
       $("#no_telp").val("");
+      $("#npwp").val("");
 
       $("#btn-simpan").prop("disabled",false);
       $("#txt-btn-simpan").html("Simpan");
