@@ -149,8 +149,16 @@ class Master extends CI_Controller {
                     echo json_encode(array('data' =>  TRUE));
                 }
             }elseif ($jenis == "PL_pl_barang") {
-                $result     = $this->m_master->insert_pl_pl_b();    
-                echo json_encode(array('data' =>  TRUE));
+                $no_surat = $this->input->post('no_surat');
+
+                $cek = $this->m_master->get_data_one("m_pl_price_list","no_surat",$no_surat)->num_rows();
+
+                if ($cek > 0 ) {
+                    echo json_encode(array('data' =>  FALSE,'msg' => 'No Surat Jalan Sudah Ada!'));
+                }else{
+                    $result = $this->m_master->insert_pl_pl_b();    
+                    echo json_encode(array('data' =>  TRUE));
+                }
             }elseif ($jenis == "Invoice") {
                 $id      = $this->input->post('id');
 
@@ -1062,7 +1070,7 @@ class Master extends CI_Controller {
     }
 
     function show_cart_plpl(){ //Fungsi untuk menampilkan Cart
-
+        //
         $output = '';
         $no = 0;
 
@@ -1125,7 +1133,7 @@ class Master extends CI_Controller {
     }
 
     function add_to_cart_pl_barang(){ //fungsi Add To Cart
-        
+        //
         $data = array(
             'id' => str_replace("/", "_", $_POST['kode_barang']), 
             'name' => str_replace("/", "_", $_POST['kode_barang']),

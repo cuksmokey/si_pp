@@ -230,31 +230,29 @@ class M_master extends CI_Model{
     function insert_pl_pl_b(){
         
         $data = array(
-                'tgl'      => $_POST['tgl'],
-                'no_surat'      => str_replace(" ", "", $_POST['no_surat']),
-                'no_so'       => $_POST['no_so'],
-                'no_pkb'      => $_POST['no_pkb'],
-                'no_kendaraan'      => $_POST['no_kendaraan'],
-                'nama'       => $_POST['nama'],
-                'id_perusahaan'       => $_POST['id_perusahaan'],
-                'nm_perusahaan'       => $_POST['nm_perusahaan'],
-                'alamat_perusahaan'      => $_POST['alamat_perusahaan'],
-                'no_telp'      => $_POST['no_telp'],
-                'no_po'      => $_POST['no_po']
-            );
-
-
-        $result= $this->db->insert("pl",$data);
+            'tgl' => $_POST['tgl'],
+            'no_surat' => $_POST['no_surat'],
+            'no_so' => $_POST['no_so'],
+            'no_po' => $_POST['no_po'],
+            'no_nota' => $_POST['no_nota'],
+            'kepada' => $_POST['kepada'],
+            'created_by' => $this->session->userdata('username')
+        );
+        $result= $this->db->insert("m_pl_price_list",$data);
 
         $no_surat = $_POST['no_surat'];
-        $id = $this->db->query("SELECT id FROM pl WHERE no_surat = '$no_surat'")->row('id');
+        $plpl = $this->db->query("SELECT id,tgl FROM m_pl_price_list WHERE no_surat = '$no_surat'")->row();
 
         foreach ($this->cart->contents() as $items) {
-            $this->db->set('status', "1");
-            $this->db->set('id_pl', $id);
-
-            $this->db->where('roll', str_replace("_", "/", $items['name']));
-            $result= $this->db->update('m_timbangan');
+            $data_list = array(
+                'tgl' => $plpl->tgl,
+                'kode_barang' => $items['options']['kode_barang'],
+                'harga_price_list' => $items['price'],
+                'qty' => $items['qty'],
+                'id_pl_price_list' => $plpl->id,
+                'created_by' => $this->session->userdata('username')
+            );
+            $result= $this->db->insert("m_pl_list_barang",$data_list);
         }
 
         return $result;

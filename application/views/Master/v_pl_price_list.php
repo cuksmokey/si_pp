@@ -88,6 +88,14 @@
                                         <td></td>
                                     </tr>
                                     <tr>
+                                        <td>No. Nota</td>
+                                        <td>:</td>
+                                        <td>
+                                            <input type="text" class="form-control" id="no_nota"> 
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
                                         <td colspan="4"><hr>Dikirim Ke<hr></td>
                                     </tr>
                                     <tr>
@@ -411,11 +419,12 @@
 
     function simpan(){
       data = $('#kepada').select2('data');
-      kepada = data[0].text;
+      kepada = data[0].id;
       tgl = $("#tgl").val();
       no_surat = $("#no_surat").val();
       no_so = $("#no_so").val();
       no_po = $("#no_po").val();
+      no_nota = $("#no_nota").val();
       pimpinan = $("#pimpinan").val();
       npwp = $("#npwp").val();
       alamat = $("#alamat").val();
@@ -423,12 +432,13 @@
 
       cart = $('#detail_cart').html();
       
-      if (cart == "" || tgl == "" || no_surat == "" || no_so == "" || no_po == "" || kepada == "" || pimpinan == "" || npwp == "" || alamat == "" || no_telp == "")  {
+      if (cart == "" || tgl == "" || no_surat == "" || no_so == "" || no_po == "" || no_nota == "" || kepada == "" || pimpinan == "" || npwp == "" || alamat == "" || no_telp == "")  {
         showNotification("alert-info", "Harap Lengkapi Form", "bottom", "center", "", ""); return;
       }
 
       $("#btn-simpan").prop("disabled",true);
 
+      // alert(i_sisa_stok);
       $.ajax({
           type     : "POST",
           url      : '<?php echo base_url(); ?>Master/'+status,
@@ -437,6 +447,7 @@
             no_surat:no_surat,
             no_so:no_so,
             no_po:no_po,
+            no_nota:no_nota,
             kepada:kepada,
             jenis : "PL_pl_barang"}),
             dataType : "json",
@@ -614,7 +625,7 @@
 
 
     function kosong(){
-      $("#judul").html('<h3> Form Tambah Data</h3>');
+      $("#judul").html('<h3> Form Tambah Data Packing List</h3>');
       $("#btn-print").hide();
       status = "insert";
 
@@ -622,6 +633,7 @@
       $("#no_surat").val("");
       $("#no_so").val("");
       $("#no_po").val("");
+      $("#no_nota").val("");
       $("#kepada").val("");
       $("#pimpinan").val("");
       $("#npwp").val("");
@@ -667,9 +679,9 @@
       
     });
 
-    function load_barang(){
+    function load_barang(){ 
       var table = $('#datatable-add').DataTable();
-
+      //
       table.destroy();
 
       tabel = $('#datatable-add').DataTable({
@@ -693,7 +705,7 @@
 
     function addToCart(kode_barang,harga_price_list,qty,i){
       i_qty = $("#i_qty"+i).val();
-
+      //
       if(i_qty == 0 || i_qty == ""){
         swal("Input QTY Tidak Boleh Kosong", "", "error");
       }else{
