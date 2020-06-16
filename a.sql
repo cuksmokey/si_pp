@@ -1,0 +1,478 @@
+-- phpMyAdmin SQL Dump
+-- version 4.8.5
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1
+-- Generation Time: Jun 16, 2020 at 08:14 PM
+-- Server version: 10.1.38-MariaDB
+-- PHP Version: 5.6.40
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `a`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `m_barang`
+--
+
+CREATE TABLE `m_barang` (
+  `id` int(11) NOT NULL,
+  `tgl` date DEFAULT NULL,
+  `kode_barang` varchar(99) NOT NULL,
+  `nama_barang` varchar(99) DEFAULT NULL,
+  `merek` varchar(99) DEFAULT NULL,
+  `spesifikasi` varchar(99) DEFAULT NULL,
+  `supplier` varchar(99) DEFAULT NULL,
+  `qty` int(99) DEFAULT NULL,
+  `qty_ket` varchar(99) DEFAULT NULL,
+  `harga` int(11) DEFAULT NULL,
+  `no_nota` varchar(99) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_by` varchar(99) DEFAULT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_by` varchar(99) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `m_barang`
+--
+
+INSERT INTO `m_barang` (`id`, `tgl`, `kode_barang`, `nama_barang`, `merek`, `spesifikasi`, `supplier`, `qty`, `qty_ket`, `harga`, `no_nota`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
+(8, '2020-06-07', 'KD/BARANG/001', 'BARANG SATU', 'MEREK SATU', 'SPEC SATU', 'SUPP SATU', 800, 'PCS', 10000, '001', '2020-06-04 09:44:37', 'developer', '2020-06-16 18:05:35', 'developer'),
+(9, '2020-06-06', 'KD/BARANG/002', 'BARANG DUA', 'MEREK  DUA', 'SPEC DUA', 'SUPP DUA', 9000, 'Batang', 2000, '002', '2020-06-04 09:45:09', 'developer', '2020-06-16 18:04:24', 'developer'),
+(10, '2020-06-05', 'KD/BARANG/003', 'BARANG TIGA', 'MEREK TIGA', 'SPEC TIGA', 'SUPP TIGA', 8900, 'Lonjor', 1300, '003', '2020-06-04 09:45:49', 'developer', '2020-06-16 04:52:43', 'developer'),
+(11, '2020-06-04', 'KD/BARANG/004', 'BARANG EMPAT', 'MEREK EMPAT', 'SPEC EMPAT', 'SUPP EMPAT', 70000, 'Kaleng', 1500, '004', '2020-06-04 09:46:37', 'developer', '2020-06-16 04:52:56', 'developer'),
+(12, '2020-06-03', 'KD/BARANG/005', 'BARANG LIMA', 'MEREK LIMA', 'SPEC LIMA', 'SUPP LIMA', 80000, 'Lembar', 1600, '005', '2020-06-04 09:47:35', 'developer', '2020-06-16 04:53:12', 'developer'),
+(13, '2020-06-09', 'KD/BARANG/006', 'NAMA BARANG ENAM', 'MEREK ENAM', 'SPEC ENAM', 'SUPP ENAM', 54000, 'PCS', 60000, '006', '2020-06-09 06:11:08', 'developer', '0000-00-00 00:00:00', 'developer'),
+(14, '2020-06-01', 'KD/BARANG/007', 'NAMA BARANG TUJUH', 'MEREK TUJUH', 'SPEC TUJUH', 'SUPP TUJUH', 70000, 'PCS', 7000, '007', '2020-06-09 06:11:58', 'developer', '0000-00-00 00:00:00', 'developer'),
+(15, '2020-05-01', 'KD/BARANG/008', 'BARANG DELAPAN', 'MEREK DELAPAN', 'SPEC DELAPAN', 'SUPP DELAPAN', 500, 'Box', 10000, '008', '2020-06-13 04:19:17', 'developer', '0000-00-00 00:00:00', 'developer'),
+(16, '2020-04-30', 'KD/BARANG/009', 'BARANGA SEMBILAN', 'MEREK SEMBILAN', 'SPEC SEMBILAN', 'SUPP SEMBILAN', 900, 'Batang', 90000, '009', '2020-06-13 04:21:38', 'developer', '0000-00-00 00:00:00', 'developer');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `m_perusahaan`
+--
+
+CREATE TABLE `m_perusahaan` (
+  `id` int(11) NOT NULL,
+  `pimpinan` varchar(90) DEFAULT NULL,
+  `nm_perusahaan` varchar(90) DEFAULT NULL,
+  `alamat` text,
+  `npwp` varchar(99) DEFAULT NULL,
+  `no_telp` varchar(99) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_by` varchar(90) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `m_perusahaan`
+--
+
+INSERT INTO `m_perusahaan` (`id`, `pimpinan`, `nm_perusahaan`, `alamat`, `npwp`, `no_telp`, `created_at`, `created_by`) VALUES
+(20, 'SATU', 'PT. TEST PERUSAHAAN', 'JL. TEST ALAMAT PERUSAHAAN', '001', '001', '2020-06-11 08:14:49', 'developer'),
+(21, 'DUA', 'PT. TEST PERUSAHAAN DUA', 'JL. TEST ALAMAT PERUSAHAAN DUA', '002', '002', '2020-06-11 08:15:22', 'developer'),
+(22, 'TEST PIMPINAN', 'PT. MAJU MUNDUR', 'ALAMAT PT KE TIGA', '001/001-001_001.001', '087123456789', '2020-06-16 08:23:38', 'developer');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `m_pl_list_barang`
+--
+
+CREATE TABLE `m_pl_list_barang` (
+  `id` int(11) NOT NULL,
+  `tgl` date DEFAULT NULL,
+  `kode_barang` varchar(99) NOT NULL,
+  `harga_price_list` int(11) DEFAULT NULL,
+  `qty` int(11) DEFAULT NULL,
+  `id_pl_price_list` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_by` varchar(99) DEFAULT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_by` varchar(99) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `m_pl_price_list`
+--
+
+CREATE TABLE `m_pl_price_list` (
+  `id` int(11) NOT NULL,
+  `tgl` date DEFAULT NULL,
+  `no_surat` varchar(99) NOT NULL,
+  `no_so` varchar(99) NOT NULL,
+  `kepada` int(11) DEFAULT NULL,
+  `no_po` varchar(99) NOT NULL,
+  `no_nota` varchar(99) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_by` varchar(99) DEFAULT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_by` varchar(99) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `m_price_list`
+--
+
+CREATE TABLE `m_price_list` (
+  `id` int(11) NOT NULL,
+  `tgl` date DEFAULT NULL,
+  `kode_barang` varchar(99) NOT NULL,
+  `nama_barang` varchar(99) DEFAULT NULL,
+  `merek` varchar(99) DEFAULT NULL,
+  `spesifikasi` varchar(99) DEFAULT NULL,
+  `supplier` varchar(99) DEFAULT NULL,
+  `harga_price_list` int(11) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_by` varchar(99) DEFAULT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_by` varchar(99) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `m_price_list`
+--
+
+INSERT INTO `m_price_list` (`id`, `tgl`, `kode_barang`, `nama_barang`, `merek`, `spesifikasi`, `supplier`, `harga_price_list`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
+(4, '2020-06-07', 'KD/BARANG/001', 'BARANG SATU', 'MEREK SATU', 'SPEC SATU', 'SUPP SATU', 10329600, '2020-06-07 20:57:44', 'developer', '0000-00-00 00:00:00', 'developer'),
+(5, '2020-06-06', 'KD/BARANG/002', 'BARANG DUA', 'MEREK  DUA', 'SPEC DUA', 'SUPP DUA', 80000000, '2020-06-07 21:00:20', 'developer', '0000-00-00 00:00:00', 'developer'),
+(6, '2020-06-05', 'KD/BARANG/003', 'BARANG TIGA', 'MEREK TIGA', 'SPEC TIGA', 'SUPP TIGA', 3000000, '2020-06-10 21:54:27', 'developer', '0000-00-00 00:00:00', 'developer'),
+(7, '2020-06-14', 'KD/BARANG/004', 'BARANG EMPAT', 'MEREK EMPAT', 'SPEC EMPAT', 'SUPP EMPAT', 15000000, '2020-06-14 09:48:13', NULL, '0000-00-00 00:00:00', NULL),
+(8, '2020-06-14', 'KD/BARANG/005', 'BARANG LIMA', 'MEREK LIMA', 'SPEC LIMA', 'SUPP LIMA', 16000000, '2020-06-14 09:49:37', 'developer', '0000-00-00 00:00:00', NULL),
+(9, '2020-06-16', 'KD/BARANG/006', 'NAMA BARANG ENAM', 'MEREK ENAM', 'SPEC ENAM', 'SUPP ENAM', 60000000, '2020-06-16 16:54:32', 'developer', '0000-00-00 00:00:00', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `m_timbangan`
+--
+
+CREATE TABLE `m_timbangan` (
+  `id` int(11) NOT NULL,
+  `roll` varchar(50) NOT NULL,
+  `tgl` date DEFAULT NULL,
+  `nm_ker` varchar(50) DEFAULT NULL,
+  `g_ac` decimal(8,2) DEFAULT NULL,
+  `g_label` varchar(50) DEFAULT NULL,
+  `width` decimal(8,2) DEFAULT NULL,
+  `diameter` int(11) DEFAULT NULL,
+  `weight` int(11) DEFAULT NULL,
+  `joint` int(11) DEFAULT NULL,
+  `ket` text,
+  `status` int(1) DEFAULT '0',
+  `id_pl` int(11) DEFAULT '0',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_by` varchar(50) DEFAULT NULL,
+  `packing_at` timestamp NULL DEFAULT NULL,
+  `packing_by` varchar(50) DEFAULT NULL,
+  `rct` decimal(8,2) DEFAULT NULL,
+  `ctk` int(1) DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `perusahaan`
+--
+
+CREATE TABLE `perusahaan` (
+  `nama` varchar(99) DEFAULT NULL,
+  `daerah` varchar(99) DEFAULT NULL,
+  `email` varchar(99) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `perusahaan`
+--
+
+INSERT INTO `perusahaan` (`nama`, `daerah`, `email`) VALUES
+('PT. Prima Paper Indonesia', 'Dsn. Timang Kulon, Wonokerto , Wonogiri', 'salesprimapaper@gmail.com');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `pl`
+--
+
+CREATE TABLE `pl` (
+  `id` int(11) NOT NULL,
+  `tgl` date DEFAULT NULL,
+  `no_surat` varchar(99) NOT NULL,
+  `no_so` varchar(99) NOT NULL,
+  `no_pkb` varchar(99) NOT NULL,
+  `no_kendaraan` varchar(99) DEFAULT NULL,
+  `nm_perusahaan` varchar(99) DEFAULT NULL,
+  `id_perusahaan` int(11) DEFAULT NULL,
+  `alamat_perusahaan` text,
+  `nama` varchar(99) DEFAULT NULL,
+  `no_telp` varchar(99) DEFAULT NULL,
+  `no_po` varchar(99) DEFAULT NULL,
+  `status` varchar(50) DEFAULT 'Open',
+  `cek_po` int(1) DEFAULT '0',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_by` varchar(99) DEFAULT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_by` varchar(99) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `po_history`
+--
+
+CREATE TABLE `po_history` (
+  `id` int(11) NOT NULL,
+  `id_perusahaan` int(11) NOT NULL,
+  `tgl` date NOT NULL,
+  `g_label` int(11) DEFAULT NULL,
+  `width` int(11) DEFAULT NULL,
+  `tonase` int(11) DEFAULT NULL,
+  `no_po` varchar(99) NOT NULL,
+  `id_pl` int(11) NOT NULL,
+  `no_pkb` varchar(99) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `po_master`
+--
+
+CREATE TABLE `po_master` (
+  `id` int(11) NOT NULL,
+  `id_perusahaan` int(11) NOT NULL,
+  `tgl` date DEFAULT NULL,
+  `g_label` int(11) DEFAULT NULL,
+  `width` int(11) DEFAULT NULL,
+  `tonase` int(11) DEFAULT NULL,
+  `no_po` varchar(99) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `th_invoice`
+--
+
+CREATE TABLE `th_invoice` (
+  `id` int(11) NOT NULL,
+  `no_invoice` char(50) NOT NULL,
+  `jto` date DEFAULT NULL,
+  `no_surat` varchar(99) DEFAULT NULL,
+  `no_po` varchar(99) DEFAULT NULL,
+  `id_perusahaan` int(11) DEFAULT NULL,
+  `nm_perusahaan` varchar(99) DEFAULT NULL,
+  `alamat` text,
+  `kepada` varchar(99) DEFAULT NULL,
+  `gsm` int(5) DEFAULT NULL,
+  `status` varchar(50) DEFAULT 'Closed',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_by` varchar(99) DEFAULT NULL,
+  `no_pkb` varchar(99) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tr_invoice`
+--
+
+CREATE TABLE `tr_invoice` (
+  `no_invoice` char(50) DEFAULT NULL,
+  `g_label` varchar(50) DEFAULT NULL,
+  `width_lb` varchar(50) DEFAULT NULL,
+  `roll` int(5) DEFAULT NULL,
+  `satuan` varchar(50) DEFAULT NULL,
+  `jumlah` decimal(10,2) DEFAULT NULL,
+  `harga` decimal(10,2) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user`
+--
+
+CREATE TABLE `user` (
+  `id` int(11) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `password` varchar(100) DEFAULT NULL,
+  `nm_user` varchar(50) DEFAULT NULL,
+  `level` enum('Admin','User','SuperAdmin') DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `user`
+--
+
+INSERT INTO `user` (`id`, `username`, `password`, `nm_user`, `level`) VALUES
+(1, 'admin', '202cb962ac59075b964b07152d234b70', 'Admin Aplikasi', 'Admin'),
+(2, 'user', 'ee11cbb19052e40b07aac0ca060c23ee', 'Admin user', 'User'),
+(3, 'developer', '5e8edd851d2fdfbd7415232c67367cc3', 'Admin Aplikasi', 'SuperAdmin');
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `m_barang`
+--
+ALTER TABLE `m_barang`
+  ADD PRIMARY KEY (`id`,`kode_barang`);
+
+--
+-- Indexes for table `m_perusahaan`
+--
+ALTER TABLE `m_perusahaan`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `m_pl_list_barang`
+--
+ALTER TABLE `m_pl_list_barang`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `m_pl_price_list`
+--
+ALTER TABLE `m_pl_price_list`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `m_price_list`
+--
+ALTER TABLE `m_price_list`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `m_timbangan`
+--
+ALTER TABLE `m_timbangan`
+  ADD PRIMARY KEY (`id`,`roll`);
+
+--
+-- Indexes for table `pl`
+--
+ALTER TABLE `pl`
+  ADD PRIMARY KEY (`no_surat`,`no_so`),
+  ADD KEY `id` (`id`);
+
+--
+-- Indexes for table `po_history`
+--
+ALTER TABLE `po_history`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `po_master`
+--
+ALTER TABLE `po_master`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id` (`id`);
+
+--
+-- Indexes for table `th_invoice`
+--
+ALTER TABLE `th_invoice`
+  ADD PRIMARY KEY (`no_invoice`),
+  ADD KEY `id` (`id`);
+
+--
+-- Indexes for table `user`
+--
+ALTER TABLE `user`
+  ADD PRIMARY KEY (`id`,`username`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `m_barang`
+--
+ALTER TABLE `m_barang`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+--
+-- AUTO_INCREMENT for table `m_perusahaan`
+--
+ALTER TABLE `m_perusahaan`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+
+--
+-- AUTO_INCREMENT for table `m_pl_list_barang`
+--
+ALTER TABLE `m_pl_list_barang`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- AUTO_INCREMENT for table `m_pl_price_list`
+--
+ALTER TABLE `m_pl_price_list`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `m_price_list`
+--
+ALTER TABLE `m_price_list`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT for table `m_timbangan`
+--
+ALTER TABLE `m_timbangan`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `pl`
+--
+ALTER TABLE `pl`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `po_history`
+--
+ALTER TABLE `po_history`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `po_master`
+--
+ALTER TABLE `po_master`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `th_invoice`
+--
+ALTER TABLE `th_invoice`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `user`
+--
+ALTER TABLE `user`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
