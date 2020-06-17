@@ -68,6 +68,7 @@
                                         <td>:</td>
                                         <td>
                                             <input type="text" class="form-control" id="no_surat">
+                                            <input type="hidden"  id="idid" value="">
                                         </td>
                                         <td></td>
                                     </tr>
@@ -393,7 +394,7 @@
        tabel.ajax.reload(null,false);
    }
 
-    function load_data(){
+    function load_data(){ //
       var table = $('#datatable11').DataTable();
 
          table.destroy();
@@ -418,6 +419,7 @@
     }
 
     function simpan(){
+      id = $("#idid").val();
       data = $('#kepada').select2('data');
       kepada = data[0].id;
       tgl = $("#tgl").val();
@@ -438,11 +440,12 @@
 
       $("#btn-simpan").prop("disabled",true);
 
-      // alert(i_sisa_stok);
+      // alert(id);
       $.ajax({
           type     : "POST",
           url      : '<?php echo base_url(); ?>Master/'+status,
           data     : ({
+            id:id,
             tgl:tgl,
             no_surat:no_surat,
             no_so:no_so,
@@ -471,7 +474,7 @@
     $(".box-data").hide();
     $(".box-form").show();
     $('.box-form').animateCss('fadeInDown');
-    $("#judul").html('<h3> Form Edit Data</h3>');
+    $("#judul").html('<h3>Form Edit Data</h3>');
 
     $('#detail_cart').load("<?php echo base_url();?>Master/destroy_cart_plpl");
 
@@ -480,31 +483,28 @@
          $.ajax({
               url: '<?php echo base_url('Master/get_edit'); ?>',
               type: 'POST',
-              data: {id: id,jenis:"PL"},
+              data: {id: id,jenis:"PL_pl_pl"},
           })
           .done(function(data) {
-               json = JSON.parse(data);
+              json = JSON.parse(data);
 
-              // $("#btn-print").attr("href", "<?php echo base_url('Master/print_timbangan?id=')  ?>"+json.roll);
-              // $("#btn-print").show();
-
+              $("#idid").val(json.header.id);
+              $("#tgl").val(json.header.tgl);
               $("#no_surat").val(json.header.no_surat);
               $("#no_so").val(json.header.no_so);
-              $("#no_surat_lama").val(json.header.no_surat);
-              $("#no_so_lama").val(json.header.no_so);
-              $("#no_pkb").val(json.header.no_pkb);
-              $("#no_kendaraan").val(json.header.no_kendaraan);
-              $("#nama").val(json.header.nama);
-              $("#nm_perusahaan").val(json.header.nm_perusahaan);
-              $("textarea#alamat_perusahaan").val(json.header.alamat_perusahaan);
-              $("#no_telp").val(json.header.no_telp);
               $("#no_po").val(json.header.no_po);
-              $("#tgl").val(json.header.tgl);
+              $("#no_nota").val(json.header.no_nota);
+              $("#kepada").val(json.pt.kepada);
+              $("#pimpinan").val(json.pt.pimpinan);
+              $("#npwp").val(json.pt.npwp);
+              $("#alamat").val(json.pt.alamat);
+              $("#no_telp").val(json.pt.no_telp);
 
               for (var i = 0 ; i < json.detail.length; i++) {
-
-                addToCart_edit(json.detail[i].roll);
+                addToCart_edit_plpl(json.detail[i].kode_barang,json.detail[i].harga_price_list,json.detail[i].qty,json.detail[i].i_qty);
               }
+
+              $("#btn-simpan").prop("disabled",true);
 
               $("#txt-btn-simpan").html("Update");
 
@@ -680,6 +680,7 @@
     });
 
     function load_barang(){ 
+      $("#btn-simpan").prop("disabled",false);
       var table = $('#datatable-add').DataTable();
       //
       table.destroy();
@@ -734,12 +735,18 @@
       }
     }
 
-    function addToCart_edit(roll){
+    function addToCart_edit_plpl(kode_barang,harga_price_list,qty,i_qty){
 
        $.ajax({
-         url : "<?php echo base_url();?>Master/add_to_cart",
+         url : "<?php echo base_url();?>Master/add_to_cart_pl_barang_edit",
+        //  url : "<?php echo base_url();?>Master/add_to_cart_pl_barang",
          method : "POST",
-         data : {roll: roll},
+         data : {
+           kode_barang:kode_barang,
+           harga_price_list:harga_price_list,
+           qty:qty,
+           i_qty:i_qty
+           },
          success: function(data){
            $('#detail_cart').html(data);
          }

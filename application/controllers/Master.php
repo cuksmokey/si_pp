@@ -361,7 +361,7 @@ class Master extends CI_Controller {
                         );
 
             }else if ($jenis == "list_pl_barang") {
-                //
+                
                 $query = $this->m_master->get_pl_barang();
                 $i=1;
 
@@ -534,14 +534,9 @@ class Master extends CI_Controller {
                         $row[] = $r->tgl;
                         $row[] = $r->no_surat;
                         $row[] = $r->no_so;
-                        // $row[] = $r->kepada;
                         $row[] = $r->no_po;
-                        $row[] = "";
-                        // $row[] = '
-                        // <a type="button" onclick=view_timbang('.$r->id.') class="btn btn-default btn-circle waves-effect waves-circle waves-float">
-                        //         '.$r->jml_timbang.'
-                        //     </a>
-                        // ' ;
+                        $row[] = '
+                        <a type="button" class="btn btn-default btn-circle waves-effect waves-circle waves-float">'.$r->jml_timbang.'</a>' ;
 
                         $aksi ="";
 
@@ -1021,7 +1016,9 @@ class Master extends CI_Controller {
                     $result= $this->m_master->update_pl();
                     echo json_encode(array('data' =>  TRUE));
                 }
-                
+            }else if ($jenis == "PL_pl_barang") {
+                    $result= $this->m_master->update_pl_edit();
+                    echo json_encode(array('data' =>  TRUE));
             }
 
              
@@ -1087,6 +1084,32 @@ class Master extends CI_Controller {
         return $output;
     }
 
+    function show_cart_plpl_edit(){ //Fungsi untuk menampilkan Cart
+        
+        $output = '';
+        $no = 0;
+
+        foreach ($this->cart->contents() as $items) {
+            $no++;
+            // $i_qty = $items['qty'] * 0;
+            // $sisa_stok = $items['options']['stok'];
+
+            $output .='
+                <tr>
+                    <td>'.$no.'</td>
+                    <td>'.$items['options']['kode_barang'].'</td>
+                    <td>Rp. '.number_format($items['price']).'</td>
+                    <td>'.$items['options']['stok'].'</td>
+                    <td>'.$items['qty'].'</td>
+                    <td><button type="button" id="'.$items['rowid'].'" class="hapus_cart btn btn-danger btn-xs">Batal</button></td>
+                </tr>
+            ';
+        }
+        
+
+        return $output;
+    }
+
     function show_cart_barang(){ //Fungsi untuk menampilkan Cart
 
         $output = '';
@@ -1139,6 +1162,22 @@ class Master extends CI_Controller {
         );
         $this->cart->insert($data);
         echo $this->show_cart_plpl(); //tampilkan cart setelah added
+    }
+
+    function add_to_cart_pl_barang_edit(){
+
+        $data = array(
+            'id' => str_replace("/", "_", $_POST['kode_barang']), 
+            'name' => str_replace("/", "_", $_POST['kode_barang']),
+            'price' => $_POST['harga_price_list'], 
+            'qty' => $_POST['i_qty'],
+            'options' => array(
+                'kode_barang' => $_POST['kode_barang'],
+                'stok' => $_POST['qty']
+            )
+        );
+        $this->cart->insert($data);
+        echo $this->show_cart_plpl_edit(); //tampilkan cart setelah added
     }
 
     function add_to_cart_barang(){ //fungsi Add To Cart baran
@@ -1288,6 +1327,17 @@ class Master extends CI_Controller {
             $data =  $this->m_master->get_data_one("pl", "id", $id)->row();
             $detail = $this->m_master->get_data_one("m_timbangan", "id_pl", $data->id)->result();
             echo json_encode(  array('header' => $data, 'detail' => $detail));
+        }else if ($jenis == "PL_pl_pl") {
+            $data =  $this->m_master->get_data_one("m_pl_price_list", "id", $id)->row();
+
+            $data_pt =  $this->m_master->get_data_one("m_perusahaan", "id", $data->kepada)->row();
+
+            $detail = $this->m_master->get_data_plpl("m_pl_list_barang", "id_pl_price_list", $data->id)->result();
+
+            echo json_encode(array(
+                'header' => $data,
+                'pt' => $data_pt,
+                'detail' => $detail));
         }
         
     }

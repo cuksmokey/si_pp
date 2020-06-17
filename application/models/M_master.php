@@ -82,8 +82,22 @@ class M_master extends CI_Model{
     }
 
     function get_data_one($table,$kolom,$id){
-        
         $query = "SELECT * FROM $table WHERE $kolom='$id'";
+        return $this->db->query($query);
+    }
+
+    function get_data_plpl($m_pl_list_barang,$id_pl_price_list,$id){
+        // $query = "SELECT * FROM $m_pl_list_barang WHERE $id_pl_price_list='$id'";
+        $query = "SELECT
+            b.qty AS qty,
+            a.tgl AS tgl,
+            a.kode_barang AS kode_barang,
+            a.harga_price_list AS harga_price_list,
+            a.qty AS i_qty,
+            a.id_pl_price_list AS id_pl_price_list
+        FROM $m_pl_list_barang a 
+        INNER JOIN m_barang b ON a.kode_barang = b.kode_barang
+        WHERE a.$id_pl_price_list='$id'";
         return $this->db->query($query);
     }
 
@@ -95,10 +109,6 @@ class M_master extends CI_Model{
 
     function get_plpl($id_pl){
         
-        // $query = "SELECT b.g_label AS g_label,b.width AS width,a.no_po AS no_po FROM pl a
-        // INNER JOIN m_timbangan b ON a.id = b.id_pl
-        // WHERE a.id='$id_pl'
-        // GROUP BY b.g_label,b.width,a.no_po";
         $query = "SELECT a.id_perusahaan AS id_perusahaan,a.tgl AS tgl,b.g_label AS g_label,b.width AS width,COUNT(b.roll) AS jml_roll,SUM(b.weight) AS tonase,a.no_surat,a.no_po AS no_po,a.id AS id_pl,a.no_pkb AS no_pkb FROM pl a
         INNER JOIN m_timbangan b ON a.id = b.id_pl
         WHERE a.id='$id_pl'
@@ -169,7 +179,8 @@ class M_master extends CI_Model{
     }
 
     function get_PL_price_list(){
-        $query = "SELECT * FROM m_pl_price_list ";
+        $query = "SELECT a.*,(SELECT COUNT(id_pl_price_list)
+        FROM m_pl_list_barang WHERE id_pl_price_list = a.id) AS jml_timbang FROM m_pl_price_list a";
         return $this->db->query($query);
     }
 
@@ -228,7 +239,7 @@ class M_master extends CI_Model{
     }
 
     function insert_pl_pl_b(){
-        // insert packing list
+        // insert packing list//
         $data = array(
             'tgl' => $_POST['tgl'],
             'no_surat' => $_POST['no_surat'],
@@ -251,6 +262,45 @@ class M_master extends CI_Model{
                 'harga_price_list' => $items['price'],
                 'qty' => $items['qty'],
                 'id_pl_price_list' => $plpl->id,
+                'created_by' => $this->session->userdata('username')
+            );
+            $result= $this->db->insert("m_pl_list_barang",$data_list);
+
+            // update stok 
+            $sisa = $items['options']['stok'] - $items['qty'];
+            $this->db->set('qty', $sisa);
+            $this->db->where('kode_barang', $items['options']['kode_barang']);
+            $result = $this->db->update('m_barang');
+        }
+
+        return $result;
+    }
+
+    function update_pl_edit(){
+
+        // update pl
+        $this->db->set('tgl', $_POST['tgl']);
+        $this->db->set('no_surat', $_POST['no_surat']);
+        $this->db->set('no_so', $_POST['no_so']);
+        $this->db->set('no_po', $_POST['no_po']);
+        $this->db->set('no_nota', $_POST['no_nota']);
+        $this->db->set('kepada', $_POST['kepada']);
+        $this->db->set('updated_at', date('Y-m-d H:i:s'));
+        $this->db->set('updated_by', $this->session->userdata('username'));
+        $this->db->where('id', $_POST['id']);
+        $result = $this->db->update('m_pl_price_list');
+
+        // delete dulu bos
+        $result = $this->m_master->delete("m_pl_list_barang","id_pl_price_list",$_POST['id']);
+
+        // insert kembali
+        foreach ($this->cart->contents() as $items) {
+            $data_list = array(
+                'tgl' => $_POST['tgl'],
+                'kode_barang' => $items['options']['kode_barang'],
+                'harga_price_list' => $items['price'],
+                'qty' => $items['qty'],
+                'id_pl_price_list' => $_POST['id'],
                 'created_by' => $this->session->userdata('username')
             );
             $result= $this->db->insert("m_pl_list_barang",$data_list);
