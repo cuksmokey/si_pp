@@ -369,7 +369,7 @@ class Master extends CI_Controller {
                     $query = $this->m_master->get_pl_barang();
                 }
                 
-                $i=1;
+                $i=0;
 
                 if ($query->num_rows() == 0) {
                     $data[] =  ["","","","","",""];
@@ -383,11 +383,13 @@ class Master extends CI_Controller {
                         $row[] = $r->nama_barang;
                         $row[] = "Rp. ".number_format($r->harga_price_list);
                         $row[] = '<div style="text-align:right">'.$r->qty.'</div>';
-                        $row[] = '<input type="text" class="angka form-control" id="i_qty'.$i.'" placeholder="0" autocomplete="off" onkeypress="return hanyaAngka(event)">
+                        // $row[] = '<input type="text" class="angka form-control" id="i_qty'.$i.'" placeholder="0" autocomplete="off" onkeypress="return hanyaAngka(event)">
+                        // <input type="hidden" id="qty'.$i.'" value="'.$r->qty.'">';
+                        $row[] = '<input type="text" class="angka form-control" id="i_qty'.$i.'" placeholder="0" autocomplete="off">
                         <input type="hidden" id="qty'.$i.'" value="'.$r->qty.'">';
 
                         if($edit_cart == "update"){
-                            $aksi = '<a type="button" onclick="addToCart_edit_plpl('."'".$r->kode_barang."'".','."'".$r->harga_price_list."'".','."'".$r->qty."'".','."'".$r->i_qty_barang."'".')" class="btn bg-brown btn-circle waves-effect waves-circle waves-float">
+                            $aksi = '<a type="button" onclick="edit_plpl('."'".$r->kode_barang."'".','."'".$r->harga_price_list."'".','."'".$r->qty."'".','."'".$r->i_qty_barang."'".','."'".$i."'".')" class="btn bg-brown btn-circle waves-effect waves-circle waves-float">
                             <i class="material-icons">check</i>
                             </a>';
                         }else{
@@ -556,10 +558,7 @@ class Master extends CI_Controller {
                         $superbtn = '<button type="button" onclick="view_detail('.$id.')" class="btn btn-info btn-circle waves-effect waves-circle waves-float">
                                 <i class="material-icons">remove_red_eye</i>
                             </button> 
-                            <button type="button" onclick="tampil_edit('.$id.')" class="btn bg-orange btn-circle waves-effect waves-circle waves-float">
-                                <i class="material-icons">edit</i>
-                            </button>
-                          <button type="button" onclick="deleteData('.$id.','."".')" class="btn btn-danger btn-circle waves-effect waves-circle waves-float">
+                        <button type="button" onclick="deleteData('.$id.','."".')" class="btn btn-danger btn-circle waves-effect waves-circle waves-float">
                                 <i class="material-icons">delete</i>
                             </button>';
                             
@@ -1087,7 +1086,6 @@ class Master extends CI_Controller {
                     <td>Rp. '.number_format($items['price']).'</td>
                     <td>'.number_format($sisa_stok).'</td>
                     <td>'.$items['qty'].'</td>
-                    <td>0</td>
                     <td><button type="button" id="'.$items['rowid'].'" class="hapus_cart btn btn-danger btn-xs">Batal</button></td>
                 </tr>
             ';
@@ -1095,13 +1093,14 @@ class Master extends CI_Controller {
         return $output;
     }
 
-    function show_cart_plpl_edit(){
+    function show_edit_cart_pl(){ //
         $output = '';
         $no = 0;
 
         foreach ($this->cart->contents() as $items) {
             $no++;
-            $sisa_stok = $items['options']['stok'] - $items['qty'];
+            $ii = $items['qty'] - 1;
+            $sisa_stok = $items['options']['stok'] - $ii;
 
             $output .='
                 <tr>
@@ -1109,7 +1108,7 @@ class Master extends CI_Controller {
                     <td>'.$items['options']['kode_barang'].'</td>
                     <td>Rp. '.number_format($items['price']).'</td>
                     <td>'.number_format($sisa_stok).'</td>
-                    <td>'.$items['qty'].'</td>
+                    <td>'.$ii.'</td>
                     <td>'.$items['options']['tambahan'].'</td>
                     <td><button type="button" id="'.$items['rowid'].'" class="hapus_cart btn btn-danger btn-xs">Batal</button></td>
                 </tr>
@@ -1172,7 +1171,7 @@ class Master extends CI_Controller {
         echo $this->show_cart_plpl(); //tampilkan cart setelah added
     }
 
-    function add_to_cart_pl_barang_edit(){ //
+    function view_edit_cart_pl(){
 
         $data = array(
             'id' => str_replace("/", "_", $_POST['kode_barang']), 
@@ -1182,11 +1181,28 @@ class Master extends CI_Controller {
             'options' => array(
                 'kode_barang' => $_POST['kode_barang'],
                 'stok' => $_POST['qty'],
-                'tambahan' => $_POST['i_qty']
+                'tambahan' => $_POST['i_qty_barang']
             )
         );
         $this->cart->insert($data);
-        echo $this->show_cart_plpl_edit();
+        echo $this->show_edit_cart_pl();
+    }
+
+    function save_edit_cart_pl(){
+
+        $data = array(
+            'id' => str_replace("/", "_", $_POST['kode_barang']), 
+            'name' => str_replace("/", "_", $_POST['kode_barang']),
+            'price' => $_POST['harga_price_list'], 
+            'qty' => $_POST['i_qty'],
+            'options' => array(
+                'kode_barang' => $_POST['kode_barang'],
+                'stok' => $_POST['qty'],
+                'tambahan' => $_POST['i_qty_barang']
+            )
+        );
+        $this->cart->insert($data);
+        echo $this->show_edit_cart_pl();
     }
 
     function add_to_cart_barang(){ //fungsi Add To Cart baran
@@ -1222,13 +1238,21 @@ class Master extends CI_Controller {
         echo $this->show_cart_plpl();
     }
 
-    function hapus_cart_barang(){ //fungsi untuk menghapus item cart
+    function hapus_cart_barang(){
+         //fungsi untuk menghapus item cart
         $data = array(
             'rowid' => $this->input->post('row_id'), 
             'qty' => 0, 
         );
         $this->cart->update($data);
-        echo $this->show_cart_barang();
+
+        $edit_cart = $this->input->post('edit_cart');
+        if($edit_cart == "update"){
+            echo $this->show_edit_cart_pl();
+        }else{
+            echo $this->show_cart_barang();
+        }
+        
     }
 
     function reject(){
@@ -1306,6 +1330,22 @@ class Master extends CI_Controller {
             $this->db->set("id_pl","");
             $this->db->where('id_pl', $id);
             $this->db->update('m_timbangan');
+            echo "1";
+        }else if ($jenis == "plpl") {
+            $detail = $this->m_master->get_data_plpl("m_pl_list_barang", "id_pl_price_list", $id)->result();
+
+            // update stok barang
+            foreach($detail as $r){
+                $stok = $r->qty + $r->i_qty;
+
+                $this->db->set("qty", $stok);
+                $this->db->where('kode_barang', $r->kode_barang);
+                $this->db->update('m_barang');
+            }
+
+            // delete packing list dan list barangnya
+            $return = $this->m_master->delete("m_pl_price_list","id",$id);
+
             echo "1";
         }
          

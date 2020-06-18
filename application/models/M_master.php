@@ -92,6 +92,7 @@ class M_master extends CI_Model{
             b.qty AS qty,
             a.tgl AS tgl,
             a.kode_barang AS kode_barang,
+            b.nama_barang AS nama_barang,
             a.harga_price_list AS harga_price_list,
             a.qty AS i_qty,
             a.id_pl_price_list AS id_pl_price_list
