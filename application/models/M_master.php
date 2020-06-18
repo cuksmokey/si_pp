@@ -168,6 +168,15 @@ class M_master extends CI_Model{
         return $this->db->query($query);
     }
 
+    function get_pl_barang_edit(){
+        $query = "SELECT a.id AS id,a.kode_barang AS kode_barang,a.nama_barang AS nama_barang,a.harga_price_list AS harga_price_list,b.qty AS qty,c.qty AS i_qty_barang
+        FROM m_price_list a
+        INNER JOIN m_barang b ON a.kode_barang = b.kode_barang
+        INNER JOIN m_pl_list_barang c ON a.kode_barang = c.kode_barang
+        GROUP BY a.id,a.kode_barang,a.nama_barang,a.harga_price_list,b.qty,c.qty";
+        return $this->db->query($query);
+    }
+
     function get_view_timbangan($id){
         $query = "SELECT * FROM m_timbangan WHERE id_pl = '$id' ";
         return $this->db->query($query);
@@ -239,7 +248,7 @@ class M_master extends CI_Model{
     }
 
     function insert_pl_pl_b(){
-        // insert packing list//
+        // insert packing list
         $data = array(
             'tgl' => $_POST['tgl'],
             'no_surat' => $_POST['no_surat'],

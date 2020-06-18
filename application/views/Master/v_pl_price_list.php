@@ -159,6 +159,7 @@
                                       <th>Harga Price List</th>
                                       <th>Sisa Stok</th>
                                       <th>Input QTY</th>
+                                      <th>+</th>
                                       <th>Aksi</th>
                                     </tr>
                                   </thead>
@@ -358,6 +359,7 @@
 
 <script>
   status = '';
+  edit_cart = '';
   roll_array = [];
 
     $(document).ready(function(){
@@ -507,6 +509,8 @@
               $("#btn-simpan").prop("disabled",true);
 
               $("#txt-btn-simpan").html("Update");
+
+              edit_cart = "update";
 
           }) 
 
@@ -674,6 +678,7 @@
     $(".btn-tambah").click(function(){
      
         load_barang();
+        $("#btn-simpan").prop("disabled",true);
         
        $("#modal-tambah").modal("show");
       
@@ -692,7 +697,9 @@
             "paging": true,
             "ajax": {
                 "url" : '<?php echo base_url(); ?>Master/load_data' ,
-                "data" : ({jenis:"list_pl_barang"}),
+                "data" : ({
+                  edit_cart:edit_cart,
+                  jenis:"list_pl_barang"}),
                 "type": "POST"
             },
             responsive: true,
@@ -736,22 +743,22 @@
     }
 
     function addToCart_edit_plpl(kode_barang,harga_price_list,qty,i_qty){
+      
+      $("#btn-simpan").prop("disabled",false);
 
-       $.ajax({
-         url : "<?php echo base_url();?>Master/add_to_cart_pl_barang_edit",
-        //  url : "<?php echo base_url();?>Master/add_to_cart_pl_barang",
-         method : "POST",
-         data : {
-           kode_barang:kode_barang,
-           harga_price_list:harga_price_list,
-           qty:qty,
-           i_qty:i_qty
-           },
-         success: function(data){
-           $('#detail_cart').html(data);
-         }
-       });
-   
+      $.ajax({
+        url : "<?php echo base_url();?>Master/add_to_cart_pl_barang_edit",
+        method : "POST",
+        data : {
+          kode_barang:kode_barang,
+          harga_price_list:harga_price_list,
+          qty:qty,
+          i_qty:i_qty
+          },
+        success: function(data){
+          $('#detail_cart').html(data);
+        }
+      });
     }
 
     $(document).on('click','.hapus_cart',function(){
