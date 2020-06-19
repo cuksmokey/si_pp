@@ -249,6 +249,7 @@
                             <th>Harga Price List</th>
                             <th>STOK</th>
                             <th>Input QTY</th>
+                            <th>Satuan</th>
                             <th>Aksi</th>
                             </tr>
                         </thead>
@@ -534,7 +535,7 @@
               html = '';
               for (var i = 0 ; i < json.detail.length; i++) {
                 ii = i+1;
-                html +='<tr><td><b>'+ii+'</b></td><td><b>'+json.detail[i].kode_barang+'</b></td><td><b>'+json.detail[i].nama_barang+'</b></td><td><b>Rp. '+idr.format(json.detail[i].harga_price_list)+'</b></td><td><b>'+json.detail[i].qty+'</b></td><td><b>'+json.detail[i].i_qty+'</b></td></tr>';
+                html +='<tr><td><b>'+ii+'</b></td><td><b>'+json.detail[i].kode_barang+'</b></td><td><b>'+json.detail[i].nama_barang+'</b></td><td><b>Rp. '+idr.format(json.detail[i].harga_price_list)+'</b></td><td><b>'+json.detail[i].qty+' '+json.detail[i].qty_ket+'</b></td><td><b>'+json.detail[i].i_qty+'</b></td></tr>';
               }
 
               $("#list-timbangan").html(html);
@@ -678,7 +679,7 @@
     function load_barang(){ 
       $("#btn-simpan").prop("disabled",true);
       var table = $('#datatable-add').DataTable();
-      //
+      
       table.destroy();
 
       tabel = $('#datatable-add').DataTable({

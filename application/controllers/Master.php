@@ -372,7 +372,7 @@ class Master extends CI_Controller {
                 $i=0;
 
                 if ($query->num_rows() == 0) {
-                    $data[] =  ["","","","","",""];
+                    $data[] =  ["","","","","","",""];
                 }else{
 
                     foreach ($query->result() as $r) {
@@ -383,10 +383,9 @@ class Master extends CI_Controller {
                         $row[] = $r->nama_barang;
                         $row[] = "Rp. ".number_format($r->harga_price_list);
                         $row[] = '<div style="text-align:right">'.$r->qty.'</div>';
-                        // $row[] = '<input type="text" class="angka form-control" id="i_qty'.$i.'" placeholder="0" autocomplete="off" onkeypress="return hanyaAngka(event)">
-                        // <input type="hidden" id="qty'.$i.'" value="'.$r->qty.'">';
                         $row[] = '<input type="text" class="angka form-control" id="i_qty'.$i.'" placeholder="0" autocomplete="off"  onkeypress="return hanyaAngka(event)">
                         <input type="hidden" id="qty'.$i.'" value="'.$r->qty.'">';
+                        $row[] = $r->qty_ket;
 
                         if($edit_cart == "update"){
                             $aksi = '<a type="button" onclick="edit_plpl('."'".$r->kode_barang."'".','."'".$r->harga_price_list."'".','."'".$r->qty."'".','."'".$r->i_qty_barang."'".','."'".$i."'".')" class="btn bg-brown btn-circle waves-effect waves-circle waves-float">
@@ -1345,7 +1344,7 @@ class Master extends CI_Controller {
 
             // delete packing list dan list barangnya
             $return = $this->m_master->delete("m_pl_price_list","id",$id);
-            $return = $this->m_master->delete("m_pl_list_barang","id",$id);
+            $return = $this->m_master->delete("m_pl_list_barang","id_pl_price_list",$id);
 
             echo "1";
         }

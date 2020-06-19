@@ -171,24 +171,7 @@
                         </a>
                         <ul class="ml-menu">
                             <li>
-                                <a href="<?php echo base_url('Laporan/Timbangan') ?>">TIMBANGAN</a>
-                            </li>
-                            <!-- <li>
-                                <a href="<?php echo base_url('Laporan/PL') ?>">Packing List</a>
-                            </li> -->
-                            <?php if($this->session->userdata('level') == "SuperAdmin") { ?>
-                                <li>
-                                    <a href="<?php echo base_url('Laporan/csv') ?>">CSV</a>
-                                </li>
-                            <?php } ?>
-                            <li>
-                                <a href="<?php echo base_url('Laporan/print_label_pl') ?>">LABEL PACKING LIST</a>
-                            </li>
-                            <li>
-                                <a href="<?php echo base_url('Laporan/print_sj') ?>">SURAT JALAN + PACKING LIST</a>
-                            </li>
-                            <li>
-                                <a href="<?php echo base_url('Laporan/update_stok_gudang') ?>">UPDATE STOK GUDANG</a>
+                                <a href="<?php echo base_url('Laporan/print_sj') ?>">SURAT JALAN</a>
                             </li>
                             <?php if($this->session->userdata('level') == "SuperAdmin") { ?>
                                 <li>

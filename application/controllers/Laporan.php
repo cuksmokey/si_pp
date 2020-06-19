@@ -186,6 +186,64 @@ class Laporan extends CI_Controller {
         }
     }
 
+    function Surat_Jalan(){
+        $jenis = $_GET['jenis'];
+        $ctk = $_GET['ctk'];
+
+        $html = '';
+
+        $sql_kop = $this->db->query("SELECT a.no_surat,a.tgl,b.nm_perusahaan,b.alamat FROM m_pl_price_list a
+        INNER JOIN m_perusahaan b ON a.kepada = b.id
+        WHERE a.id='$jenis'")->row();
+
+        // KOP
+        $html .= '<table cellspacing="0" style="font-size:11px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;font-family:Arial !important">
+            <tr>
+                <th style="border:1px solid #000;width:12%;padding:5px"></th>
+                <th style="border:1px solid #000;width:1%;padding:5px"></th>
+                <th style="border:1px solid #000;width:37%;padding:5px"></th>
+                <th style="border:1px solid #000;width:50%;padding:5px"></th>
+            </tr>
+            <tr>
+                <td style="padding:3px 0">No Surat Jalan</td>
+                <td style="padding:3px 0">:</td>
+                <td style="padding:3px 0">'.$sql_kop->no_surat.'</td>
+                <td style="padding:3px 0">Tanggal : '.$this->m_fungsi->tanggal_format_indonesia($sql_kop->tgl).'</td>
+            </tr>
+            <tr>
+                <td style="padding:3px 0">Kepada</td>
+                <td style="padding:3px 0">:</td>
+                <td style="padding:3px 0">'.$sql_kop->nm_perusahaan.'</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td style="padding:3px 0">Alamat</td>
+                <td style="padding:3px 0">:</td>
+                <td style="padding:3px 200px  3px 0" colspan="2">'.$sql_kop->alamat.'</td>
+            </tr>
+        </table>';
+
+        // DETAIL
+        $html .= '<table cellspacing="0" style="font-size:11px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;font-family:Arial !important">';
+
+        $html .= '<tr>
+            <th style="padding:5px;border:1px solid #000;width:5%"></th>
+            <th style="padding:5px;border:1px solid #000;width:45%"></th>
+            <th style="padding:5px;border:1px solid #000;width:25%"></th>
+            <th style="padding:5px;border:1px solid #000;width:25%"></th>
+        </tr>
+        <tr>
+            <td style="padding:5px 0;border:1px solid #000;text-align:center;font-weight:bold">No</td>
+            <td style="padding:5px 0;border:1px solid #000;text-align:center;font-weight:bold">Nama Barang</td>
+            <td style="padding:5px 0;border:1px solid #000;text-align:center;font-weight:bold">Quantity</td>
+            <td style="padding:5px 0;border:1px solid #000;text-align:center;font-weight:bold">Satuan</td>
+        </tr>';
+
+        $html .= '</table>';
+
+        $this->m_fungsi->_mpdf2('',$html,10,10,10,'P');
+    }
+
     function print_surat_jalan(){
         $jenis = $_GET['jenis'];
         $ctk = $_GET['ctk'];
@@ -1436,7 +1494,7 @@ class Laporan extends CI_Controller {
         }else{
             // excel
             header("Content-type: application/octet-stream");
-            header("Content-Disposition: attachment; filename=$jdl.xls");
+            header("Content-Disposition: attachment; filename=UPDATE_PO.xls");
             header("Pragma: no-cache");
             header("Expires: 0");
             $data2['prev']= $html;
