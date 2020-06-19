@@ -508,6 +508,7 @@ class M_master extends CI_Model{
         $this->db->set('spesifikasi', $_POST['spesifikasi']);
         $this->db->set('supplier', $_POST['supplier']);
         $this->db->set('harga_price_list', $_POST['harga_price_list']);
+        $this->db->set('updated_at', date("Y-m-d h:i:s"));
         $this->db->set('updated_by', $this->session->userdata('username'));
         $this->db->where('kode_barang', $_POST['kode_barang']);
         $result = $this->db->update('m_price_list');

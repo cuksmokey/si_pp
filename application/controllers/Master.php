@@ -385,7 +385,7 @@ class Master extends CI_Controller {
                         $row[] = '<div style="text-align:right">'.$r->qty.'</div>';
                         // $row[] = '<input type="text" class="angka form-control" id="i_qty'.$i.'" placeholder="0" autocomplete="off" onkeypress="return hanyaAngka(event)">
                         // <input type="hidden" id="qty'.$i.'" value="'.$r->qty.'">';
-                        $row[] = '<input type="text" class="angka form-control" id="i_qty'.$i.'" placeholder="0" autocomplete="off">
+                        $row[] = '<input type="text" class="angka form-control" id="i_qty'.$i.'" placeholder="0" autocomplete="off"  onkeypress="return hanyaAngka(event)">
                         <input type="hidden" id="qty'.$i.'" value="'.$r->qty.'">';
 
                         if($edit_cart == "update"){
@@ -1345,6 +1345,7 @@ class Master extends CI_Controller {
 
             // delete packing list dan list barangnya
             $return = $this->m_master->delete("m_pl_price_list","id",$id);
+            $return = $this->m_master->delete("m_pl_list_barang","id",$id);
 
             echo "1";
         }

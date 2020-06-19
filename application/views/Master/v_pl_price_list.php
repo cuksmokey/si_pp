@@ -325,6 +325,7 @@
                   <table  width="100%" class="table table-bordered table-striped table-hover dataTable ">
                         <thead>
                             <tr>
+                              <th>No</th>
                               <th>Kode Barang</th>
                               <th>Nama Barang</th>
                               <th>Harga Price List</th>
@@ -532,7 +533,8 @@
               let idr = new Intl.NumberFormat();
               html = '';
               for (var i = 0 ; i < json.detail.length; i++) {
-                html +='<tr><td><b>'+json.detail[i].kode_barang+'</b></td><td><b>'+json.detail[i].nama_barang+'</b></td><td><b>Rp. '+idr.format(json.detail[i].harga_price_list)+'</b></td><td><b>'+json.detail[i].qty+'</b></td><td><b>'+json.detail[i].i_qty+'</b></td></tr>';
+                ii = i+1;
+                html +='<tr><td><b>'+ii+'</b></td><td><b>'+json.detail[i].kode_barang+'</b></td><td><b>'+json.detail[i].nama_barang+'</b></td><td><b>Rp. '+idr.format(json.detail[i].harga_price_list)+'</b></td><td><b>'+json.detail[i].qty+'</b></td><td><b>'+json.detail[i].i_qty+'</b></td></tr>';
               }
 
               $("#list-timbangan").html(html);
@@ -713,7 +715,7 @@
       if(i_qty == 0 || i_qty == ""){
         swal("Input QTY Tidak Boleh Kosong", "", "error");
       }else if(ss_stok < 0){
-        swal("Melebihi STOK", "", "error");
+        swal("Melebihi STOK!!", "", "error");
       }else{
         $.ajax({
           url : "<?php echo base_url();?>Master/add_to_cart_pl_barang",
