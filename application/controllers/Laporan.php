@@ -199,10 +199,17 @@ class Laporan extends CI_Controller {
         // KOP
         $html .= '<table cellspacing="0" style="font-size:11px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;font-family:Arial !important">
             <tr>
-                <th style="border:1px solid #000;width:12%;padding:5px"></th>
-                <th style="border:1px solid #000;width:1%;padding:5px"></th>
-                <th style="border:1px solid #000;width:37%;padding:5px"></th>
-                <th style="border:1px solid #000;width:50%;padding:5px"></th>
+                <th style="border:0;width:12%;padding:0"></th>
+                <th style="border:0;width:1%;padding:0"></th>
+                <th style="border:0;width:37%;padding:0"></th>
+                <th style="border:0;width:50%;padding:0"></th>
+            </tr>
+            <tr>
+                <td style="border:0;padding:3px 0" colspan="3">LOGO</td>
+                <td style="border:0;padding:3px 0;font-weight:bold">SURAT JALAN</td>
+            </tr>
+            <tr>
+                <td style="border:0;padding:5px 0" colspan="4"></td>
             </tr>
             <tr>
                 <td style="padding:3px 0">No Surat Jalan</td>
@@ -227,10 +234,10 @@ class Laporan extends CI_Controller {
         $html .= '<table cellspacing="0" style="font-size:11px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;font-family:Arial !important">';
 
         $html .= '<tr>
-            <th style="padding:5px;border:1px solid #000;width:5%"></th>
-            <th style="padding:5px;border:1px solid #000;width:45%"></th>
-            <th style="padding:5px;border:1px solid #000;width:25%"></th>
-            <th style="padding:5px;border:1px solid #000;width:25%"></th>
+            <th style="padding:5px;border:0;width:5%"></th>
+            <th style="padding:5px;border:0;width:45%"></th>
+            <th style="padding:5px;border:0;width:25%"></th>
+            <th style="padding:5px;border:0;width:25%"></th>
         </tr>
         <tr>
             <td style="padding:5px 0;border:1px solid #000;text-align:center;font-weight:bold">No</td>
@@ -239,7 +246,78 @@ class Laporan extends CI_Controller {
             <td style="padding:5px 0;border:1px solid #000;text-align:center;font-weight:bold">Satuan</td>
         </tr>';
 
+        // isinya
+        $sql_isi = $this->db->query("SELECT b.nama_barang,b.qty_ket,a.*FROM m_pl_list_barang a
+        INNER JOIN m_barang b ON a.kode_barang = b.kode_barang
+        WHERE id_pl_price_list='$jenis'
+        GROUP BY a.kode_barang");
+
+        $i = 0;
+        foreach($sql_isi->result() as $r){
+            $i++;
+            $html .= '<tr>
+                <td style="padding:5px;border:1px solid #000;text-align:center;font-weight:bold">'.$i.'</td>
+                <td style="padding:5px;border:1px solid #000">'.$r->nama_barang.'</td>
+                <td style="padding:5px;border:1px solid #000;text-align:center">'.$r->qty.'</td>
+                <td style="padding:5px;border:1px solid #000">'.$r->qty_ket.'</td>
+            </tr>';
+        }
+
+        $count = $sql_isi->num_rows();
+
+        if($count == 1) {
+            for($i = 0; $i < 4; $i++){ 
+                $cc = 1;
+                $xx = 4;
+            }
+        }else if($count == 2){
+            for($i = 0; $i < 3; $i++){
+                $cc = 2;
+                $xx = 3;
+            }
+        }else if($count == 3){
+            for($i = 0; $i < 2; $i++){
+                $cc = 3;
+                $xx = 2;
+            }
+        }else if($count == 4){
+            for($i = 0; $i < 1; $i++){ 
+                $cc = 4;
+                $xx = 1;
+            }
+        }
+        
+        if($count == $cc) {
+            for($i = 0; $i < $xx; $i++){
+                $html .= '<tr>
+                <td style="padding:5px;border:1px solid #000;padding:11px 0"></td>
+                <td style="padding:5px;border:1px solid #000;padding:11px 0"></td>
+                <td style="padding:5px;border:1px solid #000;padding:11px 0"></td>
+                <td style="padding:5px;border:1px solid #000;padding:11px 0"></td>';
+            }
+        }
+
         $html .= '</table>';
+
+        // TANDA TANGAN
+        $html .= '<table cellspacing="0" style="font-size:11px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;text-align:center;font-family:Arial !important">
+            <tr>
+                <th style="border:0;width:50%;padding:10px 0"></th>
+                <th style="border:0;width:50%;padding:10px 0"></th>
+            </tr>
+            <tr>
+                <td>Hormat Kami</td>
+                <td>Penerima</td>
+            </tr>
+            <tr>
+                <td style="border:0;padding:40px 0"></td>
+                <td style="border:0;padding:40px 0"></td>
+            </tr>
+            <tr>
+                <td style="font-weight:bold">Andreas Purwanto</td>
+                <td>____________________</td>
+            </tr>
+        </table>';
 
         $this->m_fungsi->_mpdf2('',$html,10,10,10,'P');
     }
