@@ -64,7 +64,7 @@
                                         <td></td>
                                     </tr>
                                     <tr>
-                                        <td>No Surat Jalan</td>
+                                        <td>No. Surat Jalan</td>
                                         <td>:</td>
                                         <td>
                                             <input type="text" class="form-control" id="no_surat">
@@ -73,7 +73,7 @@
                                         <td></td>
                                     </tr>
                                     <tr>
-                                        <td>No SO</td>
+                                        <td>No. SO</td>
                                         <td>:</td>
                                         <td>
                                             <input type="text" class="form-control" id="no_so"> 

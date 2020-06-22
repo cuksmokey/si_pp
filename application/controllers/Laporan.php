@@ -186,17 +186,29 @@ class Laporan extends CI_Controller {
         }
     }
 
-    function Surat_Jalan(){
+    function Print_SJ_NOTA(){
+        //
         $jenis = $_GET['jenis'];
         $ctk = $_GET['ctk'];
+        $pt = $_GET['pt'];
 
         $html = '';
 
-        $sql_kop = $this->db->query("SELECT a.no_surat,a.tgl,b.nm_perusahaan,b.alamat FROM m_pl_price_list a
+        $sql_kop = $this->db->query("SELECT a.no_surat,a.no_nota,a.no_po,a.tgl,b.nm_perusahaan,b.npwp,b.alamat FROM m_pl_price_list a
         INNER JOIN m_perusahaan b ON a.kepada = b.id
         WHERE a.id='$jenis'")->row();
 
         // KOP
+        if($pt == "sma"){
+            $jpg = "http://localhost/Project001/assets/images/logo_sma.jpg";
+            $top = 'top';
+            $px = '65px 0 35px';
+        }else if($pt == "st"){
+            $jpg = "http://localhost/Project001/assets/images/logo_st.jpg";
+            $top = '';
+            $px = '83px 0 35px';
+        }
+
         $html .= '<table cellspacing="0" style="font-size:11px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;font-family:Arial !important">
             <tr>
                 <th style="border:0;width:12%;padding:0"></th>
@@ -205,8 +217,8 @@ class Laporan extends CI_Controller {
                 <th style="border:0;width:50%;padding:0"></th>
             </tr>
             <tr>
-                <td style="border:0;padding:3px 0" colspan="3">LOGO</td>
-                <td style="border:0;padding:3px 0;font-weight:bold">SURAT JALAN</td>
+                <td style="background:url('.$jpg.')'.$top.' center no-repeat;border:0;padding:'.$px.'" colspan="3"></td>
+                <td style="border:0;padding:18px 0 0;font-weight:bold;text-align:center;font-size:14px !important">SURAT JALAN</td>
             </tr>
             <tr>
                 <td style="border:0;padding:5px 0" colspan="4"></td>
@@ -302,8 +314,8 @@ class Laporan extends CI_Controller {
         // TANDA TANGAN
         $html .= '<table cellspacing="0" style="font-size:11px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;text-align:center;font-family:Arial !important">
             <tr>
-                <th style="border:0;width:50%;padding:10px 0"></th>
-                <th style="border:0;width:50%;padding:10px 0"></th>
+                <th style="border:0;width:50%;padding:15px 0"></th>
+                <th style="border:0;width:50%;padding:15px 0"></th>
             </tr>
             <tr>
                 <td>Hormat Kami</td>
@@ -319,7 +331,131 @@ class Laporan extends CI_Controller {
             </tr>
         </table>';
 
-        $this->m_fungsi->_mpdf2('',$html,10,10,10,'P');
+        if($ctk == 0){
+            $this->m_fungsi->_mpdf2('',$html,10,10,10,'P');
+        }else{
+
+            // CETAK NOTA PENJUALAN
+            $html = '';
+
+            // KOP
+            $html .= '<table cellspacing="0" style="font-size:11px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;font-family:Arial !important">
+                <tr>
+                    <th style="border:0;width:12%;padding:0"></th>
+                    <th style="border:0;width:1%;padding:0"></th>
+                    <th style="border:0;width:37%;padding:0"></th>
+                    <th style="border:0;width:50%;padding:0"></th>
+                </tr>
+                <tr>
+                    <td style="background:url('.$jpg.')'.$top.' center no-repeat;border:0;padding:'.$px.'" colspan="3"></td>
+                    <td style="border:0;padding:18px 0 0;font-weight:bold;text-align:center;font-size:14px !important">NOTA PENJUALAN</td>
+                </tr>
+                <tr>
+                    <td style="border:0;padding:5px 0" colspan="4"></td>
+                </tr>
+                <tr>
+                    <td style="padding:3px 0" colspan="3">Kepoh RT 003 RW 007 Bowan, Delanggu, Klaten</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td style="border:0;padding:5px 0" colspan="4"></td>
+                </tr>
+                <tr>
+                    <td style="padding:3px 0">No. Nota</td>
+                    <td style="padding:3px 0">:</td>
+                    <td style="padding:3px 0">'.$sql_kop->no_nota.'</td>
+                    <td style="padding:3px 0">NPWP : '.$sql_kop->npwp.'</td>
+                </tr>
+                <tr>
+                    <td style="padding:3px 0">Kepada</td>
+                    <td style="padding:3px 0">:</td>
+                    <td style="padding:3px 0">'.$sql_kop->nm_perusahaan.'</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td style="padding:3px 0">Alamat</td>
+                    <td style="padding:3px 0">:</td>
+                    <td style="padding:3px 200px  3px 0" colspan="2">'.$sql_kop->alamat.'</td>
+                </tr>
+                <tr>
+                    <td style="padding:3px 0">No. PO</td>
+                    <td style="padding:3px 0">:</td>
+                    <td style="padding:3px 200px  3px 0">'.$sql_kop->no_po.'</td>
+                    <td></td>
+                </tr>
+            </table>';
+
+            // I S I
+            $html .= '<table cellspacing="0" style="font-size:11px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;font-family:Arial !important">
+            <tr>
+                <th style="border:0;width:5%;padding:3px 0"></th>
+                <th style="border:0;width:45%;padding:3px 0"></th>
+                <th style="border:0;width:15%;padding:3px 0"></th>
+                <th style="border:0;width:15%;padding:3px 0"></th>
+                <th style="border:0;width:20%;padding:3px 0"></th>
+            </tr>
+            <tr>
+                <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">NO</td>
+                <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">Nama Barang</td>
+                <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">Quantity</td>
+                <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">Harga Satuan</td>
+                <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">Total Harga</td>
+            </tr>';
+
+            $ii = 0;
+            $sub_tot = 0;
+            foreach($sql_isi->result() as $r){
+                $ii++;
+                $tot_hrg = $r->qty * $r->harga_price_list;
+                $html .= '<tr>
+                    <td style="border:1px solid #000;padding:5px;text-align:center">'.$ii.'</td>
+                    <td style="border:1px solid #000;padding:5px">'.$r->nama_barang.'</td>
+                    <td style="border:1px solid #000;padding:5px">'.$r->qty.' '.$r->qty_ket.'</td>
+                    <td style="border:1px solid #000;padding:5px;text-align:right">Rp. '.number_format($r->harga_price_list).'</td>
+                    <td style="border:1px solid #000;padding:5px;text-align:right">Rp. '.number_format($tot_hrg).'</td>
+                </tr>';
+
+                $sub_tot += $tot_hrg;
+            }
+            
+            // SUB TOTAL - PPN - TOTAL
+            $ppn = round($sub_tot * 0.1);
+            $tot_all = round($sub_tot + $ppn);
+            $html .= '<tr>
+                <td style="border:0;padding:10px 5px 5px" colspan="3" rowspan="3">Terbilang : <b><i>'.ucwords($this->m_fungsi->terbilang($tot_all)).'</i></b></td>
+                <td style="border:1px solid #000;padding:5px">Sub Total</td>
+                <td style="border:1px solid #000;padding:5px;text-align:right">Rp. '.number_format($sub_tot).'</td>
+            </tr>
+            <tr>
+                <td style="border:1px solid #000;padding:5px">PPN</td>
+                <td style="border:1px solid #000;padding:5px;text-align:right">Rp. '.number_format($ppn).'</td>
+            </tr>
+            <tr>
+                <td style="border:1px solid #000;padding:5px">Total</td>
+                <td style="border:1px solid #000;padding:5px;text-align:right">Rp. '.number_format($tot_all).'</td>
+            </tr>';
+
+            // TANDA TANGAN
+            $html .= '<tr>
+                <td style="border:0;padding:5px" colspan="3"></td>
+                <td style="border:0;padding:5px" colspan="2"></td>
+            </tr>
+            <tr>
+                <td style="border:0;padding:0" colspan="3">Klaten, '.$this->m_fungsi->tanggal_format_indonesia(date('Y-m-d')).'</td>
+                <td style="border:0;padding:0" colspan="2" rowspan="2">No Faktur Pajak<br/>010.003.20.45831433</td>
+            </tr>
+            <tr>
+                <td style="border:0;padding:42px 0" colspan="3"></td>
+            </tr>
+            <tr>
+                <td style="border:0;padding:0" colspan="5">Andreas Purwanto<br/>Bank : BRI KCP DELANGGU-KLATEN A/C : 2055 - 01 - 000246 - 30 - 0 A/N : SINAR MUKTI ABADI</td>
+            </tr>';
+
+            $html .= '</table>';
+        
+            $this->m_fungsi->_mpdf2('',$html,10,10,10,'P');
+        }
+        
     }
 
     function print_surat_jalan(){
@@ -1286,7 +1422,7 @@ class Laporan extends CI_Controller {
         $ter_tot_ppn10 = round($tot_isi + (0.1 * $tot_isi));
         $ter_tot_pph22 = round($tot_isi + (0.1 * $tot_isi) + (0.01 * $tot_isi));
 
-        if($data_detail->kepada == 'BP. ZAENUROCHMAN'){
+        if($data_detail->kepada == 'BP. ZAENUROCHMAN'){//
 
             $tot_isi = round($tot_isi);
 

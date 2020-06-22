@@ -158,12 +158,12 @@
                             <span>Packing List</span>
                         </a>
                     </li>
-                    <li>
+                    <!-- <li>
                         <a href="<?php echo base_url('Master/Invoice') ?>">
                             <i class="material-icons">list</i>
                             <span>Invoice</span>
                         </a>
-                    </li>
+                    </li> -->
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">equalizer</i>

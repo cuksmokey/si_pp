@@ -21,6 +21,19 @@
                                 
                                 <tr>
                                   <td width="15%">
+                                        PT
+                                    </td>
+                                    <td>:</td>
+                                    <td colspan="3">
+                                    <select name="" id="logo" class="form-control" style="margin: 5px">
+                                      <option value="0">Pilih...</option>
+                                      <option value="sma">Sinar Mukti Abadi</option>
+                                      <option value="st">Sinar Teknindo</option>
+                                    </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                  <td width="15%">
                                       Packing List
                                   </td>
                                   <td>:</td>
@@ -66,10 +79,10 @@
                                         <!-- <i class="material-icons">personal_video</i> -->
                                         CETAK SURAT JALAN
                                     </button>
-                                    <!-- <button type="button" onclick="cetak(1)" class="btn btn-default btn-sm waves-effect">
-                                        <i class="material-icons">print </i>
-                                        CETAK PACKING LIST
-                                    </button> -->
+                                    <button type="button" onclick="cetak(1)" class="btn btn-default btn-sm waves-effect">
+                                        <!-- <i class="material-icons">print </i> -->
+                                        CETAK NOTA PENJUALAN
+                                    </button>
                                     <!-- <button type="button" onclick="cetak(2)" class="btn btn-default btn-sm waves-effect">
                                         <i class="material-icons">Download</i>
                                         Download
@@ -88,13 +101,14 @@
   
    function cetak(ctk){
     jenis = $("#jenis").val(); 
+    pt = $("#logo").val(); 
 
-    if (jenis == 0){
-      showNotification("alert-info", "PILIH PACKING LIST DAHULU !!!", "top", "center", "", ""); return;
+    if (jenis == 0 || pt == 0){
+      showNotification("alert-info", "PILIH PT / PACKING LIST DAHULU !!!", "top", "center", "", ""); return;
     }
 
-    var url    = "<?php echo base_url('Laporan/Surat_Jalan?'); ?>";
-    window.open(url+'jenis='+jenis+'&ctk='+ctk, '_blank');  
+    var url    = "<?php echo base_url('Laporan/Print_SJ_NOTA?'); ?>";
+    window.open(url+'jenis='+jenis+'&ctk='+ctk+'&pt='+pt, '_blank');  
     // window.open(url+'ctk='+ctk, '_blank');  
 
   }
