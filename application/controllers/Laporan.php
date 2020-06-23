@@ -271,7 +271,7 @@ class Laporan extends CI_Controller {
                 <td style="padding:5px;border:1px solid #000;text-align:center;font-weight:bold">'.$i.'</td>
                 <td style="padding:5px;border:1px solid #000">'.$r->nama_barang.'</td>
                 <td style="padding:5px;border:1px solid #000;text-align:center">'.$r->qty.'</td>
-                <td style="padding:5px;border:1px solid #000">'.$r->qty_ket.'</td>
+                <td style="padding:5px;border:1px solid #000;text-align:center">'.$r->qty_ket.'</td>
             </tr>';
         }
 
@@ -388,16 +388,17 @@ class Laporan extends CI_Controller {
             // I S I
             $html .= '<table cellspacing="0" style="font-size:11px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;font-family:Arial !important">
             <tr>
-                <th style="border:0;width:5%;padding:3px 0"></th>
-                <th style="border:0;width:45%;padding:3px 0"></th>
-                <th style="border:0;width:15%;padding:3px 0"></th>
-                <th style="border:0;width:15%;padding:3px 0"></th>
-                <th style="border:0;width:20%;padding:3px 0"></th>
+                <th style="border:1px solid #000;width:5%;padding:3px 0"></th>
+                <th style="border:1px solid #000;width:44%;padding:3px 0"></th>
+                <th style="border:1px solid #000;width:8%;padding:3px 0"></th>
+                <th style="border:1px solid #000;width:8%;padding:3px 0"></th>
+                <th style="border:1px solid #000;width:15%;padding:3px 0"></th>
+                <th style="border:1px solid #000;width:20%;padding:3px 0"></th>
             </tr>
             <tr>
                 <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">NO</td>
                 <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">Nama Barang</td>
-                <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">Quantity</td>
+                <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold" colspan="2">Quantity</td>
                 <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">Harga Satuan</td>
                 <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">Total Harga</td>
             </tr>';
@@ -410,7 +411,8 @@ class Laporan extends CI_Controller {
                 $html .= '<tr>
                     <td style="border:1px solid #000;padding:5px;text-align:center">'.$ii.'</td>
                     <td style="border:1px solid #000;padding:5px">'.$r->nama_barang.'</td>
-                    <td style="border:1px solid #000;padding:5px">'.$r->qty.' '.$r->qty_ket.'</td>
+                    <td style="border:1px solid #000;border-width:1px 0 1px 1px;padding:5px 2px 5px 5px;text-align:right">'.$r->qty.'</td>
+                    <td style="border:1px solid #000;border-width:1px 1px 1px 0;padding:5px 5px 5px 2px">'.$r->qty_ket.'</td>
                     <td style="border:1px solid #000;padding:5px;text-align:right">Rp. '.number_format($r->harga_price_list).'</td>
                     <td style="border:1px solid #000;padding:5px;text-align:right">Rp. '.number_format($tot_hrg).'</td>
                 </tr>';
@@ -422,7 +424,7 @@ class Laporan extends CI_Controller {
             $ppn = round($sub_tot * 0.1);
             $tot_all = round($sub_tot + $ppn);
             $html .= '<tr>
-                <td style="border:0;padding:10px 5px 5px" colspan="3" rowspan="3">Terbilang : <b><i>'.ucwords($this->m_fungsi->terbilang($tot_all)).'</i></b></td>
+                <td style="border:0;padding:10px 5px 5px" colspan="4" rowspan="3">Terbilang : <b><i>'.ucwords($this->m_fungsi->terbilang($tot_all)).'</i></b></td>
                 <td style="border:1px solid #000;padding:5px">Sub Total</td>
                 <td style="border:1px solid #000;padding:5px;text-align:right">Rp. '.number_format($sub_tot).'</td>
             </tr>
@@ -437,18 +439,18 @@ class Laporan extends CI_Controller {
 
             // TANDA TANGAN
             $html .= '<tr>
-                <td style="border:0;padding:5px" colspan="3"></td>
+                <td style="border:0;padding:5px" colspan="4"></td>
                 <td style="border:0;padding:5px" colspan="2"></td>
             </tr>
             <tr>
-                <td style="border:0;padding:0" colspan="3">Klaten, '.$this->m_fungsi->tanggal_format_indonesia(date('Y-m-d')).'</td>
+                <td style="border:0;padding:0" colspan="4">Klaten, '.$this->m_fungsi->tanggal_format_indonesia(date('Y-m-d')).'</td>
                 <td style="border:0;padding:0" colspan="2" rowspan="2">No Faktur Pajak<br/>010.003.20.45831433</td>
             </tr>
             <tr>
                 <td style="border:0;padding:42px 0" colspan="3"></td>
             </tr>
             <tr>
-                <td style="border:0;padding:0" colspan="5">Andreas Purwanto<br/>Bank : BRI KCP DELANGGU-KLATEN A/C : 2055 - 01 - 000246 - 30 - 0 A/N : SINAR MUKTI ABADI</td>
+                <td style="border:0;padding:0" colspan="6">Andreas Purwanto<br/>Bank : BRI KCP DELANGGU-KLATEN A/C : 2055 - 01 - 000246 - 30 - 0 A/N : SINAR MUKTI ABADI</td>
             </tr>';
 
             $html .= '</table>';
