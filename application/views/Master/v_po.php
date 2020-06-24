@@ -216,7 +216,7 @@
                status = 'update';
 
               }else{
-                showNotification("alert-danger", "Nama Perusahaan , GSM, dan Ukuran Sudah Ada ", "bottom", "center", "", "");
+                showNotification("alert-danger", "Nama Perusahaan dan No. PO Sama!! ", "bottom", "center", "", "");
               }
               
             }

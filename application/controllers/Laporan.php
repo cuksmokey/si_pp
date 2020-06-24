@@ -338,7 +338,7 @@ class Laporan extends CI_Controller {
             $html = '';
 
                                     # # # # # # # # # # # # # KOP # # # # # # # # # # # # #
-                                    
+
             if($pt == "st"){
                 $npwp = '';
                 $kop_nota = 'N O T A
@@ -1618,166 +1618,35 @@ class Laporan extends CI_Controller {
 
         $html = '';
 
-        $warna = 'hitam';
-
-        if($warna == 'hitam'){
-            $ink = '#000';
-        }else{
-            $ink = '#444';
-        }
-
         // ambil kop
         $poMas_kop = $this->db->query("SELECT b.id,b.nm_perusahaan FROM po_master a 
             INNER JOIN m_perusahaan b ON a.id_perusahaan = b.id
             WHERE b.id='$jenis'
             GROUP BY b.id,b.nm_perusahaan")->row();
 
-        $html .= '<table style="margin:0;padding:0;font-size:14px;font-weight:bold;color:'.$ink.';width:100%;border-collapse:collapse">
+        $html .= '<table style="margin:0;padding:0;font-size:14px;font-weight:bold;color:#000;width:100%;border-collapse:collapse">
                     <tr>
-                        <td colspan="0" style="border:0">OUTSTANDING PO '.$poMas_kop->nm_perusahaan.'</td>
+                        <td style="border:1px solid #000">OUTSTANDING PO '.$poMas_kop->nm_perusahaan.'</td>
                     </tr>
                 </table>';
 
         // ambil no po
-        // $q_no_po = $this->db->query("SELECT no_po,SUM(tonase) AS tonase FROM po_master WHERE id_perusahaan='$jenis' GROUP BY no_po");
-        $q_no_po = $this->db->query("SELECT no_po,
-        SUM(a.tonase) AS tns,
-        (SELECT SUM(b.tonase) FROM po_history b WHERE b.no_po = a.no_po) AS tot_t_uk,
-        (SUM(a.tonase) - (SELECT SUM(b.tonase) FROM po_history b WHERE b.no_po = a.no_po)) AS sisa_t_all
-        FROM po_master a WHERE id_perusahaan='$jenis' GROUP BY no_po");
+        $q_no_po = $this->db->query("SELECT*FROM po_master
+        WHERE id_perusahaan='$jenis'
+        ORDER BY tgl ASC");
 
-        foreach ($q_no_po->result() as $r) {
-            $no_po = $r->no_po;
-
-            $html .= '<table cellspacing="0" cellpadding="5" style="font-size:11px;width:100%;color:'.$ink.';border-collapse:collapse">';
-
-            $html .= '<tr>
-                <th style="border:0;height:0px;width:5%"></th>
-                <th style="border:0;height:0px;width:7%"></th>
-                <th style="border:0;height:0px;width:7%"></th>
-                <th style="border:0;height:0px;width:20%"></th>
-                <th style="border:0;height:0px;width:10%"></th>
-                <th style="border:0;height:0px;width:10%"></th>
-                <th style="border:0;height:0px;width:10%"></th>
-                <th style="border:0;height:0px;width:10%"></th>
-                <th style="border:0;height:0px;width:21%"></th>
+        foreach($q_no_po->result() as $r){
+            $html .= '<table style="margin:0;padding:0;font-size:14px;font-weight:bold;color:#000;width:100%;border-collapse:collapse">
+            <tr>
+                <td style="border:1px solid #000">'.$r->no_po.'</td>
             </tr>';
 
-            $html .= '<tr>
-                <td colspan="6" style="font-weight:bold;border:1px solid #000">PO NO : '.$no_po.'</td>
-            </tr>';
+            // ambil data po
+            $q_no_po = $this->db->query("SELECT*FROM po_master
+            WHERE id_perusahaan='$jenis'
+            ORDER BY tgl ASC");
 
-            $html .= '<tr>
-                <td style="border:1px solid #000;text-align:center;font-weight:bold">NO</td>
-                <td style="border:1px solid #000;text-align:center;font-weight:bold">GSM</td>
-                <td style="border:1px solid #000;text-align:center;font-weight:bold">WIDTH</td>
-                <td style="border:1px solid #000;text-align:center;font-weight:bold">TONASE</td>
-                <td style="border:1px solid #000;text-align:center;font-weight:bold" colspan="2">SISA TONASE</td>
-            </tr>';
-
-            $html .= '<tr>
-                <td style="border-left:1px solid #000;text-align:center"></td>
-                <td style="border:1px solid #000;text-align:center;font-weight:bold" colspan="2">TANGGAL</td>
-                <td style="border:1px solid #000;text-align:center;font-weight:bold">NO SJ</td>
-                <td style="border:1px solid #000;text-align:center;font-weight:bold">JML ROLL</td>
-                <td style="border:1px solid #000;text-align:center;font-weight:bold">TONASE</td>
-            </tr>';
-
-            // ambil no po per ukuran
-            // $q_no_po_uk = $this->db->query("SELECT*FROM po_master WHERE no_po='$no_po' ORDER BY g_label,width ASC");
-            $q_no_po_uk = $this->db->query("SELECT a.*,
-            (SELECT SUM(tonase) FROM po_history b WHERE g_label = a.g_label AND width = a.width AND no_po = a.no_po) AS h_tonase,
-            (a.tonase - (SELECT SUM(tonase) FROM po_history b WHERE g_label = a.g_label AND width = a.width AND no_po = a.no_po)) AS sisa_t_po
-            FROM po_master a WHERE no_po='$no_po' ORDER BY g_label,width ASC");
-
-            $i = 1;
-            foreach ($q_no_po_uk->result() as $r) {
-
-                if($r->tonase < $r->h_tonase){
-                    $txt = '#f00'; 
-                }else{
-                    $txt = '#000'; 
-                }
-
-                $sisaPoPo = $r->tonase - $r->h_tonase;
-
-                $html .= '<tr>
-                    <td style="border:1px solid #000;text-align:center">'.$i.'</td>
-                    <td style="border:1px solid #000;text-align:center">'.$r->g_label.'</td>
-                    <td style="border:1px solid #000;text-align:center">'.$r->width.'</td>
-                    <td style="border:1px solid #000;text-align:center">'.number_format($r->tonase).'</td>
-                    <td colspan="2" style="border:1px solid #000;text-align:center;color:'.$txt.'">'.number_format($sisaPoPo).'</td>
-                </tr>';
-
-                // ambil data po history per ukuran
-                $q_no_po_uk_poh = $this->db->query("SELECT a.tgl AS tgl,a.no_surat AS no_surat,a.no_pkb AS no_pkb,a.jml_roll AS jml_roll,a.tonase AS tonase FROM po_history a
-                INNER JOIN po_master b ON a.no_po = b.no_po AND a.g_label = b.g_label AND a.width = b.width
-                WHERE a.g_label='$r->g_label' AND a.width='$r->width' AND a.no_po='$r->no_po'
-                ORDER BY a.tgl,a.no_pkb ASC");
-
-                // if($q_no_po_uk_poh->num_rows() > 0){
-                //     $html .= '<tr>
-                //         <td style="border-left:1px solid #000;text-align:center"></td>
-                //         <td style="border:1px solid #000;text-align:center;font-weight:bold" colspan="2">TANGGAL</td>
-                //         <td style="border:1px solid #000;text-align:center;font-weight:bold">NO SJ</td>
-                //         <td style="border:1px solid #000;text-align:center;font-weight:bold">JML ROLL</td>
-                //         <td style="border:1px solid #000;text-align:center;font-weight:bold">TONASE</td>
-                //     </tr>';
-                // }
-
-                $tot_ton = 0;
-                foreach ($q_no_po_uk_poh->result() as $r) {
-                    $html .= '<tr>
-                        <td style="border-left:1px solid #000"></td>
-                        <td colspan="2" style="border:1px solid #000;text-align:center">'.$this->m_fungsi->tanggal_format_indonesia($r->tgl).'</td>
-                        <td style="border:1px solid #000;text-align:center">'.$r->no_surat.'</td>
-                        <td style="border:1px solid #000;text-align:center">'.$r->jml_roll.'</td>
-                        <td style="border:1px solid #000;text-align:center">'.number_format($r->tonase).'</td>
-                    </tr>';
-                    $tot_ton += $r->tonase;
-                }
-
-                if($q_no_po_uk_poh->num_rows() > 0){
-                    $html .= '<tr>
-                        <td style="border-left:1px solid #000;border-bottom:1px solid #000"></td>
-                        <td colspan="3" style="border:1px solid #000;text-align:center;font-weight:bold">TOTAL</td>
-                        <td colspan="2" style="border:1px solid #000;text-align:center">'.number_format($tot_ton).'</td>
-                    </tr>';
-                }
-                
-                
-                // $html .= '<tr>
-                //         <td colspan="5" style="padding:2px 0;border:1px solid #000"></td>
-                //     </tr>';
-
-                $i++;
-            }
-
-            $q_tot_no_po = $q_no_po->row();
-
-            if($q_tot_no_po->tns < $q_tot_no_po->tot_t_uk){
-                $txt = '#f00'; 
-            }else{
-                $txt = '#000'; 
-            }
-
-            $html .= '<tr>
-                <td colspan="4" style="border:1px solid #000">TOTAL KESELURUHAN TONASE PO</td>
-                <td colspan="2" style="border:1px solid #000;text-align:right">'.number_format($q_tot_no_po->tns).'</td>
-            </tr>';
-
-            $html .= '<tr>
-                <td colspan="4" style="border:1px solid #000">TOTAL KESELURUHAN TONASE PER UKURAN</td>
-                <td colspan="2" style="border:1px solid #000;text-align:right;color:'.$txt.'">'.number_format($q_tot_no_po->tot_t_uk).'</td>
-            </tr>';
-
-            $html .= '<tr>
-                <td colspan="4" style="border:1px solid #000">TOTAL KESELURUHAN SISA TONASE</td>
-                <td colspan="2" style="border:1px solid #000;text-align:right;color:'.$txt.'">'.number_format($q_tot_no_po->sisa_t_all).'</td>
-            </tr>';            
-
-            $html .= '</table>';
-            $html .= '<div style="page-break-after:always"></div>';
+            $html .='</table>';
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
