@@ -103,25 +103,23 @@ class M_master extends CI_Model{
         return $this->db->query($query);
     }
 
-    function get_data_po_master($table,$kolom,$id_perusahaan,$kolom2,$g_label,$kolom3,$width,$kolom4,$no_po){
+    function get_data_po_master($table,$kolom,$id_perusahaan,$kolom2,$tgl,$kolom3,$no_po){
         
-        $query = "SELECT * FROM $table WHERE $kolom='$id_perusahaan' AND $kolom2='$g_label' AND $kolom3='$width' AND $kolom4='$no_po'";
+        $query = "SELECT * FROM $table WHERE $kolom='$id_perusahaan' AND $kolom2='$tgl' AND $kolom3='$no_po'";
         return $this->db->query($query);
     }
 
     function get_plpl($id_pl){
         
-        $query = "SELECT a.id_perusahaan AS id_perusahaan,a.tgl AS tgl,b.g_label AS g_label,b.width AS width,COUNT(b.roll) AS jml_roll,SUM(b.weight) AS tonase,a.no_surat,a.no_po AS no_po,a.id AS id_pl,a.no_pkb AS no_pkb FROM pl a
-        INNER JOIN m_timbangan b ON a.id = b.id_pl
-        WHERE a.id='$id_pl'
-        GROUP BY a.id_perusahaan,a.tgl,b.g_label,b.width,a.no_surat,a.no_po,a.id,a.no_pkb";
+        $query = "SELECT*FROM m_pl_price_list
+        WHERE id='$id_pl'";
         
         return $this->db->query($query);
     }
 
-    function cek_po_master($g_label,$width,$no_po){
+    function cek_po_master($id_perusahaan,$no_po){
         
-        $query = "SELECT*FROM po_master WHERE g_label='$g_label' AND width='$width' AND no_po='$no_po'";
+        $query = "SELECT*FROM po_master WHERE id_perusahaan='$id_perusahaan' AND no_po='$no_po'";
         return $this->db->query($query);
     }
 
@@ -480,9 +478,6 @@ class M_master extends CI_Model{
         $data = array(
                 'id_perusahaan'      => $_POST['id_perusahaan'],
                 'tgl'      => $_POST['tgl'],
-                'g_label'      => $_POST['g_label'],
-                'width'      => $_POST['width'],
-                'tonase'      => $_POST['tonase'],
                 'no_po'      => $_POST['no_po']
             );
         $result= $this->db->insert("po_master",$data);
@@ -535,16 +530,9 @@ class M_master extends CI_Model{
     }
 
     function update_master_po(){
-            
-        // $this->db->set('id_perusahaan', $_POST['id_perusahaan']);
         $this->db->set('tgl', $_POST['tgl']);
-        // $this->db->set('g_label', $_POST['g_label']);
-        // $this->db->set('width', $_POST['width']);
-        $this->db->set('tonase', $_POST['tonase']);
         $this->db->set('no_po', $_POST['no_po']);
         $this->db->where('id_perusahaan', $_POST['id_perusahaan']);
-        $this->db->where('g_label', $_POST['g_label']);
-        $this->db->where('width', $_POST['width']);
         $result = $this->db->update('po_master');
         return $result;
     }

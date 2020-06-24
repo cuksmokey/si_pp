@@ -32,13 +32,10 @@
                                 <table id="datatable11" class="table table-bordered table-striped table-hover dataTable ">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
+                                            <th>No</th>
                                             <th>Nama Perusahaan</th>
                                             <th>Tanggal</th>
                                             <th>PO</th>
-                                            <th>GSM</th>
-                                            <th>Width</th>
-                                            <th>Total Berat</th>
                                             <th width="15%">Aksi</th>
                                         </tr>
                                     </thead>
@@ -88,45 +85,6 @@
                                         <td>:</td>
                                         <td  colspan="2">
                                             <input type="date" id="tgl" value="<?php echo date('Y-m-d') ?>" class="form-control" style="width: 40%">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Grammage Label</td>
-                                        <td>:</td>
-                                        <td >
-                                          <select  id="g_label" class="form-control" >
-                                            <option value="">Pilih</option>
-                                            <option value="67">67</option>
-                                            <option value="68">68</option>
-                                            <option value="70">70</option>
-                                            <option value="110">110</option>
-                                            <option value="125">125</option>
-                                            <option value="140">140</option>
-                                            <option value="150">150</option>
-                                          </select>
-                                        </td>
-                                        <td>
-                                          <input type="text" disabled="true" class="form-control" value="GSM" style="width: 30%;border: none"> 
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Width</td>
-                                        <td>:</td>
-                                        <td >
-                                            <input type="text" class="form-control" placeholder="0"  id="width">
-                                        </td>
-                                        <td>
-                                          <input type="text" disabled="true" class=" form-control" value="CM" style="width: 30%;border: none"> 
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Total Berat</td>
-                                        <td>:</td>
-                                        <td >
-                                            <input type="text" class="form-control" placeholder="0" id="tonase"> 
-                                        </td>
-                                        <td>
-                                          <input type="text" disabled="true" class="form-control" value="KG" style="width: 30%;border: none"> 
                                         </td>
                                     </tr>
                                     <tr>
@@ -232,18 +190,11 @@
 
 
     function simpan(){
-      // roll = $("#id1").val()+"/"+$("#id2").val()+"/"+$("#id3").val()+"/"+$("#id4").val();
-      
-      // id  = $("#id").val();
-      // id_perusahaan_lama = $("#nm_perusahaan_lama").val();
       id_perusahaan = $("#nm_perusahaan").val();
       tgl     = $("#tgl").val();
-      g_label    = $("#g_label").val();
-      width    = $("#width").val();
-      tonase    = $("#tonase").val();
       no_po    = $("#no_po").val();
         
-        if (id_perusahaan == "" || g_label == "" || width == "" || tonase == "" || no_po == "")  {
+        if (id_perusahaan == "" || tgl == "" ||  no_po == "")  {
           showNotification("alert-info", "Harap Lengkapi Form", "bottom", "center", "", ""); return;
         }
 
@@ -253,7 +204,7 @@
         $.ajax({
             type     : "POST",
             url      : '<?php echo base_url(); ?>Master/'+status,
-            data     : ({id_perusahaan:id_perusahaan,tgl:tgl,g_label:g_label,width:width,tonase:tonase,no_po:no_po,jenis : "PoMaster" }),
+            data     : ({id_perusahaan:id_perusahaan,tgl:tgl,no_po:no_po,jenis : "PoMaster" }),
             dataType : "json",
             success  : function(data){
               $("#btn-simpan").prop("disabled",true);
@@ -290,8 +241,6 @@
 
               $("#nm_perusahaan").val(json.id_perusahaan).prop("disabled",true);
               $("#tgl").val(json.tgl);
-              $("#g_label").val(json.g_label).prop("disabled",true);
-              $("#width").val(json.width).prop("disabled",true);
               $("#tonase").val(json.tonase);
               $("#no_po").val(json.no_po);
 
@@ -335,56 +284,15 @@
 
     }
 
-    // function confirmCekPo(id,nm){
-    //     swal({
-    //       title: "Apakah Anda Yakin Konfirmasi Data ?",
-    //       text: nm,
-    //       type: "warning",
-    //       showCancelButton: true,
-    //       confirmButtonClass: "btn-danger",
-    //       confirmButtonText: "Ya",
-    //       cancelButtonText: "Batal",
-    //       closeOnConfirm: false,
-    //       closeOnCancel: false
-    //     },
-    //     function(isConfirm) {
-    //       if (isConfirm) {
-    //         $.ajax({
-    //           url   : '<?php echo base_url(); ?>Master/confirm_cek_po',
-    //           type  : "POST",
-    //           data  : {id: id},
-    //           success : function(data){
-    //             if (data == 1) {
-    //             swal("Berhasil", "", "success");
-    //             reloadTable();
-
-    //             }else{
-    //               swal("Data Sudah Melakukan Konfirmasi", "", "error");
-    //             }
-    //           }
-    //         });
-            
-    //       } else {
-    //         swal("", "Data Batal Di Konfirmasi", "error");
-    //       }
-    //     });
-    // }
-
     function kosong(){
       $("#judul").html('<h3> Form Tambah Data</h3>');
       status = "insert";
       $("#id").val("");
-      // $("#nm_perusahaan").val("");
+
       $("#nm_perusahaan_lama").val("");
-      // $("textarea#alamat").val("");
-      // $("#pimpinan").val("");
-      // $("#no_telp").val("");
 
       $("#nm_perusahaan").val("").prop("disabled",false);
       $("#tgl").val("");
-      $("#g_label").val("").prop("disabled",false);
-      $("#width").val("").prop("disabled",false);
-      $("#tonase").val("");
       $("#no_po").val("");
 
       $("#btn-simpan").prop("disabled",false);

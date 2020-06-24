@@ -121,11 +121,10 @@ class Master extends CI_Controller {
                 }
             }else if ($jenis == "PoMaster") {
                 $id_perusahaan = $this->input->post('id_perusahaan');
-                $g_label       = $this->input->post('g_label');
-                $width         = $this->input->post('width');
-                $no_po         = $this->input->post('no_po');
+                $tgl       = $this->input->post('tgl');
+                $no_po       = $this->input->post('no_po');
 
-                $cek = $this->m_master->get_data_po_master("po_master","id_perusahaan",$id_perusahaan,"g_label",$g_label,"width",$width,"no_po",$no_po)->num_rows();
+                $cek = $this->m_master->get_data_po_master("po_master","id_perusahaan",$id_perusahaan,"tgl",$tgl,"no_po",$no_po)->num_rows();
                 if ($cek > 0 ) {
                     echo json_encode(array('data' =>  FALSE));
                 }else{
@@ -565,9 +564,16 @@ class Master extends CI_Controller {
                                 <i class="material-icons">remove_red_eye</i>
                             </button>';
 
-                        if ($this->session->userdata('level') == "SuperAdmin") {
+                        if ($this->session->userdata('level') == "SuperAdmin" && $r->cek_po == 0) {
                             $aksi = ''.$superbtn.'
                             <a type="button" onclick="confirmCekPo('.$id.','."".')" class="btn bg-green btn-circle waves-effect waves-circle waves-float">
+                                <i class="material-icons">check</i>
+                            </a>';
+                        }else if ($r->cek_po == 1) {
+                                $aksi = '<button type="button" onclick="view_detail('.$id.')" class="btn btn-info btn-circle waves-effect waves-circle waves-float">
+                                <i class="material-icons">remove_red_eye</i>
+                            </button>
+                                <a type="button" onclick="vvvv" class="btn bg-blue btn-circle waves-effect waves-circle waves-float">
                                 <i class="material-icons">check</i>
                             </a>';
                         }else{
@@ -732,21 +738,16 @@ class Master extends CI_Controller {
                         $id = "'$r->id'";
 
                         $row = array();
-                        $row[] = $r->id_perusahaan;
+                        $row[] = $i;
                         $row[] = $r->nm_perusahaan;
                         $row[] = $r->tgl;
                         $row[] = $r->no_po;
-                        $row[] = $r->g_label;
-                        $row[] = $r->width;
-                        $row[] = $r->tonase;
 
                         $aksi ="";
 
                         if ($this->session->userdata('level') == "SuperAdmin") {
-                        
 
                             $aksi = '   
-                            
                             <button type="button" onclick="tampil_edit('.$id.')" class="btn bg-orange btn-circle waves-effect waves-circle waves-float">
                                 <i class="material-icons">edit</i>
                             </button>
@@ -763,7 +764,7 @@ class Master extends CI_Controller {
                             $data[] = $row;
                         }
                             
-                        // $i++;
+                        $i++;
                     }
                 }
                 $output = array("data" => $data);
@@ -1271,33 +1272,17 @@ class Master extends CI_Controller {
         $q_pl_no_po = $this->m_master->get_plpl($id_pl)->row();
 
         // cek po master
-        $pl_no_po_master = $this->m_master->cek_po_master($q_pl_no_po->g_label,$q_pl_no_po->width,$q_pl_no_po->no_po)->num_rows();
+        $pl_no_po_master = $this->m_master->cek_po_master($q_pl_no_po->kepada,$q_pl_no_po->no_po)->num_rows();
 
         if($pl_no_po_master == 0){
             // jika tidak ada po master
             echo json_encode(array('msg' => false,'g' => 'Master PO Tidak Ada!!'));
         }else if($pl_no_po_master <> 0){
-            // insert po history
-            $data = array(
-                    'id_perusahaan' => $q_pl_no_po->id_perusahaan,
-                    'tgl'           => $q_pl_no_po->tgl,
-                    'g_label'       => $q_pl_no_po->g_label,
-                    'width'         => $q_pl_no_po->width,
-                    'jml_roll'      => $q_pl_no_po->jml_roll,
-                    'tonase'        => $q_pl_no_po->tonase,
-                    'no_surat'      => trim($q_pl_no_po->no_surat),
-                    'no_po'         => $q_pl_no_po->no_po,
-                    'id_pl'         => $q_pl_no_po->id_pl,
-                    'no_pkb'        => $q_pl_no_po->no_pkb
-                );
-            $this->db->insert("po_history",$data);
-
             // update cek po PL
             $this->db->set("cek_po",1);
             $this->db->where('id', $id_pl);
-            $this->db->update('pl');
+            $this->db->update('m_pl_price_list');
 
-            // echo json_encode(array('msg' => true,'g' => $pl_no_po_master));
             echo json_encode(array('msg' => true));
         }
 

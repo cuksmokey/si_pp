@@ -334,11 +334,11 @@ class Laporan extends CI_Controller {
         if($ctk == 0){
             $this->m_fungsi->_mpdf2('',$html,10,10,10,'P');
         }else{
-            //
             // CETAK NOTA PENJUALAN
             $html = '';
 
-            // KOP
+                                    # # # # # # # # # # # # # KOP # # # # # # # # # # # # #
+                                    
             if($pt == "st"){
                 $npwp = '';
                 $kop_nota = 'N O T A
@@ -410,7 +410,8 @@ class Laporan extends CI_Controller {
 
             $html .='</table>';
 
-            // I S I
+                                    # # # # # # # # # # # # # I S I # # # # # # # # # # # # #
+
             $html .= '<table cellspacing="0" style="font-size:11px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;font-family:Arial !important">
             <tr>
                 <th style="border:0;width:5%;padding:3px 0"></th>
@@ -445,7 +446,8 @@ class Laporan extends CI_Controller {
                 $sub_tot += $tot_hrg;
             }
             
-            // SUB TOTAL - PPN - TOTAL
+                            # # # # # # # # # # # # # SUB TOTAL - PPN - TOTAL # # # # # # # # # # # # #
+
             if($pt == "st") {
                 $tot_all = round($sub_tot);
                 $rs = '2';
@@ -476,7 +478,7 @@ class Laporan extends CI_Controller {
                 <td style="border:1px solid #000;padding:5px;text-align:right">Rp. '.number_format($tot_all).'</td>
             </tr>';
 
-            // TANDA TANGAN
+                        # # # # # # # # # # # # # TANDA TANGAN # # # # # # # # # # # # # 
 
             if($pt == "st") {
                 $html .= '';
