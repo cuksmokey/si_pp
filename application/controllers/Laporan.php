@@ -1631,22 +1631,58 @@ class Laporan extends CI_Controller {
                 </table>';
 
         // ambil no po
-        $q_no_po = $this->db->query("SELECT*FROM po_master
+        $q_no_po = $this->db->query("SELECT id_perusahaan,tgl,no_po FROM po_master
         WHERE id_perusahaan='$jenis'
-        ORDER BY tgl ASC");
+        GROUP BY no_po
+        ORDER BY no_po ASC");
 
+        $i = 0;
         foreach($q_no_po->result() as $r){
-            $html .= '<table style="margin:0;padding:0;font-size:14px;font-weight:bold;color:#000;width:100%;border-collapse:collapse">
+            $i++;
+            $html .= '<table style="margin:0;padding:0;font-size:11px;font-weight:bold;color:#000;width:100%;border-collapse:collapse">
+                <tr>
+                    <th style="border:1px solid #000;width:4%;padding:3px"></th>
+                    <th style="border:1px solid #000;width:4%;padding:3px"></th>
+                    <th style="border:1px solid #000;width:15%;padding:3px"></th>
+                    <th style="border:1px solid #000;width:77%;padding:3px"></th>
+                </tr>
+                <tr>
+                    <td style="border:1px solid #000;padding:5px 0;text-align:center">'.$i.'</td>
+                    <td style="border:1px solid #000;padding:5px" colspan="3">'.$r->no_po.'</td>
+                </tr>
+                <tr>
+                <td style="border:1px solid #000;border-width:0 1px;padding:5px"></td>
+                    <td style="border:1px solid #000;padding:5px;text-align:center">No</td>
+                    <td style="border:1px solid #000;padding:5px;text-align:center">Kode Barang</td>
+                    <td style="border:1px solid #000;padding:5px;text-align:center">Nama Barang</td>
+                </tr>
+            </table>'; 
+
+            // ambil data kode barang
+            $q_no_po = $this->db->query("SELECT a.id_perusahaan,a.kode_barang,c.nama_barang FROM po_master a
+            INNER JOIN m_barang c ON a.kode_barang = c.kode_barang
+            WHERE a.id_perusahaan='$r->id_perusahaan' AND a.no_po='$r->no_po'
+            ORDER BY a.kode_barang ASC");
+
+            $html .='<table style="margin:0;padding:0;font-size:11px;font-weight:bold;color:#000;width:100%;border-collapse:collapse">
             <tr>
-                <td style="border:1px solid #000">'.$r->no_po.'</td>
+                <th style="border:1px solid #000;border-width:0 1px;width:4%;padding:3px"></th>
+                <th style="border:1px solid #000;border-width:0 1px;width:4%;padding:3px"></th>
+                <th style="border:1px solid #000;border-width:0 1px;width:15%;padding:3px"></th>
+                <th style="border:1px solid #000;border-width:0 1px;width:77%;padding:3px"></th>
             </tr>';
 
-            // ambil data po
-            $q_no_po = $this->db->query("SELECT*FROM po_master
-            WHERE id_perusahaan='$jenis'
-            ORDER BY tgl ASC");
-
-            $html .='</table>';
+            $ii = 0;
+            foreach($q_no_po->result() as $r){
+                $ii++;
+                $html.= '<tr>
+                        <td style="border:1px solid #000;border-width:0 1px;padding:5px"></td>
+                        <td style="border:1px solid #000;padding:5px;text-align:center">'.$ii.'</td>
+                        <td style="border:1px solid #000;padding:5px">'.$r->kode_barang.'</td>
+                        <td style="border:1px solid #000;padding:5px">'.$r->nama_barang.'</td>
+                    </tr>';
+            }
+            $html.='</table>';
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
