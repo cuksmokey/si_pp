@@ -67,7 +67,7 @@
                                         <td>No. Surat Jalan</td>
                                         <td>:</td>
                                         <td>
-                                            <input type="text" class="form-control" id="no_surat">
+                                            <input type="text" class="form-control" id="no_surat" autocomplete="off">
                                             <input type="hidden"  id="idid" value="">
                                         </td>
                                         <td></td>
@@ -76,7 +76,7 @@
                                         <td>No. SO</td>
                                         <td>:</td>
                                         <td>
-                                            <input type="text" class="form-control" id="no_so"> 
+                                            <input type="text" class="form-control" id="no_so" autocomplete="off"> 
                                         </td>
                                         <td></td>
                                     </tr>
@@ -84,7 +84,7 @@
                                         <td>No. PO</td>
                                         <td>:</td>
                                         <td>
-                                            <input type="text" class="form-control" id="no_po"> 
+                                            <input type="text" class="form-control" id="no_po" autocomplete="off"> 
                                         </td>
                                         <td></td>
                                     </tr>
@@ -92,7 +92,7 @@
                                         <td>No. Nota</td>
                                         <td>:</td>
                                         <td>
-                                            <input type="text" class="form-control" id="no_nota"> 
+                                            <input type="text" class="form-control" id="no_nota" autocomplete="off"> 
                                         </td>
                                         <td></td>
                                     </tr>
@@ -110,28 +110,28 @@
                                         <td>Pimpinan</td>
                                         <td>:</td>
                                         <td colspan="2">
-                                            <input type="text" class="form-control" id="pimpinan" disabled="true">
+                                            <input type="text" class="form-control" id="pimpinan" disabled="true" style="background:#ddd">
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>NPWP</td>
                                         <td>:</td>
                                         <td colspan="2">
-                                            <input type="text" class="form-control" id="npwp" disabled="true">
+                                            <input type="text" class="form-control" id="npwp" disabled="true" style="background:#ddd">
                                         </td>
                                     </tr>
                                     <tr style="vertical-align: top">
                                         <td>Alamat</td>
                                         <td>:</td>
                                         <td colspan="2">
-                                            <textarea id="alamat" rows="5" class="form-control" disabled="true"></textarea>   
+                                            <textarea id="alamat" rows="5" class="form-control" disabled="true" style="background:#ddd"></textarea>   
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>No. Telepon</td>
                                         <td>:</td>
                                         <td colspan="2">
-                                            <input type="text" class="form-control" id="no_telp" disabled="true"> 
+                                            <input type="text" class="form-control" id="no_telp" disabled="true" style="background:#ddd"> 
                                         </td>
                                     </tr>
                                     <tr>

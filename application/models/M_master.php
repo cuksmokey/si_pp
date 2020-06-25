@@ -103,9 +103,9 @@ class M_master extends CI_Model{
         return $this->db->query($query);
     }
 
-    function get_data_po_master($table,$kolom,$id_perusahaan,$kolom2,$tgl,$kolom3,$no_po){
+    function get_data_po_master($table,$kolom,$id_perusahaan,$kolom2,$kode_barang,$kolom3,$no_po){
         
-        $query = "SELECT * FROM $table WHERE $kolom='$id_perusahaan' AND $kolom2='$tgl' AND $kolom3='$no_po'";
+        $query = "SELECT * FROM $table WHERE $kolom='$id_perusahaan' AND $kolom2='$kode_barang' AND $kolom3='$no_po'";
         return $this->db->query($query);
     }
 
@@ -416,9 +416,9 @@ class M_master extends CI_Model{
     }
 
     function get_po_master(){
-        // $query = "SELECT * FROM po_master";
-        $query = "SELECT b.nm_perusahaan,a.* FROM po_master a
-        INNER JOIN m_perusahaan b ON a.id_perusahaan = b.id";
+        $query = "SELECT b.nm_perusahaan,c.nama_barang,a.* FROM po_master a
+        INNER JOIN m_perusahaan b ON a.id_perusahaan = b.id
+        INNER JOIN m_barang c ON a.kode_barang = c.kode_barang";
         return $this->db->query($query);
     }
 
@@ -476,9 +476,11 @@ class M_master extends CI_Model{
     function insert_po_master(){
         
         $data = array(
-                'id_perusahaan'      => $_POST['id_perusahaan'],
-                'tgl'      => $_POST['tgl'],
-                'no_po'      => $_POST['no_po']
+                'id_perusahaan' => $_POST['id_perusahaan'],
+                'tgl'           => $_POST['tgl'],
+                'kode_barang'   => $_POST['kode_barang'],
+                'qty'           => $_POST['qty'],
+                'no_po'         => $_POST['no_po']
             );
         $result= $this->db->insert("po_master",$data);
 
@@ -531,8 +533,10 @@ class M_master extends CI_Model{
 
     function update_master_po(){
         $this->db->set('tgl', $_POST['tgl']);
+        $this->db->set('qty', $_POST['qty']);
         $this->db->set('no_po', $_POST['no_po']);
         $this->db->where('id_perusahaan', $_POST['id_perusahaan']);
+        $this->db->where('kode_barang', $_POST['kode_barang']);
         $result = $this->db->update('po_master');
         return $result;
     }
@@ -554,6 +558,21 @@ class M_master extends CI_Model{
      }
      return $data;
     }
+
+    function list_po_barang($searchTerm=""){
+        $users = $this->db->query("SELECT * FROM m_barang WHERE kode_barang like '%$searchTerm%' or nama_barang like '%$searchTerm%' ORDER BY kode_barang ")->result_array();
+   
+        // Initialize Array with fetched data
+        $data = array();
+        foreach($users as $user){
+           $data[] = array(
+               "id"=>$user['id'], 
+               "kode_barang"=>$user['kode_barang'],
+               "text"=>$user['nama_barang']
+           );
+        }
+        return $data;
+       }
 
     function list_m_barang_pl($searchTerm=""){
     $users = $this->db->query("SELECT * FROM m_barang WHERE kode_barang like '%$searchTerm%' or nama_barang like '%$searchTerm%' ORDER BY kode_barang ASC")->result_array();

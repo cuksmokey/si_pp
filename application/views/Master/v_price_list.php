@@ -76,28 +76,29 @@
                                         <td>Nama Barang</td>
                                         <td>:</td>
                                         <td>
-                                            <input type="text" id="nama_barang" autocomplete="off" class="form-control" disabled="true">
+                                            <input type="text" id="nama_barang" autocomplete="off" class="form-control" disabled="true"
+                                            style="background:#ddd">
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>Merek</td>
                                         <td>:</td>
                                         <td>
-                                            <input type="text" id="merek" autocomplete="off" class="form-control" disabled="true">
+                                            <input type="text" id="merek" autocomplete="off" class="form-control" disabled="true" style="background:#ddd">
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>Spesifikasi</td>
                                         <td>:</td>
                                         <td>
-                                            <input type="text" id="spesifikasi" autocomplete="off" class="form-control" disabled="true">
+                                            <input type="text" id="spesifikasi" autocomplete="off" class="form-control" disabled="true" style="background:#ddd">
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>Supplier</td>
                                         <td>:</td>
                                         <td>
-                                            <input type="text" id="supplier" autocomplete="off" class="form-control" disabled="true">
+                                            <input type="text" id="supplier" autocomplete="off" class="form-control" disabled="true" style="background:#ddd">
                                         </td>
                                     </tr>
                                     <tr>

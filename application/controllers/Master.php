@@ -121,12 +121,12 @@ class Master extends CI_Controller {
                 }
             }else if ($jenis == "PoMaster") {
                 $id_perusahaan = $this->input->post('id_perusahaan');
-                $tgl       = $this->input->post('tgl');
+                $kode_barang = $this->input->post('kode_barang');
                 $no_po       = $this->input->post('no_po');
 
-                $cek = $this->m_master->get_data_po_master("po_master","id_perusahaan",$id_perusahaan,"tgl",$tgl,"no_po",$no_po)->num_rows();
+                $cek = $this->m_master->get_data_po_master("po_master","id_perusahaan",$id_perusahaan,"kode_barang",$kode_barang,"no_po",$no_po)->num_rows();
                 if ($cek > 0 ) {
-                    echo json_encode(array('data' =>  FALSE));
+                    echo json_encode(array('data' =>  FALSE,'msg' => 'Nama Perusahaan, Kode Barang/Nama Barang, dan No. PO Sama!!'));
                 }else{
                     $result     = $this->m_master->insert_po_master();    
                     echo json_encode(array('data' =>  TRUE));
@@ -741,6 +741,8 @@ class Master extends CI_Controller {
                         $row[] = $i;
                         $row[] = $r->nm_perusahaan;
                         $row[] = $r->tgl;
+                        $row[] = $r->nama_barang;
+                        $row[] = $r->qty;
                         $row[] = $r->no_po;
 
                         $aksi ="";
@@ -966,6 +968,15 @@ class Master extends CI_Controller {
       echo json_encode($response);
     }
 
+    function laod_po_barang(){
+        $searchTerm = $_GET['search'];
+  
+        // Get users
+        $response = $this->m_master->list_po_barang($searchTerm);
+  
+        echo json_encode($response);
+      }
+
     function load_m_barang_pl(){
         $searchTerm = $_GET['search'];
   
@@ -1008,8 +1019,15 @@ class Master extends CI_Controller {
                 $result= $this->m_master->update_load_barang();
                 echo json_encode(array('data' =>  TRUE));
             }else if ($jenis == "PoMaster") {
-                $result= $this->m_master->update_master_po();
-                echo json_encode(array('data' =>  TRUE));
+                $id      = $this->input->post('kode_barang');
+                $id_lama = $this->input->post('kode_barang_lama');
+
+                if ($id <> $id_lama) {
+                    echo json_encode(array('data' =>  FALSE,'msg' => 'Kode Barang Lain'));
+                }else{
+                    $result= $this->m_master->update_master_po();
+                    echo json_encode(array('data' =>  TRUE));
+                }
             }else if ($jenis == "PL") {
                 $no_surat      = $this->input->post('no_surat');
                 $no_so      = $this->input->post('no_so');

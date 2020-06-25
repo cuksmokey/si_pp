@@ -35,6 +35,8 @@
                                             <th>No</th>
                                             <th>Nama Perusahaan</th>
                                             <th>Tanggal</th>
+                                            <th>Nama Barang</th>
+                                            <th>QTY</th>
                                             <th>PO</th>
                                             <th width="15%">Aksi</th>
                                         </tr>
@@ -88,10 +90,33 @@
                                         </td>
                                     </tr>
                                     <tr>
+                                        <td>Nama Barang</td>
+                                        <td>:</td>
+                                        <td colspan="2">
+                                          <select class="form-control" id="nama_barang" style="width:100%">
+                                          </select>
+                                    </tr>
+                                    <tr>
+                                        <td>Kode Barang</td>
+                                        <td>:</td>
+                                        <td colspan="2">
+                                            <input type="text" class="form-control" id="kode_barang" disabled="true" style="background:#ddd">
+                                            <input type="hidden" id="kode_barang_lama" value="">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>QTY</td>
+                                        <td>:</td>
+                                        <td colspan="2">
+                                            <input type="text" class="form-control" id="qty" onkeypress="return hanyaAngka(event)"
+                                            autocomplete="off"> 
+                                        </td>
+                                    </tr>
+                                    <tr>
                                         <td>No PO</td>
                                         <td>:</td>
                                         <td colspan="2">
-                                            <input type="text" class="form-control" id="no_po"> 
+                                            <input type="text" class="form-control" id="no_po" autocomplete="off"> 
                                         </td>
                                     </tr>
                                     <tr>
@@ -133,6 +158,7 @@
     $(document).ready(function(){
       $(".box-form").hide();
      load_data();
+     load_barang();
 
     $("input.angka").keypress(function(event) { //input text number only
             return /\d/.test(String.fromCharCode(event.keyCode));
@@ -191,36 +217,49 @@
 
     function simpan(){
       id_perusahaan = $("#nm_perusahaan").val();
-      tgl     = $("#tgl").val();
-      no_po    = $("#no_po").val();
-        
-        if (id_perusahaan == "" || tgl == "" ||  no_po == "")  {
-          showNotification("alert-info", "Harap Lengkapi Form", "bottom", "center", "", ""); return;
-        }
+      tgl = $("#tgl").val();
+      no_po = $("#no_po").val();
+      qty = $("#qty").val();
+      kode_barang_lama = $("#kode_barang_lama").val();
 
-        $("#btn-simpan").prop("disabled",true);
-        
+      data = $('#nama_barang').select2('data');
+      nama_barang = data[0].text;
+      kode_barang = data[0].kode_barang;
 
-        $.ajax({
-            type     : "POST",
-            url      : '<?php echo base_url(); ?>Master/'+status,
-            data     : ({id_perusahaan:id_perusahaan,tgl:tgl,no_po:no_po,jenis : "PoMaster" }),
-            dataType : "json",
-            success  : function(data){
-              $("#btn-simpan").prop("disabled",true);
-              if (data.data == true) {
-                
-                reloadTable();
-                showNotification("alert-success", "Berhasil", "bottom", "center", "", "");
-                
-               status = 'update';
+      if (id_perusahaan == "" || tgl == "" || nama_barang == "" ||kode_barang == "" ||  no_po == "" || qty == "")  {
+        showNotification("alert-info", "Harap Lengkapi Form", "bottom", "center", "", ""); return;
+      }
 
-              }else{
-                showNotification("alert-danger", "Nama Perusahaan dan No. PO Sama!! ", "bottom", "center", "", "");
-              }
+      $("#btn-simpan").prop("disabled",true);
+      
+      // alert("Kode :("+kode_barang+"). Kode Lama :("+kode_barang_lama+"). Nama :("+nama_barang+")");
+      $.ajax({
+          type     : "POST",
+          url      : '<?php echo base_url(); ?>Master/'+status,
+          data     : ({
+            id_perusahaan:id_perusahaan,
+            tgl:tgl,
+            kode_barang:kode_barang,
+            kode_barang_lama:kode_barang_lama,
+            qty:qty,
+            no_po:no_po,
+            jenis : "PoMaster" }),
+          dataType : "json",
+          success  : function(data){
+            $("#btn-simpan").prop("disabled",true);
+            if (data.data == true) {
               
+              reloadTable();
+              showNotification("alert-success", "Berhasil", "bottom", "center", "", "");
+              
+              status = 'update';
+
+            }else{
+              showNotification("alert-danger", data.msg, "bottom", "center", "", "");
             }
-        });
+            
+          }
+      });
     }
 
     function tampil_edit(id){
@@ -228,6 +267,7 @@
     $(".box-form").show();
     $('.box-form').animateCss('fadeInDown');
     $("#judul").html('<h3> Form Edit Data Master PO</h3>');
+    $("#btn-simpan").prop("disabled",false);
 
     status = "update";
 
@@ -241,8 +281,9 @@
 
               $("#nm_perusahaan").val(json.id_perusahaan).prop("disabled",true);
               $("#tgl").val(json.tgl);
-              $("#tonase").val(json.tonase);
+              $("#kode_barang_lama").val(json.kode_barang);
               $("#no_po").val(json.no_po);
+              $("#qty").val(json.qty);
 
           }) 
 
@@ -285,18 +326,63 @@
     }
 
     function kosong(){
-      $("#judul").html('<h3> Form Tambah Data</h3>');
+      $("#judul").html('<h3> Tambah Data Master PO</h3>');
       status = "insert";
       $("#id").val("");
-
-      $("#nm_perusahaan_lama").val("");
 
       $("#nm_perusahaan").val("").prop("disabled",false);
       $("#tgl").val("");
       $("#no_po").val("");
+      $("#qty").val("");
+      $("#nama_barang").val("");
+      $("#kode_barang").val("");
 
       $("#btn-simpan").prop("disabled",false);
       $("#txt-btn-simpan").html("Simpan");
     }
+
+    function load_barang(){
+    
+    $('#nama_barang').select2({
+         // minimumInputLength: 3,
+         allowClear: true,
+         placeholder: '--select--',
+         ajax: {
+            dataType: 'json',
+            url      : '<?php echo base_url(); ?>/Master/laod_po_barang',
+            delay: 800,
+            data: function(params) {
+              if (params.term == undefined) {
+                return {
+                  search: ""
+                }  
+              }else{
+                return {
+                  search: params.term
+                }
+              }
+              
+            },
+            processResults: function (data, page) {
+            return {
+              results: data
+            };
+          },
+        }
+    });
+ }
+
+ $('#nama_barang').on('change', function() {
+    data = $('#nama_barang').select2('data');
+    // $("#pimpinan").val(data[0].pimpinan);
+    $("#kode_barang").val(data[0].kode_barang);
+  });
+
+  function hanyaAngka(evt) {
+    var charCode = (evt.which) ? evt.which : event.keyCode
+      if (charCode > 31 && (charCode < 48 || charCode > 57))
+      return false;
+    return true;
+  }
     
 </script>
