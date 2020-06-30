@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>PROJECT001</title>
+    <title>SIPP</title>
     <!-- Favicon-->
     <link rel="icon" href="<?php echo base_url(); ?>assets/logo.ico" type="image/x-icon">
 
@@ -74,7 +74,7 @@
             <div class="navbar-header">
                 <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false"></a>
                 <a href="javascript:void(0);" class="bars"></a>
-                <a class="navbar-brand" href="<?php echo base_url(); ?>">SI Timbangan</a>
+                <a class="navbar-brand" href="<?php echo base_url(); ?>">SI Penjualan dan Pembelian</a>
             </div>
             <div class="collapse navbar-collapse" id="navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
@@ -188,7 +188,7 @@
              <!-- Footer -->
             <div class="legal">
                 <div class="copyright">
-                    nama aplikasi
+                    SI PP
                 </div>
             </div>
             <!-- #Footer -->

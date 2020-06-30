@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>SI Timbangan</title>
+    <title>SIPP</title>
     <!-- Favicon-->
     <link rel="icon" href="<?php echo base_url(); ?>assets/logo.ico" type="image/x-icon">
 
@@ -28,7 +28,7 @@
 <body class="login-page">
     <div class="login-box">
         <div class="logo">
-            <a href="javascript:void(0);">SI  <b>Timbangan</b></a>
+            <a href="javascript:void(0);">SI<b>PP</b></a>
             <!-- <small>Aplikasi Gudang</small> -->
         </div>
         <div class="card">
