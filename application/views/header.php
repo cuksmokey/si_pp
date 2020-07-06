@@ -132,9 +132,9 @@
                             <li>
                                 <a href="<?php echo base_url('Master/Barang') ?>">Barang</a>
                             </li>
-                            <li>
+                            <!-- <li>
                                 <a href="<?php echo base_url('Master/Perusahaan') ?>">Perusahaan</a>
-                            </li>
+                            </li> -->
                             <!-- <li>
                                 <a href="<?php echo base_url('Master/PO') ?>">PO</a>
                             </li> -->
@@ -170,8 +170,17 @@
                             <span>Laporan</span>
                         </a>
                         <ul class="ml-menu">
-                            <li>
+                            <!-- <li>
                                 <a href="<?php echo base_url('Laporan/print_sj') ?>">SURAT JALAN</a>
+                            </li> -->
+                            <li>
+                                <a href="<?php echo base_url('Laporan/print_sj') ?>">BARANG</a>
+                            </li>
+                            <li>
+                                <a href="<?php echo base_url('Laporan/print_sj') ?>">TOTAL PEMBELIAN</a>
+                            </li>
+                            <li>
+                                <a href="<?php echo base_url('Laporan/print_sj') ?>">REKAP PER NO NOTA</a>
                             </li>
                             <!-- <?php if($this->session->userdata('level') == "SuperAdmin") { ?>
                                 <li>
