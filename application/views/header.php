@@ -74,7 +74,7 @@
             <div class="navbar-header">
                 <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false"></a>
                 <a href="javascript:void(0);" class="bars"></a>
-                <a class="navbar-brand" href="<?php echo base_url(); ?>">SI Penjualan dan Pembelian</a>
+                <a class="navbar-brand" href="<?php echo base_url(); ?>">SI PEMBELIAN</a>
             </div>
             <div class="collapse navbar-collapse" id="navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
@@ -135,9 +135,9 @@
                             <li>
                                 <a href="<?php echo base_url('Master/Perusahaan') ?>">Perusahaan</a>
                             </li>
-                            <li>
+                            <!-- <li>
                                 <a href="<?php echo base_url('Master/PO') ?>">PO</a>
-                            </li>
+                            </li> -->
                         </ul>
                     </li>
                     <!-- <li>
@@ -152,12 +152,12 @@
                             <span>Price List</span>
                         </a>
                     </li>
-                    <li>
+                    <!-- <li>
                         <a href="<?php echo base_url('Master/PL_Price_List') ?>">
                             <i class="material-icons">list</i>
                             <span>Packing List</span>
                         </a>
-                    </li>
+                    </li> -->
                     <!-- <li>
                         <a href="<?php echo base_url('Master/Invoice') ?>">
                             <i class="material-icons">list</i>
@@ -173,11 +173,11 @@
                             <li>
                                 <a href="<?php echo base_url('Laporan/print_sj') ?>">SURAT JALAN</a>
                             </li>
-                            <?php if($this->session->userdata('level') == "SuperAdmin") { ?>
+                            <!-- <?php if($this->session->userdata('level') == "SuperAdmin") { ?>
                                 <li>
                                     <a href="<?php echo base_url('Laporan/update_po') ?>">UPDATE PO</a>
                                 </li>
-                            <?php } ?>
+                            <?php } ?> -->
                         </ul>
                     </li>
                     
