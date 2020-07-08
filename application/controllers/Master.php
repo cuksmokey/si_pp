@@ -77,6 +77,13 @@ class Master extends CI_Controller {
         $this->load->view('footer');
     }
 
+    public function Supplier()
+    {
+        $this->load->view('header');
+        $this->load->view('Master/v_supplier');
+        $this->load->view('footer');
+    }
+
    
     function Insert(){
 
@@ -117,6 +124,15 @@ class Master extends CI_Controller {
                     echo json_encode(array('data' =>  FALSE));
                 }else{
                     $result     = $this->m_master->insert_load_barang();    
+                    echo json_encode(array('data' =>  TRUE));
+                }
+            }else if ($jenis == "Simpan_Supplier") {
+                $id      = $this->input->post('supplier');
+                $cek = $this->m_master->get_data_one("m_supplier","nama_supplier",$id)->num_rows();
+                if ($cek > 0 ) {
+                    echo json_encode(array('data' =>  FALSE));
+                }else{
+                    $result     = $this->m_master->insert_load_supplier();    
                     echo json_encode(array('data' =>  TRUE));
                 }
             }else if ($jenis == "PoMaster") {
@@ -770,6 +786,87 @@ class Master extends CI_Controller {
                     }
                 }
                 $output = array("data" => $data);
+            }else if ($jenis == "Load_Supplier") {
+
+                $query = $this->m_master->get_load_supplier();
+
+                if ($query->num_rows() == 0) {
+                    $data[] =  ["","",""];
+                }else{
+                    $i=1;
+
+                    foreach ($query->result() as $r) {
+                        $id = "'$r->id'";
+                        $row = array();
+                        $row[] = $i;
+                        $row[] = $r->nama_supplier;
+                        $aksi ="";
+
+                        if ($this->session->userdata('level') == "SuperAdmin") {
+                            $aksi = '   
+                            <button type="button" onclick="tampil_edit('.$id.')" class="btn bg-orange btn-circle waves-effect waves-circle waves-float">
+                                <i class="material-icons">edit</i>
+                            </button>
+                          <button type="button" onclick="deleteData('.$id.','."".')" class="btn btn-danger btn-circle waves-effect waves-circle waves-float">
+                                <i class="material-icons">delete</i>
+                            </button>';
+
+                            $row[] = $aksi;
+                            $data[] = $row;
+                        }else{
+                            $aksi .='-';
+                            $row[] = $aksi;
+                            $data[] = $row;
+                        }
+                        $i++;
+                    }
+                }
+                $output = array("data" => $data);
+            }else if ($jenis == "PoMaster") {
+
+                $query = $this->m_master->get_po_master();
+
+                if ($query->num_rows() == 0) {
+                    $data[] =  ["","","","","","","",""];
+                }else{
+                    $i=1;
+
+                    foreach ($query->result() as $r) {
+                        $id = "'$r->id'";
+
+                        $row = array();
+                        $row[] = $i;
+                        $row[] = $r->nm_perusahaan;
+                        $row[] = $r->tgl;
+                        $row[] = $r->nama_barang;
+                        $row[] = $r->qty;
+                        $row[] = $r->no_po;
+
+                        $aksi ="";
+
+                        if ($this->session->userdata('level') == "SuperAdmin") {
+
+                            $aksi = '   
+                            <button type="button" onclick="tampil_edit('.$id.')" class="btn bg-orange btn-circle waves-effect waves-circle waves-float">
+                                <i class="material-icons">edit</i>
+                            </button>
+                          <button type="button" onclick="deleteData('.$id.','."".')" class="btn btn-danger btn-circle waves-effect waves-circle waves-float">
+                                <i class="material-icons">delete</i>
+                            </button>';
+
+                            $row[] = $aksi;
+                            $data[] = $row;
+                            
+                        }else{
+                            $aksi .='-';
+                            $row[] = $aksi;
+                            $data[] = $row;
+                        }
+                            
+                        $i++;
+                    }
+                }
+                $output = array("data" => $data);
             }else if ($jenis == "Invoice") {
 
                 $query = $this->m_master->get_invoice();
@@ -1013,6 +1110,19 @@ class Master extends CI_Controller {
                     echo json_encode(array('data' =>  FALSE,'msg' => 'Kode Barang Lain'));
                 }else{
                     $result= $this->m_master->update_price_list();
+                    echo json_encode(array('data' =>  TRUE));
+                }
+            }else if ($jenis == "Simpan_Supplier") {
+                $id      = $this->input->post('supplier');
+                $id_lama = $this->input->post('supplier_lama');
+                $cek = $this->m_master->get_data_one("m_supplier","nama_supplier",$id)->num_rows();
+
+                if ($id == $id_lama) {
+                    echo json_encode(array('data' =>  FALSE));
+                }else if ($cek > 0) {
+                    echo json_encode(array('data' =>  FALSE));
+                }else{
+                    $result= $this->m_master->update_load_supplier();
                     echo json_encode(array('data' =>  TRUE));
                 }
             }else if ($jenis == "Simpan_Barang") {
@@ -1322,6 +1432,9 @@ class Master extends CI_Controller {
         }else if ($jenis == "hapus_barang") {
             $return = $this->m_master->delete("m_barang","id",$id);
             echo "1";
+        }else if ($jenis == "hapus_supplier") {
+            $return = $this->m_master->delete("m_supplier","id",$id);
+            echo "1";
         }else if ($jenis == "PoMaster") {
             $return = $this->m_master->delete("po_master","id",$id);
             echo "1";
@@ -1371,6 +1484,9 @@ class Master extends CI_Controller {
             echo json_encode($data);
         }else if ($jenis == "edit_barang") {
             $data =  $this->m_master->get_data_one("m_barang", "id", $id)->row();
+            echo json_encode($data);
+        }else if ($jenis == "edit_supplier") {
+            $data =  $this->m_master->get_data_one("m_supplier", "id", $id)->row();
             echo json_encode($data);
         }else if ($jenis == "PoMaster") {
             $data =  $this->m_master->get_data_one("po_master", "id", $id)->row();

@@ -415,6 +415,11 @@ class M_master extends CI_Model{
         return $this->db->query($query);
     }
 
+    function get_load_supplier(){
+        $query = "SELECT * FROM m_supplier";
+        return $this->db->query($query);
+    }
+
     function get_po_master(){
         $query = "SELECT b.nm_perusahaan,c.nama_barang,a.* FROM po_master a
         INNER JOIN m_perusahaan b ON a.id_perusahaan = b.id
@@ -469,6 +474,17 @@ class M_master extends CI_Model{
             'created_by' => $this->session->userdata('username')
         );
         $result= $this->db->insert("m_barang",$data);
+
+        return $result;
+    }
+
+    function insert_load_supplier(){
+        $data = array(
+            // 'tgl' => $_POST['tgl'],
+            'nama_supplier' => $_POST['supplier'],
+            'created_by' => $this->session->userdata('username')
+        );
+        $result= $this->db->insert("m_supplier",$data);
 
         return $result;
     }
@@ -528,6 +544,17 @@ class M_master extends CI_Model{
         $this->db->set('updated_by', $this->session->userdata('username'));
         $this->db->where('kode_barang', $_POST['kode_barang']);
         $result = $this->db->update('m_barang');
+        return $result;
+    }
+
+    function update_load_supplier(){
+        
+        // $this->db->set('tgl', $_POST['tgl']);
+        $this->db->set('nama_supplier', $_POST['supplier']);
+        $this->db->set('updated_at', date("Y-m-d h:i:s"));
+        $this->db->set('updated_by', $this->session->userdata('username'));
+        $this->db->where('id', $_POST['id']);
+        $result = $this->db->update('m_supplier');
         return $result;
     }
 

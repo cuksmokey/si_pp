@@ -130,6 +130,9 @@
                                 <a href="<?php echo base_url('Master/Timbangan') ?>">Timbangan</a>
                             </li> -->
                             <li>
+                                <a href="<?php echo base_url('Master/Supplier') ?>">Supplier</a>
+                            </li>
+                            <li>
                                 <a href="<?php echo base_url('Master/Barang') ?>">Barang</a>
                             </li>
                             <!-- <li>
