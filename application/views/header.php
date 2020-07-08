@@ -174,7 +174,7 @@
                                 <a href="<?php echo base_url('Laporan/print_sj') ?>">SURAT JALAN</a>
                             </li> -->
                             <li>
-                                <a href="<?php echo base_url('Laporan/print_sj') ?>">BARANG</a>
+                                <a href="<?php echo base_url('Laporan/print_barang') ?>">BARANG</a>
                             </li>
                             <li>
                                 <a href="<?php echo base_url('Laporan/print_sj') ?>">TOTAL PEMBELIAN</a>

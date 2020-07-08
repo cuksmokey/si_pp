@@ -39,6 +39,12 @@ class Laporan extends CI_Controller {
         $this->load->view('footer');
     }
 
+    function print_barang(){
+        $this->load->view('header');
+        $this->load->view('Laporan/v_barang');
+        $this->load->view('footer');
+    }
+
     function update_stok_gudang(){
         $this->load->view('header');
         $this->load->view('Laporan/v_stok_gudang');
@@ -155,6 +161,70 @@ class Laporan extends CI_Controller {
             $data2['prev']= $html;
             $this->load->view('view_excel', $data2);
         }
+    }
+
+    function lap_barang(){
+        $tgl1 = $_GET['tgl1'];
+        $tgl2 = $_GET['tgl2'];
+
+        $html = '';
+
+        // JUDUL
+        $html .= '<table cellspacing="0" style="font-size:12px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;text-align:center;font-family:Arial !important">
+            <tr>
+                <th>LAPORAN BARANG</th>
+            </tr>
+        </table>';
+
+        // content
+        $html .= '<table cellspacing="0" style="font-size:11px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;font-family:Arial !important">
+            <tr>
+                <th style="border:1px solid #000;width:3%;padding:5px 0"></th>
+                <th style="border:1px solid #000;width:10%;padding:5px"></th>
+                <th style="border:1px solid #000;width:23%;padding:5px"></th>
+                <th style="border:1px solid #000;width:11%;padding:5px"></th>
+                <th style="border:1px solid #000;width:11%;padding:5px"></th>
+                <th style="border:1px solid #000;width:11%;padding:5px"></th>
+                <th style="border:1px solid #000;width:8%;padding:5px"></th>
+                <th style="border:1px solid #000;width:10%;padding:5px"></th>
+                <th style="border:1px solid #000;width:12%;padding:5px"></th>
+            </tr>
+            <tr>
+                <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">No.</td>
+                <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">Tanggal</td>
+                <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">Nama Barang</td>
+                <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">Merek</td>
+                <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">Spesifikasi</td>
+                <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">Supplier</td>
+                <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">QTY</td>
+                <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">Harga</td>
+                <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">No. Nota</td>
+            </tr>';
+        //$this->m_fungsi->tanggal_format_indonesia($data_pl->tgl)
+
+        $sql_barang = $this->db->query("SELECT*FROM m_barang WHERE tgl BETWEEN '$tgl1' AND '$tgl2'
+        ORDER BY tgl ASC");
+
+        $i = 0;
+        foreach($sql_barang->result() as $r){
+            $i++;
+            $html .='<tr>
+                <td style="border:1px solid #000;padding:5px;text-align:center">'.$i.'</td>
+                <td style="border:1px solid #000;padding:5px">'.$this->m_fungsi->tanggal_format_indonesia($r->tgl).'</td>
+                <td style="border:1px solid #000;padding:5px">'.$r->nama_barang.'</td>
+                <td style="border:1px solid #000;padding:5px">'.$r->merek.'</td>
+                <td style="border:1px solid #000;padding:5px">'.$r->spesifikasi.'</td>
+                <td style="border:1px solid #000;padding:5px">'.$r->supplier.'</td>
+                <td style="border:1px solid #000;padding:5px">'.$r->qty.' '.$r->qty_ket.'</td>
+                <td style="border:1px solid #000;padding:5px">Rp. '.number_format($r->harga).'</td>
+                <td style="border:1px solid #000;padding:5px">'.$r->no_nota.'</td>
+            </tr>';
+        }
+
+        $html .= '</table>';
+
+        $this->m_fungsi->_mpdf2('',$html,10,10,10,'L');
+
     }
 
     function lap_csv(){
