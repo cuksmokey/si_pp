@@ -34,14 +34,14 @@
                                         <tr>
                                             <th>No</th>
                                             <th>Tanggal</th>
+                                            <th>Supplier</th>
+                                            <th>No. Nota</th>
                                             <th>Kode Barang</th>
                                             <th>Nama Barang</th>
                                             <th>Merek</th>
                                             <th>Spesifikasi</th>
-                                            <th>Supplier</th>
                                             <th>Qty</th>
                                             <th>Harga</th>
-                                            <th>No. Nota</th>
                                             <th width="15%">Aksi</th>
                                         </tr>
                                     </thead>
@@ -54,7 +54,7 @@
                             <!-- box form -->
                             <div class="box-form">
                                 <div id="judul"></div>
-                                <table width="70%">
+                                <table width="80%">
                                     <tr>
                                       <th style="border:0;padding:5px;width:10%"></th>
                                       <th style="border:0;padding:5px;width:1%"></th>
@@ -69,10 +69,37 @@
                                         </td>
                                     </tr>
                                     <tr>
+                                      <td style="padding:10px"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Supplier</td>
+                                        <td>:</td>
+                                        <td>
+                                        <select class="form-control" id="supplier" style="width:100%">
+                                        </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>No. Nota</td>
+                                        <td>:</td>
+                                        <td>
+                                            <input type="text" id="no_nota" autocomplete="off" class="form-control" disabled="true" style="background:#ddd">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                      <td style="padding:10px"></td>
+                                    </tr>
+                                    <tr>
                                         <td>Kode Barang</td>
                                         <td>:</td>
                                         <td>
-                                            <input type="text" id="kode_barang" autocomplete="off" class="form-control">
+                                          <table style="width:100%" border="0">
+                                            <tr>
+                                              <td width="30%"><input type="text" id="id1" class="angka form-control" maxlength="5"></td>
+                                              <td width="1%">/</td>
+                                              <td width="64%"><input type="text" id="id2" class="form-control" maxlength="15"></td>
+                                            </tr>
+                                          </table>
                                         </td>
                                     </tr>
                                     <tr>
@@ -80,6 +107,9 @@
                                         <td>:</td>
                                         <td>
                                             <input type="text" id="nama_barang" autocomplete="off" class="form-control">
+                                            <input type="hidden" value="" id="id">
+                                            <!-- <input type="hidden" value="" id="kode_barang_lama"> -->
+                                            <input type="hidden" value="" id="supplier_lama">
                                         </td>
                                     </tr>
                                     <tr>
@@ -94,13 +124,6 @@
                                         <td>:</td>
                                         <td>
                                             <input type="text" id="spesifikasi" autocomplete="off" class="form-control">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Supplier</td>
-                                        <td>:</td>
-                                        <td>
-                                            <input type="text" id="supplier" autocomplete="off" class="form-control">
                                         </td>
                                     </tr>
                                     <tr>
@@ -129,13 +152,6 @@
                                         <td>:</td>
                                         <td>
                                             <input type="text" id="harga" placeholder="0" autocomplete="off" class="form-control" onkeypress="return hanyaAngka(event)">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>No. Nota</td>
-                                        <td>:</td>
-                                        <td>
-                                            <input type="text" id="no_nota" autocomplete="off" class="form-control">
                                         </td>
                                     </tr>
                                     <tr>
@@ -177,6 +193,7 @@
     $(document).ready(function(){
       $(".box-form").hide();
      load_data();
+     load_supplier();
 
     $("input.angka").keypress(function(event) { //input text number only
             return /\d/.test(String.fromCharCode(event.keyCode));
@@ -232,16 +249,23 @@
     }
 
     function simpan(){
+      id = $("#id").val();
       tgl = $("#tgl").val();
-      kode_barang = $("#kode_barang").val();
+      
+      data = $('#supplier').select2('data');
+      supplier = data[0].id;
+      // supplier_lama = $("#supplier_lama").val();
+      no_nota = $("#no_nota").val();
+
+      kode_barang = $("#id1").val()+"/"+$("#id2").val();
+      kode_barang_lama = $("#kode_barang_lama").val();
       nama_barang = $("#nama_barang").val();
       merek = $("#merek").val();
       spesifikasi = $("#spesifikasi").val();
-      supplier = $("#supplier").val();
+
       i_qty = $("#qty").val();
       qty_ket = $("#qty_ket").val();
       i_harga = $("#harga").val();
-      no_nota = $("#no_nota").val();
 
       qty = i_qty.split(".").join("");
       harga = i_harga.split(".").join("");
@@ -257,16 +281,19 @@
           type     : "POST",
           url      : '<?php echo base_url(); ?>Master/'+status,
           data     : ({
+            id : id,
             tgl : tgl,
             kode_barang : kode_barang,
+            kode_barang_lama : kode_barang_lama,
             nama_barang : nama_barang,
             merek : merek,
             spesifikasi : spesifikasi,
             supplier : supplier,
+            // supplier_lama : supplier_lama,
             qty : qty,
             qty_ket : qty_ket,
             harga : harga,
-            no_nota : no_nota,
+            // no_nota : no_nota,
             jenis : "Simpan_Barang" }),
           dataType : "json",
           success  : function(data){
@@ -290,8 +317,12 @@
       $(".box-form").show();
       $('.box-form').animateCss('fadeInDown');
       $("#judul").html('<h3>Form Edit Data Barang</h3>');
+      $("#supplier").val("");
+      $("#no_nota").val("");
 
       status = "update";
+
+      // alert(id);
 
       $.ajax({
           url : '<?php echo base_url('Master/get_edit'); ?>',
@@ -302,18 +333,25 @@
       })
       .done(function(data) {
           json = JSON.parse(data);
-
           $("#btn-simpan").prop("disabled",false);
+
+          // $("#kode_barang_lama").val(json.kode_barang);
+          a = json.kode_barang.split("/");
+
+          // $("#kode_barang").val(json.kode_barang).prop("disabled",true);
+          $("#id1").val(a[0]).prop("disabled",true);
+          $("#id2").val(a[1]).prop("disabled",true);
+
+          $("#id").val(json.id);
           $("#tgl").val(json.tgl);
-          $("#kode_barang").val(json.kode_barang).prop("disabled",true);
           $("#nama_barang").val(json.nama_barang);
           $("#merek").val(json.merek);
           $("#spesifikasi").val(json.spesifikasi);
-          $("#supplier").val(json.supplier);
+          // $("#supplier_lama").val(json.id_m_nota);
           $("#qty").val(json.qty);
           $("#qty_ket").val(json.qty_ket);
           $("#harga").val(json.harga);
-          $("#no_nota").val(json.no_nota);
+          // $("#no_nota").val(json.no_nota);
       })
     }
     function deleteData(id,nm){
@@ -357,19 +395,59 @@
       status = "insert";
 
       $("#tgl").val("");
-      $("#kode_barang").val("").prop("disabled",false);
+      $("#id1").val("").prop("disabled",false);
+      $("#id2").val("").prop("disabled",false);
+      $("#kode_barang_lama").val("");
       $("#nama_barang").val("");
       $("#merek").val("");
       $("#spesifikasi").val("");
       $("#supplier").val("");
+      $("#supplier_lama").val("");
+      $("#no_nota").val("");
       $("#qty").val("");
       $("#qty_ket").val("0");
       $("#harga").val("");
-      $("#no_nota").val("");
 
       $("#btn-simpan").prop("disabled",false);
       $("#txt-btn-simpan").html("SIMPAN");
     }
+
+    function load_supplier(){
+    
+    $('#supplier').select2({
+         // minimumInputLength: 3,
+         allowClear: true,
+         placeholder: 'SELECT',
+         ajax: {
+            dataType: 'json',
+            url      : '<?php echo base_url(); ?>/Master/laod_supplier_nota',
+            delay: 800,
+            data: function(params) {
+              if (params.term == undefined) {
+                return {
+                  search: ""
+                }  
+              }else{
+                return {
+                  search: params.term
+                }
+              }
+              
+            },
+            processResults: function (data, page) {
+            return {
+              results: data
+            };
+          },
+        }
+    });
+ }
+
+ $('#supplier').on('change', function() {
+    data = $('#supplier').select2('data');
+    // $("#supplier").val(data[0].text);
+    $("#no_nota").val(data[0].no_nota);
+  });
 
     function hanyaAngka(evt) {
 		  var charCode = (evt.which) ? evt.which : event.keyCode

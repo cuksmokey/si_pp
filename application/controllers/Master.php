@@ -127,6 +127,7 @@ class Master extends CI_Controller {
             }else if ($jenis == "Simpan_Barang") {
                 $id      = $this->input->post('kode_barang');
                 $cek = $this->m_master->get_data_one("m_barang","kode_barang",$id)->num_rows();
+                
                 if ($cek > 0 ) {
                     echo json_encode(array('data' =>  FALSE));
                 }else{
@@ -731,14 +732,14 @@ class Master extends CI_Controller {
                         $row = array();
                         $row[] = $i;
                         $row[] = $r->tgl;
+                        $row[] = $r->nama_supplier;
+                        $row[] = $r->no_nota;
                         $row[] = $r->kode_barang;
                         $row[] = $r->nama_barang;
                         $row[] = $r->merek;
                         $row[] = $r->spesifikasi;
-                        $row[] = $r->supplier;
                         $row[] = number_format($r->qty)." ".$r->qty_ket;
                         $row[] = "Rp. ".number_format($r->harga);
-                        $row[] = $r->no_nota;
                         $aksi ="";
 
                         if ($this->session->userdata('level') == "SuperAdmin") {
@@ -1140,6 +1141,15 @@ class Master extends CI_Controller {
     echo json_encode($response);
     }
 
+    function laod_supplier_nota(){
+        $searchTerm = $_GET['search'];
+    
+        // Get users
+        $response = $this->m_master->list_supplier_nota($searchTerm);
+    
+        echo json_encode($response);
+        }
+
     function load_m_barang_pl(){
         $searchTerm = $_GET['search'];
   
@@ -1197,12 +1207,12 @@ class Master extends CI_Controller {
                 $nota      = $this->input->post('no_nota');
                 $nota_lama = $this->input->post('no_nota_lama');
 
-                $cek = $this->m_master->get_data_one("m_nota","no_nota",$id)->num_rows();
+                $cek = $this->m_master->get_data_one("m_nota","no_nota",$nota)->num_rows();
 
                 if ($id <> $id_lama) {
                     echo json_encode(array('data' =>  FALSE,'msg' => 'Supplier Tidak Sama'));
                 }else if ($nota == $nota_lama) {
-                    echo json_encode(array('data' =>  FALSE,'msg' => 'No. Nota Sudah Ada'));
+                    echo json_encode(array('data' =>  FALSE,'msg' => 'No. Nota Sama Dengan Sebelumnya'));
                 }else if ($cek > 0) {
                     echo json_encode(array('data' =>  FALSE,'msg' => 'No. Nota Sudah Ada'));
                 }else{
@@ -1210,8 +1220,20 @@ class Master extends CI_Controller {
                     echo json_encode(array('data' =>  TRUE));
                 }
             }else if ($jenis == "Simpan_Barang") {
-                $result= $this->m_master->update_load_barang();
-                echo json_encode(array('data' =>  TRUE));
+                // $id = $this->input->post('kode_barang');
+                // $s_n = $this->input->post('supplier');
+                // $s_n_l = $this->input->post('supplier_lama');
+
+                // $cek = $this->m_master->get_data_one("m_barang","kode_barang",$id)->num_rows();
+
+                // if ($s_n == $s_n_l && $cek > 0) {
+                //     echo json_encode(array('data' =>  FALSE));
+                // }else if ($s_n <> $s_n_l && $cek > 0) {
+                //     echo json_encode(array('data' =>  FALSE));
+                // }else{
+                    $result= $this->m_master->update_load_barang();
+                    echo json_encode(array('data' =>  TRUE));
+                // }
             }else if ($jenis == "PoMaster") {
                 $id      = $this->input->post('kode_barang');
                 $id_lama = $this->input->post('kode_barang_lama');
@@ -1518,6 +1540,9 @@ class Master extends CI_Controller {
             echo "1";
         }else if ($jenis == "hapus_supplier") {
             $return = $this->m_master->delete("m_supplier","id",$id);
+            echo "1";
+        }else if ($jenis == "hapus_nota") {
+            $return = $this->m_master->delete("m_nota","id",$id);
             echo "1";
         }else if ($jenis == "PoMaster") {
             $return = $this->m_master->delete("po_master","id",$id);

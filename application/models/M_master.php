@@ -411,7 +411,10 @@ class M_master extends CI_Model{
     }
 
     function get_load_barang(){
-        $query = "SELECT * FROM m_barang ORDER BY kode_barang ASC";
+        $query = "SELECT a.id,a.tgl,c.nama_supplier,b.no_nota,a.kode_barang,a.nama_barang,a.merek,a.spesifikasi,a.qty,a.qty_ket,a.harga FROM m_barang a
+        INNER JOIN m_nota b ON a.id_m_nota=b.id
+        INNER JOIN m_supplier c ON b.id_supplier=c.id
+        ORDER BY a.nama_barang";
         return $this->db->query($query);
     }
 
@@ -423,7 +426,7 @@ class M_master extends CI_Model{
     function get_load_no_nota(){
         $query = "SELECT a.id,b.nama_supplier,a.no_nota FROM m_nota a
         INNER JOIN m_supplier b ON a.id_supplier = b.id
-        ORDER BY b.nama_supplier ASC";
+        ORDER BY b.nama_supplier ASC,a.no_nota ASC";
         return $this->db->query($query);
     }
 
@@ -469,15 +472,15 @@ class M_master extends CI_Model{
     function insert_load_barang(){
         $data = array(
             'tgl' => $_POST['tgl'],
+            'id_m_nota' => $_POST['supplier'],
             'kode_barang' => $_POST['kode_barang'],
             'nama_barang' => $_POST['nama_barang'],
             'merek' => $_POST['merek'],
             'spesifikasi' => $_POST['spesifikasi'],
-            'supplier' => $_POST['supplier'],
             'qty' => $_POST['qty'],
             'qty_ket' => $_POST['qty_ket'],
             'harga' => $_POST['harga'],
-            'no_nota' => $_POST['no_nota'],
+            // 'no_nota' => $_POST['no_nota'],
             'created_by' => $this->session->userdata('username')
         );
         $result= $this->db->insert("m_barang",$data);
@@ -551,17 +554,18 @@ class M_master extends CI_Model{
     function update_load_barang(){
         
         $this->db->set('tgl', $_POST['tgl']);
+        $this->db->set('id_m_nota', $_POST['supplier']);
+        // $this->db->set('kode_barang', $_POST['kode_barang']);
         $this->db->set('nama_barang', $_POST['nama_barang']);
         $this->db->set('merek', $_POST['merek']);
         $this->db->set('spesifikasi', $_POST['spesifikasi']);
-        $this->db->set('supplier', $_POST['supplier']);
         $this->db->set('qty', $_POST['qty']);
         $this->db->set('qty_ket', $_POST['qty_ket']);
         $this->db->set('harga', $_POST['harga']);
-        $this->db->set('no_nota', $_POST['no_nota']);
+        // $this->db->set('no_nota', $_POST['no_nota']);
         $this->db->set('updated_at', date("Y-m-d h:i:s"));
         $this->db->set('updated_by', $this->session->userdata('username'));
-        $this->db->where('kode_barang', $_POST['kode_barang']);
+        $this->db->where('id', $_POST['id']);
         $result = $this->db->update('m_barang');
         return $result;
     }
@@ -641,6 +645,25 @@ class M_master extends CI_Model{
                "id"=>$user['id'],
                "id_supplier"=>$user['id'],
                "text"=>$user['nama_supplier']
+           );
+        }
+        return $data;
+    }
+
+    function list_supplier_nota($searchTerm=""){
+        $users = $this->db->query("SELECT a.id,b.nama_supplier,a.no_nota FROM m_nota a
+        INNER JOIN m_supplier b ON a.id_supplier=b.id
+        WHERE b.nama_supplier LIKE '%$searchTerm%' OR
+        a.no_nota LIKE '%$searchTerm%' 
+        ORDER BY b.nama_supplier ASC,a.no_nota ASC")->result_array();
+   
+        // Initialize Array with fetched data
+        $data = array();
+        foreach($users as $user){
+           $data[] = array(
+               "id"=>$user['id'],
+               "text"=>$user['nama_supplier'],
+               "no_nota"=>$user['no_nota']
            );
         }
         return $data;

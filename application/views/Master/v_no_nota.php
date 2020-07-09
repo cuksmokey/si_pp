@@ -262,7 +262,7 @@
               type  : "POST",
               data  : {
                 id:id,
-                jenis:"hapus_supplier"},
+                jenis:"hapus_nota"},
               success : function(data){
                 if (data == 1) {
                 swal("Berhasil", "", "success");
