@@ -420,6 +420,12 @@ class M_master extends CI_Model{
         return $this->db->query($query);
     }
 
+    function get_load_no_nota(){
+        $query = "SELECT*FROM m_nota a
+        INNER JOIN m_supplier b ON a.id_supplier = b.id";
+        return $this->db->query($query);
+    }
+
     function get_po_master(){
         $query = "SELECT b.nm_perusahaan,c.nama_barang,a.* FROM po_master a
         INNER JOIN m_perusahaan b ON a.id_perusahaan = b.id

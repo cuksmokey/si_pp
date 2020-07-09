@@ -8,7 +8,7 @@
                         <div class="header">
                             <h2>
                                 <ol class="breadcrumb">
-                                    <li class="">Master Supplier</li>
+                                    <li class="">Master No. Nota</li>
                                 </ol>
                             </h2>
 
@@ -34,6 +34,7 @@
                                         <tr>
                                             <th width="3%">No</th>
                                             <th>Supplier</th>
+                                            <th>No. Nota</th>
                                             <th width="15%">Aksi</th>
                                         </tr>
                                     </thead>
@@ -69,13 +70,13 @@
                                             <input type="hidden" value="" id="id">
                                         </td>
                                     </tr>
-                                    <!-- <tr>
+                                    <tr>
                                         <td>No. Nota</td>
                                         <td>:</td>
                                         <td>
                                             <input type="text" id="no_nota" autocomplete="off" class="form-control">
                                         </td>
-                                    </tr> -->
+                                    </tr>
                                     <tr>
                                         <td colspan="3" align="right">
                                             <br>
@@ -129,7 +130,7 @@
         // getmax();
         $(".box-data").hide();
         $(".box-form").show();
-        $("#judul").html('<h3>Form Tambah Data Supplier</h3>');
+        $("#judul").html('<h3>Form Tambah Data No Nota</h3>');
       $('.box-form').animateCss('fadeInDown');
     });
 
@@ -157,7 +158,7 @@
                "paging": true,
                "ajax": {
                    "url" : '<?php echo base_url(); ?>Master/load_data' ,
-                   "data" : ({jenis:"Load_Supplier"}),
+                   "data" : ({jenis:"Load_NoNota"}),
                    "type": "POST"
                },
                responsive: true,
