@@ -65,9 +65,8 @@
                                         <td>Supplier</td>
                                         <td>:</td>
                                         <td>
-                                            <input type="text" id="supplier" autocomplete="off" class="form-control">
-                                            <input type="hidden" value="" id="supplier_lama">
-                                            <input type="hidden" value="" id="id">
+                                        <select class="form-control" id="supplier" style="width:100%">
+                                        </select>
                                         </td>
                                     </tr>
                                     <tr>
@@ -75,6 +74,9 @@
                                         <td>:</td>
                                         <td>
                                             <input type="text" id="no_nota" autocomplete="off" class="form-control">
+                                            <input type="hidden" value="" id="id">
+                                            <input type="hidden" value="" id="no_nota_lama">
+                                            <input type="hidden" value="" id="supplier_lama">
                                         </td>
                                     </tr>
                                     <tr>
@@ -116,6 +118,7 @@
     $(document).ready(function(){
       $(".box-form").hide();
      load_data();
+     load_supplier();
 
     $("input.angka").keypress(function(event) { //input text number only
             return /\d/.test(String.fromCharCode(event.keyCode));
@@ -138,6 +141,7 @@
         $(".box-form").hide();
         $(".box-data").show();
         $('.box-data').animateCss('fadeIn');
+        kosong();
         load_data();
     });
 
@@ -171,28 +175,31 @@
     }
 
     function simpan(){
-      // tgl = $("#tgl").val();
       id = $("#id").val();
-      supplier = $("#supplier").val();
+      data = $('#supplier').select2('data');
+      supplier = data[0].id_supplier;
       supplier_lama = $("#supplier_lama").val();
+      no_nota = $("#no_nota").val();
+      no_nota_lama = $("#no_nota_lama").val();
 
-      if (supplier == "")  {
+      if (supplier == "" || no_nota == "")  {
         showNotification("alert-info", "Harap Lengkapi Form", "bottom", "center", "", ""); return;
       }
 
       $("#btn-simpan").prop("disabled",true);
 
-      // alert(supplier+" "+supplier_lama+" "+id);
+      // alert("ID: "+supplier+". ID_LAMA:"+supplier_lama+". NOTA:"+no_nota+". NOTA_LAMA:"+no_nota_lama);
 
       $.ajax({
           type     : "POST",
           url      : '<?php echo base_url(); ?>Master/'+status,
           data     : ({
-            // tgl : tgl,
             id : id,
             supplier : supplier,
             supplier_lama : supplier_lama,
-            jenis : "Simpan_Supplier" }),
+            no_nota : no_nota,
+            no_nota_lama : no_nota_lama,
+            jenis : "Simpan_Nota" }),
           dataType : "json",
           success  : function(data){
             $("#btn-simpan").prop("disabled",true);
@@ -214,7 +221,7 @@
       $(".box-data").hide();
       $(".box-form").show();
       $('.box-form').animateCss('fadeInDown');
-      $("#judul").html('<h3>Form Edit Data Supplier</h3>');
+      $("#judul").html('<h3>Form Edit Data No. Nota</h3>');
 
       status = "update";
 
@@ -223,16 +230,17 @@
           type: 'POST',
           data: {
             id: id,
-            jenis:"edit_supplier"},
+            jenis:"edit_nota"},
       })
       .done(function(data) {
           json = JSON.parse(data);
 
           $("#btn-simpan").prop("disabled",false);
-          // $("#tgl").val(json.tgl);
           $("#id").val(json.id);
-          $("#supplier").val(json.nama_supplier);
-          $("#supplier_lama").val(json.nama_supplier);
+          $("#supplier").val(json.id_supplier);
+          $("#supplier_lama").val(json.id_supplier);
+          $("#no_nota").val(json.no_nota);
+          $("#no_nota_lama").val(json.no_nota);
       })
     }
     function deleteData(id,nm){
@@ -271,13 +279,52 @@
 
     }
 
+    function load_supplier(){
+    
+    $('#supplier').select2({
+         // minimumInputLength: 3,
+         allowClear: true,
+         placeholder: 'SELECT',
+         ajax: {
+            dataType: 'json',
+            url      : '<?php echo base_url(); ?>/Master/laod_supplier',
+            delay: 800,
+            data: function(params) {
+              if (params.term == undefined) {
+                return {
+                  search: ""
+                }  
+              }else{
+                return {
+                  search: params.term
+                }
+              }
+              
+            },
+            processResults: function (data, page) {
+            return {
+              results: data
+            };
+          },
+        }
+    });
+ }
+
+ $('#supplier').on('change', function() {
+    data = $('#supplier').select2('data');
+    // $("#pimpinan").val(data[0].pimpinan);
+    $("#supplier").val(data[0].id_supplier);
+  });
+
     function kosong(){
-      
+
       status = "insert";
 
-      // $("#tgl").val("");
+      $("#id").val("");
       $("#supplier").val("");
       $("#supplier_lama").val("");
+      $("#no_nota").val("");
+      $("#no_nota_lama").val("");
 
       $("#btn-simpan").prop("disabled",false);
       $("#txt-btn-simpan").html("SIMPAN");

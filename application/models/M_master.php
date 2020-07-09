@@ -416,13 +416,14 @@ class M_master extends CI_Model{
     }
 
     function get_load_supplier(){
-        $query = "SELECT * FROM m_supplier";
+        $query = "SELECT * FROM m_supplier ORDER BY nama_supplier ASC";
         return $this->db->query($query);
     }
 
     function get_load_no_nota(){
-        $query = "SELECT*FROM m_nota a
-        INNER JOIN m_supplier b ON a.id_supplier = b.id";
+        $query = "SELECT a.id,b.nama_supplier,a.no_nota FROM m_nota a
+        INNER JOIN m_supplier b ON a.id_supplier = b.id
+        ORDER BY b.nama_supplier ASC";
         return $this->db->query($query);
     }
 
@@ -491,6 +492,18 @@ class M_master extends CI_Model{
             'created_by' => $this->session->userdata('username')
         );
         $result= $this->db->insert("m_supplier",$data);
+
+        return $result;
+    }
+
+    function insert_nota(){
+        $data = array(
+            // 'tgl' => $_POST['tgl'],
+            'id_supplier' => $_POST['supplier'],
+            'no_nota' => $_POST['no_nota'],
+            'created_by' => $this->session->userdata('username')
+        );
+        $result= $this->db->insert("m_nota",$data);
 
         return $result;
     }
@@ -564,6 +577,17 @@ class M_master extends CI_Model{
         return $result;
     }
 
+    function update_nonota(){
+        
+        $this->db->set('id_supplier ', $_POST['supplier']);
+        $this->db->set('no_nota ', $_POST['no_nota']);
+        $this->db->set('updated_at', date("Y-m-d h:i:s"));
+        $this->db->set('updated_by', $this->session->userdata('username'));
+        $this->db->where('id', $_POST['id']);
+        $result = $this->db->update('m_nota');
+        return $result;
+    }
+
     function update_master_po(){
         $this->db->set('tgl', $_POST['tgl']);
         $this->db->set('qty', $_POST['qty']);
@@ -605,7 +629,22 @@ class M_master extends CI_Model{
            );
         }
         return $data;
-       }
+    }
+
+    function list_supplier($searchTerm=""){
+        $users = $this->db->query("SELECT * FROM m_supplier WHERE nama_supplier like '%$searchTerm%' ORDER BY id ASC")->result_array();
+   
+        // Initialize Array with fetched data
+        $data = array();
+        foreach($users as $user){
+           $data[] = array(
+               "id"=>$user['id'],
+               "id_supplier"=>$user['id'],
+               "text"=>$user['nama_supplier']
+           );
+        }
+        return $data;
+    }
 
     function list_m_barang_pl($searchTerm=""){
     $users = $this->db->query("SELECT * FROM m_barang WHERE kode_barang like '%$searchTerm%' or nama_barang like '%$searchTerm%' ORDER BY kode_barang ASC")->result_array();
