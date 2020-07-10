@@ -842,22 +842,24 @@ class Master extends CI_Controller {
                         $row[] = $r->nama_supplier;
                         $aksi ="";
 
-                        if ($this->session->userdata('level') == "SuperAdmin") {
-                            $aksi = '   
-                            <button type="button" onclick="tampil_edit('.$id.')" class="btn bg-orange btn-circle waves-effect waves-circle waves-float">
-                                <i class="material-icons">edit</i>
-                            </button>
-                          <button type="button" onclick="deleteData('.$id.','."".')" class="btn btn-danger btn-circle waves-effect waves-circle waves-float">
-                                <i class="material-icons">delete</i>
-                            </button>';
+                        $btn_edit = '<button type="button" onclick="tampil_edit('.$id.')" class="btn bg-orange btn-circle waves-effect waves-circle waves-float">
+                        <i class="material-icons">edit</i>
+                        </button>';
 
-                            $row[] = $aksi;
-                            $data[] = $row;
+                        $btn_hapus = '<button type="button" onclick="deleteData('.$id.','."".')" class="btn btn-danger btn-circle waves-effect waves-circle waves-float">
+                        <i class="material-icons">delete</i>
+                        </button>';   
+                                    
+                        if ($this->session->userdata('level') == "Developer" || $this->session->userdata('level') == "SuperAdmin") {
+                            $aksi = $btn_edit.''.$btn_edit;
+                        }else if($this->session->userdata('level') == "Admin") {
+                            $aksi = $btn_edit;
                         }else{
                             $aksi .='-';
-                            $row[] = $aksi;
-                            $data[] = $row;
                         }
+
+                        $row[] = $aksi;
+                        $data[] = $row;
                         $i++;
                     }
                 }
