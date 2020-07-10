@@ -97,8 +97,8 @@
                     <img src="<?php echo base_url(); ?>assets/images/user.png" width="48" height="48" alt="User" />
                 </div>
                 <div class="info-container">
-                    <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?php echo $this->session->userdata('username'); ?></div>
-                    <div class="email"><?php echo $this->session->userdata('nm_user'); ?></div>
+                    <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?php echo $this->session->userdata('nm_user'); ?></div>
+                    <div class="email"><?php echo $this->session->userdata('username'); ?></div>
                     <div class="btn-group user-helper-dropdown">
                         <i class="material-icons" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Logout</i>
                         <ul class="dropdown-menu pull-right">
@@ -138,6 +138,11 @@
                             <li>
                                 <a href="<?php echo base_url('Master/Barang') ?>">Barang</a>
                             </li>
+                            <?php if($this->session->userdata('level') == "Developer" || $this->session->userdata('level') == "SuperAdmin") { ?>
+                            <li>
+                                <a href="<?php echo base_url('Master/Administrator') ?>">Administrator</a>
+                            </li>
+                            <?php } ?>
                             <!-- <li>
                                 <a href="<?php echo base_url('Master/Perusahaan') ?>">Perusahaan</a>
                             </li> -->

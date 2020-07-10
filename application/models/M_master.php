@@ -449,6 +449,11 @@ class M_master extends CI_Model{
         return $this->db->query($query);
     }
 
+    function get_load_admin(){
+        $query = "SELECT * FROM user ORDER BY username ASC";
+        return $this->db->query($query);
+    }
+
     function get_load_no_nota(){
         $query = "SELECT a.id,b.nama_supplier,a.no_nota FROM m_nota a
         INNER JOIN m_supplier b ON a.id_supplier = b.id
@@ -512,12 +517,38 @@ class M_master extends CI_Model{
 
     function insert_load_supplier(){
         $data = array(
-            // 'tgl' => $_POST['tgl'],
             'nama_supplier' => $_POST['supplier'],
             'created_by' => $this->session->userdata('username')
         );
         $result= $this->db->insert("m_supplier",$data);
 
+        return $result;
+    }
+
+    function insert_load_admin(){
+        $data = array(
+            // 'tgl' => $_POST['tgl'],
+            'nm_user' => $_POST['nm_user'],
+            'username' => $_POST['username'],
+            'password' => md5($_POST['password']),
+            'level' => $_POST['level'],
+            'created_by' => $this->session->userdata('username')
+        );
+        $result= $this->db->insert("user",$data);
+
+        return $result;
+    }
+
+    function update_load_admin(){
+        
+        $this->db->set('nm_user', $_POST['nm_user']);
+        $this->db->set('username', $_POST['username']);
+        $this->db->set('password', md5($_POST['password']));
+        $this->db->set('level', $_POST['level']);
+        $this->db->set('updated_at', date("Y-m-d h:i:s"));
+        $this->db->set('updated_by', $this->session->userdata('username'));
+        $this->db->where('id', $_POST['id']);
+        $result = $this->db->update('user');
         return $result;
     }
 

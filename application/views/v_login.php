@@ -41,7 +41,7 @@
                             <i class="material-icons">person</i>
                         </span>
                         <div class="form-line">
-                            <input type="text" name="Username" class="form-control" placeholder="Username" required="" autofocus/>
+                            <input type="text" name="Username" class="form-control" autocomplete="off" placeholder="Username" required="" autofocus/>
                             <!-- <input type="text" class="form-control" name="username" placeholder="Username" required autofocus> -->
                         </div>
                     </div>
@@ -50,7 +50,7 @@
                             <i class="material-icons">lock</i>
                         </span>
                         <div class="form-line">
-                            <input type="password" name="Password" class="form-control" placeholder="Password" required="" />
+                            <input type="password" name="Password" class="form-control" autocomplete="off" placeholder="Password" required="" />
                             <!-- <input type="password" class="form-control" name="password" placeholder="Password" required> -->
                         </div>
                     </div>

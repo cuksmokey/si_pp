@@ -77,6 +77,13 @@ class Master extends CI_Controller {
         $this->load->view('footer');
     }
 
+    public function Administrator()
+    {
+        $this->load->view('header');
+        $this->load->view('Master/v_administrator');
+        $this->load->view('footer');
+    }
+
     public function Supplier()
     {
         $this->load->view('header');
@@ -144,6 +151,17 @@ class Master extends CI_Controller {
                     echo json_encode(array('data' =>  FALSE,'msg' => 'Supplier Sudah Ada'));
                 }else{
                     $result     = $this->m_master->insert_load_supplier();    
+                    echo json_encode(array('data' =>  TRUE));
+                }
+            }else if ($jenis == "Simpan_Admin") {
+                $id = $this->input->post('username');
+
+                $cek = $this->m_master->get_data_one("user","username",$id)->num_rows();
+
+                if ($cek > 0 ) {
+                    echo json_encode(array('data' =>  FALSE,'msg' => 'Username Sudah Dipakai'));
+                }else{
+                    $result     = $this->m_master->insert_load_admin();    
                     echo json_encode(array('data' =>  TRUE));
                 }
             }else if ($jenis == "Simpan_Nota") {
@@ -844,6 +862,44 @@ class Master extends CI_Controller {
                     }
                 }
                 $output = array("data" => $data);
+            }else if ($jenis == "Load_Administrator") {
+
+                $query = $this->m_master->get_load_admin();
+
+                if ($query->num_rows() == 0) {
+                    $data[] =  ["","","","",""];
+                }else{
+                    $i=1;
+
+                    foreach ($query->result() as $r) {
+                        $id = "'$r->id'";
+                        $row = array();
+                        $row[] = $i;
+                        $row[] = $r->nm_user;
+                        $row[] = $r->username;
+                        $row[] = $r->level;
+                        $aksi ="";
+
+                        $btn_edit = '<button type="button" onclick="tampil_edit('.$id.')" class="btn bg-orange btn-circle waves-effect waves-circle waves-float">
+                        <i class="material-icons">edit</i>
+                        </button>';
+
+                        $btn_hapus = '<button type="button" onclick="deleteData('.$id.','."".')" class="btn btn-danger btn-circle waves-effect waves-circle waves-float">
+                        <i class="material-icons">delete</i>
+                        </button>';
+
+                        if ($this->session->userdata('level') == "Developer") {
+                            $aksi = $btn_edit.' '.$btn_hapus;
+                        }else if ($this->session->userdata('level') == "SuperAdmin") {
+                            $aksi = '-';
+                        }
+
+                        $row[] = $aksi;
+                        $data[] = $row;
+                        $i++;
+                    }
+                }
+                $output = array("data" => $data);
             }else if ($jenis == "Load_NoNota") {
 
                 $query = $this->m_master->get_load_no_nota();
@@ -1200,6 +1256,18 @@ class Master extends CI_Controller {
                     echo json_encode(array('data' =>  FALSE,'msg' => 'Supplier Sudah Ada'));
                 }else{
                     $result= $this->m_master->update_load_supplier();
+                    echo json_encode(array('data' =>  TRUE));
+                }
+            }else if ($jenis == "Simpan_Admin") {
+                $id = $this->input->post('username');
+                $id_lama = $this->input->post('username_lama');
+
+                $cek = $this->m_master->get_data_one("user","username",$id)->num_rows();
+
+                if ($id <> $id_lama && $cek > 0) {
+                    echo json_encode(array('data' =>  FALSE,'msg' => 'Username Sudah Ada'));
+                }else{
+                    $result= $this->m_master->update_load_admin();
                     echo json_encode(array('data' =>  TRUE));
                 }
             }else if ($jenis == "Simpan_Nota") {
@@ -1598,6 +1666,9 @@ class Master extends CI_Controller {
             echo json_encode($data);
         }else if ($jenis == "edit_supplier") {
             $data =  $this->m_master->get_data_one("m_supplier", "id", $id)->row();
+            echo json_encode($data);
+        }else if ($jenis == "edit_admin") {
+            $data =  $this->m_master->get_data_one("user", "id", $id)->row();
             echo json_encode($data);
         }else if ($jenis == "edit_nota") {
             $data =  $this->m_master->get_data_ij("m_nota", "id", $id)->row();
