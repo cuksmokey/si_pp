@@ -86,6 +86,13 @@ class M_master extends CI_Model{
         return $this->db->query($query);
     }
 
+    function get_data_ij($table,$kolom,$id){
+        $query = "SELECT a.id,a.id_supplier,b.nama_supplier,a.no_nota FROM $table a
+        INNER JOIN m_supplier b ON a.id_supplier=b.id
+        WHERE a.$kolom='$id'";
+        return $this->db->query($query);
+    }
+
     function get_data_plpl($m_pl_list_barang,$id_pl_price_list,$id){
         // $query = "SELECT * FROM $m_pl_list_barang WHERE $id_pl_price_list='$id'";
         $query = "SELECT
@@ -636,7 +643,7 @@ class M_master extends CI_Model{
     }
 
     function list_supplier($searchTerm=""){
-        $users = $this->db->query("SELECT * FROM m_supplier WHERE nama_supplier like '%$searchTerm%' ORDER BY id ASC")->result_array();
+        $users = $this->db->query("SELECT * FROM m_supplier WHERE nama_supplier like '%$searchTerm%' ORDER BY nama_supplier ASC")->result_array();
    
         // Initialize Array with fetched data
         $data = array();
@@ -651,7 +658,7 @@ class M_master extends CI_Model{
     }
 
     function list_supplier_nota($searchTerm=""){
-        $users = $this->db->query("SELECT a.id,b.nama_supplier,a.no_nota FROM m_nota a
+        $users = $this->db->query("SELECT a.id,b.nama_supplier,CONCAT(b.nama_supplier, ' | ', a.no_nota) AS id_n,a.no_nota FROM m_nota a
         INNER JOIN m_supplier b ON a.id_supplier=b.id
         WHERE b.nama_supplier LIKE '%$searchTerm%' OR
         a.no_nota LIKE '%$searchTerm%' 
@@ -662,7 +669,8 @@ class M_master extends CI_Model{
         foreach($users as $user){
            $data[] = array(
                "id"=>$user['id'],
-               "text"=>$user['nama_supplier'],
+               "text"=>$user['id_n'],
+               "nama_supplier"=>$user['nama_supplier'],
                "no_nota"=>$user['no_nota']
            );
         }

@@ -72,11 +72,18 @@
                                       <td style="padding:10px"></td>
                                     </tr>
                                     <tr>
-                                        <td>Supplier</td>
+                                        <td>Pilih</td>
                                         <td>:</td>
                                         <td>
                                         <select class="form-control" id="supplier" style="width:100%">
                                         </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Supplier</td>
+                                        <td>:</td>
+                                        <td>
+                                            <input type="text" id="supplier_note" autocomplete="off" class="form-control" disabled="true" style="background:#ddd">
                                         </td>
                                     </tr>
                                     <tr>
@@ -255,6 +262,7 @@
       data = $('#supplier').select2('data');
       supplier = data[0].id;
       // supplier_lama = $("#supplier_lama").val();
+      supplier_note = $("#supplier_note").val();
       no_nota = $("#no_nota").val();
 
       kode_barang = $("#id1").val()+"/"+$("#id2").val();
@@ -269,7 +277,7 @@
 
       qty = i_qty.split(".").join("");
       harga = i_harga.split(".").join("");
-      if (kode_barang == "" || nama_barang == ""|| merek == "" || spesifikasi == "" || supplier == "" || qty == "" ||  qty == 0 || qty_ket == "" || qty_ket == 0 || harga == "" || harga == 0 || no_nota == "")  {
+      if (kode_barang == "" || nama_barang == ""|| merek == "" || spesifikasi == "" || supplier == "" || supplier_note == "" || qty == "" ||  qty == 0 || qty_ket == "" || qty_ket == 0 || harga == "" || harga == 0 || no_nota == "")  {
         showNotification("alert-info", "Harap Lengkapi Form", "bottom", "center", "", ""); return;
       }
 
@@ -318,6 +326,7 @@
       $('.box-form').animateCss('fadeInDown');
       $("#judul").html('<h3>Form Edit Data Barang</h3>');
       $("#supplier").val("");
+      $("#supplier_note").val("");
       $("#no_nota").val("");
 
       status = "update";
@@ -339,8 +348,8 @@
           a = json.kode_barang.split("/");
 
           // $("#kode_barang").val(json.kode_barang).prop("disabled",true);
-          $("#id1").val(a[0]).prop("disabled",true);
-          $("#id2").val(a[1]).prop("disabled",true);
+          $("#id1").val(a[0]).prop("disabled",true).attr('style','background:#ddd;');
+          $("#id2").val(a[1]).prop("disabled",true).attr('style','background:#ddd;');
 
           $("#id").val(json.id);
           $("#tgl").val(json.tgl);
@@ -395,13 +404,14 @@
       status = "insert";
 
       $("#tgl").val("");
-      $("#id1").val("").prop("disabled",false);
-      $("#id2").val("").prop("disabled",false);
+      $("#id1").val("").prop("disabled",false).attr('style','background:#fff;');
+      $("#id2").val("").prop("disabled",false).attr('style','background:#fff;');
       $("#kode_barang_lama").val("");
       $("#nama_barang").val("");
       $("#merek").val("");
       $("#spesifikasi").val("");
       $("#supplier").val("");
+      $("#supplier_note").val("");
       $("#supplier_lama").val("");
       $("#no_nota").val("");
       $("#qty").val("");
@@ -446,6 +456,7 @@
  $('#supplier').on('change', function() {
     data = $('#supplier').select2('data');
     // $("#supplier").val(data[0].text);
+    $("#supplier_note").val(data[0].nama_supplier);
     $("#no_nota").val(data[0].no_nota);
   });
 

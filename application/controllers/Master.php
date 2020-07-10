@@ -731,7 +731,7 @@ class Master extends CI_Controller {
                         $id = "'$r->id'";
                         $row = array();
                         $row[] = $i;
-                        $row[] = $r->tgl;
+                        $row[] = $this->m_fungsi->tanggal_format_indonesia($r->tgl);
                         $row[] = $r->nama_supplier;
                         $row[] = $r->no_nota;
                         $row[] = $r->kode_barang;
@@ -1598,7 +1598,7 @@ class Master extends CI_Controller {
             $data =  $this->m_master->get_data_one("m_supplier", "id", $id)->row();
             echo json_encode($data);
         }else if ($jenis == "edit_nota") {
-            $data =  $this->m_master->get_data_one("m_nota", "id", $id)->row();
+            $data =  $this->m_master->get_data_ij("m_nota", "id", $id)->row();
             echo json_encode($data);
         }else if ($jenis == "PoMaster") {
             $data =  $this->m_master->get_data_one("po_master", "id", $id)->row();
