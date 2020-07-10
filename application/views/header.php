@@ -182,11 +182,11 @@
                             <li>
                                 <a href="<?php echo base_url('Laporan/print_barang') ?>">BARANG</a>
                             </li>
-                            <li>
+                            <!-- <li>
                                 <a href="<?php echo base_url('Laporan/print_sj') ?>">TOTAL PEMBELIAN</a>
                             </li>
                             <li>
-                                <a href="<?php echo base_url('Laporan/print_sj') ?>">REKAP PER NO NOTA</a>
+                                <a href="<?php echo base_url('Laporan/print_sj') ?>">REKAP PER NO NOTA</a> -->
                             </li>
                             <!-- <?php if($this->session->userdata('level') == "SuperAdmin") { ?>
                                 <li>

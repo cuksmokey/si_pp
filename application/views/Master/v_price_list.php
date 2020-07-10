@@ -104,16 +104,17 @@
                                         <td>:</td>
                                         <td>
                                             <input type="text" id="spesifikasi" autocomplete="off" class="form-control" disabled="true" style="background:#ddd">
+                                            <input type="hidden" value="" id="id_supplier">
                                         </td>
                                     </tr>
-                                    <tr>
+                                    <!-- <tr>
                                         <td>Supplier</td>
                                         <td>:</td>
                                         <td>
                                             <input type="text" id="supplier" autocomplete="off" class="form-control" disabled="true" style="background:#ddd">
                                             <input type="hidden" value="" id="id_supplier">
                                         </td>
-                                    </tr>
+                                    </tr> -->
                                     <tr>
                                         <td colspan="4"><hr>Perhitungan<hr></td>
                                     </tr>
@@ -447,7 +448,7 @@
     data = $('#kode_barang').select2('data');
     // $("#tgl").val(data[0].tgl);
     $("#kode_barang_note").val(data[0].kode_barang);
-    $("#id_kode_barang").val(data[0].id_barang);
+    $("#id_kode_barang").val(data[0].id);
     $("#nama_barang").val(data[0].nama_barang);
     $("#merek").val(data[0].merek);
     $("#spesifikasi").val(data[0].spesifikasi);

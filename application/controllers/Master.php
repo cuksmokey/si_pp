@@ -1151,7 +1151,7 @@ class Master extends CI_Controller {
         echo json_encode($response);
         }
 
-    function load_m_barang_pl(){
+    function load_m_barang_pl(){ //
         $searchTerm = $_GET['search'];
   
         // Get users
