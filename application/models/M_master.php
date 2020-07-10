@@ -93,6 +93,22 @@ class M_master extends CI_Model{
         return $this->db->query($query);
     }
 
+    function get_data_ijpl($table,$kolom,$id){
+        $query = "SELECT a.*,b.id AS id_barang,b.kode_barang,b.nama_barang,b.merek,b.spesifikasi,c.id AS id_supplier,c.nama_supplier FROM $table a
+        INNER JOIN m_barang b ON a.id_m_barang=b.id
+        INNER JOIN m_supplier c ON a.id_m_supplier=c.id
+        WHERE a.$kolom='$id'";
+        return $this->db->query($query);
+    }
+
+    function get_data_ijb($table,$kolom,$id){
+        $query = "SELECT c.nama_supplier,b.no_nota,a.* FROM $table a
+        INNER JOIN m_nota b ON a.id_m_nota=b.id
+        INNER JOIN m_supplier c ON b.id_supplier=c.id
+        WHERE a.$kolom='$id'";
+        return $this->db->query($query);
+    }
+
     function get_data_plpl($m_pl_list_barang,$id_pl_price_list,$id){
         // $query = "SELECT * FROM $m_pl_list_barang WHERE $id_pl_price_list='$id'";
         $query = "SELECT
@@ -413,7 +429,10 @@ class M_master extends CI_Model{
     }
 
     function get_load_price_list(){
-        $query = "SELECT * FROM m_price_list ORDER BY kode_barang ASC";
+        $query = "SELECT a.*,b.kode_barang,b.nama_barang,b.merek,b.spesifikasi,c.id AS id_supplier,c.nama_supplier FROM m_price_list a
+        INNER JOIN m_barang b ON a.id_m_barang=b.id
+        INNER JOIN m_supplier c ON a.id_m_supplier=c.id
+        ORDER BY b.nama_barang ASC";
         return $this->db->query($query);
     }
 
@@ -459,15 +478,12 @@ class M_master extends CI_Model{
         return $result;
     }
 
-    function insert_price_list(){
+    function insert_price_list(){ //
         
         $data = array(
             'tgl' => $_POST['tgl'],
-            'kode_barang' => $_POST['kode_barang'],
-            'nama_barang' => $_POST['nama_barang'],
-            'merek' => $_POST['merek'],
-            'spesifikasi' => $_POST['spesifikasi'],
-            'supplier' => $_POST['supplier'],
+            'id_m_barang' => $_POST['kode_barang'],
+            'id_m_supplier' => $_POST['supplier'],
             'harga_price_list' => $_POST['harga_price_list'],
             'created_by' => $this->session->userdata('username')
         );
@@ -487,7 +503,6 @@ class M_master extends CI_Model{
             'qty' => $_POST['qty'],
             'qty_ket' => $_POST['qty_ket'],
             'harga' => $_POST['harga'],
-            // 'no_nota' => $_POST['no_nota'],
             'created_by' => $this->session->userdata('username')
         );
         $result= $this->db->insert("m_barang",$data);
@@ -546,14 +561,12 @@ class M_master extends CI_Model{
 
     function update_price_list(){
         $this->db->set('tgl', $_POST['tgl']);
-        $this->db->set('nama_barang', $_POST['nama_barang']);
-        $this->db->set('merek', $_POST['merek']);
-        $this->db->set('spesifikasi', $_POST['spesifikasi']);
-        $this->db->set('supplier', $_POST['supplier']);
+        $this->db->set('id_m_barang', $_POST['kode_barang']);
+        $this->db->set('id_m_supplier', $_POST['supplier']);
         $this->db->set('harga_price_list', $_POST['harga_price_list']);
         $this->db->set('updated_at', date("Y-m-d h:i:s"));
         $this->db->set('updated_by', $this->session->userdata('username'));
-        $this->db->where('kode_barang', $_POST['kode_barang']);
+        $this->db->where('id', $_POST['id']);
         $result = $this->db->update('m_price_list');
         return $result;
     }
@@ -678,7 +691,12 @@ class M_master extends CI_Model{
     }
 
     function list_m_barang_pl($searchTerm=""){
-    $users = $this->db->query("SELECT * FROM m_barang WHERE kode_barang like '%$searchTerm%' or nama_barang like '%$searchTerm%' ORDER BY kode_barang ASC")->result_array();
+    // $users = $this->db->query("SELECT * FROM m_barang WHERE kode_barang like '%$searchTerm%' or nama_barang like '%$searchTerm%' ORDER BY kode_barang ASC")->result_array();
+    $users = $this->db->query("SELECT c.id AS id_supplier,c.nama_supplier,CONCAT(a.kode_barang,' | ', a.nama_barang) AS kbnb,a.* FROM m_barang a
+    INNER JOIN m_nota b ON a.id_m_nota=b.id
+    INNER JOIN m_supplier c ON b.id_supplier=c.id
+    WHERE kode_barang LIKE '%$searchTerm%' OR nama_barang LIKE '%$searchTerm%'
+    ORDER BY kode_barang ASC")->result_array();
 
     // Initialize Array with fetched data
     $data = array();
@@ -687,11 +705,13 @@ class M_master extends CI_Model{
             // harus kasih id agar muncul
             "id" =>$user['id'],
             // "tgl" =>$user['tgl'],
-            "text" =>$user['kode_barang'],
+            "text" =>$user['kbnb'],
+            "kode_barang" =>$user['kode_barang'],
             "nama_barang" =>$user['nama_barang'],
             "merek" =>$user['merek'],
             "spesifikasi" =>$user['spesifikasi'],
-            "supplier" =>$user['supplier'],
+            "supplier" =>$user['nama_supplier'],
+            "id_supplier" =>$user['id_supplier'],
             "harga" =>$user['harga']
         );
     }

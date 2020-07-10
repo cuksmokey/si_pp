@@ -115,9 +115,10 @@ class Master extends CI_Controller {
                     $result = $this->m_master->insert_perusahaan();    
                     echo json_encode(array('data' =>  TRUE));
                 }
-            }else if ($jenis == "Simpan_Price_List") {
+            }else if ($jenis == "Simpan_Price_List") { //
                 $id  = $this->input->post('kode_barang');
-                $cek = $this->m_master->get_data_one("m_price_list","kode_barang",$id)->num_rows();
+                $cek = $this->m_master->get_data_one("m_price_list","id_m_barang",$id)->num_rows();
+
                 if ($cek > 0 ) {
                     echo json_encode(array('data' =>  FALSE,'msg' => 'Kode Barang Sudah Dipakai'));
                 }else{
@@ -687,12 +688,12 @@ class Master extends CI_Controller {
                         $id = "'$r->id'";
                         $row = array();
                         $row[] = $i;
-                        $row[] = $r->tgl;
+                        $row[] = $this->m_fungsi->tanggal_format_indonesia($r->tgl);
                         $row[] = $r->kode_barang;
                         $row[] = $r->nama_barang;
                         $row[] = $r->merek;
                         $row[] = $r->spesifikasi;
-                        $row[] = $r->supplier;
+                        $row[] = $r->nama_supplier;
                         $row[] = "Rp. ".number_format($r->harga_price_list);
 
                         $aksi ="";
@@ -1178,16 +1179,16 @@ class Master extends CI_Controller {
                     echo json_encode(array('data' =>  TRUE));
                 }
             }else if ($jenis == "Simpan_Price_List") {
-                $id      = $this->input->post('kode_barang');
-                $id_lama = $this->input->post('kode_barang_lama');
-                $cek = $this->m_master->get_data_one("m_price_list","kode_barang",$id)->num_rows();
+                // $id      = $this->input->post('kode_barang');
+                // $id_lama = $this->input->post('kode_barang_lama');
+                // $cek = $this->m_master->get_data_one("m_price_list","kode_barang",$id)->num_rows();
 
-                if ($id <> $id_lama) {
-                    echo json_encode(array('data' =>  FALSE,'msg' => 'Kode Barang Lain'));
-                }else{
+                // if ($id <> $id_lama) {
+                //     echo json_encode(array('data' =>  FALSE,'msg' => 'Kode Barang Lain'));
+                // }else{
                     $result= $this->m_master->update_price_list();
                     echo json_encode(array('data' =>  TRUE));
-                }
+                // }
             }else if ($jenis == "Simpan_Supplier") {
                 $id      = $this->input->post('supplier');
                 $id_lama = $this->input->post('supplier_lama');
@@ -1202,16 +1203,17 @@ class Master extends CI_Controller {
                     echo json_encode(array('data' =>  TRUE));
                 }
             }else if ($jenis == "Simpan_Nota") {
-                $id      = $this->input->post('supplier');
-                $id_lama = $this->input->post('supplier_lama');
+                // $id      = $this->input->post('supplier');
+                // $id_lama = $this->input->post('supplier_lama');
                 $nota      = $this->input->post('no_nota');
                 $nota_lama = $this->input->post('no_nota_lama');
 
                 $cek = $this->m_master->get_data_one("m_nota","no_nota",$nota)->num_rows();
 
-                if ($id <> $id_lama) {
-                    echo json_encode(array('data' =>  FALSE,'msg' => 'Supplier Tidak Sama'));
-                }else if ($nota == $nota_lama) {
+                // if ($id <> $id_lama) {
+                //     echo json_encode(array('data' =>  FALSE,'msg' => 'Supplier Tidak Sama'));
+                // }else
+                if ($nota == $nota_lama) {
                     echo json_encode(array('data' =>  FALSE,'msg' => 'No. Nota Sama Dengan Sebelumnya'));
                 }else if ($cek > 0) {
                     echo json_encode(array('data' =>  FALSE,'msg' => 'No. Nota Sudah Ada'));
@@ -1589,10 +1591,10 @@ class Master extends CI_Controller {
             $data =  $this->m_master->get_data_one("m_perusahaan", "id", $id)->row();
             echo json_encode($data);
         }else if ($jenis == "edit_price_list") {
-            $data =  $this->m_master->get_data_one("m_price_list", "id", $id)->row();
+            $data =  $this->m_master->get_data_ijpl("m_price_list", "id", $id)->row();
             echo json_encode($data);
         }else if ($jenis == "edit_barang") {
-            $data =  $this->m_master->get_data_one("m_barang", "id", $id)->row();
+            $data =  $this->m_master->get_data_ijb("m_barang", "id", $id)->row();
             echo json_encode($data);
         }else if ($jenis == "edit_supplier") {
             $data =  $this->m_master->get_data_one("m_supplier", "id", $id)->row();

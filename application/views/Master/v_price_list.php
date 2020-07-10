@@ -63,13 +63,25 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>Kode Barang</td>
+                                      <td style="padding:10px"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Pilih</td>
                                         <td>:</td>
                                         <td>
-                                            <!-- <input type="text" id="kode_barang" autocomplete="off" class="form-control"> -->
                                             <select class="form-control" id="kode_barang" style="width:100%">
                                            </select>
                                            <input type="hidden" id="kode_barang_lama" value="">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Kode Barang</td>
+                                        <td>:</td>
+                                        <td>
+                                            <input type="text" id="kode_barang_note" autocomplete="off" class="form-control" disabled="true"
+                                            style="background:#ddd">
+                                            <input type="hidden" id="id_kode_barang" value="">
+                                            <input type="hidden" id="id" value="">
                                         </td>
                                     </tr>
                                     <tr>
@@ -99,6 +111,7 @@
                                         <td>:</td>
                                         <td>
                                             <input type="text" id="supplier" autocomplete="off" class="form-control" disabled="true" style="background:#ddd">
+                                            <input type="hidden" value="" id="id_supplier">
                                         </td>
                                     </tr>
                                     <tr>
@@ -247,34 +260,34 @@
 
 
     function simpan(){
+      // data = $('#kode_barang').select2('data');
+      // kode_barang = data[0].text;
+      
+      id = $("#id").val();
       tgl = $("#tgl").val();
-      // kode_barang = $("#kode_barang").val();
-      data = $('#kode_barang').select2('data');
-      kode_barang = data[0].text;
+      kode_barang = $("#id_kode_barang").val();
       nama_barang = $("#nama_barang").val();
       kode_barang_lama = $("#kode_barang_lama").val();
       merek = $("#merek").val();
       spesifikasi = $("#spesifikasi").val();
-      supplier = $("#supplier").val();
+      supplier = $("#id_supplier").val();
       harga_price_list = $("#harga_price_list").val().split(".").join("");
 
-      if (tgl == "" || kode_barang == "" || nama_barang == "" || merek == "" || spesifikasi == "" || supplier == "" || harga_awal_barang == "" || profit == "" || ongkir == "" || hasil_harga_awal == "" || mark_up == "" || harga_sementara == "" || pembulatan == "" || harga_price_list == "")  {
+      if (tgl == "" || nama_barang == "" || merek == "" || spesifikasi == "" || supplier == "" || harga_awal_barang == "" || profit == "" || ongkir == "" || hasil_harga_awal == "" || mark_up == "" || harga_sementara == "" || pembulatan == "" || harga_price_list == "")  {
         showNotification("alert-info", "Harap Lengkapi Form", "bottom", "center", "", ""); return;
       }
 
       $("#btn-simpan").prop("disabled",true);
 
-      // alert(kode_barang_lama);
+      // alert(id+" || "+kode_barang+" || "+supplier);
+
       $.ajax({
           type     : "POST",
           url      : '<?php echo base_url(); ?>Master/'+status,
           data     : ({
+            id : id,
             tgl : tgl,
             kode_barang : kode_barang,
-            kode_barang_lama : kode_barang_lama,
-            nama_barang : nama_barang,
-            merek : merek,
-            spesifikasi : spesifikasi,
             supplier : supplier,
             harga_price_list : harga_price_list,
             jenis : "Simpan_Price_List" }),
@@ -283,7 +296,7 @@
             $("#btn-simpan").prop("disabled",true);
             if (data.data == true) {
               
-              reloadTable();
+              // reloadTable();
               showNotification("alert-success", "Berhasil", "bottom", "center", "", "");
               
               status = 'update';
@@ -320,13 +333,16 @@
               $("#pembulatan").val("");
               $("#harga_price_list").val("");
 
+              $("#id").val(json.id);
               $("#tgl").val(json.tgl);
-              $("#kode_barang").val(json.kode_barang);
-              $("#kode_barang_lama").val(json.kode_barang);
+              $("#kode_barang").val("").prop("disabled",true).attr('style','background:#ccc;');
+              $("#id_kode_barang").val(json.id_barang);
+              $("#kode_barang_note").val(json.kode_barang);
               $("#nama_barang").val(json.nama_barang);
               $("#merek").val(json.merek);
               $("#spesifikasi").val(json.spesifikasi);
-              $("#supplier").val(json.supplier);
+              $("#id_supplier").val(json.id_supplier);
+              $("#supplier").val(json.nama_supplier);
               $("#harga_awal_barang").val(json.harga_price_list);
           }) 
 
@@ -372,12 +388,16 @@
       $("#judul").html('<h3> Form Tambah Data</h3>');
       status = "insert";
 
+      $("#id").val("");
       $("#tgl").val("");
-      $("#kode_barang").val("");
+      $("#kode_barang").val("").prop("disabled",false).attr('style','background:#fff;');
+      $("#kode_barang_note").val("");
+      $("#id_kode_barang").val("");
       $("#nama_barang").val("");
       $("#merek").val("");
       $("#spesifikasi").val("");
       $("#supplier").val("");
+      $("#id_supplier").val("");
       $("#harga_awal_barang").val("");
       $("#profit").val("");
       $("#ongkir").val("");
@@ -426,10 +446,13 @@
  $('#kode_barang').on('change', function() {
     data = $('#kode_barang').select2('data');
     // $("#tgl").val(data[0].tgl);
+    $("#kode_barang_note").val(data[0].kode_barang);
+    $("#id_kode_barang").val(data[0].id_barang);
     $("#nama_barang").val(data[0].nama_barang);
     $("#merek").val(data[0].merek);
     $("#spesifikasi").val(data[0].spesifikasi);
     $("#supplier").val(data[0].supplier);
+    $("#id_supplier").val(data[0].id_supplier);
     $("#harga_awal_barang").val(data[0].harga);
   });
 

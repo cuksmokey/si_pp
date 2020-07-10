@@ -179,15 +179,15 @@ class Laporan extends CI_Controller {
         // content
         $html .= '<table cellspacing="0" style="font-size:11px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;font-family:Arial !important">
             <tr>
-                <th style="border:1px solid #000;width:3%;padding:5px 0"></th>
-                <th style="border:1px solid #000;width:10%;padding:5px"></th>
-                <th style="border:1px solid #000;width:23%;padding:5px"></th>
-                <th style="border:1px solid #000;width:11%;padding:5px"></th>
-                <th style="border:1px solid #000;width:11%;padding:5px"></th>
-                <th style="border:1px solid #000;width:11%;padding:5px"></th>
-                <th style="border:1px solid #000;width:8%;padding:5px"></th>
-                <th style="border:1px solid #000;width:10%;padding:5px"></th>
-                <th style="border:1px solid #000;width:12%;padding:5px"></th>
+                <th style="border:0;width:3%;padding:5px 0"></th>
+                <th style="border:0;width:10%;padding:5px"></th>
+                <th style="border:0;width:23%;padding:5px"></th>
+                <th style="border:0;width:11%;padding:5px"></th>
+                <th style="border:0;width:11%;padding:5px"></th>
+                <th style="border:0;width:11%;padding:5px"></th>
+                <th style="border:0;width:8%;padding:5px"></th>
+                <th style="border:0;width:10%;padding:5px"></th>
+                <th style="border:0;width:12%;padding:5px"></th>
             </tr>
             <tr>
                 <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">No.</td>
@@ -202,7 +202,10 @@ class Laporan extends CI_Controller {
             </tr>';
         //$this->m_fungsi->tanggal_format_indonesia($data_pl->tgl)
 
-        $sql_barang = $this->db->query("SELECT*FROM m_barang WHERE tgl BETWEEN '$tgl1' AND '$tgl2'
+        $sql_barang = $this->db->query("SELECT c.nama_supplier,b.no_nota,a.* FROM m_barang a
+        INNER JOIN m_nota b ON a.id_m_nota=b.id
+        INNER JOIN m_supplier c ON b.id_supplier=c.id
+        WHERE tgl BETWEEN '$tgl1' AND '$tgl2'
         ORDER BY tgl ASC");
 
         $i = 0;
@@ -214,7 +217,7 @@ class Laporan extends CI_Controller {
                 <td style="border:1px solid #000;padding:5px">'.$r->nama_barang.'</td>
                 <td style="border:1px solid #000;padding:5px">'.$r->merek.'</td>
                 <td style="border:1px solid #000;padding:5px">'.$r->spesifikasi.'</td>
-                <td style="border:1px solid #000;padding:5px">'.$r->supplier.'</td>
+                <td style="border:1px solid #000;padding:5px">'.$r->nama_supplier.'</td>
                 <td style="border:1px solid #000;padding:5px">'.$r->qty.' '.$r->qty_ket.'</td>
                 <td style="border:1px solid #000;padding:5px">Rp. '.number_format($r->harga).'</td>
                 <td style="border:1px solid #000;padding:5px">'.$r->no_nota.'</td>

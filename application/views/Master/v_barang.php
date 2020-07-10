@@ -84,6 +84,7 @@
                                         <td>:</td>
                                         <td>
                                             <input type="text" id="supplier_note" autocomplete="off" class="form-control" disabled="true" style="background:#ddd">
+                                            <input type="hidden" value="" id="id_supplier">
                                         </td>
                                     </tr>
                                     <tr>
@@ -260,8 +261,9 @@
       tgl = $("#tgl").val();
       
       data = $('#supplier').select2('data');
-      supplier = data[0].id;
+      // supplier = data[0].id;
       // supplier_lama = $("#supplier_lama").val();
+      supplier = $("#id_supplier").val();
       supplier_note = $("#supplier_note").val();
       no_nota = $("#no_nota").val();
 
@@ -277,13 +279,14 @@
 
       qty = i_qty.split(".").join("");
       harga = i_harga.split(".").join("");
-      if (kode_barang == "" || nama_barang == ""|| merek == "" || spesifikasi == "" || supplier == "" || supplier_note == "" || qty == "" ||  qty == 0 || qty_ket == "" || qty_ket == 0 || harga == "" || harga == 0 || no_nota == "")  {
+
+      if (tgl == "" || kode_barang == "" || nama_barang == ""|| merek == "" || spesifikasi == "" || supplier_note == "" || qty == "" ||  qty == 0 || qty_ket == "" || qty_ket == 0 || harga == "" || harga == 0 || no_nota == "")  {
         showNotification("alert-info", "Harap Lengkapi Form", "bottom", "center", "", ""); return;
       }
 
       $("#btn-simpan").prop("disabled",true);
 
-      // alert(qty+" "+harga);
+      // alert(supplier);
 
       $.ajax({
           type     : "POST",
@@ -291,17 +294,15 @@
           data     : ({
             id : id,
             tgl : tgl,
+            supplier : supplier,
             kode_barang : kode_barang,
             kode_barang_lama : kode_barang_lama,
             nama_barang : nama_barang,
             merek : merek,
             spesifikasi : spesifikasi,
-            supplier : supplier,
-            // supplier_lama : supplier_lama,
             qty : qty,
             qty_ket : qty_ket,
             harga : harga,
-            // no_nota : no_nota,
             jenis : "Simpan_Barang" }),
           dataType : "json",
           success  : function(data){
@@ -348,19 +349,22 @@
           a = json.kode_barang.split("/");
 
           // $("#kode_barang").val(json.kode_barang).prop("disabled",true);
+          $("#supplier").val("").prop("disabled",true).attr('style','background:#ddd;');
+
           $("#id1").val(a[0]).prop("disabled",true).attr('style','background:#ddd;');
           $("#id2").val(a[1]).prop("disabled",true).attr('style','background:#ddd;');
 
           $("#id").val(json.id);
           $("#tgl").val(json.tgl);
+          $("#id_supplier").val(json.id_m_nota);
+          $("#supplier_note").val(json.nama_supplier);
+          $("#no_nota").val(json.no_nota);
           $("#nama_barang").val(json.nama_barang);
           $("#merek").val(json.merek);
           $("#spesifikasi").val(json.spesifikasi);
-          // $("#supplier_lama").val(json.id_m_nota);
           $("#qty").val(json.qty);
           $("#qty_ket").val(json.qty_ket);
           $("#harga").val(json.harga);
-          // $("#no_nota").val(json.no_nota);
       })
     }
     function deleteData(id,nm){
@@ -410,10 +414,11 @@
       $("#nama_barang").val("");
       $("#merek").val("");
       $("#spesifikasi").val("");
-      $("#supplier").val("");
+      $("#id_supplier").val("");
+      $("#supplier").val("").prop("disabled",false).attr('style','background:#fff;');
       $("#supplier_note").val("");
-      $("#supplier_lama").val("");
       $("#no_nota").val("");
+      $("#supplier_lama").val("");
       $("#qty").val("");
       $("#qty_ket").val("0");
       $("#harga").val("");
@@ -457,6 +462,7 @@
     data = $('#supplier').select2('data');
     // $("#supplier").val(data[0].text);
     $("#supplier_note").val(data[0].nama_supplier);
+    $("#id_supplier").val(data[0].id);
     $("#no_nota").val(data[0].no_nota);
   });
 

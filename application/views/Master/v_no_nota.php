@@ -74,6 +74,7 @@
                                         <td>:</td>
                                         <td>
                                             <input type="text" id="supplier_note" autocomplete="off" class="form-control" disabled="true" style="background:#ddd">
+                                            <input type="hidden" value="" id="id_supplier">
                                         </td>
                                     </tr>
                                     <tr>
@@ -82,7 +83,6 @@
                                         <td>
                                             <input type="text" id="no_nota" autocomplete="off" class="form-control">
                                             <input type="hidden" value="" id="id">
-                                            <input type="hidden" value="" id="supplier_id">
                                             <input type="hidden" value="" id="no_nota_lama">
                                             <input type="hidden" value="" id="supplier_lama">
                                         </td>
@@ -185,13 +185,14 @@
     function simpan(){
       id = $("#id").val();
       data = $('#supplier').select2('data');
-      supplier = data[0].id_supplier;
+      // supplier = data[0].id_supplier;
+      supplier = $("#id_supplier").val();
       supplier_lama = $("#supplier_lama").val();
       supplier_note = $("#supplier_note").val();
       no_nota = $("#no_nota").val();
       no_nota_lama = $("#no_nota_lama").val();
 
-      if (supplier == "" || no_nota == "" || supplier_note == "")  {
+      if (no_nota == "" || supplier_note == "")  {
         showNotification("alert-info", "Harap Lengkapi Form", "bottom", "center", "", ""); return;
       }
 
@@ -246,7 +247,8 @@
 
           $("#btn-simpan").prop("disabled",false);
           $("#id").val(json.id);
-          $("#supplier").val(json.id_supplier);
+          $("#supplier").val("").prop("disabled",true).attr('style','background:#ccc;');
+          $("#id_supplier").val(json.id_supplier);
           $("#supplier_note").val(json.nama_supplier);
           $("#supplier_lama").val(json.id_supplier);
           $("#no_nota").val(json.no_nota);
@@ -323,7 +325,7 @@
  $('#supplier').on('change', function() {
     data = $('#supplier').select2('data');
     // $("#pimpinan").val(data[0].pimpinan);
-    $("#supplier").val(data[0].id_supplier);
+    $("#id_supplier").val(data[0].id_supplier);
     $("#supplier_note").val(data[0].text);
   });
 
@@ -332,7 +334,8 @@
       status = "insert";
 
       $("#id").val("");
-      $("#supplier").val("");
+      $("#supplier").val("").prop("disabled",false).attr('style','background:#ccc;');
+      $("#id_supplier").val("");
       $("#supplier_lama").val("");
       $("#supplier_note").val("");
       $("#no_nota").val("");
