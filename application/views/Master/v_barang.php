@@ -19,10 +19,13 @@
                             <div class="box-data">
                               <table width="100%">
                                 <tr>
-                                  <td align="left"> <button type="button" class="btn-add btn btn-default btn-sm waves-effect">
+                                  <td align="left">
+                                  <?php if ($this->session->userdata('level') <> "User") { ?>
+                                    <button type="button" class="btn-add btn btn-default btn-sm waves-effect">
                                         <i class="material-icons">library_add</i>
                                         <b><span>New</span></b>
                                     </button>
+                                  <?php } ?>
                                   </td>
                                 </tr>
                               </table>
@@ -103,9 +106,9 @@
                                         <td>
                                           <table style="width:100%" border="0">
                                             <tr>
-                                              <td width="30%"><input type="text" id="id1" class="angka form-control" maxlength="5"></td>
-                                              <td width="1%">/</td>
-                                              <td width="64%"><input type="text" id="id2" class="form-control" maxlength="15"></td>
+                                              <td width="30%"><input type="text" id="id1" class="angka form-control" maxlength="5" autocomplete="off"></td>
+                                              <td style="text-align: center;" width="1%">/</td>
+                                              <td width="64%"><input type="text" id="id2" class="form-control" maxlength="15" autocomplete="off"></td>
                                             </tr>
                                           </table>
                                         </td>

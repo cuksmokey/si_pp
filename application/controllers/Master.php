@@ -761,22 +761,23 @@ class Master extends CI_Controller {
                         $row[] = "Rp. ".number_format($r->harga);
                         $aksi ="";
 
-                        if ($this->session->userdata('level') == "SuperAdmin") {
-                            $aksi = '   
-                            <button type="button" onclick="tampil_edit('.$id.')" class="btn bg-orange btn-circle waves-effect waves-circle waves-float">
-                                <i class="material-icons">edit</i>
-                            </button>
-                          <button type="button" onclick="deleteData('.$id.','."".')" class="btn btn-danger btn-circle waves-effect waves-circle waves-float">
-                                <i class="material-icons">delete</i>
-                            </button>';
+                        $btn_edit = '<button type="button" onclick="tampil_edit('.$id.')" class="btn bg-orange btn-circle waves-effect waves-circle waves-float">
+                        <i class="material-icons">edit</i>
+                        </button>';
+                        $btn_hapus = '<button type="button" onclick="deleteData('.$id.','."".')" class="btn btn-danger btn-circle waves-effect waves-circle waves-float">
+                        <i class="material-icons">delete</i>
+                        </button>';
 
-                            $row[] = $aksi;
-                            $data[] = $row;
+                        if ($this->session->userdata('level') == "Developer" || $this->session->userdata('level') == "SuperAdmin") {
+                            $aksi = $btn_edit.' '.$btn_hapus;
+                        }else if ($this->session->userdata('level') == "Admin") {
+                            $aksi = $btn_edit;
                         }else{
                             $aksi .='-';
-                            $row[] = $aksi;
-                            $data[] = $row;
                         }
+
+                        $row[] = $aksi;
+                        $data[] = $row;
                         $i++;
                     }
                 }
@@ -851,7 +852,7 @@ class Master extends CI_Controller {
                         </button>';   
                                     
                         if ($this->session->userdata('level') == "Developer" || $this->session->userdata('level') == "SuperAdmin") {
-                            $aksi = $btn_edit.''.$btn_edit;
+                            $aksi = $btn_edit.' '.$btn_hapus;
                         }else if($this->session->userdata('level') == "Admin") {
                             $aksi = $btn_edit;
                         }else{
@@ -893,7 +894,7 @@ class Master extends CI_Controller {
                         if ($this->session->userdata('level') == "Developer") {
                             $aksi = $btn_edit.' '.$btn_hapus;
                         }else if ($this->session->userdata('level') == "SuperAdmin") {
-                            $aksi = '-';
+                            $aksi = $btn_edit;
                         }
 
                         $row[] = $aksi;
@@ -919,22 +920,23 @@ class Master extends CI_Controller {
                         $row[] = $r->no_nota;
                         $aksi ="";
 
-                        if ($this->session->userdata('level') == "SuperAdmin") {
-                            $aksi = '   
-                            <button type="button" onclick="tampil_edit('.$id.')" class="btn bg-orange btn-circle waves-effect waves-circle waves-float">
-                                <i class="material-icons">edit</i>
-                            </button>
-                          <button type="button" onclick="deleteData('.$id.','."".')" class="btn btn-danger btn-circle waves-effect waves-circle waves-float">
-                                <i class="material-icons">delete</i>
-                            </button>';
+                        $btn_edit = '<button type="button" onclick="tampil_edit('.$id.')" class="btn bg-orange btn-circle waves-effect waves-circle waves-float">
+                        <i class="material-icons">edit</i>
+                        </button>';
+                        $btn_hapus = '<button type="button" onclick="deleteData('.$id.','."".')" class="btn btn-danger btn-circle waves-effect waves-circle waves-float">
+                        <i class="material-icons">delete</i>
+                        </button>';
 
-                            $row[] = $aksi;
-                            $data[] = $row;
+                        if ($this->session->userdata('level') == "Developer" || $this->session->userdata('level') == "SuperAdmin") {
+                            $aksi = $btn_edit.' '.$btn_hapus;
+                        }else if ($this->session->userdata('level') == "Admin") {
+                            $aksi = $btn_edit;
                         }else{
                             $aksi .='-';
-                            $row[] = $aksi;
-                            $data[] = $row;
                         }
+
+                        $row[] = $aksi;
+                        $data[] = $row;
                         $i++;
                     }
                 }
