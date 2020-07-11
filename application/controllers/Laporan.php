@@ -39,9 +39,9 @@ class Laporan extends CI_Controller {
         $this->load->view('footer');
     }
 
-    function print_barang(){
+    function Pembelian(){
         $this->load->view('header');
-        $this->load->view('Laporan/v_barang');
+        $this->load->view('Laporan/v_lap_pembelian');
         $this->load->view('footer');
     }
 
