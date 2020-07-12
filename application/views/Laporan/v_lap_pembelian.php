@@ -27,7 +27,17 @@
 
   <!-- SEMUA -->
   <div id="box_barang_all"><br/>
-    <button type="button" onclick="cetak(0)" class="btn btn-default btn-sm waves-effect">
+    <input type="hidden" value="0" id="sid_supplier">
+    <table style="border:0;width:50%">
+      <tr>
+        <td style="border:0;width:12%">Pilih Tanggal</td>
+        <td style="border:0;width:1%">:</td>
+        <td style="border:0;width:12%"><input type="date" class="form-control" value="" id="tgl1" style="width:100%"></td>
+        <td style="border:0;width:3%;text-align:center">S/d</td>
+        <td style="border:0;width:12%"><input type="date" class="form-control" value="" id="tgl2" style="width:100%"></td>
+      </tr>
+    </table>
+    <br/><button type="button" onclick="cetak_barang(0,0)" class="btn btn-default btn-sm waves-effect">
       <i class="material-icons">personal_video</i> CETAK
     </button>
   </div>
@@ -36,29 +46,45 @@
   <div id="box_barang_supplier"><br/>
 
     <!-- tampil data -->
-    <table style="border:0;width:30%;">
+    <table style="border:0;width:50%;">
+      <tr>
+        <th style="border:0;width:12%"></th>
+        <th style="border:0;width:1%"></th>
+        <th style="border:0;width:12%"></th>
+        <th style="border:0;width:3%"></th>
+        <th style="border:0;width:12%"></th>
+      </tr>
       <tr>
         <td>Pilih</td>
         <td>:</td>
-        <td><select class="form-control" id="supplier" style="width:100%"></select></td>
+        <td colspan="3"><select class="form-control" id="supplier" style="width:100%"></select></td>
       </tr>
       <tr>
         <td>Supplier</td>
         <td>:</td>
-        <td>
+        <td colspan="3">
           <input type="text" id="supplier_note" autocomplete="off" class="form-control" disabled="true" style="background:#ddd">
           <input type="hidden" value="" id="id_supplier">
         </td>
       </tr>
+      <tr>
+        <td>Pilih Tanggal</td>
+        <td>:</td>
+        <td><input type="date" class="form-control" value="" id="stgl1" style="width:100%"></td>
+        <td style="text-align:center;">S/d</td>
+        <td><input type="date" class="form-control" value="" id="stgl2" style="width:100%"></td>
+      </tr>
     </table>
 
     <!-- cetak barang -->
-    <br/><button type="button" onclick="cetak(0)" class="btn btn-default btn-sm waves-effect">
+    <br/><button type="button" onclick="cetak_barang(0,1)" class="btn btn-default btn-sm waves-effect">
       <i class="material-icons">personal_video</i> CETAK
     </button>
   </div>
 </div>
 <!-- END BARANG -->
+
+<!-- # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # -->
 
 <!-- NO NOTA -->
 <div id="box_nota">
@@ -96,6 +122,8 @@
   </button>
 </div>
 <!-- END NO NOT -->
+
+<!-- # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # -->
 
 <!-- REKAP -->
 <div id="box_rekap">
@@ -164,6 +192,10 @@
       $("#box_rekap").hide();
 
       $("#supplier_note").val("");
+      $("#tgl1").val("");
+      $("#tgl2").val("");
+      $("#stgl1").val("");
+      $("#stgl2").val("");
     });
 
       // barang all
@@ -300,10 +332,21 @@
     $("#no_nota").val(data[0].no_nota);
   });
   
-   function cetak(ctk){
-    // jenis = $("#jenis").val(); 
-    tgl1 = $("#tgl1").val();
-    tgl2 = $("#tgl2").val();
+   // cetak barang
+   function cetak_barang(ctk,jenis){
+    if(jenis == 0){
+      tgl1 = $("#tgl1").val();
+      tgl2 = $("#tgl2").val();
+      id_supplier = $("#sid_supplier").val();
+    }else if(jenis == 1){
+      tgl1 = $("#stgl1").val();
+      tgl2 = $("#stgl2").val();
+      id_supplier = $("#id_supplier").val();
+
+      if (id_supplier == "" || id_supplier == 0){
+        showNotification("alert-info", "Pilih Supplier Dahulu", "bottom", "right", "", ""); return;
+      }
+    }
 
     if (tgl1 == ""){
       showNotification("alert-info", "Pilih Tanggal Mulai", "bottom", "right", "", ""); return;
@@ -312,7 +355,7 @@
     }
 
     var url    = "<?php echo base_url('Laporan/lap_barang?'); ?>";
-    window.open(url+'tgl1='+tgl1+'&tgl2='+tgl2+'&ctk='+ctk, '_blank');
+    window.open(url+'tgl1='+tgl1+'&tgl2='+tgl2+'&jenis='+id_supplier+'&ctk='+ctk, '_blank');
 
    }
 

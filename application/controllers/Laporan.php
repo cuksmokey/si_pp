@@ -163,31 +163,34 @@ class Laporan extends CI_Controller {
         }
     }
 
-    function lap_barang(){
+    function lap_barang(){ //
         $tgl1 = $_GET['tgl1'];
         $tgl2 = $_GET['tgl2'];
+        $jenis = $_GET['jenis'];
 
         $html = '';
+        //$this->m_fungsi->tanggal_format_indonesia($data_pl->tgl)
 
         // JUDUL
         $html .= '<table cellspacing="0" style="font-size:12px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;text-align:center;font-family:Arial !important">
             <tr>
                 <th>LAPORAN BARANG</th>
             </tr>
+            <tr>
+                <th>TANGGAL '.strtoupper($this->m_fungsi->tanggal_format_indonesia($tgl1)).' S/D '.strtoupper($this->m_fungsi->tanggal_format_indonesia($tgl2)).'</th>
+            </tr>
         </table>';
 
         // content
         $html .= '<table cellspacing="0" style="font-size:11px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;font-family:Arial !important">
             <tr>
-                <th style="border:0;width:3%;padding:5px 0"></th>
-                <th style="border:0;width:10%;padding:5px"></th>
-                <th style="border:0;width:23%;padding:5px"></th>
+                <th style="border:0;width:4%;padding:5px 0"></th>
                 <th style="border:0;width:11%;padding:5px"></th>
-                <th style="border:0;width:11%;padding:5px"></th>
-                <th style="border:0;width:11%;padding:5px"></th>
+                <th style="border:0;width:29%;padding:5px"></th>
+                <th style="border:0;width:19%;padding:5px"></th>
+                <th style="border:0;width:19%;padding:5px"></th>
                 <th style="border:0;width:8%;padding:5px"></th>
                 <th style="border:0;width:10%;padding:5px"></th>
-                <th style="border:0;width:12%;padding:5px"></th>
             </tr>
             <tr>
                 <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">No.</td>
@@ -195,33 +198,51 @@ class Laporan extends CI_Controller {
                 <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">Nama Barang</td>
                 <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">Merek</td>
                 <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">Spesifikasi</td>
-                <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">Supplier</td>
                 <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">QTY</td>
                 <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">Harga</td>
-                <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">No. Nota</td>
             </tr>';
-        //$this->m_fungsi->tanggal_format_indonesia($data_pl->tgl)
+        
+        // data barang per supplier
+        if($jenis == 0){
+            $where = '';
+        }else if($jenis <> 0){
+            $where = "AND c.id='$jenis'";
+        }
 
-        $sql_barang = $this->db->query("SELECT c.nama_supplier,b.no_nota,a.* FROM m_barang a
+        $sql_barang_supplier = $this->db->query("SELECT c.nama_supplier,b.no_nota,a.id_m_nota FROM m_barang a
         INNER JOIN m_nota b ON a.id_m_nota=b.id
         INNER JOIN m_supplier c ON b.id_supplier=c.id
-        WHERE tgl BETWEEN '$tgl1' AND '$tgl2'
-        ORDER BY tgl ASC");
+        WHERE tgl BETWEEN '$tgl1' AND '$tgl2' $where
+        GROUP BY a.id_m_nota
+        ORDER BY c.nama_supplier ASC,b.no_nota ASC");
 
-        $i = 0;
-        foreach($sql_barang->result() as $r){
-            $i++;
-            $html .='<tr>
-                <td style="border:1px solid #000;padding:5px;text-align:center">'.$i.'</td>
-                <td style="border:1px solid #000;padding:5px">'.$this->m_fungsi->tanggal_format_indonesia($r->tgl).'</td>
-                <td style="border:1px solid #000;padding:5px">'.$r->nama_barang.'</td>
-                <td style="border:1px solid #000;padding:5px">'.$r->merek.'</td>
-                <td style="border:1px solid #000;padding:5px">'.$r->spesifikasi.'</td>
-                <td style="border:1px solid #000;padding:5px">'.$r->nama_supplier.'</td>
-                <td style="border:1px solid #000;padding:5px">'.$r->qty.' '.$r->qty_ket.'</td>
-                <td style="border:1px solid #000;padding:5px">Rp. '.number_format($r->harga).'</td>
-                <td style="border:1px solid #000;padding:5px">'.$r->no_nota.'</td>
+        foreach($sql_barang_supplier->result() as $r) {
+            $html .= '<tr>
+                <td style="border:1px solid #000;padding:5px;font-weight:bold" colspan="7">
+                    SUPPLIER : '.$r->nama_supplier.' | NO. NOTA : '.$r->no_nota.'
+                </td>
             </tr>';
+
+            // tampil data
+            $sql_barang = $this->db->query("SELECT c.nama_supplier,b.no_nota,a.* FROM m_barang a
+            INNER JOIN m_nota b ON a.id_m_nota=b.id
+            INNER JOIN m_supplier c ON b.id_supplier=c.id
+            WHERE tgl BETWEEN '$tgl1' AND '$tgl2' AND a.id_m_nota='$r->id_m_nota'
+            ORDER BY tgl ASC,a.nama_barang ASC");
+
+            $i = 0;
+            foreach($sql_barang->result() as $r){
+                $i++;
+                $html .='<tr>
+                    <td style="border:1px solid #000;padding:5px;text-align:center">'.$i.'</td>
+                    <td style="border:1px solid #000;padding:5px">'.$this->m_fungsi->tanggal_format_indonesia($r->tgl).'</td>
+                    <td style="border:1px solid #000;padding:5px">'.$r->nama_barang.'</td>
+                    <td style="border:1px solid #000;padding:5px">'.$r->merek.'</td>
+                    <td style="border:1px solid #000;padding:5px">'.$r->spesifikasi.'</td>
+                    <td style="border:1px solid #000;padding:5px">'.$r->qty.' '.$r->qty_ket.'</td>
+                    <td style="border:1px solid #000;padding:5px">Rp. '.number_format($r->harga).'</td>
+                </tr>';
+            }
         }
 
         $html .= '</table>';

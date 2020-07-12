@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 11, 2020 at 04:56 PM
+-- Generation Time: Jul 12, 2020 at 04:51 PM
 -- Server version: 10.1.38-MariaDB
 -- PHP Version: 5.6.40
 
@@ -57,7 +57,9 @@ INSERT INTO `m_barang` (`id`, `id_m_nota`, `tgl`, `kode_barang`, `nama_barang`, 
 (33, 22, '2020-07-12', '00002/MSMBARANGNT22', 'MSMBARANGNT2NM2', 'MSMBARANGNT2MR2', 'MSMBARANGNT2SS2', 120, 'Batang', 1200000, '2020-07-11 04:09:14', 'developer', '2020-07-11 04:21:06', 'developer'),
 (34, 23, '2020-07-13', '00001/MSMBARANGNT3', 'MSMBARANGNT3NM3', 'MSMBARANGNT3MR3', 'MSMBARANGNT3SS3', 230, 'Batang', 2300000, '2020-07-11 04:18:24', 'developer', '0000-00-00 00:00:00', NULL),
 (35, 24, '2020-07-01', '00001/PPIBARANG1', 'PPIBARANG1NM', 'PPIBARANG1MR', 'PPIBARANG1SS', 100, 'Kaleng', 1000000, '2020-07-11 04:19:46', 'developer', '0000-00-00 00:00:00', NULL),
-(36, 21, '2020-07-11', '00004/MSMBARANG', 'MSMBARANGNM4', 'MSMBARANGMR4', 'MSMBARANGSS4', 300, 'PCS', 3000000, '2020-07-11 12:45:17', 'developer', '2020-07-11 00:46:08', 'developer');
+(36, 21, '2020-07-11', '00004/MSMBARANG', 'MSMBARANGNM4', 'MSMBARANGMR4', 'MSMBARANGSS4', 300, 'PCS', 3000000, '2020-07-11 12:45:17', 'developer', '2020-07-11 00:46:08', 'developer'),
+(37, 21, '2020-07-11', '00004/MSMBARANG4', 'MSMBARANGNM4', 'MSMBARANGMR4', 'MSMBARANGSS4', 400, 'PCS', 3000000, '2020-07-11 04:03:15', 'developer', '2020-07-11 04:20:57', 'developer'),
+(38, 21, '2020-07-11', '00005/MSMBARANG5', 'MSMBARANGNM5', 'MSMBARANGMR5', 'MSMBARANGSS5', 500, 'PCS', 3000000, '2020-07-11 04:03:15', 'developer', '2020-07-11 04:20:57', 'developer');
 
 -- --------------------------------------------------------
 
@@ -193,7 +195,8 @@ CREATE TABLE `m_supplier` (
 
 INSERT INTO `m_supplier` (`id`, `nama_supplier`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
 (14, 'PT. PRIMA PAPER INDOSESIA', '2020-07-11 03:52:08', 'developer', '0000-00-00 00:00:00', NULL),
-(15, 'PT. MURFA SURYA MAHARDIKA', '2020-07-11 03:52:21', 'developer', '0000-00-00 00:00:00', NULL);
+(15, 'PT. MURFA SURYA MAHARDIKA', '2020-07-11 03:52:21', 'developer', '0000-00-00 00:00:00', NULL),
+(16, 'PT. POLITAMA', '2020-07-12 14:47:02', 'developer', '0000-00-00 00:00:00', NULL);
 
 -- --------------------------------------------------------
 
@@ -341,7 +344,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `m_barang`
 --
 ALTER TABLE `m_barang`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT for table `m_nota`
@@ -359,25 +362,25 @@ ALTER TABLE `m_perusahaan`
 -- AUTO_INCREMENT for table `m_pl_list_barang`
 --
 ALTER TABLE `m_pl_list_barang`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `m_pl_price_list`
 --
 ALTER TABLE `m_pl_price_list`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `m_price_list`
 --
 ALTER TABLE `m_price_list`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `m_supplier`
 --
 ALTER TABLE `m_supplier`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `po_master`
@@ -389,7 +392,7 @@ ALTER TABLE `po_master`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
