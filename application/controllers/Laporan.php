@@ -67,6 +67,7 @@ class Laporan extends CI_Controller {
         }else{
             $data_detail = $this->db->query("SELECT * FROM m_timbangan WHERE tgl BETWEEN '$tgl1' AND '$tgl2' ");
         }
+
         $html = '';
 
         $html .= '<table width="100%" border="0" style="font-size:10px">
@@ -171,13 +172,19 @@ class Laporan extends CI_Controller {
         $html = '';
         //$this->m_fungsi->tanggal_format_indonesia($data_pl->tgl)
 
+        if($tgl1 == $tgl2){
+            $ttgl = $this->m_fungsi->tanggal_format_indonesia($tgl1);
+        }else{
+            $ttgl = $this->m_fungsi->tanggal_format_indonesia($tgl1).' S/D '.$this->m_fungsi->tanggal_format_indonesia($tgl2);
+        }
+
         // JUDUL
         $html .= '<table cellspacing="0" style="font-size:12px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;text-align:center;font-family:Arial !important">
             <tr>
                 <th>LAPORAN BARANG</th>
             </tr>
             <tr>
-                <th>TANGGAL '.strtoupper($this->m_fungsi->tanggal_format_indonesia($tgl1)).' S/D '.strtoupper($this->m_fungsi->tanggal_format_indonesia($tgl2)).'</th>
+                <th>TANGGAL '.strtoupper($ttgl).'</th>
             </tr>
         </table>';
 
@@ -248,6 +255,78 @@ class Laporan extends CI_Controller {
         $html .= '</table>';
 
         $this->m_fungsi->_mpdf2('',$html,10,10,10,'L');
+
+    }
+
+    function lap_total_pembelian(){ //
+        $tgl1 = $_GET['tgl1'];
+        $tgl2 = $_GET['tgl2'];
+        $jenis = $_GET['jenis'];
+
+        $html = '';
+        //$this->m_fungsi->tanggal_format_indonesia($data_pl->tgl)
+
+        if($tgl1 == $tgl2){
+            $ttgl = $this->m_fungsi->tanggal_format_indonesia($tgl1);
+        }else{
+            $ttgl = $this->m_fungsi->tanggal_format_indonesia($tgl1).' S/D '.$this->m_fungsi->tanggal_format_indonesia($tgl2);
+        }
+
+        // JUDUL
+        $html .= '<table cellspacing="0" style="font-size:12px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;text-align:center;font-family:Arial !important">
+            <tr>
+                <th>LAPORAN TOTAL PEMBELIAN</th>
+            </tr>
+            <tr>
+                <th>TANGGAL '.strtoupper($ttgl).'</th>
+            </tr>
+        </table>';
+
+        // content
+        $html .= '<table cellspacing="0" style="font-size:11px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;font-family:Arial !important">
+            <tr>
+                <th style="border:0;width:5%;padding:5px 0"></th>
+                <th style="border:0;width:15%;padding:5px"></th>
+                <th style="border:0;width:29%;padding:5px"></th>
+                <th style="border:0;width:29%;padding:5px"></th>
+                <th style="border:0;width:22%;padding:5px"></th>
+            </tr>
+            <tr>
+                <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">No.</td>
+                <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">Tanggal</td>
+                <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">Supplier</td>
+                <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">No. Nota</td>
+                <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">Total Pembelian</td>
+            </tr>';
+        
+        if($jenis == 0){
+            $where = '';
+        }else if($jenis <> 0){
+            $where = "AND a.id_m_nota='$jenis'";
+        }
+        
+        $sql_nota = $this->db->query("SELECT c.nama_supplier,b.no_nota,SUM(a.harga) AS tot_harga,a.* FROM m_barang a
+        INNER JOIN m_nota b ON a.id_m_nota=b.id
+        INNER JOIN m_supplier c ON b.id_supplier=c.id
+        WHERE tgl BETWEEN '$tgl1' AND '$tgl2' $where
+        GROUP BY a.id_m_nota
+        ORDER BY tgl ASC,a.nama_barang ASC");
+
+        $i = 0;
+        foreach($sql_nota->result() as $r){
+            $i++;
+            $html .= '<tr>
+                <td style="border:1px solid #000;padding:5px;text-align:center">'.$i.'</td>
+                <td style="border:1px solid #000;padding:5px">'.$this->m_fungsi->tanggal_format_indonesia($r->tgl).'</td>
+                <td style="border:1px solid #000;padding:5px">'.$r->nama_supplier.'</td>
+                <td style="border:1px solid #000;padding:5px">'.$r->no_nota.'</td>
+                <td style="border:1px solid #000;padding:5px">Rp. '.number_format($r->tot_harga).'</td>
+            </tr>';
+        }
+
+        $html .= '</table>';
+
+        $this->m_fungsi->_mpdf2('',$html,10,10,10,'P');
 
     }
 

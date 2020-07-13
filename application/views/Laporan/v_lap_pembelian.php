@@ -88,38 +88,81 @@
 
 <!-- NO NOTA -->
 <div id="box_nota">
-  
-  <!-- tampil data -->
-  <table style="border:0;width:40%;">
-    <tr>
-      <td>Pilih</td>
-      <td>:</td>
-      <td>
-      <select class="form-control" id="supplier_nota" style="width:100%">
-      </select>
-      </td>
-    </tr>
-    <tr>
-      <td>Supplier</td>
-      <td>:</td>
-      <td>
-      <input type="text" id="supplier_note_nota" autocomplete="off" class="form-control" disabled="true" style="background:#ddd">
-      <input type="hidden" value="" id="id_supplier">
-      </td>
-    </tr>
-    <tr>
-      <td>No. Nota</td>
-      <td>:</td>
-      <td>
-      <input type="text" id="no_nota" autocomplete="off" class="form-control" disabled="true" style="background:#ddd">
-      </td>
-    </tr>
-  </table>
+  <div>LAPORAN TOTAL PEMBELIAN</div><br/>
+  <button style="background:#ddd;padding:8px 10px;color:#000;border:0" id="btn_nota_all">SEMUA</button>
+  <button style="background:#ddd;padding:8px 10px;color:#000;border:0" id="btn_nota_supplier">PER SUPPLIER NO NOTA</button>
 
-  <!-- cetak barang -->
-  <br/><button type="button" onclick="cetak(0)" class="btn btn-default btn-sm waves-effect">
-    <i class="material-icons">personal_video</i> CETAK
-  </button>
+  <!-- SEMUA NOTA -->
+  <div id="box_nota_all"><br/>
+    <!-- tampil data -->
+    <table style="border:0;width:50%;">
+    <input type="hidden" value="0" id="sid_supplier_nota">
+      <tr>
+          <th style="border:0;width:12%"></th>
+          <th style="border:0;width:1%"></th>
+          <th style="border:0;width:12%"></th>
+          <th style="border:0;width:3%"></th>
+          <th style="border:0;width:12%"></th>
+        </tr>
+      <tr>
+        <td>Pilih Tanggal</td>
+        <td>:</td>
+        <td><input type="date" class="form-control" value="" id="sntgl1" style="width:100%"></td>
+        <td style="text-align:center;">S/d</td>
+        <td><input type="date" class="form-control" value="" id="sntgl2" style="width:100%"></td>
+      </tr>
+    </table>
+
+    <!-- cetak barang -->
+    <br/><button type="button" onclick="cetak_nota(0,0)" class="btn btn-default btn-sm waves-effect">
+      <i class="material-icons">personal_video</i> CETAK
+    </button>
+  </div>
+
+  <!-- PER SUPPLIER NOTA -->
+  <div id="box_nota_supplier"><br/>
+    <!-- tampil data -->
+    <table style="border:0;width:50%;">
+      <tr>
+          <th style="border:0;width:12%"></th>
+          <th style="border:0;width:1%"></th>
+          <th style="border:0;width:12%"></th>
+          <th style="border:0;width:3%"></th>
+          <th style="border:0;width:12%"></th>
+        </tr>
+      <tr>
+        <td>Pilih</td>
+        <td>:</td>
+        <td colspan="3"><select class="form-control" id="supplier_nota" style="width:100%"></select>
+        </td>
+      </tr>
+      <tr>
+        <td>Supplier</td>
+        <td>:</td>
+        <td colspan="3">
+        <input type="text" id="supplier_note_nota" autocomplete="off" class="form-control" disabled="true" style="background:#ddd">
+        <input type="hidden" value="" id="id_supplier_nota">
+        </td>
+      </tr>
+      <tr>
+        <td>No. Nota</td>
+        <td>:</td>
+        <td colspan="3"><input type="text" id="no_nota" autocomplete="off" class="form-control" disabled="true" style="background:#ddd"></td>
+      </tr>
+      <tr>
+        <td>Pilih Tanggal</td>
+        <td>:</td>
+        <td><input type="date" class="form-control" value="" id="ntgl1" style="width:100%"></td>
+        <td style="text-align:center;">S/d</td>
+        <td><input type="date" class="form-control" value="" id="ntgl2" style="width:100%"></td>
+      </tr>
+    </table>
+
+    <!-- cetak barang -->
+    <br/><button type="button" onclick="cetak_nota(0,1)" class="btn btn-default btn-sm waves-effect">
+      <i class="material-icons">personal_video</i> CETAK
+    </button>
+  </div>
 </div>
 <!-- END NO NOT -->
 
@@ -130,41 +173,21 @@
   rekap
 </div>
 <!-- END REKAP -->
-                              <table width="80%">
-                                <!-- <tr>
-                                  <td width="15%">
-                                      Pilih Tanggal
-                                  </td>
-                                  <td>:</td>
-                                  <td>
-                                    <input type="date" class="form-control" value="<?= date('Y-m-d') ?>" id="tgl1" style="margin: 5px">
-                                  </td>
-                                  <td align="center">S/d</td>
-                                  <td>
-                                    <input type="date" class="form-control" value="<?= date('Y-m-d') ?>" id="tgl2" style="margin: 5px">
-                                  </td>
-                                </tr> -->
-                                <tr>
-                                  <td colspan="5">
-                                    <br>
-                                    
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td colspan="5">
-                                    <br>
-                                    
-                                  </td>
-                                </tr>
-                              </table>
-                    </div>
 
-
-                </div>
+<table width="80%">
+  <tr>
+    <td colspan="5"><br></td>
+  </tr>
+  <tr>
+    <td colspan="5"><br></td>
+  </tr>
+</table>
+</div>
             </div>
-            <!-- #END# Exportable Table -->
         </div>
-    </section>
+        <!-- #END# Exportable Table -->
+    </div>
+</section>
 
 <script>
 
@@ -183,12 +206,16 @@
     $("#btn_barang").click(function() {
       $("#btn_barang").attr('style','background:#287FB8;padding:8px 10px;color:#fff;border:0');
       $("#btn_nota").attr('style','background:#ddd;padding:8px 10px;color:#000;border:0');
+      $("#btn_nota_all").attr('style','background:#ddd;padding:8px 10px;color:#000;border:0');
+      $("#btn_nota_supplier").attr('style','background:#ddd;padding:8px 10px;color:#000;border:0');
       $("#btn_rekap").attr('style','background:#ddd;padding:8px 10px;color:#000;border:0');
 
       $("#box_barang").show();
       $("#box_barang_all").hide();
       $("#box_barang_supplier").hide();
       $("#box_nota").hide();
+      $("#box_nota_all").hide();
+      $("#box_nota_supplier").hide();
       $("#box_rekap").hide();
 
       $("#supplier_note").val("");
@@ -230,11 +257,35 @@
       $("#box_barang_all").hide();
       $("#box_barang_supplier").hide();
       $("#box_nota").show();
+      $("#box_nota_all").hide();
+      $("#box_nota_supplier").hide();
       $("#box_rekap").hide();
 
       $("#supplier_note_nota").val("");
       $("#no_nota").val("");
+      $("#sntgl1").val("");
+      $("#sntgl2").val("");
+      $("#ntgl1").val("");
+      $("#ntgl2").val("");
     });
+
+      // nota all
+      $("#btn_nota_all").click(function(){
+        $("#btn_nota_all").attr('style','background:#287FB8;padding:8px 10px;color:#fff;border:0');
+        $("#btn_nota_supplier").attr('style','background:#ddd;padding:8px 10px;color:#000;border:0');
+
+        $("#box_nota_all").show();
+        $("#box_nota_supplier").hide();
+      });
+
+      // nota supplier
+      $("#btn_nota_supplier").click(function(){
+        $("#btn_nota_all").attr('style','background:#ddd;padding:8px 10px;color:#000;border:0');
+        $("#btn_nota_supplier").attr('style','background:#287FB8;padding:8px 10px;color:#fff;border:0');
+
+        $("#box_nota_all").hide();
+        $("#box_nota_supplier").show();
+      });
 
   //#####################################################################
 
@@ -244,12 +295,16 @@
       $("#btn_barang_all").attr('style','background:#ddd;padding:8px 10px;color:#000;border:0');
       $("#btn_barang_supplier").attr('style','background:#ddd;padding:8px 10px;color:#000;border:0');
       $("#btn_nota").attr('style','background:#ddd;padding:8px 10px;color:#000;border:0');
+      $("#btn_nota_all").attr('style','background:#ddd;padding:8px 10px;color:#000;border:0');
+      $("#btn_nota_supplier").attr('style','background:#ddd;padding:8px 10px;color:#000;border:0');
       $("#btn_rekap").attr('style','background:#287FB8;padding:8px 10px;color:#fff;border:0');
 
       $("#box_barang").hide();
       $("#box_barang_all").hide();
       $("#box_barang_supplier").hide();
       $("#box_nota").hide();
+      $("#box_nota_all").hide();
+      $("#box_nota_supplier").hide();
       $("#box_rekap").show();
     });
 
@@ -328,7 +383,7 @@
     data = $('#supplier_nota').select2('data');
     // $("#supplier").val(data[0].text);
     $("#supplier_note_nota").val(data[0].nama_supplier);
-    $("#id_supplier").val(data[0].id);
+    $("#id_supplier_nota").val(data[0].id);
     $("#no_nota").val(data[0].no_nota);
   });
   
@@ -355,6 +410,33 @@
     }
 
     var url    = "<?php echo base_url('Laporan/lap_barang?'); ?>";
+    window.open(url+'tgl1='+tgl1+'&tgl2='+tgl2+'&jenis='+id_supplier+'&ctk='+ctk, '_blank');
+
+   }
+
+   // cetak nota
+   function cetak_nota(ctk,jenis){
+    if(jenis == 0){
+      tgl1 = $("#sntgl1").val();
+      tgl2 = $("#sntgl2").val();
+      id_supplier = $("#sid_supplier_nota").val();
+    }else if(jenis == 1){
+      tgl1 = $("#ntgl1").val();
+      tgl2 = $("#ntgl2").val();
+      id_supplier = $("#id_supplier_nota").val();
+
+    if (id_supplier == "" || id_supplier == 0){
+        showNotification("alert-info", "Pilih Supplier Dahulu", "bottom", "right", "", ""); return;
+      }
+    }
+
+    if (tgl1 == ""){
+      showNotification("alert-info", "Pilih Tanggal Mulai", "bottom", "right", "", ""); return;
+    }else if (tgl2 == ""){
+      showNotification("alert-info", "Pilih Tanggal Akhir", "bottom", "right", "", ""); return;
+    }
+
+    var url    = "<?php echo base_url('Laporan/lap_total_pembelian?'); ?>";
     window.open(url+'tgl1='+tgl1+'&tgl2='+tgl2+'&jenis='+id_supplier+'&ctk='+ctk, '_blank');
 
    }
