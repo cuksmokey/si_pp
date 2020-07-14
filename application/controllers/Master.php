@@ -277,7 +277,7 @@ class Master extends CI_Controller {
 
     function load_data(){
          $jenis = $this->input->post('jenis');
-         $edit_cart = $this->input->post('edit_cart');
+        //  $edit_cart = $this->input->post('edit_cart');
 
             if ($jenis == "Timbangan") {
                 $query = $this->m_master->get_timbangan()->result();
@@ -418,40 +418,27 @@ class Master extends CI_Controller {
 
             }else if ($jenis == "list_pl_barang") {
                 
-                if($edit_cart == "update"){
-                    $query = $this->m_master->get_pl_barang_edit();
-                }else{
-                    $query = $this->m_master->get_pl_barang();
-                }
+                $query = $this->m_master->get_pl_barang();
                 
                 $i=0;
 
                 if ($query->num_rows() == 0) {
-                    $data[] =  ["","","","","","",""];
+                    $data[] =  ["","","","","",""];
                 }else{
-
                     foreach ($query->result() as $r) {
                         $id = "$r->id";
 
                         $row = array();
                         $row[] = $r->kode_barang;
                         $row[] = $r->nama_barang;
-                        $row[] = "Rp. ".number_format($r->harga_price_list);
                         $row[] = '<div style="text-align:right">'.$r->qty.'</div>';
                         $row[] = '<input type="text" class="angka form-control" id="i_qty'.$i.'" placeholder="0" autocomplete="off"  onkeypress="return hanyaAngka(event)">
                         <input type="hidden" id="qty'.$i.'" value="'.$r->qty.'">';
                         $row[] = $r->qty_ket;
 
-                        if($edit_cart == "update"){
-                            $aksi = '<a type="button" onclick="edit_plpl('."'".$r->kode_barang."'".','."'".$r->harga_price_list."'".','."'".$r->qty."'".','."'".$r->i_qty_barang."'".','."'".$i."'".')" class="btn bg-brown btn-circle waves-effect waves-circle waves-float">
-                            <i class="material-icons">check</i>
+                        $aksi = '<a type="button" onclick="addToCart('."'".$id."'".','."'".$r->kode_barang."'".','."'".$r->nama_barang."'".','."'".$r->qty."'".','."'".$i."'".')" class="btn bg-brown btn-circle waves-effect waves-circle waves-float">
+                        <i class="material-icons">check</i>
                             </a>';
-                        }else{
-                            $aksi = '<a type="button" onclick="addToCart('."'".$r->kode_barang."'".','."'".$r->harga_price_list."'".','."'".$r->qty."'".','."'".$i."'".')" class="btn bg-brown btn-circle waves-effect waves-circle waves-float">
-                            <i class="material-icons">check</i>
-                            </a>';
-                        }
-
 
                         $row[] = $aksi;
                         $data[] = $row;
@@ -463,9 +450,6 @@ class Master extends CI_Controller {
                 $output = array(
                                 "data" => $data,
                         );
-                
-                
-
             }else if ($jenis == "view_timbang") {
                 $id = $_POST['id'];
                 $query = $this->m_master->get_view_timbangan($id);
@@ -1379,28 +1363,6 @@ class Master extends CI_Controller {
         return $output;
     }
 
-    function show_cart_plpl(){
-        $output = '';
-        $no = 0;
-
-        foreach ($this->cart->contents() as $items) {
-            $no++;
-            $sisa_stok = $items['options']['stok'] - $items['qty'];
-
-            $output .='
-                <tr>
-                    <td>'.$no.'</td>
-                    <td>'.$items['options']['kode_barang'].'</td>
-                    <td>Rp. '.number_format($items['price']).'</td>
-                    <td>'.number_format($sisa_stok).'</td>
-                    <td>'.$items['qty'].'</td>
-                    <td><button type="button" id="'.$items['rowid'].'" class="hapus_cart btn btn-danger btn-xs">Batal</button></td>
-                </tr>
-            ';
-        }
-        return $output;
-    }
-
     function show_edit_cart_pl(){ //
         $output = '';
         $no = 0;
@@ -1463,20 +1425,61 @@ class Master extends CI_Controller {
         echo $this->show_cart(); //tampilkan cart setelah added
     }
 
-    function add_to_cart_pl_barang(){
+    function add_to_cart_pl_barang(){ //
 
         $data = array(
             'id' => str_replace("/", "_", $_POST['kode_barang']), 
-            'name' => str_replace("/", "_", $_POST['kode_barang']),
-            'price' => $_POST['harga_price_list'], 
+            'name' => $_POST['nama_barang'],
+            'price' => 0, 
             'qty' => $_POST['i_qty'],
             'options' => array(
+                'id_barang' => $_POST['id_barang'],
                 'kode_barang' => $_POST['kode_barang'],
-                'stok' => $_POST['qty']
+                'i_qty' => $_POST['i_qty'],
+                'qty' => $_POST['qty']
             )
         );
         $this->cart->insert($data);
         echo $this->show_cart_plpl(); //tampilkan cart setelah added
+    }
+
+    function show_cart_plpl(){
+        $output = '';
+        $no = 0;
+
+        foreach ($this->cart->contents() as $items) {
+            $no++;
+            $sisa_stok = $items['options']['qty'] - $items['qty'];
+
+            if($sisa_stok < 0){
+                $stok = 0;
+                $iqty = ($items['qty'] - $items['qty']) + $items['options']['qty'];
+            }else{
+                $stok = $sisa_stok;
+                $iqty = $items['qty'];
+            }
+
+            $output .='
+                <tr>
+                    <td>'.$no.'</td>
+                    <td>'.$items['options']['kode_barang'].'</td>
+                    <td>'.$items['name'].'</td>
+                    <td>'.number_format($stok).'</td>
+                    <td>'.$iqty.'</td>
+                    <td><button type="button" id="'.$items['rowid'].'" class="hapus_cart btn btn-danger btn-xs">Batal</button></td>
+                </tr>
+            ';
+        }
+        return $output;
+    }
+
+    function hapus_cart_plpl(){ //fungsi untuk menghapus item cart
+        $data = array(
+            'rowid' => $this->input->post('row_id'), 
+            'qty' => 0, 
+        );
+        $this->cart->update($data);
+        echo $this->show_cart_plpl();
     }
 
     function view_edit_cart_pl(){
@@ -1535,15 +1538,6 @@ class Master extends CI_Controller {
         );
         $this->cart->update($data);
         echo $this->show_cart();
-    }
-
-    function hapus_cart_plpl(){ //fungsi untuk menghapus item cart
-        $data = array(
-            'rowid' => $this->input->post('row_id'), 
-            'qty' => 0, 
-        );
-        $this->cart->update($data);
-        echo $this->show_cart_plpl();
     }
 
     function hapus_cart_barang(){

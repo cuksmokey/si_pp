@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 12, 2020 at 04:51 PM
+-- Generation Time: Jul 14, 2020 at 05:12 PM
 -- Server version: 10.1.38-MariaDB
 -- PHP Version: 5.6.40
 
@@ -57,9 +57,9 @@ INSERT INTO `m_barang` (`id`, `id_m_nota`, `tgl`, `kode_barang`, `nama_barang`, 
 (33, 22, '2020-07-12', '00002/MSMBARANGNT22', 'MSMBARANGNT2NM2', 'MSMBARANGNT2MR2', 'MSMBARANGNT2SS2', 120, 'Batang', 1200000, '2020-07-11 04:09:14', 'developer', '2020-07-11 04:21:06', 'developer'),
 (34, 23, '2020-07-13', '00001/MSMBARANGNT3', 'MSMBARANGNT3NM3', 'MSMBARANGNT3MR3', 'MSMBARANGNT3SS3', 230, 'Batang', 2300000, '2020-07-11 04:18:24', 'developer', '0000-00-00 00:00:00', NULL),
 (35, 24, '2020-07-01', '00001/PPIBARANG1', 'PPIBARANG1NM', 'PPIBARANG1MR', 'PPIBARANG1SS', 100, 'Kaleng', 1000000, '2020-07-11 04:19:46', 'developer', '0000-00-00 00:00:00', NULL),
-(36, 21, '2020-07-11', '00004/MSMBARANG', 'MSMBARANGNM4', 'MSMBARANGMR4', 'MSMBARANGSS4', 300, 'PCS', 3000000, '2020-07-11 12:45:17', 'developer', '2020-07-11 00:46:08', 'developer'),
-(37, 21, '2020-07-11', '00004/MSMBARANG4', 'MSMBARANGNM4', 'MSMBARANGMR4', 'MSMBARANGSS4', 400, 'PCS', 3000000, '2020-07-11 04:03:15', 'developer', '2020-07-11 04:20:57', 'developer'),
-(38, 21, '2020-07-11', '00005/MSMBARANG5', 'MSMBARANGNM5', 'MSMBARANGMR5', 'MSMBARANGSS5', 500, 'PCS', 3000000, '2020-07-11 04:03:15', 'developer', '2020-07-11 04:20:57', 'developer');
+(36, 21, '2020-07-11', '00004/MSMBARANG', 'MSMBARANGNM4', 'MSMBARANGMR4', 'MSMBARANGSS4', 300, 'PCS', 5000000, '2020-07-11 12:45:17', 'developer', '2020-07-11 00:46:08', 'developer'),
+(37, 21, '2020-07-11', '00004/MSMBARANG4', 'MSMBARANGNM4', 'MSMBARANGMR4', 'MSMBARANGSS4', 400, 'PCS', 4000000, '2020-07-11 04:03:15', 'developer', '2020-07-11 04:20:57', 'developer'),
+(38, 21, '2020-07-11', '00005/MSMBARANG5', 'MSMBARANGNM5', 'MSMBARANGMR5', 'MSMBARANGSS5', 500, 'PCS', 6000000, '2020-07-11 04:03:15', 'developer', '2020-07-11 04:20:57', 'developer');
 
 -- --------------------------------------------------------
 
@@ -124,11 +124,11 @@ INSERT INTO `m_perusahaan` (`id`, `pimpinan`, `nm_perusahaan`, `alamat`, `npwp`,
 
 CREATE TABLE `m_pl_list_barang` (
   `id` int(11) NOT NULL,
+  `id_pl` int(11) NOT NULL,
+  `id_m_barang` int(11) NOT NULL,
   `tgl` date DEFAULT NULL,
-  `kode_barang` varchar(99) NOT NULL,
-  `harga_price_list` int(11) DEFAULT NULL,
   `qty` int(11) DEFAULT NULL,
-  `id_pl_price_list` int(11) NOT NULL,
+  `harga_invoice` int(11) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `created_by` varchar(99) DEFAULT NULL,
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -261,6 +261,7 @@ CREATE TABLE `user` (
   `password` varchar(100) DEFAULT NULL,
   `nm_user` varchar(99) DEFAULT NULL,
   `level` enum('Developer','SuperAdmin','Admin','User') DEFAULT NULL,
+  `otoritas` enum('Pembelian','Penjualan') DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `created_by` varchar(99) DEFAULT NULL,
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -271,11 +272,11 @@ CREATE TABLE `user` (
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`id`, `username`, `password`, `nm_user`, `level`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
-(1, 'admin', '21232f297a57a5a743894a0e4a801fc3', 'Admin Biasa', 'Admin', '2020-07-10 13:51:57', NULL, '0000-00-00 00:00:00', NULL),
-(2, 'user', 'ee11cbb19052e40b07aac0ca060c23ee', 'User Biasa', 'User', '2020-07-10 13:51:57', NULL, '2020-07-10 03:05:21', 'developer'),
-(3, 'superadmin', '17c4520f6cfd1ab53d8745e84681eb49', 'Admin Super', 'SuperAdmin', '2020-07-10 13:51:57', NULL, '0000-00-00 00:00:00', NULL),
-(4, 'developer', '5e8edd851d2fdfbd7415232c67367cc3', 'Dev Ganteng', 'Developer', '2020-07-10 13:51:57', NULL, '2020-07-11 04:22:51', 'developer');
+INSERT INTO `user` (`id`, `username`, `password`, `nm_user`, `level`, `otoritas`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
+(1, 'admin', '21232f297a57a5a743894a0e4a801fc3', 'Admin Biasa', 'Admin', 'Pembelian', '2020-07-10 13:51:57', NULL, '0000-00-00 00:00:00', NULL),
+(2, 'user', 'ee11cbb19052e40b07aac0ca060c23ee', 'User Biasa', 'User', 'Penjualan', '2020-07-10 13:51:57', NULL, '2020-07-10 03:05:21', 'developer'),
+(3, 'superadmin', '17c4520f6cfd1ab53d8745e84681eb49', 'Admin Super', 'SuperAdmin', 'Penjualan', '2020-07-10 13:51:57', NULL, '0000-00-00 00:00:00', NULL),
+(4, 'developer', '5e8edd851d2fdfbd7415232c67367cc3', 'Dev Ganteng', 'Developer', 'Pembelian', '2020-07-10 13:51:57', NULL, '2020-07-11 04:22:51', 'developer');
 
 --
 -- Indexes for dumped tables

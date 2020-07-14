@@ -143,7 +143,7 @@
                                 </table>
                                 <table width="100%">
                                 <tr>
-                                  <td align="left"> <button type="button" class="btn-tambah btn btn-default btn-sm waves-effect">
+                                  <td align="left"> <button type="button" class="btn-tambah btn btn_list_barang btn-default btn-sm waves-effect">
                                         <i class="material-icons">book</i>
                                         <span>List Barang</span>
                                     </button>
@@ -154,12 +154,12 @@
                               <table class="table" style="background-color: grey; color:white">
                                   <thead>
                                     <tr>
-                                      <th>No</th>
-                                      <th>Kode Barang</th>
-                                      <th>Harga Price List</th>
-                                      <th>Sisa Stok</th>
-                                      <th>Input QTY</th>
-                                      <th>Aksi</th>
+                                      <th style="width:5%;text-align:center">No</th>
+                                      <th style="width:15%;text-align:center">Kode Barang</th>
+                                      <th style="width:45%;text-align:center">Nama Barang</th>
+                                      <th style="width:10%;text-align:center">Sisa Stok</th>
+                                      <th style="width:10%;text-align:center">Input QTY</th>
+                                      <th style="width:15%;text-align:center">Aksi</th>
                                     </tr>
                                   </thead>
                                   <tbody id="detail_cart">
@@ -232,7 +232,7 @@
       </div>
   </div>
 
-   <!-- Large Size -->
+   <!-- Large Size// -->
   <div class="modal fade" id="modal-tambah" tabindex="-1" role="dialog">
       <div class="modal-dialog modal-lg" role="document">
           <div class="modal-content" style="width: 150%; left: -200px">
@@ -246,7 +246,6 @@
                             <tr>
                             <th>Kode Barang</th>
                             <th>Nama Barang</th>
-                            <th>Harga Price List</th>
                             <th>STOK</th>
                             <th>Input QTY</th>
                             <th>Satuan</th>
@@ -351,7 +350,6 @@
 
 <script>
   status = '';
-  edit_cart = '';
   roll_array = [];
 
     $(document).ready(function(){
@@ -667,7 +665,7 @@
       $("#modal-view-timbang").modal("show");
     }
 
-    $(".btn-tambah").click(function(){
+    $(".btn-tambah").click(function(){ //
      
         load_barang();
         $("#btn-simpan").prop("disabled",true);
@@ -690,7 +688,7 @@
             "ajax": {
                 "url" : '<?php echo base_url(); ?>Master/load_data' ,
                 "data" : ({
-                  edit_cart:edit_cart,
+                  // edit_cart:edit_cart,
                   jenis:"list_pl_barang"}),
                 "type": "POST"
             },
@@ -703,33 +701,37 @@
             });
     }
 
-    function addToCart(kode_barang,harga_price_list,qty,i){
+    function addToCart(id,kode_barang,nama_barang,qty,i){
       $("#btn-simpan").prop("disabled",false);
+      $("#i_qty"+i).prop("disabled",true).attr('style','background:#ddd;');
+      $(".btn_list_barang").prop("disabled",true);
 
       qty = $("#qty"+i).val();
       i_qty = $("#i_qty"+i).val();
 
       ss_stok = qty - i_qty;
 
-      // alert(qty+" "+i_qty+". stok: "+ss_stok);
+      // alert("ID:"+id+". qty:"+qty+". i_qty:"+i_qty+". stok: "+ss_stok);
 
       if(i_qty == 0 || i_qty == ""){
         swal("Input QTY Tidak Boleh Kosong", "", "error");
+        $("#i_qty"+i).prop("disabled",false).attr('style','background:#fff;');
       }else if(ss_stok < 0){
         swal("Melebihi STOK!!", "", "error");
+        $("#i_qty"+i).prop("disabled",false).attr('style','background:#fff;');
       }else{
         $.ajax({
           url : "<?php echo base_url();?>Master/add_to_cart_pl_barang",
           method : "POST",
           data : {
+            id_barang:id,
             kode_barang:kode_barang,
-            harga_price_list:harga_price_list,
+            nama_barang:nama_barang,
             qty:qty,
             i_qty:i_qty
           },
           success: function(data){
           swal("Berhasil Ditambahkan", "", "success");
-            // $('#btn-cek'+nou).prop('disabled', true);
             $('#detail_cart').html(data);
           }
         });
@@ -793,10 +795,11 @@
          url : "<?php echo base_url();?>Master/hapus_cart_plpl",
          method : "POST",
          data : {
-            edit_cart:edit_cart,
+            // edit_cart:edit_cart,
             row_id : row_id},
          success :function(data){
            $('#detail_cart').html(data);
+           $(".btn_list_barang").prop("disabled",false);
          }
        });
      });

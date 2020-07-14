@@ -157,47 +157,48 @@
                             <span>Packing List</span>
                         </a>
                     </li> -->
+                    <?php if($this->session->userdata('otoritas') == "Pembelian") { ?>
                     <li>
                         <a href="<?php echo base_url('Master/Price_List') ?>">
                             <i class="material-icons">list</i>
                             <span>Price List</span>
                         </a>
                     </li>
-                    <!-- <li>
+                    <?php }
+                    
+                    if($this->session->userdata('otoritas') == "Penjualan") {
+                    ?>
+                    <li>
                         <a href="<?php echo base_url('Master/PL_Price_List') ?>">
                             <i class="material-icons">list</i>
                             <span>Packing List</span>
                         </a>
-                    </li> -->
-                    <!-- <li>
+                    </li>
+                    <li>
                         <a href="<?php echo base_url('Master/Invoice') ?>">
                             <i class="material-icons">list</i>
                             <span>Invoice</span>
                         </a>
-                    </li> -->
+                    </li>
+                    <?php } ?>
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">equalizer</i>
                             <span>Laporan</span>
                         </a>
                         <ul class="ml-menu">
-                            <!-- <li>
-                                <a href="<?php echo base_url('Laporan/print_sj') ?>">SURAT JALAN</a>
-                            </li> -->
-                            <li>
-                                <a href="<?php echo base_url('Laporan/Pembelian') ?>">Pembelian</a>
-                            </li>
-                            <!-- <li>
-                                <a href="<?php echo base_url('Laporan/print_sj') ?>">TOTAL PEMBELIAN</a>
-                            </li>
-                            <li>
-                                <a href="<?php echo base_url('Laporan/print_sj') ?>">REKAP PER NO NOTA</a> -->
-                            </li>
-                            <!-- <?php if($this->session->userdata('level') == "SuperAdmin") { ?>
+                            
+                            
+                            <?php if($this->session->userdata('otoritas') == "Pembelian") { ?>
                                 <li>
-                                    <a href="<?php echo base_url('Laporan/update_po') ?>">UPDATE PO</a>
+                                    <a href="<?php echo base_url('Laporan/Pembelian') ?>">Pembelian</a>
                                 </li>
-                            <?php } ?> -->
+                            <?php } ?>
+                            <?php if($this->session->userdata('otoritas') == "Penjualan") { ?>
+                                <li>
+                                    <a href="<?php echo base_url('Laporan/print_sj') ?>">SURAT JALAN</a>
+                                </li>
+                            <?php } ?>
                         </ul>
                     </li>
                     

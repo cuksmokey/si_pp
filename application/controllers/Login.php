@@ -34,6 +34,7 @@ class login extends CI_Controller{
 				$data_session['password'] = $dt->password;
 				$data_session['nm_user'] = $dt->nm_user;
 				$data_session['level'] = $dt->level;
+				$data_session['otoritas'] = $dt->otoritas;
 				
 
 				$this->session->set_userdata($data_session);

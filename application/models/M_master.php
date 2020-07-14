@@ -186,8 +186,8 @@ class M_master extends CI_Model{
     }
 
     function get_pl_barang(){
-        $query = "SELECT a.id AS id,a.kode_barang AS kode_barang,a.nama_barang AS nama_barang,a.harga_price_list AS harga_price_list,b.qty AS qty,b.qty_ket AS qty_ket FROM m_price_list a
-        INNER JOIN m_barang b ON a.kode_barang = b.kode_barang";
+        $query = "SELECT*FROM m_barang
+        ORDER BY kode_barang ASC, nama_barang ASC";
         return $this->db->query($query);
     }
 
