@@ -604,7 +604,7 @@ class Master extends CI_Controller {
                                 <i class="material-icons">remove_red_eye</i>
                             </button>';
 
-                        if ($this->session->userdata('level') == "SuperAdmin" && $r->cek_po == 0) {
+                        if (($this->session->userdata('level') == "Developer" || $this->session->userdata('level') == "SuperAdmin" ) && $r->cek_po == 0) {
                             $aksi = ''.$superbtn.'
                             <a type="button" onclick="confirmCekPo('.$id.','."".')" class="btn bg-green btn-circle waves-effect waves-circle waves-float">
                                 <i class="material-icons">check</i>
@@ -1425,7 +1425,7 @@ class Master extends CI_Controller {
         echo $this->show_cart(); //tampilkan cart setelah added
     }
 
-    function add_to_cart_pl_barang(){ //
+    function add_to_cart_pl_barang(){
 
         $data = array(
             'id' => str_replace("/", "_", $_POST['kode_barang']), 
@@ -1624,20 +1624,20 @@ class Master extends CI_Controller {
             $this->db->update('m_timbangan');
             echo "1";
         }else if ($jenis == "plpl") {
-            $detail = $this->m_master->get_data_plpl("m_pl_list_barang", "id_pl_price_list", $id)->result();
+            $detail = $this->m_master->get_data_plpl("m_pl_list_barang", "id_pl", $id)->result();
 
             // update stok barang
             foreach($detail as $r){
                 $stok = $r->qty + $r->i_qty;
 
                 $this->db->set("qty", $stok);
-                $this->db->where('kode_barang', $r->kode_barang);
+                $this->db->where('id', $r->id_m_brng);
                 $this->db->update('m_barang');
             }
 
             // delete packing list dan list barangnya
             $return = $this->m_master->delete("m_pl_price_list","id",$id);
-            $return = $this->m_master->delete("m_pl_list_barang","id_pl_price_list",$id);
+            $return = $this->m_master->delete("m_pl_list_barang","id_pl",$id);
 
             echo "1";
         }
@@ -1681,9 +1681,9 @@ class Master extends CI_Controller {
         }else if ($jenis == "PL_pl_pl") {
             $data =  $this->m_master->get_data_one("m_pl_price_list", "id", $id)->row();
 
-            $data_pt =  $this->m_master->get_data_one("m_perusahaan", "id", $data->kepada)->row();
+            $data_pt =  $this->m_master->get_data_one("m_perusahaan", "id", $data->id_m_perusahaan)->row();
 
-            $detail = $this->m_master->get_data_plpl("m_pl_list_barang", "id_pl_price_list", $data->id)->result();
+            $detail = $this->m_master->get_data_plpl("m_pl_list_barang", "id_pl", $data->id)->result();
 
             echo json_encode(array(
                 'header' => $data,

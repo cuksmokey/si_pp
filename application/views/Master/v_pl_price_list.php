@@ -100,7 +100,7 @@
                                         <td colspan="4"><hr>Dikirim Ke<hr></td>
                                     </tr>
                                     <tr>
-                                        <td>Kepada</td>
+                                        <td>Pilih</td>
                                         <td>:</td>
                                         <td colspan="2">
                                           <select class="form-control" id="kepada" style="width:100%">
@@ -110,7 +110,14 @@
                                         <td>Pimpinan</td>
                                         <td>:</td>
                                         <td colspan="2">
-                                            <input type="text" class="form-control" id="pimpinan" disabled="true" style="background:#ddd">
+                                            <input type="text" class="form-control" id="pimpinan" disabled="true" style="background:#ddd"> <input type="hidden" value="" id="id_kepada">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Nama Perusahaan</td>
+                                        <td>:</td>
+                                        <td colspan="2">
+                                            <input type="text" class="form-control" id="nama_perusahaan" disabled="true" style="background:#ddd">
                                         </td>
                                     </tr>
                                     <tr>
@@ -328,7 +335,6 @@
                               <th>No</th>
                               <th>Kode Barang</th>
                               <th>Nama Barang</th>
-                              <th>Harga Price List</th>
                               <th>STOK</th>
                               <th>Input QTY</th>
                             </tr>
@@ -412,21 +418,24 @@
 
     function simpan(){
       id = $("#idid").val();
-      data = $('#kepada').select2('data');
-      kepada = data[0].id;
+      // data = $('#kepada').select2('data');
+      // kepada = data[0].id;
       tgl = $("#tgl").val();
       no_surat = $("#no_surat").val();
       no_so = $("#no_so").val();
       no_po = $("#no_po").val();
       no_nota = $("#no_nota").val();
+      
+      kepada = $("#id_kepada").val();
       pimpinan = $("#pimpinan").val();
+      nama_perusahaan = $("#nama_perusahaan").val();
       npwp = $("#npwp").val();
       alamat = $("#alamat").val();
       no_telp = $("#no_telp").val();
 
       cart = $('#detail_cart').html();
       
-      if (cart == "" || tgl == "" || no_surat == "" || no_so == "" || no_po == "" || no_nota == "" || kepada == "" || pimpinan == "" || npwp == "" || alamat == "" || no_telp == "")  {
+      if (cart == "" || tgl == "" || no_surat == "" || no_so == "" || no_po == "" || no_nota == "" || nama_perusahaan == "" || pimpinan == "" || npwp == "" || alamat == "" || no_telp == "")  {
         showNotification("alert-info", "Harap Lengkapi Form", "bottom", "center", "", ""); return;
       }
 
@@ -533,7 +542,7 @@
               html = '';
               for (var i = 0 ; i < json.detail.length; i++) {
                 ii = i+1;
-                html +='<tr><td><b>'+ii+'</b></td><td><b>'+json.detail[i].kode_barang+'</b></td><td><b>'+json.detail[i].nama_barang+'</b></td><td><b>Rp. '+idr.format(json.detail[i].harga_price_list)+'</b></td><td><b>'+json.detail[i].qty+' '+json.detail[i].qty_ket+'</b></td><td><b>'+json.detail[i].i_qty+'</b></td></tr>';
+                html +='<tr><td><b>'+ii+'</b></td><td><b>'+json.detail[i].kode_barang+'</b></td><td><b>'+json.detail[i].nama_barang+'</b></td><td><b>'+json.detail[i].qty+' '+json.detail[i].qty_ket+'</b></td><td><b>'+json.detail[i].i_qty+'</b></td></tr>';
               }
 
               $("#list-timbangan").html(html);
@@ -627,7 +636,9 @@
       $("#no_so").val("");
       $("#no_po").val("");
       $("#no_nota").val("");
-      $("#kepada").val("");
+
+      $("#id_kepada").val("");
+      $("#nama_perusahaan").val("");
       $("#pimpinan").val("");
       $("#npwp").val("");
       $("#alamat").val("");
@@ -838,7 +849,9 @@
    $('#kepada').on('change', function() {
       data = $('#kepada').select2('data');
       // $("#nama").val(data[0].text);
+      $("#id_kepada").val(data[0].id);
       $("#pimpinan").val(data[0].pimpinan);
+      $("#nama_perusahaan").val(data[0].text);
       $("#npwp").val(data[0].npwp);
       $("textarea#alamat").val(data[0].alamat);
       $("#no_telp").val(data[0].no_telp);

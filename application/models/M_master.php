@@ -109,20 +109,20 @@ class M_master extends CI_Model{
         return $this->db->query($query);
     }
 
-    function get_data_plpl($m_pl_list_barang,$id_pl_price_list,$id){
-        // $query = "SELECT * FROM $m_pl_list_barang WHERE $id_pl_price_list='$id'";
+    function get_data_plpl($m_pl_list_barang,$id_pl,$id){
+        // $query = "SELECT * FROM $m_pl_list_barang WHERE $id_pl='$id'";
         $query = "SELECT
+            b.id AS id_m_brng,
             b.qty AS qty,
             a.tgl AS tgl,
-            a.kode_barang AS kode_barang,
+            b.kode_barang AS kode_barang,
             b.nama_barang AS nama_barang,
-            a.harga_price_list AS harga_price_list,
             a.qty AS i_qty,
             b.qty_ket AS qty_ket,
-            a.id_pl_price_list AS id_pl_price_list
+            a.id_pl AS id_pl
         FROM $m_pl_list_barang a 
-        INNER JOIN m_barang b ON a.kode_barang = b.kode_barang
-        WHERE a.$id_pl_price_list='$id'";
+        INNER JOIN m_barang b ON a.id_m_barang = b.id
+        WHERE a.$id_pl='$id'";
         return $this->db->query($query);
     }
 
@@ -211,8 +211,8 @@ class M_master extends CI_Model{
     }
 
     function get_PL_price_list(){
-        $query = "SELECT a.*,(SELECT COUNT(id_pl_price_list)
-        FROM m_pl_list_barang WHERE id_pl_price_list = a.id) AS jml_timbang FROM m_pl_price_list a";
+        $query = "SELECT a.*,(SELECT COUNT(id_pl)
+        FROM m_pl_list_barang WHERE id_pl = a.id) AS jml_timbang FROM m_pl_price_list a";
         return $this->db->query($query);
     }
 
@@ -273,12 +273,12 @@ class M_master extends CI_Model{
     function insert_pl_pl_b(){
         // insert packing list
         $data = array(
+            'id_m_perusahaan' => $_POST['kepada'],
             'tgl' => $_POST['tgl'],
             'no_surat' => $_POST['no_surat'],
             'no_so' => $_POST['no_so'],
             'no_po' => $_POST['no_po'],
             'no_nota' => $_POST['no_nota'],
-            'kepada' => $_POST['kepada'],
             'created_by' => $this->session->userdata('username')
         );
         $result= $this->db->insert("m_pl_price_list",$data);
@@ -288,20 +288,28 @@ class M_master extends CI_Model{
 
         // insert pl list barang
         foreach ($this->cart->contents() as $items) {
+            $sisa_stok = $items['options']['qty'] - $items['qty'];
+
+            if($sisa_stok < 0){
+                $stok = 0;
+                $iqty = ($items['qty'] - $items['qty']) + $items['options']['qty'];
+            }else{
+                $stok = $sisa_stok;
+                $iqty = $items['qty'];
+            }
+            
             $data_list = array(
+                'id_pl' => $plpl->id,
+                'id_m_barang' => $items['options']['id_barang'],
                 'tgl' => $plpl->tgl,
-                'kode_barang' => $items['options']['kode_barang'],
-                'harga_price_list' => $items['price'],
-                'qty' => $items['qty'],
-                'id_pl_price_list' => $plpl->id,
+                'qty' => $iqty,
                 'created_by' => $this->session->userdata('username')
             );
             $result= $this->db->insert("m_pl_list_barang",$data_list);
 
-            // update stok 
-            $sisa = $items['options']['stok'] - $items['qty'];
-            $this->db->set('qty', $sisa);
-            $this->db->where('kode_barang', $items['options']['kode_barang']);
+            // update stok             
+            $this->db->set('qty', $stok);
+            $this->db->where('id', $items['options']['id_barang']);
             $result = $this->db->update('m_barang');
         }
 
@@ -654,14 +662,16 @@ class M_master extends CI_Model{
     }
 
     function list_perusahaan($searchTerm=""){
-     $users = $this->db->query("SELECT * FROM m_perusahaan WHERE pimpinan like '%$searchTerm%' or nm_perusahaan like '%$searchTerm%' ORDER BY pimpinan ")->result_array();
+     $users = $this->db->query("SELECT CONCAT(pimpinan, ' | ', nm_perusahaan) AS cc,a.* FROM m_perusahaan a
+     WHERE pimpinan like '%$searchTerm%' or nm_perusahaan like '%$searchTerm%' ORDER BY pimpinan ")->result_array();
 
      // Initialize Array with fetched data
      $data = array();
      foreach($users as $user){
         $data[] = array(
             "id"=>$user['id'], 
-            "text"=>$user['nm_perusahaan'],
+            "text"=>$user['cc'],
+            "nama_perusahaan"=>$user['nm_perusahaan'],
             "pimpinan"=>$user['pimpinan'], 
             "no_telp"=>$user['no_telp'], 
             "npwp"=>$user['npwp'], 
