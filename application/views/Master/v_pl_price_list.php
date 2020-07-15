@@ -521,7 +521,7 @@
          $.ajax({
               url: '<?php echo base_url('Master/get_edit'); ?>',
               type: 'POST',
-              data: {id: id,jenis:"PL_pl_pl"},
+              data: {id: id,jenis:"PL_invoice"},
           })
           .done(function(data) {
               json = JSON.parse(data);

@@ -193,7 +193,7 @@ class M_master extends CI_Model{
 
     function get_pl_inv(){
         $id_pl = $_POST['id_pl'];
-        $query = "SELECT c.kode_barang,c.nama_barang,b.qty,c.qty_ket,a.* FROM m_pl_price_list a
+        $query = "SELECT c.kode_barang,c.nama_barang,b.qty,c.qty_ket,b.id AS id_pl_list_barang,a.* FROM m_pl_price_list a
         INNER JOIN m_pl_list_barang b ON a.id=b.id_pl
         INNER JOIN m_barang c ON b.id_m_barang=c.id
         WHERE a.id='$id_pl'";
@@ -222,6 +222,12 @@ class M_master extends CI_Model{
     function get_PL_price_list(){
         $query = "SELECT a.*,(SELECT COUNT(id_pl)
         FROM m_pl_list_barang WHERE id_pl = a.id) AS jml_timbang FROM m_pl_price_list a";
+        return $this->db->query($query);
+    }
+
+    function get_load_inv(){
+        $query = "SELECT b.no_surat,b.no_nota,b.cek_inv,(SELECT COUNT(id_pl) FROM m_pl_list_barang WHERE id_pl = b.id) AS jml_timbang,a.* FROM m_invoice a
+        INNER JOIN m_pl_price_list b ON a.id_pl=b.id";
         return $this->db->query($query);
     }
 
@@ -320,6 +326,32 @@ class M_master extends CI_Model{
             $this->db->set('qty', $stok);
             $this->db->where('id', $items['options']['id_barang']);
             $result = $this->db->update('m_barang');
+        }
+
+        return $result;
+    }
+
+    function insert_pl_inv(){
+        // insert invoice
+        $data = array(
+            'id_pl' => $_POST['id_pl'],
+            'no_invoice' => $_POST['no_invoice'],
+            'tgl_jt' => $_POST['tgl_jt'],
+            'created_by' => $this->session->userdata('username')
+        );
+        $result= $this->db->insert("m_invoice",$data);
+
+        // update data masuk invoice
+        $this->db->set('data_inv', "1");
+        $this->db->where('id', $_POST['id_pl']);
+        $result = $this->db->update('m_pl_price_list');
+
+        // update harga list barang
+        foreach ($this->cart->contents() as $items) {
+            // update harga
+            $this->db->set('harga_invoice', $items['options']['price']);
+            $this->db->where('id', $items['options']['id_list_barang']);
+            $result = $this->db->update('m_pl_list_barang');
         }
 
         return $result;
@@ -693,7 +725,7 @@ class M_master extends CI_Model{
     function list_pl($searchTerm=""){
         $users = $this->db->query("SELECT CONCAT(no_surat, ' | ',no_nota) AS ket,b.pimpinan,b.nm_perusahaan,b.alamat,b.npwp,b.no_telp,a.* FROM m_pl_price_list a
         INNER JOIN m_perusahaan b ON a.id_m_perusahaan=b.id
-        WHERE no_surat LIKE '%$searchTerm%' OR no_nota LIKE '%$searchTerm%' AND cek_inv='0'
+        WHERE data_inv='0' AND no_surat LIKE '%$searchTerm%' OR no_nota LIKE '%$searchTerm%'
         ORDER BY tgl DESC")->result_array();
    
         // Initialize Array with fetched data

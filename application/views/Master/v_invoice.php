@@ -31,10 +31,9 @@
                                         <tr>
                                             <th>No</th>
                                             <th>Tanggal Jatuh Tempo</th>
+                                            <th>No Invoice</th>
                                             <th>No Surat Jalan</th>
-                                            <th>No SO</th>
-                                            <!-- <th>Kepada</th> -->
-                                            <th>No PO</th>
+                                            <th>No Nota</th>
                                             <th width="5%">Jumlah Barang</th>
                                             <th width="20%">Aksi</th>
                                         </tr>
@@ -184,8 +183,8 @@
                                       <th style="width:5%;text-align:center">No</th>
                                       <th style="width:15%;text-align:center">Kode Barang</th>
                                       <th style="width:45%;text-align:center">Nama Barang</th>
-                                      <th style="width:10%;text-align:center">Sisa Stok</th>
-                                      <th style="width:10%;text-align:center">Input QTY</th>
+                                      <th style="width:10%;text-align:center">QTY</th>
+                                      <th style="width:10%;text-align:center">Input Harga</th>
                                       <th style="width:15%;text-align:center">Aksi</th>
                                     </tr>
                                   </thead>
@@ -424,7 +423,7 @@
                "paging": true,
                "ajax": {
                    "url" : '<?php echo base_url(); ?>Master/load_data' ,
-                   "data" : ({jenis:"PL_price_list"}),
+                   "data" : ({jenis:"pl_inv"}),
                    "type": "POST"
                },
                responsive: true,
@@ -462,7 +461,8 @@
 
       $("#btn-simpan").prop("disabled",true);
 
-      // alert(id);
+      // alert(id_pl+" "+no_invoice+" "+tgl_jt);
+      
       $.ajax({
           type     : "POST",
           url      : '<?php echo base_url(); ?>Master/'+status,
@@ -470,7 +470,7 @@
             id_pl:id_pl,
             no_invoice:no_invoice,
             tgl_jt:tgl_jt,
-            jenis : "PL_pl_barang"}),
+            jenis : "Save_invoice"}),
             dataType : "json",
           success  : function(data){
             $("#btn-simpan").prop("disabled",false);
@@ -649,6 +649,8 @@
       status = "insert";
       
       $("#id_pl").val("");
+      $("#tgl_jt").val("");
+      $("#no_invoice").val("");
 
       $("#tgl").val("");
       $("#no_surat").val("");
@@ -664,7 +666,7 @@
 
       $("#btn-simpan").prop("disabled",false);
       $("#txt-btn-simpan").html("SIMPAN");
-      $('#detail_cart').load("<?php echo base_url();?>Master/destroy_cart_plpl");
+      $('#detail_cart').load("<?php echo base_url();?>Master/destroy_cart_inv");
     }
 
     // function view_timbang(id){
@@ -704,7 +706,7 @@
       
     });
 
-    function load_barang(id_pl){ 
+    function load_barang(id_pl){ //
       $("#btn-simpan").prop("disabled",true);
       var table = $('#datatable-add').DataTable();
       
@@ -733,32 +735,26 @@
 
     function addToCart(id,kode_barang,nama_barang,qty,i){
       $("#btn-simpan").prop("disabled",false);
-      $("#i_qty"+i).prop("disabled",true).attr('style','background:#ddd;');
+      $("#harga_inv"+i).prop("disabled",true).attr('style','background:#ddd;');
       $(".btn_list_barang").prop("disabled",true);
 
-      qty = $("#qty"+i).val();
-      i_qty = $("#i_qty"+i).val();
-
-      ss_stok = qty - i_qty;
+      harga_inv = $("#harga_inv"+i).val();
 
       // alert("ID:"+id+". qty:"+qty+". i_qty:"+i_qty+". stok: "+ss_stok);
 
-      if(i_qty == 0 || i_qty == ""){
-        swal("Input QTY Tidak Boleh Kosong", "", "error");
-        $("#i_qty"+i).prop("disabled",false).attr('style','background:#fff;');
-      }else if(ss_stok < 0){
-        swal("Melebihi STOK!!", "", "error");
-        $("#i_qty"+i).prop("disabled",false).attr('style','background:#fff;');
+      if(harga_inv == 0 || harga_inv == ""){
+        swal("Input Harga Tidak Boleh Kosong", "", "error");
+        $("#harga_inv"+i).prop("disabled",false).attr('style','background:#fff;');
       }else{
         $.ajax({
-          url : "<?php echo base_url();?>Master/add_to_cart_pl_barang",
+          url : "<?php echo base_url();?>Master/add_to_cart_inv",
           method : "POST",
           data : {
-            id_barang:id,
+            id_list_barang:id,
             kode_barang:kode_barang,
             nama_barang:nama_barang,
-            qty:qty,
-            i_qty:i_qty
+            harga_inv:harga_inv,
+            qty:qty
           },
           success: function(data){
           swal("Berhasil Ditambahkan", "", "success");
@@ -820,12 +816,11 @@
     // }
 
     $(document).on('click','.hapus_cart',function(){
-       var row_id=$(this).attr("id"); //mengambil row_id dari artibut id
+       var row_id=$(this).attr("id");
        $.ajax({
-         url : "<?php echo base_url();?>Master/hapus_cart_plpl",
+         url : "<?php echo base_url();?>Master/hapus_cart_inv",
          method : "POST",
          data : {
-            // edit_cart:edit_cart,
             row_id : row_id},
          success :function(data){
            $('#detail_cart').html(data);

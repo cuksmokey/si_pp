@@ -214,6 +214,17 @@ class Master extends CI_Controller {
                     $result = $this->m_master->insert_pl_pl_b();    
                     echo json_encode(array('data' =>  TRUE));
                 }
+            }elseif ($jenis == "Save_invoice") {
+                $no_invoice = $this->input->post('no_invoice');
+
+                $cek = $this->m_master->get_data_one("m_invoice","no_invoice",$no_invoice)->num_rows();
+
+                if ($cek > 0 ) {
+                    echo json_encode(array('data' =>  FALSE,'msg' => 'No Invoice Sudah Ada!'));
+                }else{
+                    $result = $this->m_master->insert_pl_inv();    
+                    echo json_encode(array('data' =>  TRUE));
+                }
             }elseif ($jenis == "Invoice") {
                 $id      = $this->input->post('id');
 
@@ -450,7 +461,7 @@ class Master extends CI_Controller {
                 $output = array(
                                 "data" => $data,
                         );
-            }else if ($jenis == "list_pl_inv") {
+            }else if ($jenis == "list_pl_inv") { //
                 
                 $query = $this->m_master->get_pl_inv();
                 
@@ -460,14 +471,13 @@ class Master extends CI_Controller {
                     $data[] =  ["","","","","",""];
                 }else{
                     foreach ($query->result() as $r) {
-                        $id = "$r->id";
+                        $id = "$r->id_pl_list_barang";
 
                         $row = array();
                         $row[] = $r->kode_barang;
                         $row[] = $r->nama_barang;
                         $row[] = '<div style="text-align:right">'.$r->qty.'</div>';
-                        $row[] = '<input type="text" class="angka form-control" id="i_qty'.$i.'" placeholder="0" autocomplete="off"  onkeypress="return hanyaAngka(event)">
-                        <input type="hidden" id="qty'.$i.'" value="'.$r->qty.'">';
+                        $row[] = '<input type="text" class="angka form-control" id="harga_inv'.$i.'" placeholder="0" autocomplete="off"  onkeypress="return hanyaAngka(event)">';
                         $row[] = $r->qty_ket;
 
                         $aksi = '<a type="button" onclick="addToCart('."'".$id."'".','."'".$r->kode_barang."'".','."'".$r->nama_barang."'".','."'".$r->qty."'".','."'".$i."'".')" class="btn bg-brown btn-circle waves-effect waves-circle waves-float">
@@ -644,6 +654,65 @@ class Master extends CI_Controller {
                                 <i class="material-icons">check</i>
                             </a>';
                         }else if ($r->cek_po == 1) {
+                                $aksi = '<button type="button" onclick="view_detail('.$id.')" class="btn btn-info btn-circle waves-effect waves-circle waves-float">
+                                <i class="material-icons">remove_red_eye</i>
+                            </button>
+                                <a type="button" onclick="vvvv" class="btn bg-blue btn-circle waves-effect waves-circle waves-float">
+                                <i class="material-icons">check</i>
+                            </a>';
+                        }else{
+                            $aksi = ''.$superbtn.'';
+                        }    
+                            
+                        $row[] = $aksi;
+                        $data[] = $row;
+
+                        $i++;
+                    }
+                }
+
+                $output = array("data" => $data);
+                
+
+            }else if ($jenis == "pl_inv") {
+                $i=1;
+                $query = $this->m_master->get_load_inv();
+                
+                if ($query->num_rows() == 0) {
+                    $data[] =  ["","","","","","",""];
+                }else{
+
+                    foreach ($query->result() as $r) {
+                        $id = "'$r->id'";
+
+                        $row = array();
+                        $row[] = $i;
+                        $row[] = $this->m_fungsi->tanggal_format_indonesia($r->tgl_jt);
+                        $row[] = $r->no_invoice;
+                        $row[] = $r->no_surat;
+                        $row[] = $r->no_nota;
+                        $row[] = '
+                        <a type="button" class="btn btn-default btn-circle waves-effect waves-circle waves-float">'.$r->jml_timbang.'</a>' ;
+
+                        $aksi ="";
+
+                        $superbtn = '<button type="button" onclick="view_detail('.$id.')" class="btn btn-info btn-circle waves-effect waves-circle waves-float">
+                                <i class="material-icons">remove_red_eye</i>
+                            </button> 
+                        <button type="button" onclick="deleteData('.$id.','."".')" class="btn btn-danger btn-circle waves-effect waves-circle waves-float">
+                                <i class="material-icons">delete</i>
+                            </button>';
+                            
+                        $superbtn2 = '<button type="button" onclick="view_detail('.$id.')" class="btn btn-info btn-circle waves-effect waves-circle waves-float">
+                                <i class="material-icons">remove_red_eye</i>
+                            </button>';
+
+                        if (($this->session->userdata('level') == "Developer" || $this->session->userdata('level') == "SuperAdmin" ) && $r->cek_inv == 0) {
+                            $aksi = ''.$superbtn.'
+                            <a type="button" onclick="confirmCekPo('.$id.','."".')" class="btn bg-green btn-circle waves-effect waves-circle waves-float">
+                                <i class="material-icons">check</i>
+                            </a>';
+                        }else if ($r->cek_inv == 1) {
                                 $aksi = '<button type="button" onclick="view_detail('.$id.')" class="btn btn-info btn-circle waves-effect waves-circle waves-float">
                                 <i class="material-icons">remove_red_eye</i>
                             </button>
@@ -1381,6 +1450,11 @@ class Master extends CI_Controller {
         echo $this->show_cart_plpl();
     }
 
+    function destroy_cart_inv(){
+        $this->cart->destroy();
+        echo $this->show_cart_inv();
+    }
+
     function destroy_cart_barang(){
         $this->cart->destroy();
         echo $this->show_cart_barang();
@@ -1523,6 +1597,55 @@ class Master extends CI_Controller {
         );
         $this->cart->update($data);
         echo $this->show_cart_plpl();
+    }
+
+    function add_to_cart_inv(){
+
+        $data = array(
+            'id' => str_replace("/", "_", $_POST['kode_barang']), 
+            'name' => $_POST['nama_barang'],
+            'price' => 0, 
+            'qty' => 1,
+            'options' => array(
+                'id_list_barang' => $_POST['id_list_barang'],
+                'kode_barang' => $_POST['kode_barang'],
+                'qty' => $_POST['qty'],
+                'price' => $_POST['harga_inv']
+            )
+        );
+        $this->cart->insert($data);
+        echo $this->show_cart_inv(); //tampilkan cart setelah added
+    }
+
+    function show_cart_inv(){
+        $output = '';
+        $no = 0;
+
+        foreach ($this->cart->contents() as $items) {
+            $no++;
+
+            $output .='
+                <tr>
+                    <td>'.$no.'</td>
+                    <td>'.$items['options']['kode_barang'].'<input type="hidden" value="'.$items['options']['id_list_barang'].'" id="id_pll_h"></td>
+                    <td>'.$items['name'].'</td>
+                    <td>'.$items['options']['qty'].'</td>
+                    <td>Rp. '.number_format($items['options']['price']).'</td>
+                    <td><button type="button" id="'.$items['rowid'].'" class="hapus_cart btn btn-danger btn-xs">Batal</button></td>
+                </tr>
+            ';
+        }
+
+        return $output;
+    }
+
+    function hapus_cart_inv(){ //fungsi untuk menghapus item cart
+        $data = array(
+            'rowid' => $this->input->post('row_id'), 
+            'qty' => 0, 
+        );
+        $this->cart->update($data);
+        echo $this->show_cart_inv();
     }
 
     function view_edit_cart_pl(){
@@ -1722,6 +1845,17 @@ class Master extends CI_Controller {
             $detail = $this->m_master->get_data_one("m_timbangan", "id_pl", $data->id)->result();
             echo json_encode(  array('header' => $data, 'detail' => $detail));
         }else if ($jenis == "PL_pl_pl") {
+            $data =  $this->m_master->get_data_one("m_pl_price_list", "id", $id)->row();
+
+            $data_pt =  $this->m_master->get_data_one("m_perusahaan", "id", $data->id_m_perusahaan)->row();
+
+            $detail = $this->m_master->get_data_plpl("m_pl_list_barang", "id_pl", $data->id)->result();
+
+            echo json_encode(array(
+                'header' => $data,
+                'pt' => $data_pt,
+                'detail' => $detail));
+        }else if ($jenis == "PL_invoice") {
             $data =  $this->m_master->get_data_one("m_pl_price_list", "id", $id)->row();
 
             $data_pt =  $this->m_master->get_data_one("m_perusahaan", "id", $data->id_m_perusahaan)->row();
