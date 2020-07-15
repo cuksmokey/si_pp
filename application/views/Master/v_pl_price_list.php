@@ -374,6 +374,7 @@
         status = 'insert';
         kosong();
         $("#btn-simpan").prop("disabled",true);
+        $(".btn_list_barang").prop("disabled",false);
         $(".box-data").hide();
         $(".box-form").show();
         $("#judul").html('<h3>Form Tambah Data Packing List</h3>');
@@ -744,6 +745,7 @@
           success: function(data){
           swal("Berhasil Ditambahkan", "", "success");
             $('#detail_cart').html(data);
+            $(".btn_list_barang").prop("disabled",false);
           }
         });
       }

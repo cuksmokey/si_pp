@@ -450,6 +450,40 @@ class Master extends CI_Controller {
                 $output = array(
                                 "data" => $data,
                         );
+            }else if ($jenis == "list_pl_inv") {
+                
+                $query = $this->m_master->get_pl_inv();
+                
+                $i=0;
+
+                if ($query->num_rows() == 0) {
+                    $data[] =  ["","","","","",""];
+                }else{
+                    foreach ($query->result() as $r) {
+                        $id = "$r->id";
+
+                        $row = array();
+                        $row[] = $r->kode_barang;
+                        $row[] = $r->nama_barang;
+                        $row[] = '<div style="text-align:right">'.$r->qty.'</div>';
+                        $row[] = '<input type="text" class="angka form-control" id="i_qty'.$i.'" placeholder="0" autocomplete="off"  onkeypress="return hanyaAngka(event)">
+                        <input type="hidden" id="qty'.$i.'" value="'.$r->qty.'">';
+                        $row[] = $r->qty_ket;
+
+                        $aksi = '<a type="button" onclick="addToCart('."'".$id."'".','."'".$r->kode_barang."'".','."'".$r->nama_barang."'".','."'".$r->qty."'".','."'".$i."'".')" class="btn bg-brown btn-circle waves-effect waves-circle waves-float">
+                        <i class="material-icons">check</i>
+                            </a>';
+
+                        $row[] = $aksi;
+                        $data[] = $row;
+
+                        $i++;
+                    }
+                }
+
+                $output = array(
+                                "data" => $data,
+                        );
             }else if ($jenis == "view_timbang") {
                 $id = $_POST['id'];
                 $query = $this->m_master->get_view_timbangan($id);
@@ -584,7 +618,7 @@ class Master extends CI_Controller {
 
                         $row = array();
                         $row[] = $i;
-                        $row[] = $r->tgl;
+                        $row[] = $this->m_fungsi->tanggal_format_indonesia($r->tgl);
                         $row[] = $r->no_surat;
                         $row[] = $r->no_so;
                         $row[] = $r->no_po;
@@ -1167,6 +1201,15 @@ class Master extends CI_Controller {
 
       echo json_encode($response);
     }
+
+    function load_pl(){
+        $searchTerm = $_GET['search'];
+  
+        // Get users
+        $response = $this->m_master->list_pl($searchTerm);
+  
+        echo json_encode($response);
+      }
 
     function laod_po_barang(){
         $searchTerm = $_GET['search'];

@@ -191,6 +191,15 @@ class M_master extends CI_Model{
         return $this->db->query($query);
     }
 
+    function get_pl_inv(){
+        $id_pl = $_POST['id_pl'];
+        $query = "SELECT c.kode_barang,c.nama_barang,b.qty,c.qty_ket,a.* FROM m_pl_price_list a
+        INNER JOIN m_pl_list_barang b ON a.id=b.id_pl
+        INNER JOIN m_barang c ON b.id_m_barang=c.id
+        WHERE a.id='$id_pl'";
+        return $this->db->query($query);
+    }
+
     function get_pl_barang_edit(){
         $query = "SELECT a.id AS id,a.kode_barang AS kode_barang,a.nama_barang AS nama_barang,a.harga_price_list AS harga_price_list,b.qty AS qty,c.qty AS i_qty_barang
         FROM m_price_list a
@@ -680,6 +689,33 @@ class M_master extends CI_Model{
      }
      return $data;
     }
+
+    function list_pl($searchTerm=""){
+        $users = $this->db->query("SELECT CONCAT(no_surat, ' | ',no_nota) AS ket,b.pimpinan,b.nm_perusahaan,b.alamat,b.npwp,b.no_telp,a.* FROM m_pl_price_list a
+        INNER JOIN m_perusahaan b ON a.id_m_perusahaan=b.id
+        WHERE no_surat LIKE '%$searchTerm%' OR no_nota LIKE '%$searchTerm%' AND cek_inv='0'
+        ORDER BY tgl DESC")->result_array();
+   
+        // Initialize Array with fetched data
+        $data = array();
+        foreach($users as $user){
+           $data[] = array(
+               "id"=>$user['id'], 
+               "text"=>$user['ket'],
+               "tgl"=>$user['tgl'],
+               "no_surat"=>$user['no_surat'],
+               "no_so"=>$user['no_so'],
+               "no_po"=>$user['no_po'],
+               "no_nota"=>$user['no_nota'],
+               "nama_perusahaan"=>$user['nm_perusahaan'],
+               "pimpinan"=>$user['pimpinan'], 
+               "no_telp"=>$user['no_telp'], 
+               "npwp"=>$user['npwp'], 
+               "alamat"=>$user['alamat']
+           );
+        }
+        return $data;
+       }
 
     function list_po_barang($searchTerm=""){
         $users = $this->db->query("SELECT * FROM m_barang WHERE kode_barang like '%$searchTerm%' or nama_barang like '%$searchTerm%' ORDER BY kode_barang ")->result_array();
