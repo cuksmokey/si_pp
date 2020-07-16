@@ -37,6 +37,7 @@
                                             <th>Nama User</th>
                                             <th>Username</th>
                                             <th>Level</th>
+                                            <th>Otoritas</th>
                                             <th width="15%">Aksi</th>
                                         </tr>
                                     </thead>
@@ -92,9 +93,20 @@
                                       <option value="Admin">Admin</option>
                                       <option value="User">User</option>
                                     </select>
-
                                   </td>
-                                  
+                                </tr>
+                                <tr>
+                                <td width="15%">
+                                      Otoritas
+                                  </td>
+                                  <td>:</td>
+                                  <td>
+                                    <select name="" id="otoritas" class="form-control">
+                                      <option value="0"></option>
+                                      <option value="Pembelian">Pembelian</option>
+                                      <option value="Penjualan">Penjualan</option>
+                                    </select>
+                                  </td>
                                 </tr>
                                     <tr>
                                         <td colspan="3" align="right">
@@ -197,8 +209,9 @@
       username_lama = $("#username_lama").val();
       password = $("#password").val();
       level = $("#level").val();
+      otoritas = $("#otoritas").val();
 
-      if (nm_user == "" || username == "" || password == "" || level == "" || level == 0)  {
+      if (nm_user == "" || username == "" || password == "" || level == "" || level == 0 || otoritas == 0)  {
         showNotification("alert-info", "Harap Lengkapi Form", "bottom", "center", "", ""); return;
       }
 
@@ -216,6 +229,7 @@
             username_lama : username_lama,
             password : password,
             level : level,
+            otoritas : otoritas,
             jenis : "Simpan_Admin" }),
           dataType : "json",
           success  : function(data){
@@ -259,6 +273,7 @@
           $("#username_lama").val(json.username);
           $("#password").val("");
           $("#level").val(json.level);
+          $("#otoritas").val(json.otoritas);
       })
     }
     function deleteData(id,nm){
@@ -280,7 +295,7 @@
               type  : "POST",
               data  : {
                 id:id,
-                jenis:"hapus_supplier"},
+                jenis:"hapus_admin"},
               success : function(data){
                 if (data == 1) {
                 swal("Berhasil", "", "success");
@@ -307,6 +322,7 @@
       $("#username_lama").val("");
       $("#password").val("");
       $("#level").val("");
+      $("#otoritas").val("");
 
       $("#btn-simpan").prop("disabled",false);
       $("#txt-btn-simpan").html("SIMPAN");

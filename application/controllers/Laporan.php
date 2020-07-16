@@ -45,6 +45,12 @@ class Laporan extends CI_Controller {
         $this->load->view('footer');
     }
 
+    function Penjualan(){
+        $this->load->view('header');
+        $this->load->view('Laporan/v_lap_penjualan');
+        $this->load->view('footer');
+    }
+
     function update_stok_gudang(){
         $this->load->view('header');
         $this->load->view('Laporan/v_stok_gudang');
@@ -359,7 +365,7 @@ class Laporan extends CI_Controller {
         }
     }
 
-    function Print_SJ_NOTA(){
+    function Surat_Jalan(){
         //
         $jenis = $_GET['jenis'];
         $ctk = $_GET['ctk'];
@@ -504,212 +510,240 @@ class Laporan extends CI_Controller {
             </tr>
         </table>';
 
-        if($ctk == 0){
-            $this->m_fungsi->_mpdf2('',$html,10,10,10,'P');
-        }else{
-            // CETAK NOTA PENJUALAN
-            $html = '';
-
-                                    # # # # # # # # # # # # # KOP # # # # # # # # # # # # #
-
-            if($pt == "st"){
-                $npwp = '';
-                $kop_nota = 'N O T A
-                <div style="font-weight:normal;font-size:12px !important">Klaten, '.$this->m_fungsi->tanggal_format_indonesia(date('Y-m-d')).'<br/>
-                Yth. Gesit<br/>
-                Up.Bag. Keuangan<br/>
-                Solo
-                </div>';
-            }else if($pt == "sma"){
-                $npwp = 'NPWP :'.$sql_kop->npwp;
-                $kop_nota = 'NOTA PENJUALAN';
-            }
-
-            $html .= '<table cellspacing="0" style="font-size:11px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;font-family:Arial !important">
-                <tr>
-                    <th style="border:0;width:8%;padding:0"></th>
-                    <th style="border:0;width:1%;padding:0"></th>
-                    <th style="border:0;width:41%;padding:0"></th>
-                    <th style="border:0;width:50%;padding:0"></th>
-                </tr>
-                <tr>
-                    <td style="border:0;background:url('.$jpg.')'.$top.' center no-repeat;padding:'.$px.'" colspan="3"></td>
-                    <td style="border:0;padding:0 5px 5px 15px;font-weight:bold;font-size:14px !important">'.$kop_nota.'</td>
-                </tr>
-                <tr>
-                    <td style="border:0;padding:5px 0" colspan="4"></td>
-                </tr>';
-
-                if($pt == "st"){
-                    $html .='';
-                    $html .='<tr>
-                        <td style="padding:3px 0">No. Nota</td>
-                        <td style="padding:3px 0">:</td>
-                        <td style="padding:3px 200px  3px 0">'.$sql_kop->no_nota.'</td>
-                        <td style="padding:3px 0">No. PO: '.$sql_kop->no_po.'</td>
-                    </tr>';
-                }else if($pt == "sma"){
-                    $html .='<tr>
-                        <td style="padding:3px 0" colspan="3">Kepoh RT 003 RW 007 Bowan, Delanggu, Klaten</td>
-                        <td></td>
-                    </tr>';
-                    $html .='<tr>
-                        <td style="border:0;padding:5px 0" colspan="4"></td>
-                    </tr>
-                    <tr>
-                        <td style="padding:3px 0">No. Nota</td>
-                        <td style="padding:3px 0">:</td>
-                        <td style="padding:3px 0">'.$sql_kop->no_nota.'</td>
-                        <td style="padding:3px 0">'.$npwp.'</td>
-                    </tr>
-                    <tr>
-                        <td style="padding:3px 0">Kepada</td>
-                        <td style="padding:3px 0">:</td>
-                        <td style="padding:3px 0">'.$sql_kop->nm_perusahaan.'</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td style="padding:3px 0">Alamat</td>
-                        <td style="padding:3px 0">:</td>
-                        <td style="padding:3px 200px  3px 0" colspan="2">'.$sql_kop->alamat.'</td>
-                    </tr>
-                    <tr>
-                        <td style="padding:3px 0">No. PO</td>
-                        <td style="padding:3px 0">:</td>
-                        <td style="padding:3px 200px  3px 0">'.$sql_kop->no_po.'</td>
-                        <td></td>
-                    </tr>';
-                }   
-
-            $html .='</table>';
-
-                                    # # # # # # # # # # # # # I S I # # # # # # # # # # # # #
-
-            $html .= '<table cellspacing="0" style="font-size:11px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;font-family:Arial !important">
-            <tr>
-                <th style="border:0;width:5%;padding:3px 0"></th>
-                <th style="border:0;width:44%;padding:3px 0"></th>
-                <th style="border:0;width:8%;padding:3px 0"></th>
-                <th style="border:0;width:8%;padding:3px 0"></th>
-                <th style="border:0;width:15%;padding:3px 0"></th>
-                <th style="border:0;width:20%;padding:3px 0"></th>
-            </tr>
-            <tr>
-                <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">NO</td>
-                <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">Nama Barang</td>
-                <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold" colspan="2">Quantity</td>
-                <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">Harga Satuan</td>
-                <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">Total Harga</td>
-            </tr>';
-
-            $ii = 0;
-            $sub_tot = 0;
-            foreach($sql_isi->result() as $r){
-                $ii++;
-                $tot_hrg = $r->qty * $r->harga_price_list;
-                $html .= '<tr>
-                    <td style="border:1px solid #000;padding:5px;text-align:center">'.$ii.'</td>
-                    <td style="border:1px solid #000;padding:5px">'.$r->nama_barang.'</td>
-                    <td style="border:1px solid #000;border-width:1px 0 1px 1px;padding:5px 2px 5px 5px;text-align:right">'.$r->qty.'</td>
-                    <td style="border:1px solid #000;border-width:1px 1px 1px 0;padding:5px 5px 5px 2px">'.$r->qty_ket.'</td>
-                    <td style="border:1px solid #000;padding:5px;text-align:right">Rp. '.number_format($r->harga_price_list).'</td>
-                    <td style="border:1px solid #000;padding:5px;text-align:right">Rp. '.number_format($tot_hrg).'</td>
-                </tr>';
-
-                $sub_tot += $tot_hrg;
-            }
-            
-                            # # # # # # # # # # # # # SUB TOTAL - PPN - TOTAL # # # # # # # # # # # # #
-
-            if($pt == "st") {
-                $tot_all = round($sub_tot);
-                $rs = '2';
-                $html .= '';
-            }else if($pt == "sma") {
-                $ppn = round($sub_tot * 0.1);
-                $tot_all = round($sub_tot + $ppn);
-                $rs = '3';
-            }
-
-            $html .= '<tr>
-                <td style="border:0;padding:10px 5px 5px" colspan="4" rowspan="'.$rs.'">Terbilang : <b><i>'.ucwords($this->m_fungsi->terbilang($tot_all)).'</i></b></td>
-                <td style="border:1px solid #000;padding:5px">Sub Total</td>
-                <td style="border:1px solid #000;padding:5px;text-align:right">Rp. '.number_format($sub_tot).'</td>
-            </tr>';
-            
-            if($pt == "st") {
-                $html .= '';
-            }else if($pt == "sma") {
-                $html .='<tr>
-                    <td style="border:1px solid #000;padding:5px">PPN</td>
-                    <td style="border:1px solid #000;padding:5px;text-align:right">Rp. '.number_format($ppn).'</td>
-                </tr>';
-            }
-            
-            $html.='<tr>
-                <td style="border:1px solid #000;padding:5px">Total</td>
-                <td style="border:1px solid #000;padding:5px;text-align:right">Rp. '.number_format($tot_all).'</td>
-            </tr>';
-
-                        # # # # # # # # # # # # # TANDA TANGAN # # # # # # # # # # # # # 
-
-            if($pt == "st") {
-                $html .= '';
-                $nm_ttd = 'Pembayaran mohon ditransfer ke BCA
-                <br/>Rekening : 079.0302.231
-                <br/>Atas Nama : Niken Pangastuti
-                <br/>Cabang Pasar Legi';
-
-                $html .= '<tr>
-                    <td style="border:0;padding:2px" colspan="2"></td>
-                    <td style="border:0;padding:2px" colspan="4"></td>
-                </tr>';
-
-                $html .= '<tr>
-                    <td style="border:0;padding:0" colspan="2">'.$nm_ttd.'</td>
-                    <td style="border:0;padding:5px" colspan="4"></td>
-                </tr>';
-
-                $html .= '<tr>
-                    <td style="border:0;padding:5px 0 0;text-align:center" colspan="2">Penerima</td>
-                    <td style="border:0;padding:5px 0 0;text-align:center" colspan="4">Hormat Kami,</td>
-                </tr>
-                <tr>
-                    <td style="border:0;padding:40px 0" colspan="2"></td>
-                    <td style="border:0;padding:40px 0" colspan="4"></td>
-                </tr>
-                <tr>
-                    <td style="border:0;padding:0 0 5px;text-align:center" colspan="2">_____________________</td>
-                    <td style="border:0;padding:0 0 5px;text-align:center" colspan="4">Niken Pangastuti</td>
-                </tr>
-                ';
-
-            }else if($pt == "sma") {
-                $no_faktur = 'No Faktur Pajak<br/>010.003.20.45831433';
-                $nm_ttd = 'Andreas Purwanto<br/>Bank : BRI KCP DELANGGU-KLATEN A/C : 2055 - 01 - 000246 - 30 - 0 A/N : SINAR MUKTI ABADI';
-
-                $html .= '<tr>
-                    <td style="border:0;padding:5px" colspan="4"></td>
-                    <td style="border:0;padding:5px" colspan="2"></td>
-                </tr>';
-
-                $html .='<tr>
-                    <td style="border:0;padding:0" colspan="4">Klaten, '.$this->m_fungsi->tanggal_format_indonesia(date('Y-m-d')).'</td>
-                    <td style="border:0;padding:0" colspan="2" rowspan="2">'.$no_faktur.'</td>
-                </tr>
-                <tr>
-                    <td style="border:0;padding:42px 0" colspan="3"></td>
-                </tr>
-                <tr>
-                    <td style="border:0;padding:0" colspan="6">'.$nm_ttd.'</td>
-                </tr>';
-            }
-
-            $html .= '</table>';
+            $this->m_fungsi->_mpdf2('',$html,10,10,10,'P');        
         
-            $this->m_fungsi->_mpdf2('',$html,10,10,10,'P');
+    }
+
+    function Nota_Penjualan(){
+    // CETAK NOTA PENJUALAN
+    //
+    $jenis = $_GET['jenis'];
+    $ctk = $_GET['ctk'];
+    $pt = $_GET['pt'];
+
+    $html = '';
+
+    $sql_kop = $this->db->query("SELECT b.no_surat,b.no_nota,b.no_po,a.tgl_jt,c.nm_perusahaan,c.npwp,c.alamat,a.* FROM m_invoice a
+    INNER JOIN m_pl_price_list b ON a.id_pl=b.id
+    INNER JOIN m_perusahaan c ON b.id_m_perusahaan=c.id
+    WHERE a.id='$jenis'")->row();
+
+    // KOP
+    if($pt == "sma"){
+        $jpg = "http://localhost/si_pp/assets/images/logo_sma.jpg";
+        $top = 'top';
+        $px = '65px 0 35px';
+    }else if($pt == "st"){
+        $jpg = "http://localhost/si_pp/assets/images/logo_st.jpg";
+        $top = '';
+        $px = '83px 0 35px';
+    }
+
+        # # # # # # # # # # # # # KOP # # # # # # # # # # # # #
+
+        if($pt == "st"){
+        $npwp = '';
+        $kop_nota = 'N O T A
+        <div style="font-weight:normal;font-size:12px !important">Klaten, '.$this->m_fungsi->tanggal_format_indonesia(date('Y-m-d')).'<br/>
+        Yth. Gesit<br/>
+        Up.Bag. Keuangan<br/>
+        Solo
+        </div>';
+        }else if($pt == "sma"){
+        $npwp = 'NPWP :'.$sql_kop->npwp;
+        $kop_nota = 'NOTA PENJUALAN';
         }
-        
+
+        $html .= '<table cellspacing="0" style="font-size:11px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;font-family:Arial !important">
+        <tr>
+        <th style="border:0;width:8%;padding:0"></th>
+        <th style="border:0;width:1%;padding:0"></th>
+        <th style="border:0;width:41%;padding:0"></th>
+        <th style="border:0;width:50%;padding:0"></th>
+        </tr>
+        <tr>
+        <td style="border:0;background:url('.$jpg.')'.$top.' center no-repeat;padding:'.$px.'" colspan="3"></td>
+        <td style="border:0;padding:0 5px 5px 15px;font-weight:bold;font-size:14px !important">'.$kop_nota.'</td>
+        </tr>
+        <tr>
+        <td style="border:0;padding:5px 0" colspan="4"></td>
+        </tr>';
+
+        if($pt == "st"){
+        $html .='';
+        $html .='<tr>
+        <td style="padding:3px 0">No. Nota</td>
+        <td style="padding:3px 0">:</td>
+        <td style="padding:3px 200px  3px 0">'.$sql_kop->no_nota.'</td>
+        <td style="padding:3px 0">No. PO: '.$sql_kop->no_po.'</td>
+        </tr>';
+        }else if($pt == "sma"){
+        $html .='<tr>
+        <td style="padding:3px 0" colspan="3">Kepoh RT 003 RW 007 Bowan, Delanggu, Klaten</td>
+        <td></td>
+        </tr>';
+        $html .='<tr>
+        <td style="border:0;padding:5px 0" colspan="4"></td>
+        </tr>
+        <tr>
+        <td style="padding:3px 0">No. Nota</td>
+        <td style="padding:3px 0">:</td>
+        <td style="padding:3px 0">'.$sql_kop->no_nota.'</td>
+        <td style="padding:3px 0">'.$npwp.'</td>
+        </tr>
+        <tr>
+        <td style="padding:3px 0">Kepada</td>
+        <td style="padding:3px 0">:</td>
+        <td style="padding:3px 0">'.$sql_kop->nm_perusahaan.'</td>
+        <td></td>
+        </tr>
+        <tr>
+        <td style="padding:3px 0">Alamat</td>
+        <td style="padding:3px 0">:</td>
+        <td style="padding:3px 200px  3px 0" colspan="2">'.$sql_kop->alamat.'</td>
+        </tr>
+        <tr>
+        <td style="padding:3px 0">No. PO</td>
+        <td style="padding:3px 0">:</td>
+        <td style="padding:3px 200px  3px 0">'.$sql_kop->no_po.'</td>
+        <td></td>
+        </tr>';
+        }   
+
+        $html .='</table>';
+
+                # # # # # # # # # # # # # I S I # # # # # # # # # # # # #
+
+        $html .= '<table cellspacing="0" style="font-size:11px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;font-family:Arial !important">
+        <tr>
+        <th style="border:0;width:5%;padding:3px 0"></th>
+        <th style="border:0;width:44%;padding:3px 0"></th>
+        <th style="border:0;width:8%;padding:3px 0"></th>
+        <th style="border:0;width:8%;padding:3px 0"></th>
+        <th style="border:0;width:15%;padding:3px 0"></th>
+        <th style="border:0;width:20%;padding:3px 0"></th>
+        </tr>
+        <tr>
+        <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">NO</td>
+        <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">Nama Barang</td>
+        <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold" colspan="2">Quantity</td>
+        <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">Harga Satuan</td>
+        <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">Total Harga</td>
+        </tr>';
+
+        // isinya
+        $sql_isi = $this->db->query("SELECT c.nama_barang,c.qty_ket,a.*FROM m_pl_list_barang a
+        INNER JOIN m_pl_price_list b ON a.id_pl=b.id
+        INNER JOIN m_barang c ON a.id_m_barang=c.id
+        WHERE a.id_pl='$sql_kop->id_pl'
+        ORDER BY c.nama_barang ASC");
+
+        $ii = 0;
+        $sub_tot = 0;
+        foreach($sql_isi->result() as $r){
+        $ii++;
+        $tot_hrg = $r->qty * $r->harga_invoice;
+        $html .= '<tr>
+        <td style="border:1px solid #000;padding:5px;text-align:center">'.$ii.'</td>
+        <td style="border:1px solid #000;padding:5px">'.$r->nama_barang.'</td>
+        <td style="border:1px solid #000;border-width:1px 0 1px 1px;padding:5px 2px 5px 5px;text-align:right">'.$r->qty.'</td>
+        <td style="border:1px solid #000;border-width:1px 1px 1px 0;padding:5px 5px 5px 2px">'.$r->qty_ket.'</td>
+        <td style="border:1px solid #000;padding:5px;text-align:right">Rp. '.number_format($r->harga_invoice).'</td>
+        <td style="border:1px solid #000;padding:5px;text-align:right">Rp. '.number_format($tot_hrg).'</td>
+        </tr>';
+
+        $sub_tot += $tot_hrg;
+        }
+
+        # # # # # # # # # # # # # SUB TOTAL - PPN - TOTAL # # # # # # # # # # # # #
+
+        if($pt == "st") {
+        $tot_all = round($sub_tot);
+        $rs = '2';
+        $html .= '';
+        }else if($pt == "sma") {
+        $ppn = round($sub_tot * 0.1);
+        $tot_all = round($sub_tot + $ppn);
+        $rs = '3';
+        }
+
+        $html .= '<tr>
+        <td style="border:0;padding:10px 5px 5px" colspan="4" rowspan="'.$rs.'">Terbilang : <b><i>'.ucwords($this->m_fungsi->terbilang($tot_all)).'</i></b></td>
+        <td style="border:1px solid #000;padding:5px">Sub Total</td>
+        <td style="border:1px solid #000;padding:5px;text-align:right">Rp. '.number_format($sub_tot).'</td>
+        </tr>';
+
+        if($pt == "st") {
+        $html .= '';
+        }else if($pt == "sma") {
+        $html .='<tr>
+        <td style="border:1px solid #000;padding:5px">PPN</td>
+        <td style="border:1px solid #000;padding:5px;text-align:right">Rp. '.number_format($ppn).'</td>
+        </tr>';
+        }
+
+        $html.='<tr>
+        <td style="border:1px solid #000;padding:5px">Total</td>
+        <td style="border:1px solid #000;padding:5px;text-align:right">Rp. '.number_format($tot_all).'</td>
+        </tr>';
+
+        # # # # # # # # # # # # # TANDA TANGAN # # # # # # # # # # # # # 
+
+        if($pt == "st") {
+        $html .= '';
+        $nm_ttd = 'Pembayaran mohon ditransfer ke BCA
+        <br/>Rekening : 079.0302.231
+        <br/>Atas Nama : Niken Pangastuti
+        <br/>Cabang Pasar Legi';
+
+        $html .= '<tr>
+        <td style="border:0;padding:2px" colspan="2"></td>
+        <td style="border:0;padding:2px" colspan="4"></td>
+        </tr>';
+
+        $html .= '<tr>
+        <td style="border:0;padding:0" colspan="2">'.$nm_ttd.'</td>
+        <td style="border:0;padding:5px" colspan="4"></td>
+        </tr>';
+
+        $html .= '<tr>
+        <td style="border:0;padding:5px 0 0;text-align:center" colspan="2">Penerima</td>
+        <td style="border:0;padding:5px 0 0;text-align:center" colspan="4">Hormat Kami,</td>
+        </tr>
+        <tr>
+        <td style="border:0;padding:40px 0" colspan="2"></td>
+        <td style="border:0;padding:40px 0" colspan="4"></td>
+        </tr>
+        <tr>
+        <td style="border:0;padding:0 0 5px;text-align:center" colspan="2">_____________________</td>
+        <td style="border:0;padding:0 0 5px;text-align:center" colspan="4">Niken Pangastuti</td>
+        </tr>
+        ';
+
+        }else if($pt == "sma") {
+        $no_faktur = 'No Faktur Pajak<br/>010.003.20.45831433';
+        $nm_ttd = 'Andreas Purwanto<br/>Bank : BRI KCP DELANGGU-KLATEN A/C : 2055 - 01 - 000246 - 30 - 0 A/N : SINAR MUKTI ABADI';
+
+        $html .= '<tr>
+        <td style="border:0;padding:5px" colspan="4"></td>
+        <td style="border:0;padding:5px" colspan="2"></td>
+        </tr>';
+
+        $html .='<tr>
+        <td style="border:0;padding:0" colspan="4">Klaten, '.$this->m_fungsi->tanggal_format_indonesia(date('Y-m-d')).'</td>
+        <td style="border:0;padding:0" colspan="2" rowspan="2">'.$no_faktur.'</td>
+        </tr>
+        <tr>
+        <td style="border:0;padding:42px 0" colspan="3"></td>
+        </tr>
+        <tr>
+        <td style="border:0;padding:0" colspan="6">'.$nm_ttd.'</td>
+        </tr>';
+        }
+
+        $html .= '</table>';
+
+        $this->m_fungsi->_mpdf2('',$html,10,10,10,'P');
     }
 
     function print_surat_jalan(){

@@ -957,7 +957,7 @@ class Master extends CI_Controller {
                 $query = $this->m_master->get_load_admin();
 
                 if ($query->num_rows() == 0) {
-                    $data[] =  ["","","","",""];
+                    $data[] =  ["","","","","",""];
                 }else{
                     $i=1;
 
@@ -968,6 +968,7 @@ class Master extends CI_Controller {
                         $row[] = $r->nm_user;
                         $row[] = $r->username;
                         $row[] = $r->level;
+                        $row[] = $r->otoritas;
                         $aksi ="";
 
                         $btn_edit = '<button type="button" onclick="tampil_edit('.$id.')" class="btn bg-orange btn-circle waves-effect waves-circle waves-float">
@@ -1290,12 +1291,30 @@ class Master extends CI_Controller {
       }
 
     function laod_supplier(){
-    $searchTerm = $_GET['search'];
+        $searchTerm = $_GET['search'];
 
-    // Get users
-    $response = $this->m_master->list_supplier($searchTerm);
+        // Get users
+        $response = $this->m_master->list_supplier($searchTerm);
 
-    echo json_encode($response);
+        echo json_encode($response);
+    }
+
+    function laod_p_sj(){
+        $s = $_GET['search'];
+
+        // Get users
+        $response = $this->m_master->list_p_sj($s);
+
+        echo json_encode($response);
+    }
+
+    function laod_p_nota(){
+        $s = $_GET['search'];
+
+        // Get users
+        $response = $this->m_master->list_p_nota($s);
+
+        echo json_encode($response);
     }
 
     function laod_supplier_nota(){
@@ -1774,6 +1793,9 @@ class Master extends CI_Controller {
             echo "1";
         }else if ($jenis == "hapus_supplier") {
             $return = $this->m_master->delete("m_supplier","id",$id);
+            echo "1";
+        }else if ($jenis == "hapus_admin") {
+            $this->m_master->delete("user","id",$id);
             echo "1";
         }else if ($jenis == "hapus_nota") {
             $return = $this->m_master->delete("m_nota","id",$id);

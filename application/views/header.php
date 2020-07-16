@@ -196,7 +196,7 @@
                             <?php } ?>
                             <?php if($this->session->userdata('otoritas') == "Penjualan") { ?>
                                 <li>
-                                    <a href="<?php echo base_url('Laporan/print_sj') ?>">SURAT JALAN</a>
+                                    <a href="<?php echo base_url('Laporan/Penjualan') ?>">Penjualan</a>
                                 </li>
                             <?php } ?>
                         </ul>

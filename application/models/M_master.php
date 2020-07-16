@@ -583,6 +583,7 @@ class M_master extends CI_Model{
             'username' => $_POST['username'],
             'password' => md5($_POST['password']),
             'level' => $_POST['level'],
+            'otoritas' => $_POST['otoritas'],
             'created_by' => $this->session->userdata('username')
         );
         $result= $this->db->insert("user",$data);
@@ -596,6 +597,7 @@ class M_master extends CI_Model{
         $this->db->set('username', $_POST['username']);
         $this->db->set('password', md5($_POST['password']));
         $this->db->set('level', $_POST['level']);
+        $this->db->set('otoritas', $_POST['otoritas']);
         $this->db->set('updated_at', date("Y-m-d h:i:s"));
         $this->db->set('updated_by', $this->session->userdata('username'));
         $this->db->where('id', $_POST['id']);
@@ -776,6 +778,50 @@ class M_master extends CI_Model{
                "id"=>$user['id'],
                "id_supplier"=>$user['id'],
                "text"=>$user['nama_supplier']
+           );
+        }
+        return $data;
+    }
+
+    function list_p_sj($s=""){
+        $users = $this->db->query("SELECT CONCAT(no_surat, ' | ', b.nm_perusahaan) AS ket,b.nm_perusahaan,a.* FROM m_pl_price_list a
+        INNER JOIN m_perusahaan b ON a.id_m_perusahaan=b.id
+        WHERE (no_surat LIKE '%$s%' OR no_so LIKE '%$s%' OR b.nm_perusahaan LIKE '%$s%')
+        ORDER BY no_surat ASC")->result_array();
+   
+        // Initialize Array with fetched data
+        $data = array();
+        foreach($users as $user){
+           $data[] = array(
+               "id"=>$user['id'],
+               "text"=>$user['ket'],
+               "tgl"=>$user['tgl'],
+               "nm_perusahaan"=>$user['nm_perusahaan'],
+               "no_surat"=>$user['no_surat'],
+               "no_so"=>$user['no_so']
+           );
+        }
+        return $data;
+    }
+
+    function list_p_nota($s=""){
+        $users = $this->db->query("SELECT CONCAT(no_invoice, ' | ', b.no_nota, ' | ', c.nm_perusahaan) AS ket,a.tgl_jt AS jt_nota,c.nm_perusahaan,b.no_nota,b.no_po,a.* FROM m_invoice a
+        INNER JOIN m_pl_price_list b ON a.id_pl=b.id
+        INNER JOIN m_perusahaan c ON b.id_m_perusahaan=c.id
+        WHERE (no_invoice LIKE '%$s%' OR b.no_po LIKE '%$s%' OR c.nm_perusahaan LIKE '%$s%')
+        ORDER BY no_invoice ASC")->result_array();
+   
+        // Initialize Array with fetched data
+        $data = array();
+        foreach($users as $user){
+           $data[] = array(
+               "id"=>$user['id'],
+               "text"=>$user['ket'],
+               "jt_nota"=>$user['jt_nota'],
+               "nm_perusahaan"=>$user['nm_perusahaan'],
+               "no_invoice"=>$user['no_invoice'],
+               "no_nota"=>$user['no_nota'],
+               "no_po"=>$user['no_po']
            );
         }
         return $data;
