@@ -159,6 +159,13 @@
                                         </td>
                                     </tr>
                                     <tr>
+                                        <td>Penambahan QTY</td>
+                                        <td>:</td>
+                                        <td>
+                                            <input type="text" id="plus_qty" autocomplete="off" placeholder="0" class="form-control" onkeypress="return hanyaAngka(event)">
+                                        </td>
+                                    </tr>
+                                    <tr>
                                         <td>Harga</td>
                                         <td>:</td>
                                         <td>
@@ -275,15 +282,27 @@
       nama_barang = $("#nama_barang").val();
       merek = $("#merek").val();
       spesifikasi = $("#spesifikasi").val();
-
+      
       i_qty = $("#qty").val();
+      i_plus_qty = $("#plus_qty").val();
+
       qty_ket = $("#qty_ket").val();
       i_harga = $("#harga").val();
 
-      qty = i_qty.split(".").join("");
+      k_qty = i_qty.split(".").join("");
+      ii_plus_qty = i_plus_qty.split(".").join("");
+
+      if(ii_plus_qty == ""){
+        k_plus_qty = 0;
+      }else{
+        k_plus_qty = ii_plus_qty;
+      }
+
       harga = i_harga.split(".").join("");
 
-      if (tgl == "" || kode_barang == "" || nama_barang == ""|| merek == "" || spesifikasi == "" || supplier_note == "" || qty == "" ||  qty == 0 || qty_ket == "" || qty_ket == 0 || harga == "" || harga == 0 || no_nota == "")  {
+      qty = Number.parseInt(k_qty) + Number.parseInt(k_plus_qty);
+
+      if (tgl == "" || kode_barang == "" || nama_barang == ""|| merek == "" || spesifikasi == "" || supplier_note == "" || i_qty == "" || qty_ket == "" || qty_ket == 0 || harga == "" || harga == 0 || no_nota == "")  {
         showNotification("alert-info", "Harap Lengkapi Form", "bottom", "center", "", ""); return;
       }
 
@@ -365,7 +384,10 @@
           $("#nama_barang").val(json.nama_barang);
           $("#merek").val(json.merek);
           $("#spesifikasi").val(json.spesifikasi);
-          $("#qty").val(json.qty);
+          
+          $("#qty").val(json.qty).prop("disabled",true).attr('style','background:#ddd;');
+          $("#plus_qty").val("").prop("disabled",false).attr('style','background:#fff;');
+          
           $("#qty_ket").val(json.qty_ket);
           $("#harga").val(json.harga);
       })
@@ -422,7 +444,8 @@
       $("#supplier_note").val("");
       $("#no_nota").val("");
       $("#supplier_lama").val("");
-      $("#qty").val("");
+      $("#qty").val("").prop("disabled",false).attr('style','background:#fff;');
+      $("#plus_qty").val("").prop("disabled",true).attr('style','background:#ddd;');
       $("#qty_ket").val("0");
       $("#harga").val("");
 

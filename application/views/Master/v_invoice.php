@@ -32,8 +32,8 @@
                                             <th>No</th>
                                             <th>Tanggal Jatuh Tempo</th>
                                             <th>No Invoice</th>
-                                            <th>No Surat Jalan</th>
                                             <th>No Nota</th>
+                                            <th>No PO</th>
                                             <th width="5%">Jumlah Barang</th>
                                             <th width="20%">Aksi</th>
                                         </tr>
@@ -301,45 +301,36 @@
               <div class="modal-body">
                 <table width="100%" border="0" cellspacing="0" cellpadding="5" style="font-size:16px">
                   <tr>
-                      <td align="left" width="8%">Tanggal</td>
+                      <td align="left" width="8%">No Nota</td>
                       <td align="" width="1%">:</td>
-                      <td align="left" width="10%"><div id="txt-tgl"></div></td>
+                      <td align="left" width="10%"><div id="txt-no_nota"></div></td>
                       <td align="center" width="10%"></td>
-                      <td align="left" width="8%">Kepada</td>
+                      <td align="left" width="8%">Tanggal Jatuh Tempo</td>
                       <td align="" width="1%">:</td>
-                      <td align="left" width="20%"><div id="txt-nm_perusahaan"></div></td>
+                      <td align="left" width="20%"><div id="txt-tgl_jt"></div></td>
                   </tr>
                   <tr>
-                        <td align="left" width="8%">No Surat Jalan</td>
+                        <td align="left" width="8%">Kepada</td>
                         <td align="" width="1%">:</td>
-                        <td align="left" width="10%"><div id="txt-no_surat"></div></td>
+                        <td align="left" width="10%"><div id="txt-kepada"></div></td>
                         <td align="center" width="10%"></td>
+                        <td align="left" width="8%">NPWP</td>
+                        <td align="" width="1%">:</td>
+                        <td align="left" width="20%"><div id="txt-npwp"></div></td>
+                    </tr>
+                    <tr>
                         <td align="left" width="8%">Alamat</td>
                         <td align="" width="1%">:</td>
-                        <td align="left" width="20%"><div id="txt-alamat_perusahaan"></div></td>
-                    </tr>
-                    <tr>
-                        <td align="left" width="8%">No SO</td>
-                        <td align="" width="1%">:</td>
-                        <td align="left" width="10%"><div id="txt-no_so"></div></td>
+                        <td align="left" width="10%"><div id="txt-alamat"></div></td>
                         <td align="center" width="10%"></td>
-                        <td align="left" width="8%">ATTN</td>
-                        <td align="" width="1%">:</td>
-                        <td align="left" width="20%"><div id="txt-nama"></div></td>
+                        <td align="left" width="8%"></td>
+                        <td align="" width="1%"></td>
+                        <td align="left" width="20%"></td>
                     </tr>
                     <tr>
-                        <td align="left" width="8%">No Nota</td>
+                        <td align="left" width="8%">No Po</td>
                         <td align="" width="1%">:</td>
-                        <td align="left" width="10%"><div id="txt-no_nota"></div></td>
-                        <td align="center" width="10%"></td>
-                        <td align="left" width="8%">No Telp / No HP</td>
-                        <td align="" width="1%">:</td>
-                        <td align="left" width="20%"><div id="txt-no_telp"></div></td>
-                    </tr>
-                    <tr>
-                        <td align="left" width="8%">No PO</td>
-                        <td align="" width="1%">:</td>
-                        <td align="left" width="20%"><div id="txt-no_po"></div></td>
+                        <td align="left" width="10%"><div id="txt-no_po"></div></td>
                         <td align="center" width="10%"></td>
                         <td align="left" width="8%"></td>
                         <td align="" width="1%"></td>
@@ -354,8 +345,8 @@
                               <th>No</th>
                               <th>Kode Barang</th>
                               <th>Nama Barang</th>
-                              <th>STOK</th>
-                              <th>Input QTY</th>
+                              <th>QTY</th>
+                              <th>Input Harga</th>
                             </tr>
                         </thead>
                         <tbody id="list-timbangan">
@@ -411,7 +402,7 @@
        tabel.ajax.reload(null,false);
    }
 
-    function load_data(){ //
+    function load_data(){
       var table = $('#datatable11').DataTable();
 
          table.destroy();
@@ -537,29 +528,23 @@
          $.ajax({
               url: '<?php echo base_url('Master/get_edit'); ?>',
               type: 'POST',
-              data: {id: id,jenis:"PL_pl_pl"},
+              data: {id: id,jenis:"view_inv"},
           })
           .done(function(data) {
               json = JSON.parse(data);
 
-              // alert(json.header.no_surat);
-              // $("#idid").val(json.header.id);
-              $("#txt-tgl").html(json.header.tgl);
-              $("#txt-no_surat").html(json.header.no_surat);
-              $("#txt-no_so").html(json.header.no_so);
-              $("#txt-no_po").html(json.header.no_po);
-              $("#txt-no_nota").html(json.header.no_nota);
-              $("#txt-nm_perusahaan").html(json.pt.nm_perusahaan);
-              $("#txt-nama").html(json.pt.pimpinan);
+              $("#txt-no_nota").html(json.pl.no_nota);
+              $("#txt-no_po").html(json.pl.no_po);
+              $("#txt-tgl_jt").html(json.header.tgl_jt);
+              $("#txt-kepada").html(json.pt.nm_perusahaan);
               $("#txt-npwp").html(json.pt.npwp);
-              $("#txt-alamat_perusahaan").html(json.pt.alamat);
-              $("#txt-no_telp").html(json.pt.no_telp);
+              $("#txt-alamat").html(json.pt.alamat);
 
               let idr = new Intl.NumberFormat();
               html = '';
               for (var i = 0 ; i < json.detail.length; i++) {
                 ii = i+1;
-                html +='<tr><td><b>'+ii+'</b></td><td><b>'+json.detail[i].kode_barang+'</b></td><td><b>'+json.detail[i].nama_barang+'</b></td><td><b>'+json.detail[i].qty+' '+json.detail[i].qty_ket+'</b></td><td><b>'+json.detail[i].i_qty+'</b></td></tr>';
+                html +='<tr><td><b>'+ii+'</b></td><td><b>'+json.detail[i].kode_barang+'</b></td><td><b>'+json.detail[i].nama_barang+'</b></td><td><b>'+json.detail[i].i_qty+' '+json.detail[i].qty_ket+'</b></td><td><b>Rp. '+idr.format(json.detail[i].harga_invoice)+'</b></td></tr>';
               }
 
               $("#list-timbangan").html(html);
@@ -587,7 +572,7 @@
             $.ajax({
               url   : '<?php echo base_url(); ?>Master/hapus/',
               type  : "POST",
-              data  : {id: id,jenis:"plpl"},
+              data  : {id: id,jenis:"hapus_inv"},
               success : function(data){
                 if (data == 1) {
                 swal("Berhasil", "", "success");
@@ -665,6 +650,7 @@
       $("#no_telp").val("");
 
       $("#btn-simpan").prop("disabled",false);
+      $(".btn_list_barang").prop("disabled",false);
       $("#txt-btn-simpan").html("SIMPAN");
       $('#detail_cart').load("<?php echo base_url();?>Master/destroy_cart_inv");
     }

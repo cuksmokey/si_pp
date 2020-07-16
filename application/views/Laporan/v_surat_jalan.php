@@ -45,8 +45,8 @@
                                           include 'connect.php';
                                           
                                           $sql = mysql_query("SELECT a.id AS id,a.tgl AS tgl,a.no_surat AS no_surat,c.nm_perusahaan AS nm_perusahaan FROM m_pl_price_list a
-                                          INNER JOIN m_pl_list_barang b ON a.id = b.id_pl_price_list
-                                          INNER JOIN m_perusahaan c ON a.kepada = c.id
+                                          INNER JOIN m_pl_list_barang b ON a.id = b.id_pl
+                                          INNER JOIN m_perusahaan c ON a.id_m_perusahaan = c.id
                                           GROUP BY a.id
                                           ORDER BY a.tgl DESC");
                                           while($data=mysql_fetch_array($sql)) {

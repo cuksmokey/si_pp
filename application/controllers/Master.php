@@ -689,8 +689,8 @@ class Master extends CI_Controller {
                         $row[] = $i;
                         $row[] = $this->m_fungsi->tanggal_format_indonesia($r->tgl_jt);
                         $row[] = $r->no_invoice;
-                        $row[] = $r->no_surat;
                         $row[] = $r->no_nota;
+                        $row[] = $r->no_po;
                         $row[] = '
                         <a type="button" class="btn btn-default btn-circle waves-effect waves-circle waves-float">'.$r->jml_timbang.'</a>' ;
 
@@ -1802,8 +1802,33 @@ class Master extends CI_Controller {
             }
 
             // delete packing list dan list barangnya
-            $return = $this->m_master->delete("m_pl_price_list","id",$id);
-            $return = $this->m_master->delete("m_pl_list_barang","id_pl",$id);
+            $this->m_master->delete("m_pl_price_list","id",$id);
+            $this->m_master->delete("m_pl_list_barang","id_pl",$id);
+
+            echo "1";
+        }else if ($jenis == "hapus_inv") {
+            $data =  $this->m_master->get_data_one("m_invoice", "id", $id)->row();
+            $data_pl =  $this->m_master->get_data_one("m_pl_price_list", "id", $data->id_pl)->row();
+            $detail = $this->m_master->get_data_one("m_pl_list_barang", "id_pl", $data_pl->id)->row();
+
+            // ubah data inv jadi 0
+            $data_pl_u =  $this->m_master->get_data_one("m_pl_price_list", "id", $data->id_pl)->result();
+            foreach($data_pl_u as $u_pl){
+                $this->db->set("data_inv", "0");
+                $this->db->where('id', $u_pl->id);
+                $this->db->update('m_pl_price_list');
+            }
+
+            // update harga list barang jadi 0
+            $detail_u = $this->m_master->get_data_one("m_pl_list_barang", "id_pl", $data_pl->id)->result();
+            foreach($detail_u as $u_l_b){
+                $this->db->set("harga_invoice", "0");
+                $this->db->where('id_pl', $u_l_b->id_pl);
+                $this->db->update('m_pl_list_barang');
+            }
+            
+            // delete invoice
+            $this->m_master->delete("m_invoice","id",$id);
 
             echo "1";
         }
@@ -1855,17 +1880,18 @@ class Master extends CI_Controller {
                 'header' => $data,
                 'pt' => $data_pt,
                 'detail' => $detail));
-        }else if ($jenis == "PL_invoice") {
-            $data =  $this->m_master->get_data_one("m_pl_price_list", "id", $id)->row();
-
-            $data_pt =  $this->m_master->get_data_one("m_perusahaan", "id", $data->id_m_perusahaan)->row();
-
-            $detail = $this->m_master->get_data_plpl("m_pl_list_barang", "id_pl", $data->id)->result();
+        }else if ($jenis == "view_inv") {
+            $data =  $this->m_master->get_data_one("m_invoice", "id", $id)->row();
+            $data_pl =  $this->m_master->get_data_one("m_pl_price_list", "id", $data->id_pl)->row();
+            $data_pt =  $this->m_master->get_data_one("m_perusahaan", "id", $data_pl->id_m_perusahaan)->row();
+            $detail = $this->m_master->get_data_plpl("m_pl_list_barang", "id_pl", $data_pl->id)->result();
 
             echo json_encode(array(
                 'header' => $data,
+                'pl' => $data_pl,
                 'pt' => $data_pt,
-                'detail' => $detail));
+                'detail' => $detail
+            ));
         }
         
     }

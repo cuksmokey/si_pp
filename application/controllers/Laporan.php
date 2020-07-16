@@ -368,16 +368,16 @@ class Laporan extends CI_Controller {
         $html = '';
 
         $sql_kop = $this->db->query("SELECT a.no_surat,a.no_nota,a.no_po,a.tgl,b.nm_perusahaan,b.npwp,b.alamat FROM m_pl_price_list a
-        INNER JOIN m_perusahaan b ON a.kepada = b.id
+        INNER JOIN m_perusahaan b ON a.id_m_perusahaan = b.id
         WHERE a.id='$jenis'")->row();
 
         // KOP
         if($pt == "sma"){
-            $jpg = "http://localhost/Project001/assets/images/logo_sma.jpg";
+            $jpg = "http://localhost/si_pp/assets/images/logo_sma.jpg";
             $top = 'top';
             $px = '65px 0 35px';
         }else if($pt == "st"){
-            $jpg = "http://localhost/Project001/assets/images/logo_st.jpg";
+            $jpg = "http://localhost/si_pp/assets/images/logo_st.jpg";
             $top = '';
             $px = '83px 0 35px';
         }
@@ -432,10 +432,10 @@ class Laporan extends CI_Controller {
         </tr>';
 
         // isinya
-        $sql_isi = $this->db->query("SELECT b.nama_barang,b.qty_ket,a.*FROM m_pl_list_barang a
-        INNER JOIN m_barang b ON a.kode_barang = b.kode_barang
-        WHERE id_pl_price_list='$jenis'
-        GROUP BY a.kode_barang");
+        $sql_isi = $this->db->query("SELECT b.nama_barang,b.qty_ket,a.* FROM m_pl_list_barang a
+        INNER JOIN m_barang b ON a.id_m_barang = b.id
+        WHERE id_pl='$jenis'
+        GROUP BY b.kode_barang");
 
         $i = 0;
         foreach($sql_isi->result() as $r){

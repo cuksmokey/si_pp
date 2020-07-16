@@ -521,7 +521,7 @@
          $.ajax({
               url: '<?php echo base_url('Master/get_edit'); ?>',
               type: 'POST',
-              data: {id: id,jenis:"PL_invoice"},
+              data: {id: id,jenis:"PL_pl_pl"},
           })
           .done(function(data) {
               json = JSON.parse(data);
@@ -646,6 +646,7 @@
       $("#no_telp").val("");
 
       $("#btn-simpan").prop("disabled",false);
+      $(".btn_list_barang").prop("disabled",false);
       $("#txt-btn-simpan").html("SIMPAN");
       $('#detail_cart').load("<?php echo base_url();?>Master/destroy_cart_plpl");
     }

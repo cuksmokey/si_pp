@@ -112,11 +112,13 @@ class M_master extends CI_Model{
     function get_data_plpl($m_pl_list_barang,$id_pl,$id){
         // $query = "SELECT * FROM $m_pl_list_barang WHERE $id_pl='$id'";
         $query = "SELECT
+            a.id AS id_list_barang,
             b.id AS id_m_brng,
             b.qty AS qty,
             a.tgl AS tgl,
             b.kode_barang AS kode_barang,
             b.nama_barang AS nama_barang,
+            a.harga_invoice AS harga_invoice,
             a.qty AS i_qty,
             b.qty_ket AS qty_ket,
             a.id_pl AS id_pl
@@ -226,7 +228,7 @@ class M_master extends CI_Model{
     }
 
     function get_load_inv(){
-        $query = "SELECT b.no_surat,b.no_nota,b.cek_inv,(SELECT COUNT(id_pl) FROM m_pl_list_barang WHERE id_pl = b.id) AS jml_timbang,a.* FROM m_invoice a
+        $query = "SELECT b.no_po,b.no_nota,b.cek_inv,(SELECT COUNT(id_pl) FROM m_pl_list_barang WHERE id_pl = b.id) AS jml_timbang,a.* FROM m_invoice a
         INNER JOIN m_pl_price_list b ON a.id_pl=b.id";
         return $this->db->query($query);
     }
@@ -725,7 +727,7 @@ class M_master extends CI_Model{
     function list_pl($searchTerm=""){
         $users = $this->db->query("SELECT CONCAT(no_surat, ' | ',no_nota) AS ket,b.pimpinan,b.nm_perusahaan,b.alamat,b.npwp,b.no_telp,a.* FROM m_pl_price_list a
         INNER JOIN m_perusahaan b ON a.id_m_perusahaan=b.id
-        WHERE data_inv='0' AND no_surat LIKE '%$searchTerm%' OR no_nota LIKE '%$searchTerm%'
+        WHERE a.data_inv='0' AND (no_surat LIKE '%$searchTerm%' OR no_nota LIKE '%$searchTerm%')
         ORDER BY tgl DESC")->result_array();
    
         // Initialize Array with fetched data
