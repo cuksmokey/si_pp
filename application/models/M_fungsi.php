@@ -264,29 +264,29 @@ class M_fungsi extends CI_Model {
 	function _mpdf2($judul='',$isi='',$lMargin='',$rMargin='',$font=0,$orientasi='',$title='PL') {
         
         ini_set("memory_limit","512M");
-        $this->load->library('mpdf');
+        $this->load->library('Mpdf');
 
 
-        $this->mpdf->defaultheaderfontsize = 6;	/* in pts */
-        $this->mpdf->defaultheaderfontstyle = BI;	/* blank, B, I, or BI */
-        $this->mpdf->defaultheaderline = 1; 	/* 1 to include line below header/above footer */
+        $this->Mpdf->defaultheaderfontsize = 6;	/* in pts */
+        $this->Mpdf->defaultheaderfontstyle = BI;	/* blank, B, I, or BI */
+        $this->Mpdf->defaultheaderline = 1; 	/* 1 to include line below header/above footer */
 
-        $this->mpdf->defaultfooterfontsize = 6;	/* in pts */
-        $this->mpdf->defaultfooterfontstyle = BI;	/* blank, B, I, or BI */
-        $this->mpdf->defaultfooterline = 1; 
+        $this->Mpdf->defaultfooterfontsize = 6;	/* in pts */
+        $this->Mpdf->defaultfooterfontstyle = BI;	/* blank, B, I, or BI */
+        $this->Mpdf->defaultfooterline = 1; 
 
-        $this->mpdf->SetTitle = $title;
+        $this->Mpdf->SetTitle = $title;
 
-        $this->mpdf->SetLeftMargin = $lMargin;
-        $this->mpdf->SetRightMargin = $rMargin;
+        $this->Mpdf->SetLeftMargin = $lMargin;
+        $this->Mpdf->SetRightMargin = $rMargin;
         
         $jam = date("H:i:s");
 
-        $this->mpdf->AddPage($orientasi,'','','','',$lMargin,$rMargin);
+        $this->Mpdf->AddPage($orientasi,'','','','',$lMargin,$rMargin);
         
-        if (!empty($judul)) $this->mpdf->writeHTML($judul);
-        $this->mpdf->writeHTML($isi);         
-        $this->mpdf->Output();
+        if (!empty($judul)) $this->Mpdf->writeHTML($judul);
+        $this->Mpdf->writeHTML($isi);         
+        $this->Mpdf->Output();
                
     }
 
