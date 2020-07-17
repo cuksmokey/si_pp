@@ -1,8 +1,8 @@
 <?php
 	
 # include mPDF
-require(APPPATH.'config\Mpdf.php');
-require_once($mpdf['base_directory'].'/Mpdf.php');
+require(APPPATH.'config\mpdf.php');
+require_once($mpdf['base_directory'].'/mpdf.php');
 
 /**
 
