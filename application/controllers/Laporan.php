@@ -379,24 +379,24 @@ class Laporan extends CI_Controller {
 
         // KOP
         if($pt == "sma"){
-            $jpg = "http://localhost/si_pp/assets/images/logo_sma.jpg";
-            $top = 'top';
-            $px = '65px 0 35px';
+            $jpg = "http://sinarmuktiabadi.com/assets/images/logo_sma.jpg";
+            $top = 'left';
+            $px = '70px 0 35px';
         }else if($pt == "st"){
-            $jpg = "http://localhost/si_pp/assets/images/logo_st.jpg";
-            $top = '';
+            $jpg = "http://sinarmuktiabadi.com/assets/images/logo_st.jpg";
+            $top = 'left';
             $px = '83px 0 35px';
         }
-
+        
         $html .= '<table cellspacing="0" style="font-size:11px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;font-family:Arial !important">
             <tr>
-                <th style="border:0;width:12%;padding:0"></th>
+                <th style="border:0;width:17%;padding:0"></th>
                 <th style="border:0;width:1%;padding:0"></th>
                 <th style="border:0;width:37%;padding:0"></th>
-                <th style="border:0;width:50%;padding:0"></th>
+                <th style="border:0;width:45%;padding:0"></th>
             </tr>
             <tr>
-                <td style="background:url('.$jpg.')'.$top.' center no-repeat;border:0;padding:'.$px.'" colspan="3"></td>
+                <td style="background:url('.$jpg.')'.$top.' center no-repeat;border:0;padding:'.$px.';z-index:2" colspan="3"></td>
                 <td style="border:0;padding:18px 0 0;font-weight:bold;text-align:center;font-size:14px !important">SURAT JALAN</td>
             </tr>
             <tr>
@@ -519,7 +519,7 @@ class Laporan extends CI_Controller {
         
     }
 
-    function Nota_Penjualan(){
+    function Nota_Penjualan(){ //
     // CETAK NOTA PENJUALAN
     //
     $jenis = $_GET['jenis'];
@@ -536,11 +536,11 @@ class Laporan extends CI_Controller {
     // KOP
     if($pt == "sma"){
         $jpg = "http://localhost/si_pp/assets/images/logo_sma.jpg";
-        $top = 'top';
-        $px = '65px 0 35px';
+        $top = 'left';
+        $px = '70px 0 35px';
     }else if($pt == "st"){
         $jpg = "http://localhost/si_pp/assets/images/logo_st.jpg";
-        $top = '';
+        $top = 'left';
         $px = '83px 0 35px';
     }
 
@@ -561,10 +561,10 @@ class Laporan extends CI_Controller {
 
         $html .= '<table cellspacing="0" style="font-size:11px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;font-family:Arial !important">
         <tr>
-        <th style="border:0;width:8%;padding:0"></th>
+        <th style="border:0;width:13%;padding:0"></th>
         <th style="border:0;width:1%;padding:0"></th>
         <th style="border:0;width:41%;padding:0"></th>
-        <th style="border:0;width:50%;padding:0"></th>
+        <th style="border:0;width:45%;padding:0"></th>
         </tr>
         <tr>
         <td style="border:0;background:url('.$jpg.')'.$top.' center no-repeat;padding:'.$px.'" colspan="3"></td>
@@ -622,18 +622,18 @@ class Laporan extends CI_Controller {
         $html .= '<table cellspacing="0" style="font-size:11px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;font-family:Arial !important">
         <tr>
         <th style="border:0;width:5%;padding:3px 0"></th>
-        <th style="border:0;width:44%;padding:3px 0"></th>
+        <th style="border:0;width:42%;padding:3px 0"></th>
         <th style="border:0;width:8%;padding:3px 0"></th>
         <th style="border:0;width:8%;padding:3px 0"></th>
-        <th style="border:0;width:15%;padding:3px 0"></th>
+        <th style="border:0;width:17%;padding:3px 0"></th>
         <th style="border:0;width:20%;padding:3px 0"></th>
         </tr>
         <tr>
-        <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">NO</td>
-        <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">Nama Barang</td>
-        <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold" colspan="2">Quantity</td>
-        <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">Harga Satuan</td>
-        <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">Total Harga</td>
+        <td style="border:1px solid #000;padding:5px 3px;text-align:center;font-weight:bold">NO</td>
+        <td style="border:1px solid #000;padding:5px 3px;text-align:center;font-weight:bold">Nama Barang</td>
+        <td style="border:1px solid #000;padding:5px 3px;text-align:center;font-weight:bold" colspan="2">Quantity</td>
+        <td style="border:1px solid #000;padding:5px 3px;text-align:center;font-weight:bold">Harga Satuan</td>
+        <td style="border:1px solid #000;padding:5px 3px;text-align:center;font-weight:bold">Total Harga</td>
         </tr>';
 
         // isinya
@@ -649,12 +649,11 @@ class Laporan extends CI_Controller {
         $ii++;
         $tot_hrg = $r->qty * $r->harga_invoice;
         $html .= '<tr>
-        <td style="border:1px solid #000;padding:5px;text-align:center">'.$ii.'</td>
-        <td style="border:1px solid #000;padding:5px">'.$r->nama_barang.'</td>
-        <td style="border:1px solid #000;border-width:1px 0 1px 1px;padding:5px 2px 5px 5px;text-align:right">'.$r->qty.'</td>
-        <td style="border:1px solid #000;border-width:1px 1px 1px 0;padding:5px 5px 5px 2px">'.$r->qty_ket.'</td>
-        <td style="border:1px solid #000;padding:5px;text-align:right">Rp. '.number_format($r->harga_invoice).'</td>
-        <td style="border:1px solid #000;padding:5px;text-align:right">Rp. '.number_format($tot_hrg).'</td>
+        <td style="border:1px solid #000;padding:5px 3px;text-align:center">'.$ii.'</td>
+        <td style="border:1px solid #000;padding:5px 3px">'.$r->nama_barang.'</td>
+        <td style="border:1px solid #000;border-width:1px 0 1px 1px;padding:5px 3px" colspan="2">'.$r->qty.' '.$r->qty_ket.'</td>
+        <td style="border:1px solid #000;padding:5px 3px;text-align:right">Rp. '.number_format($r->harga_invoice).'</td>
+        <td style="border:1px solid #000;padding:5px 3px;text-align:right">Rp. '.number_format($tot_hrg).'</td>
         </tr>';
 
         $sub_tot += $tot_hrg;
@@ -748,7 +747,8 @@ class Laporan extends CI_Controller {
 
         $html .= '</table>';
 
-        $this->m_fungsi->_mpdf2('',$html,10,10,10,'P');
+        // $this->m_fungsi->_mpdf2('',$html,10,10,10,'P');
+        $this->m_fungsi->mPDF($html);
     }
 
     function print_surat_jalan(){
