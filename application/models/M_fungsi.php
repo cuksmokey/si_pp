@@ -231,7 +231,7 @@ class M_fungsi extends CI_Model {
     function _mpdf($judul='',$isi='',$lMargin='',$rMargin='',$font=0,$orientasi='') {
         
         ini_set("memory_limit","512M");
-        $this->load->library('Mpdf');
+        $this->load->library('M_pdf');
         
         /*
         $this->mpdf->progbar_altHTML = '<html><body>
