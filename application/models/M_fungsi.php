@@ -259,7 +259,13 @@ class M_fungsi extends CI_Model {
         $this->mpdf->writeHTML($isi);         
         $this->mpdf->Output();
                
-    }
+	}
+	
+	function mPDF($html){
+		$mpdf = new \Mpdf\Mpdf();
+		$mpdf->WriteHTML($html);
+		$mpdf->Output();
+	}
 
 	function _mpdf2($judul='',$isi='',$lMargin='',$rMargin='',$font=0,$orientasi='',$title='PL') {
         

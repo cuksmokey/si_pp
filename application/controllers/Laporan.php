@@ -510,7 +510,12 @@ class Laporan extends CI_Controller {
             </tr>
         </table>';
 
-            $this->m_fungsi->_mpdf2('',$html,10,10,10,'P');        
+            // $this->m_fungsi->_mpdf2('',$html,10,10,10,'P');
+            $this->m_fungsi->mPDF($html);
+
+            // $mpdf = new \Mpdf\Mpdf();
+            // $mpdf->WriteHTML($html);
+            // $mpdf->Output();
         
     }
 
