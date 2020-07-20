@@ -270,7 +270,7 @@ class M_fungsi extends CI_Model {
 	function _mpdf2($judul='',$isi='',$lMargin='',$rMargin='',$font=0,$orientasi='',$title='PL') {
         
         ini_set("memory_limit","512M");
-        $this->load->library('mpdf');
+        $this->load->library('M_pdf');
 
 
         $this->mpdf->defaultheaderfontsize = 6;	/* in pts */
