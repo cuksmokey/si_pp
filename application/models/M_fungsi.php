@@ -273,20 +273,20 @@ class M_fungsi extends CI_Model {
         $this->load->library('M_pdf');
 
 
-        $this->mpdf->defaultheaderfontsize = 6;	/* in pts */
-        $this->mpdf->defaultheaderfontstyle = BI;	/* blank, B, I, or BI */
-        $this->mpdf->defaultheaderline = 1; 	/* 1 to include line below header/above footer */
+        // $this->mpdf->defaultheaderfontsize = 6;	/* in pts */
+        // $this->mpdf->defaultheaderfontstyle = BI;	/* blank, B, I, or BI */
+        // $this->mpdf->defaultheaderline = 1; 	/* 1 to include line below header/above footer */
 
-        $this->mpdf->defaultfooterfontsize = 6;	/* in pts */
-        $this->mpdf->defaultfooterfontstyle = BI;	/* blank, B, I, or BI */
-        $this->mpdf->defaultfooterline = 1; 
+        // $this->mpdf->defaultfooterfontsize = 6;	/* in pts */
+        // $this->mpdf->defaultfooterfontstyle = BI;	/* blank, B, I, or BI */
+        // $this->mpdf->defaultfooterline = 1; 
 
-        $this->mpdf->SetTitle = $title;
+        // $this->mpdf->SetTitle = $title;
 
-        $this->mpdf->SetLeftMargin = $lMargin;
-        $this->mpdf->SetRightMargin = $rMargin;
+        // $this->mpdf->SetLeftMargin = $lMargin;
+        // $this->mpdf->SetRightMargin = $rMargin;
         
-        $jam = date("H:i:s");
+        // $jam = date("H:i:s");
 
         $this->mpdf->AddPage($orientasi,'','','','',$lMargin,$rMargin);
         
