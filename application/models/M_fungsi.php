@@ -288,7 +288,7 @@ class M_fungsi extends CI_Model {
         
         // $jam = date("H:i:s");
 
-        // $this->mpdf->AddPage($orientasi,'','','','',$lMargin,$rMargin);
+        $this->mpdf->AddPage();
         
         if (!empty($judul)) $this->mpdf->writeHTML($judul);
         $this->mpdf->writeHTML($isi);         
