@@ -281,14 +281,14 @@ class M_fungsi extends CI_Model {
         // $this->mpdf->defaultfooterfontstyle = BI;	/* blank, B, I, or BI */
         // $this->mpdf->defaultfooterline = 1; 
 
-        // $this->mpdf->SetTitle = $title;
+        $this->mpdf->SetTitle = $title;
 
-        // $this->mpdf->SetLeftMargin = $lMargin;
-        // $this->mpdf->SetRightMargin = $rMargin;
+        $this->mpdf->SetLeftMargin = $lMargin;
+        $this->mpdf->SetRightMargin = $rMargin;
         
-        // $jam = date("H:i:s");
+        $jam = date("H:i:s");
 
-        $this->mpdf->AddPage();
+        $this->mpdf->AddPage($orientasi,'','','','',$lMargin,$rMargin);
         
         if (!empty($judul)) $this->mpdf->writeHTML($judul);
         $this->mpdf->writeHTML($isi);         
