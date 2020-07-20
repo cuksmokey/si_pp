@@ -535,11 +535,11 @@ class Laporan extends CI_Controller {
 
     // KOP
     if($pt == "sma"){
-        $jpg = "http://localhost/si_pp/assets/images/logo_sma.jpg";
+        $jpg = "http://sinarmuktiabadi.com/assets/images/logo_sma.jpg";
         $top = 'left';
         $px = '70px 0 35px';
     }else if($pt == "st"){
-        $jpg = "http://localhost/si_pp/assets/images/logo_st.jpg";
+        $jpg = "http://sinarmuktiabadi.com/assets/images/logo_st.jpg";
         $top = 'left';
         $px = '83px 0 35px';
     }
