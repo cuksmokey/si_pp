@@ -88,14 +88,14 @@
                                         </td>
                                         <td></td>
                                     </tr>
-                                    <tr>
+                                    <!-- <tr>
                                         <td>No. Nota</td>
                                         <td>:</td>
                                         <td>
                                             <input type="text" class="form-control" id="no_nota" autocomplete="off"> 
                                         </td>
                                         <td></td>
-                                    </tr>
+                                    </tr> -->
                                     <tr>
                                         <td colspan="4"><hr>Dikirim Ke<hr></td>
                                     </tr>
@@ -309,22 +309,13 @@
                         <td align="left" width="20%"><div id="txt-nama"></div></td>
                     </tr>
                     <tr>
-                        <td align="left" width="8%">No Nota</td>
+                        <td align="left" width="8%">No PO</td>
                         <td align="" width="1%">:</td>
-                        <td align="left" width="10%"><div id="txt-no_nota"></div></td>
+                        <td align="left" width="10%"><div id="txt-no_po"></div></td>
                         <td align="center" width="10%"></td>
                         <td align="left" width="8%">No Telp / No HP</td>
                         <td align="" width="1%">:</td>
                         <td align="left" width="20%"><div id="txt-no_telp"></div></td>
-                    </tr>
-                    <tr>
-                        <td align="left" width="8%">No PO</td>
-                        <td align="" width="1%">:</td>
-                        <td align="left" width="20%"><div id="txt-no_po"></div></td>
-                        <td align="center" width="10%"></td>
-                        <td align="left" width="8%"></td>
-                        <td align="" width="1%"></td>
-                        <td align="left" width="20%"></td>
                     </tr>
                 </table>
 
@@ -425,7 +416,6 @@
       no_surat = $("#no_surat").val();
       no_so = $("#no_so").val();
       no_po = $("#no_po").val();
-      no_nota = $("#no_nota").val();
       
       kepada = $("#id_kepada").val();
       pimpinan = $("#pimpinan").val();
@@ -436,7 +426,7 @@
 
       cart = $('#detail_cart').html();
       
-      if (cart == "" || tgl == "" || no_surat == "" || no_so == "" || no_po == "" || no_nota == "" || nama_perusahaan == "" || pimpinan == "" || npwp == "" || alamat == "" || no_telp == "")  {
+      if (cart == "" || tgl == "" || no_surat == "" || no_so == "" || no_po == "" || nama_perusahaan == "" || pimpinan == "" || npwp == "" || alamat == "" || no_telp == "")  {
         showNotification("alert-info", "Harap Lengkapi Form", "bottom", "center", "", ""); return;
       }
 
@@ -452,7 +442,6 @@
             no_surat:no_surat,
             no_so:no_so,
             no_po:no_po,
-            no_nota:no_nota,
             kepada:kepada,
             jenis : "PL_pl_barang"}),
             dataType : "json",
@@ -532,7 +521,6 @@
               $("#txt-no_surat").html(json.header.no_surat);
               $("#txt-no_so").html(json.header.no_so);
               $("#txt-no_po").html(json.header.no_po);
-              $("#txt-no_nota").html(json.header.no_nota);
               $("#txt-nm_perusahaan").html(json.pt.nm_perusahaan);
               $("#txt-nama").html(json.pt.pimpinan);
               $("#txt-npwp").html(json.pt.npwp);

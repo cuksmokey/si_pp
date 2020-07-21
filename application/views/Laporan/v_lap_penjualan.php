@@ -126,18 +126,11 @@
     </td>
   </tr>
   <tr>
-    <td>No Invoice</td>
-    <td>:</td>
-    <td colspan="3">
-      <input type="text" id="no_invoice" autocomplete="off" class="form-control" disabled="true" style="background:#ddd">
-      <input type="hidden" value="" id="id_pl_nota">
-    </td>
-  </tr>
-  <tr>
     <td>No Nota</td>
     <td>:</td>
     <td colspan="3">
       <input type="text" id="no_nota" autocomplete="off" class="form-control" disabled="true" style="background:#ddd">
+      <input type="hidden" value="" id="id_pl_nota">
     </td>
   </tr>
   <tr>
@@ -229,7 +222,6 @@
       $("#id_pl_nota").val("");
       $("#tgl_pl_nota").val("");
       $("#kepada_nota").val("");
-      $("#no_invoice").val("");
       $("#no_nota").val("");
       $("#no_po").val("");
     });
@@ -325,7 +317,6 @@
     $("#id_pl_nota").val(data[0].id);
     $("#tgl_pl_nota").val(data[0].jt_nota);
     $("#kepada_nota").val(data[0].nm_perusahaan);
-    $("#no_invoice").val(data[0].no_invoice);
     $("#no_nota").val(data[0].no_nota);
     $("#no_po").val(data[0].no_po);
   });

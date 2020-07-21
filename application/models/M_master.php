@@ -228,7 +228,7 @@ class M_master extends CI_Model{
     }
 
     function get_load_inv(){
-        $query = "SELECT b.no_po,b.no_nota,b.cek_inv,(SELECT COUNT(id_pl) FROM m_pl_list_barang WHERE id_pl = b.id) AS jml_timbang,a.* FROM m_invoice a
+        $query = "SELECT b.no_po,b.cek_inv,(SELECT COUNT(id_pl) FROM m_pl_list_barang WHERE id_pl = b.id) AS jml_timbang,a.* FROM m_invoice a
         INNER JOIN m_pl_price_list b ON a.id_pl=b.id";
         return $this->db->query($query);
     }
@@ -295,7 +295,6 @@ class M_master extends CI_Model{
             'no_surat' => $_POST['no_surat'],
             'no_so' => $_POST['no_so'],
             'no_po' => $_POST['no_po'],
-            'no_nota' => $_POST['no_nota'],
             'created_by' => $this->session->userdata('username')
         );
         $result= $this->db->insert("m_pl_price_list",$data);
@@ -337,7 +336,7 @@ class M_master extends CI_Model{
         // insert invoice
         $data = array(
             'id_pl' => $_POST['id_pl'],
-            'no_invoice' => $_POST['no_invoice'],
+            'no_nota' => $_POST['no_nota'],
             'tgl_jt' => $_POST['tgl_jt'],
             'created_by' => $this->session->userdata('username')
         );
@@ -727,9 +726,9 @@ class M_master extends CI_Model{
     }
 
     function list_pl($searchTerm=""){
-        $users = $this->db->query("SELECT CONCAT(no_surat, ' | ',no_nota) AS ket,b.pimpinan,b.nm_perusahaan,b.alamat,b.npwp,b.no_telp,a.* FROM m_pl_price_list a
+        $users = $this->db->query("SELECT CONCAT(no_surat, ' | ',b.nm_perusahaan) AS ket,b.pimpinan,b.nm_perusahaan,b.alamat,b.npwp,b.no_telp,a.* FROM m_pl_price_list a
         INNER JOIN m_perusahaan b ON a.id_m_perusahaan=b.id
-        WHERE a.data_inv='0' AND (no_surat LIKE '%$searchTerm%' OR no_nota LIKE '%$searchTerm%')
+        WHERE a.data_inv='0' AND (no_surat LIKE '%$searchTerm%' OR b.nm_perusahaan LIKE '%$searchTerm%')
         ORDER BY tgl DESC")->result_array();
    
         // Initialize Array with fetched data
@@ -742,7 +741,6 @@ class M_master extends CI_Model{
                "no_surat"=>$user['no_surat'],
                "no_so"=>$user['no_so'],
                "no_po"=>$user['no_po'],
-               "no_nota"=>$user['no_nota'],
                "nama_perusahaan"=>$user['nm_perusahaan'],
                "pimpinan"=>$user['pimpinan'], 
                "no_telp"=>$user['no_telp'], 
@@ -805,11 +803,11 @@ class M_master extends CI_Model{
     }
 
     function list_p_nota($s=""){
-        $users = $this->db->query("SELECT CONCAT(no_invoice, ' | ', b.no_nota, ' | ', c.nm_perusahaan) AS ket,a.tgl_jt AS jt_nota,c.nm_perusahaan,b.no_nota,b.no_po,a.* FROM m_invoice a
+        $users = $this->db->query("SELECT CONCAT(no_nota, ' | ', c.nm_perusahaan) AS ket,a.tgl_jt AS jt_nota,c.nm_perusahaan,b.no_po,a.* FROM m_invoice a
         INNER JOIN m_pl_price_list b ON a.id_pl=b.id
         INNER JOIN m_perusahaan c ON b.id_m_perusahaan=c.id
-        WHERE (no_invoice LIKE '%$s%' OR b.no_po LIKE '%$s%' OR c.nm_perusahaan LIKE '%$s%')
-        ORDER BY no_invoice ASC")->result_array();
+        WHERE (no_nota LIKE '%$s%' OR b.no_po LIKE '%$s%' OR c.nm_perusahaan LIKE '%$s%')
+        ORDER BY no_nota ASC")->result_array();
    
         // Initialize Array with fetched data
         $data = array();
@@ -819,7 +817,6 @@ class M_master extends CI_Model{
                "text"=>$user['ket'],
                "jt_nota"=>$user['jt_nota'],
                "nm_perusahaan"=>$user['nm_perusahaan'],
-               "no_invoice"=>$user['no_invoice'],
                "no_nota"=>$user['no_nota'],
                "no_po"=>$user['no_po']
            );

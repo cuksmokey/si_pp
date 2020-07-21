@@ -373,7 +373,7 @@ class Laporan extends CI_Controller {
 
         $html = '';
 
-        $sql_kop = $this->db->query("SELECT a.no_surat,a.no_nota,a.no_po,a.tgl,b.nm_perusahaan,b.npwp,b.alamat FROM m_pl_price_list a
+        $sql_kop = $this->db->query("SELECT a.no_surat,a.no_po,a.tgl,b.nm_perusahaan,b.npwp,b.alamat FROM m_pl_price_list a
         INNER JOIN m_perusahaan b ON a.id_m_perusahaan = b.id
         WHERE a.id='$jenis'")->row();
 
@@ -528,7 +528,7 @@ class Laporan extends CI_Controller {
 
     $html = '';
 
-    $sql_kop = $this->db->query("SELECT b.no_surat,b.no_nota,b.no_po,a.tgl_jt,c.nm_perusahaan,c.npwp,c.alamat,a.* FROM m_invoice a
+    $sql_kop = $this->db->query("SELECT b.no_surat,b.no_po,a.tgl_jt,c.nm_perusahaan,c.npwp,c.alamat,a.* FROM m_invoice a
     INNER JOIN m_pl_price_list b ON a.id_pl=b.id
     INNER JOIN m_perusahaan c ON b.id_m_perusahaan=c.id
     WHERE a.id='$jenis'")->row();

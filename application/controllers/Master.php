@@ -215,12 +215,12 @@ class Master extends CI_Controller {
                     echo json_encode(array('data' =>  TRUE));
                 }
             }elseif ($jenis == "Save_invoice") {
-                $no_invoice = $this->input->post('no_invoice');
+                $no_nota = $this->input->post('no_nota');
 
-                $cek = $this->m_master->get_data_one("m_invoice","no_invoice",$no_invoice)->num_rows();
+                $cek = $this->m_master->get_data_one("m_invoice","no_nota",$no_nota)->num_rows();
 
                 if ($cek > 0 ) {
-                    echo json_encode(array('data' =>  FALSE,'msg' => 'No Invoice Sudah Ada!'));
+                    echo json_encode(array('data' =>  FALSE,'msg' => 'No Nota Sudah Ada!'));
                 }else{
                     $result = $this->m_master->insert_pl_inv();    
                     echo json_encode(array('data' =>  TRUE));
@@ -679,7 +679,7 @@ class Master extends CI_Controller {
                 $query = $this->m_master->get_load_inv();
                 
                 if ($query->num_rows() == 0) {
-                    $data[] =  ["","","","","","",""];
+                    $data[] =  ["","","","","",""];
                 }else{
 
                     foreach ($query->result() as $r) {
@@ -688,7 +688,6 @@ class Master extends CI_Controller {
                         $row = array();
                         $row[] = $i;
                         $row[] = $this->m_fungsi->tanggal_format_indonesia($r->tgl_jt);
-                        $row[] = $r->no_invoice;
                         $row[] = $r->no_nota;
                         $row[] = $r->no_po;
                         $row[] = '

@@ -262,7 +262,9 @@ class M_fungsi extends CI_Model {
 	}
 	
 	function mPDF($html){
-		$mpdf = new \Mpdf\Mpdf();
+		$mpdf = new \Mpdf\Mpdf([
+			'default_font_size' => 9
+		]);
 		$mpdf->WriteHTML($html);
 		$mpdf->Output();
 	}
@@ -273,13 +275,13 @@ class M_fungsi extends CI_Model {
         $this->load->library('Mpdf');
 
 
-        // $this->mpdf->defaultheaderfontsize = 6;	/* in pts */
-        // $this->mpdf->defaultheaderfontstyle = BI;	/* blank, B, I, or BI */
-        // $this->mpdf->defaultheaderline = 1; 	/* 1 to include line below header/above footer */
+        $this->mpdf->defaultheaderfontsize = 6;	/* in pts */
+        $this->mpdf->defaultheaderfontstyle = BI;	/* blank, B, I, or BI */
+        $this->mpdf->defaultheaderline = 1; 	/* 1 to include line below header/above footer */
 
-        // $this->mpdf->defaultfooterfontsize = 6;	/* in pts */
-        // $this->mpdf->defaultfooterfontstyle = BI;	/* blank, B, I, or BI */
-        // $this->mpdf->defaultfooterline = 1; 
+        $this->mpdf->defaultfooterfontsize = 6;	/* in pts */
+        $this->mpdf->defaultfooterfontstyle = BI;	/* blank, B, I, or BI */
+        $this->mpdf->defaultfooterline = 1; 
 
         $this->mpdf->SetTitle = $title;
 

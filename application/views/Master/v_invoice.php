@@ -31,7 +31,7 @@
                                         <tr>
                                             <th>No</th>
                                             <th>Tanggal Jatuh Tempo</th>
-                                            <th>No Invoice</th>
+                                            <!-- <th>No Invoice</th> -->
                                             <th>No Nota</th>
                                             <th>No PO</th>
                                             <th width="5%">Jumlah Barang</th>
@@ -55,10 +55,10 @@
                                       <th style="border:0;padding:5px;width:18%"></th>
                                     </tr>
                                     <tr>
-                                        <td>No. Invoice</td>
+                                        <td>No. Nota</td>
                                         <td>:</td>
                                         <td>
-                                            <input type="text" class="form-control" id="no_invoice" autocomplete="off">
+                                            <input type="text" class="form-control" id="no_nota" autocomplete="off">
                                         </td>
                                         <td></td>
                                     </tr>
@@ -111,14 +111,6 @@
                                         <td>:</td>
                                         <td>
                                             <input type="text" class="form-control" id="no_po" autocomplete="off" disabled="true" style="background:#ddd"> 
-                                        </td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>No. Nota</td>
-                                        <td>:</td>
-                                        <td>
-                                            <input type="text" class="form-control" id="no_nota" autocomplete="off" disabled="true" style="background:#ddd"> 
                                         </td>
                                         <td></td>
                                     </tr>
@@ -429,14 +421,13 @@
     function simpan(){
       id_pl = $("#id_pl").val();
 
-      no_invoice = $("#no_invoice").val();
       tgl_jt = $("#tgl_jt").val();
+      no_nota = $("#no_nota").val();
 
       tgl = $("#tgl").val();
       no_surat = $("#no_surat").val();
       no_so = $("#no_so").val();
       no_po = $("#no_po").val();
-      no_nota = $("#no_nota").val();
       
       pimpinan = $("#pimpinan").val();
       nama_perusahaan = $("#nama_perusahaan").val();
@@ -446,7 +437,7 @@
 
       cart = $('#detail_cart').html();
       
-      if (cart == "" || no_invoice == "" || tgl_jt == "" || tgl == "" || no_surat == "" || no_so == "" || no_po == "" || no_nota == "" || nama_perusahaan == "" || pimpinan == "" || npwp == "" || alamat == "" || no_telp == "")  {
+      if (cart == ""  || tgl_jt == "" || tgl == "" || no_surat == "" || no_so == "" || no_po == "" || nama_perusahaan == "" || pimpinan == "" || npwp == "" || alamat == "" || no_telp == "")  {
         showNotification("alert-info", "Harap Lengkapi Form", "bottom", "center", "", ""); return;
       }
 
@@ -459,7 +450,7 @@
           url      : '<?php echo base_url(); ?>Master/'+status,
           data     : ({
             id_pl:id_pl,
-            no_invoice:no_invoice,
+            no_nota:no_nota,
             tgl_jt:tgl_jt,
             jenis : "Save_invoice"}),
             dataType : "json",
@@ -533,7 +524,7 @@
           .done(function(data) {
               json = JSON.parse(data);
 
-              $("#txt-no_nota").html(json.pl.no_nota);
+              $("#txt-no_nota").html(json.header.no_nota);
               $("#txt-no_po").html(json.pl.no_po);
               $("#txt-tgl_jt").html(json.header.tgl_jt);
               $("#txt-kepada").html(json.pt.nm_perusahaan);
@@ -635,7 +626,6 @@
       
       $("#id_pl").val("");
       $("#tgl_jt").val("");
-      $("#no_invoice").val("");
 
       $("#tgl").val("");
       $("#no_surat").val("");
@@ -854,7 +844,6 @@
       $("#no_surat").val(data[0].no_surat);
       $("#no_so").val(data[0].no_so);
       $("#no_po").val(data[0].no_po);
-      $("#no_nota").val(data[0].no_nota);
 
       $("#pimpinan").val(data[0].pimpinan);
       $("#nama_perusahaan").val(data[0].text);
