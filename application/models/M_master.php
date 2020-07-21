@@ -562,6 +562,19 @@ class M_master extends CI_Model{
         );
         $result= $this->db->insert("m_barang",$data);
 
+        $kd = $_POST['kode_barang'];
+        $id = $this->db->query("SELECT id FROM m_barang WHERE kode_barang = '$kd'")->row();
+        $data_plus = array(
+            'tgl_bayar' => $_POST['tgl_byr'],
+            'id_m_barang' => $id->id,
+            'qty_plus' => $_POST['qty'],
+            'qty_ket' => $_POST['qty_ket'],
+            'status' => $_POST['status_plus'],
+            'harga' => $_POST['harga'],
+            'created_by' => $this->session->userdata('username')
+        );
+        $result= $this->db->insert("m_barang_plus",$data_plus);
+
         return $result;
     }
 
@@ -658,18 +671,31 @@ class M_master extends CI_Model{
         
         $this->db->set('tgl', $_POST['tgl']);
         $this->db->set('id_m_nota', $_POST['supplier']);
-        // $this->db->set('kode_barang', $_POST['kode_barang']);
         $this->db->set('nama_barang', $_POST['nama_barang']);
         $this->db->set('merek', $_POST['merek']);
         $this->db->set('spesifikasi', $_POST['spesifikasi']);
         $this->db->set('qty', $_POST['qty']);
         $this->db->set('qty_ket', $_POST['qty_ket']);
         $this->db->set('harga', $_POST['harga']);
-        // $this->db->set('no_nota', $_POST['no_nota']);
         $this->db->set('updated_at', date("Y-m-d h:i:s"));
         $this->db->set('updated_by', $this->session->userdata('username'));
         $this->db->where('id', $_POST['id']);
         $result = $this->db->update('m_barang');
+
+        if($_POST['qty_plus'] <> 0){
+            $id = $_POST['id'];
+            $id = $this->db->query("SELECT id FROM m_barang WHERE id = '$id'")->row();
+            $data_plus = array(
+                'tgl_bayar' => $_POST['tgl_byr'],
+                'id_m_barang' => $id->id,
+                'qty_plus' => $_POST['qty_plus'],
+                'qty_ket' => $_POST['qty_ket'],
+                'status' => $_POST['status_plus'],
+                'harga' => $_POST['harga'],
+                'created_by' => $this->session->userdata('username')
+            );
+            $result= $this->db->insert("m_barang_plus",$data_plus);
+        }
         return $result;
     }
 

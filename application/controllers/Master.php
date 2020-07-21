@@ -1788,7 +1788,8 @@ class Master extends CI_Controller {
             $return = $this->m_master->delete("m_price_list","id",$id);
             echo "1";
         }else if ($jenis == "hapus_barang") {
-            $return = $this->m_master->delete("m_barang","id",$id);
+            $this->m_master->delete("m_barang","id",$id);
+            $this->m_master->delete("m_barang_plus","id_m_barang",$id);
             echo "1";
         }else if ($jenis == "hapus_supplier") {
             $return = $this->m_master->delete("m_supplier","id",$id);

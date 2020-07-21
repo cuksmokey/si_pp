@@ -138,28 +138,56 @@
                                         </td>
                                     </tr>
                                     <tr>
+                                      <td style="padding:10px"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Tgl Bayar</td>
+                                        <td>:</td>
+                                        <td>
+                                            <input type="date" id="tgl_byr" value=""  class="form-control">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Status</td>
+                                        <td>:</td>
+                                        <td>
+                                          <select name="" id="status_plus" class="form-control" style="width:100%">
+                                            <option value="0">Pembayaran</option>
+                                            <option value="Cash">Cash</option>
+                                            <option value="Kredit">Kredit</option>
+                                          </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>KET</td>
+                                        <td>:</td>
+                                        <td>
+                                          <select name="" id="qty_ket" class="form-control" style="width:100%">
+                                            <option value="0">Keterangan</option>
+                                            <option value="Batang">Batang</option>
+                                            <option value="Lonjor">Lonjor</option>
+                                            <option value="PCS">PCS</option>
+                                            <option value="Box">Box</option>
+                                            <option value="Kaleng">Kaleng</option>
+                                            <option value="Lembar">Lembar</option>
+                                            <option value="Liter">Liter</option>
+                                            <option value="KG">KG</option>
+                                            <option value="Unit">Unit</option>
+                                          </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                      <td style="padding:10px"></td>
+                                    </tr>
+                                    <tr>
                                         <td>QTY</td>
                                         <td>:</td>
                                         <td>
                                             <input type="text" id="qty" placeholder="0" autocomplete="off" class="form-control" onkeypress="return hanyaAngka(event)">
                                         </td>
-                                        <td>
-                                            <select name="" id="qty_ket" class="form-control" style="width:20%">
-                                              <option value="0">KET</option>
-                                              <option value="Batang">Batang</option>
-                                              <option value="Lonjor">Lonjor</option>
-                                              <option value="PCS">PCS</option>
-                                              <option value="Box">Box</option>
-                                              <option value="Kaleng">Kaleng</option>
-                                              <option value="Lembar">Lembar</option>
-                                              <option value="Liter">Liter</option>
-                                              <option value="KG">KG</option>
-                                              <option value="Unit">Unit</option>
-                                            </select>
-                                        </td>
                                     </tr>
                                     <tr>
-                                        <td>Penambahan QTY</td>
+                                        <td>Tambah QTY</td>
                                         <td>:</td>
                                         <td>
                                             <input type="text" id="plus_qty" autocomplete="off" placeholder="0" class="form-control" onkeypress="return hanyaAngka(event)">
@@ -218,6 +246,20 @@
       });
 
      
+    });
+
+    $("#id2").on({
+      keydown: function(e) {
+        if (e.which === 32)
+          return false;
+      },
+      keyup: function(){
+        this.value = this.value.toUpperCase();
+      },
+      change: function() {
+        this.value = this.value.replace(/\s/g, "");
+        
+      }
     });
 
     $(".btn-add").click(function(){
@@ -282,6 +324,9 @@
       nama_barang = $("#nama_barang").val();
       merek = $("#merek").val();
       spesifikasi = $("#spesifikasi").val();
+
+      status_plus = $("#status_plus").val();
+      tgl_byr = $("#tgl_byr").val();
       
       i_qty = $("#qty").val();
       i_plus_qty = $("#plus_qty").val();
@@ -301,8 +346,9 @@
       harga = i_harga.split(".").join("");
 
       qty = Number.parseInt(k_qty) + Number.parseInt(k_plus_qty);
+      qty_plus = Number.parseInt(k_plus_qty);
 
-      if (tgl == "" || kode_barang == "" || nama_barang == ""|| merek == "" || spesifikasi == "" || supplier_note == "" || i_qty == "" || qty_ket == "" || qty_ket == 0 || harga == "" || harga == 0 || no_nota == "")  {
+      if (tgl == "" || kode_barang == "" || nama_barang == ""|| merek == "" || spesifikasi == "" || supplier_note == "" || i_qty == "" || qty_ket == "" || qty_ket == 0 || harga == "" || harga == 0 || no_nota == "" || status_plus == "" || tgl_byr == "")  {
         showNotification("alert-info", "Harap Lengkapi Form", "bottom", "center", "", ""); return;
       }
 
@@ -323,6 +369,9 @@
             merek : merek,
             spesifikasi : spesifikasi,
             qty : qty,
+            qty_plus : qty_plus,
+            status_plus : status_plus,
+            tgl_byr : tgl_byr,
             qty_ket : qty_ket,
             harga : harga,
             jenis : "Simpan_Barang" }),
@@ -384,6 +433,9 @@
           $("#nama_barang").val(json.nama_barang);
           $("#merek").val(json.merek);
           $("#spesifikasi").val(json.spesifikasi);
+
+          $("#status_plus").val("0");
+          $("#tgl_byr").val("0");
           
           $("#qty").val(json.qty).prop("disabled",true).attr('style','background:#ddd;');
           $("#plus_qty").val("").prop("disabled",false).attr('style','background:#fff;');
@@ -448,6 +500,9 @@
       $("#plus_qty").val("").prop("disabled",true).attr('style','background:#ddd;');
       $("#qty_ket").val("0");
       $("#harga").val("");
+
+      $("#status_plus").val("0");
+      $("#tgl_byr").val("");
 
       $("#btn-simpan").prop("disabled",false);
       $("#txt-btn-simpan").html("SIMPAN");

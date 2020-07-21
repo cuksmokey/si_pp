@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 15, 2020 at 05:01 PM
+-- Generation Time: Jul 21, 2020 at 05:48 PM
 -- Server version: 10.1.38-MariaDB
 -- PHP Version: 5.6.40
 
@@ -45,21 +45,25 @@ CREATE TABLE `m_barang` (
   `updated_by` varchar(99) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `m_barang`
+-- Table structure for table `m_barang_plus`
 --
 
-INSERT INTO `m_barang` (`id`, `id_m_nota`, `tgl`, `kode_barang`, `nama_barang`, `merek`, `spesifikasi`, `qty`, `qty_ket`, `harga`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
-(29, 21, '2020-07-11', '00001/MSMBARANG', 'MSMBARANGNM', 'MSMBARANGMR', 'MSMBARANGSS', 0, 'PCS', 1000000, '2020-07-11 03:58:00', 'developer', '0000-00-00 00:00:00', NULL),
-(30, 21, '2020-07-11', '00002/MSMBARANG2', 'MSMBARANGNM2', 'MSMBARANGMR2', 'MSMBARANGSS2', 170, 'PCS', 2000000, '2020-07-11 04:00:31', 'developer', '2020-07-11 04:20:50', 'developer'),
-(31, 21, '2020-07-11', '00003/MSMBARANG3', 'MSMBARANGNM3', 'MSMBARANGMR3', 'MSMBARANGSS3', 260, 'PCS', 3000000, '2020-07-11 04:03:15', 'developer', '2020-07-11 04:20:57', 'developer'),
-(32, 22, '2020-07-12', '00001/MSMBARANGNT21', 'MSMBARANGNT2NM1', 'MSMBARANGNT2MR1', 'MSMBARANGNT2SS1', 110, 'Batang', 1100000, '2020-07-11 04:05:47', 'developer', '0000-00-00 00:00:00', NULL),
-(33, 22, '2020-07-12', '00002/MSMBARANGNT22', 'MSMBARANGNT2NM2', 'MSMBARANGNT2MR2', 'MSMBARANGNT2SS2', 120, 'Batang', 1200000, '2020-07-11 04:09:14', 'developer', '2020-07-11 04:21:06', 'developer'),
-(34, 23, '2020-07-13', '00001/MSMBARANGNT3', 'MSMBARANGNT3NM3', 'MSMBARANGNT3MR3', 'MSMBARANGNT3SS3', 230, 'Batang', 2300000, '2020-07-11 04:18:24', 'developer', '0000-00-00 00:00:00', NULL),
-(35, 24, '2020-07-01', '00001/PPIBARANG1', 'PPIBARANG1NM', 'PPIBARANG1MR', 'PPIBARANG1SS', 100, 'Kaleng', 1000000, '2020-07-11 04:19:46', 'developer', '0000-00-00 00:00:00', NULL),
-(36, 21, '2020-07-11', '00004/MSMBARANG', 'MSMBARANGNM4', 'MSMBARANGMR4', 'MSMBARANGSS4', 260, 'PCS', 5000000, '2020-07-11 12:45:17', 'developer', '2020-07-11 00:46:08', 'developer'),
-(37, 21, '2020-07-11', '00004/MSMBARANG4', 'MSMBARANGNM4', 'MSMBARANGMR4', 'MSMBARANGSS4', 350, 'PCS', 4000000, '2020-07-11 04:03:15', 'developer', '2020-07-11 04:20:57', 'developer'),
-(38, 21, '2020-07-11', '00005/MSMBARANG5', 'MSMBARANGNM5', 'MSMBARANGMR5', 'MSMBARANGSS5', 440, 'PCS', 6000000, '2020-07-11 04:03:15', 'developer', '2020-07-11 04:20:57', 'developer');
+CREATE TABLE `m_barang_plus` (
+  `id` int(11) NOT NULL,
+  `tgl_bayar` date DEFAULT NULL,
+  `id_m_barang` int(11) NOT NULL,
+  `qty_plus` int(11) DEFAULT NULL,
+  `qty_ket` varchar(99) DEFAULT NULL,
+  `harga` int(11) DEFAULT NULL,
+  `status` varchar(99) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_by` varchar(99) DEFAULT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_by` varchar(99) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -71,19 +75,12 @@ CREATE TABLE `m_invoice` (
   `id` int(11) NOT NULL,
   `id_pl` int(11) NOT NULL,
   `tgl_jt` date DEFAULT NULL,
-  `no_invoice` varchar(99) DEFAULT NULL,
+  `no_nota` varchar(99) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `created_by` varchar(99) DEFAULT NULL,
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_by` varchar(99) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `m_invoice`
---
-
-INSERT INTO `m_invoice` (`id`, `id_pl`, `tgl_jt`, `no_invoice`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
-(3, 5, '2020-07-15', 'INV1', '2020-07-15 14:53:36', 'superadmin', '0000-00-00 00:00:00', NULL);
 
 -- --------------------------------------------------------
 
@@ -159,22 +156,6 @@ CREATE TABLE `m_pl_list_barang` (
   `updated_by` varchar(99) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `m_pl_list_barang`
---
-
-INSERT INTO `m_pl_list_barang` (`id`, `id_pl`, `id_m_barang`, `tgl`, `qty`, `harga_invoice`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
-(14, 4, 29, '2020-07-14', 10, 0, '2020-07-15 08:21:53', 'superadmin', '0000-00-00 00:00:00', NULL),
-(15, 4, 30, '2020-07-14', 20, 0, '2020-07-15 08:21:53', 'superadmin', '0000-00-00 00:00:00', NULL),
-(16, 4, 31, '2020-07-14', 30, 0, '2020-07-15 08:21:53', 'superadmin', '0000-00-00 00:00:00', NULL),
-(17, 4, 36, '2020-07-14', 40, 0, '2020-07-15 08:21:53', 'superadmin', '0000-00-00 00:00:00', NULL),
-(18, 4, 37, '2020-07-14', 50, 0, '2020-07-15 08:21:53', 'superadmin', '0000-00-00 00:00:00', NULL),
-(19, 4, 38, '2020-07-14', 60, 0, '2020-07-15 08:21:53', 'superadmin', '0000-00-00 00:00:00', NULL),
-(20, 5, 29, '2020-07-15', 10, 15000, '2020-07-15 08:23:39', 'superadmin', '0000-00-00 00:00:00', NULL),
-(21, 5, 30, '2020-07-15', 10, 20000, '2020-07-15 08:23:39', 'superadmin', '0000-00-00 00:00:00', NULL),
-(22, 5, 31, '2020-07-15', 10, 25000, '2020-07-15 08:23:39', 'superadmin', '0000-00-00 00:00:00', NULL),
-(23, 6, 29, '2020-07-16', 80, 0, '2020-07-15 08:24:11', 'superadmin', '0000-00-00 00:00:00', NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -188,7 +169,6 @@ CREATE TABLE `m_pl_price_list` (
   `no_surat` varchar(99) NOT NULL,
   `no_so` varchar(99) NOT NULL,
   `no_po` varchar(99) NOT NULL,
-  `no_nota` varchar(99) DEFAULT NULL,
   `cek_po` int(1) DEFAULT '0',
   `cek_inv` int(1) DEFAULT '0',
   `data_inv` int(1) DEFAULT '0',
@@ -197,15 +177,6 @@ CREATE TABLE `m_pl_price_list` (
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_by` varchar(99) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `m_pl_price_list`
---
-
-INSERT INTO `m_pl_price_list` (`id`, `id_m_perusahaan`, `tgl`, `no_surat`, `no_so`, `no_po`, `no_nota`, `cek_po`, `cek_inv`, `data_inv`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
-(4, 23, '2020-07-14', 'SJ1', 'SO1', 'PO1', 'NO1', 0, 0, 0, '2020-07-15 08:21:53', 'superadmin', '0000-00-00 00:00:00', NULL),
-(5, 21, '2020-07-15', 'SJ2', 'SO2', 'PO2', 'NO2', 0, 0, 1, '2020-07-15 08:23:39', 'superadmin', '0000-00-00 00:00:00', NULL),
-(6, 22, '2020-07-16', 'SJ3', 'SO3', 'PO3', 'NO3', 0, 0, 0, '2020-07-15 08:24:11', 'superadmin', '0000-00-00 00:00:00', NULL);
 
 -- --------------------------------------------------------
 
@@ -340,6 +311,12 @@ ALTER TABLE `m_barang`
   ADD PRIMARY KEY (`id`,`kode_barang`);
 
 --
+-- Indexes for table `m_barang_plus`
+--
+ALTER TABLE `m_barang_plus`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `m_invoice`
 --
 ALTER TABLE `m_invoice`
@@ -402,13 +379,19 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `m_barang`
 --
 ALTER TABLE `m_barang`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
+
+--
+-- AUTO_INCREMENT for table `m_barang_plus`
+--
+ALTER TABLE `m_barang_plus`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `m_invoice`
 --
 ALTER TABLE `m_invoice`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `m_nota`
@@ -426,13 +409,13 @@ ALTER TABLE `m_perusahaan`
 -- AUTO_INCREMENT for table `m_pl_list_barang`
 --
 ALTER TABLE `m_pl_list_barang`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `m_pl_price_list`
 --
 ALTER TABLE `m_pl_price_list`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `m_price_list`
