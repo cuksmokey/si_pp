@@ -438,7 +438,7 @@ class Laporan extends CI_Controller {
         </tr>';
 
         // isinya
-        $sql_isi = $this->db->query("SELECT b.nama_barang,b.qty_ket,a.* FROM m_pl_list_barang a
+        $sql_isi = $this->db->query("SELECT b.nama_barang,a.* FROM m_pl_list_barang a
         INNER JOIN m_barang b ON a.id_m_barang = b.id
         WHERE id_pl='$jenis'
         GROUP BY b.kode_barang");
@@ -637,7 +637,7 @@ class Laporan extends CI_Controller {
         </tr>';
 
         // isinya
-        $sql_isi = $this->db->query("SELECT c.nama_barang,c.qty_ket,a.*FROM m_pl_list_barang a
+        $sql_isi = $this->db->query("SELECT c.nama_barang,a.*FROM m_pl_list_barang a
         INNER JOIN m_pl_price_list b ON a.id_pl=b.id
         INNER JOIN m_barang c ON a.id_m_barang=c.id
         WHERE a.id_pl='$sql_kop->id_pl'

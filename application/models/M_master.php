@@ -102,9 +102,10 @@ class M_master extends CI_Model{
     }
 
     function get_data_ijb($table,$kolom,$id){
-        $query = "SELECT c.nama_supplier,b.no_nota,a.* FROM $table a
+        $query = "SELECT c.nama_supplier,b.no_nota,d.tgl_bayar,d.qty_ket,d.harga,d.status,a.* FROM $table a
         INNER JOIN m_nota b ON a.id_m_nota=b.id
         INNER JOIN m_supplier c ON b.id_supplier=c.id
+        INNER JOIN m_barang_plus d ON a.id_m_barang_plus=d.id
         WHERE a.$kolom='$id'";
         return $this->db->query($query);
     }
@@ -120,7 +121,7 @@ class M_master extends CI_Model{
             b.nama_barang AS nama_barang,
             a.harga_invoice AS harga_invoice,
             a.qty AS i_qty,
-            b.qty_ket AS qty_ket,
+            a.qty_ket AS qty_ket,
             a.id_pl AS id_pl
         FROM $m_pl_list_barang a 
         INNER JOIN m_barang b ON a.id_m_barang = b.id
@@ -188,14 +189,15 @@ class M_master extends CI_Model{
     }
 
     function get_pl_barang(){
-        $query = "SELECT*FROM m_barang
+        $query = "SELECT b.qty_ket,a.* FROM m_barang a
+        INNER JOIN m_barang_plus b ON a.id_m_barang_plus=b.id
         ORDER BY kode_barang ASC, nama_barang ASC";
         return $this->db->query($query);
     }
 
     function get_pl_inv(){
         $id_pl = $_POST['id_pl'];
-        $query = "SELECT c.kode_barang,c.nama_barang,b.qty,c.qty_ket,b.id AS id_pl_list_barang,a.* FROM m_pl_price_list a
+        $query = "SELECT c.kode_barang,c.nama_barang,b.qty,b.qty_ket,b.id AS id_pl_list_barang,a.* FROM m_pl_price_list a
         INNER JOIN m_pl_list_barang b ON a.id=b.id_pl
         INNER JOIN m_barang c ON b.id_m_barang=c.id
         WHERE a.id='$id_pl'";
@@ -319,6 +321,7 @@ class M_master extends CI_Model{
                 'id_m_barang' => $items['options']['id_barang'],
                 'tgl' => $plpl->tgl,
                 'qty' => $iqty,
+                'qty_ket' => $items['options']['qty_ket'],
                 'created_by' => $this->session->userdata('username')
             );
             $result= $this->db->insert("m_pl_list_barang",$data_list);
@@ -487,9 +490,10 @@ class M_master extends CI_Model{
     }
 
     function get_load_barang(){
-        $query = "SELECT a.id,a.tgl,c.nama_supplier,b.no_nota,a.kode_barang,a.nama_barang,a.merek,a.spesifikasi,a.qty,a.qty_ket,a.harga FROM m_barang a
+        $query = "SELECT c.nama_supplier,b.no_nota,d.harga,d.qty_ket,a.* FROM m_barang a
         INNER JOIN m_nota b ON a.id_m_nota=b.id
         INNER JOIN m_supplier c ON b.id_supplier=c.id
+        INNER JOIN m_barang_plus d ON a.id_m_barang_plus=d.id
         ORDER BY a.nama_barang";
         return $this->db->query($query);
     }
@@ -550,14 +554,16 @@ class M_master extends CI_Model{
     function insert_load_barang(){
         $data = array(
             'tgl' => $_POST['tgl'],
+            // 'tgl_bayar' => $_POST['tgl_byr'],
             'id_m_nota' => $_POST['supplier'],
             'kode_barang' => $_POST['kode_barang'],
             'nama_barang' => $_POST['nama_barang'],
             'merek' => $_POST['merek'],
             'spesifikasi' => $_POST['spesifikasi'],
             'qty' => $_POST['qty'],
-            'qty_ket' => $_POST['qty_ket'],
-            'harga' => $_POST['harga'],
+            // 'qty_ket' => $_POST['qty_ket'],
+            // 'harga' => $_POST['harga'],
+            // 'status' => $_POST['status_plus'],
             'created_by' => $this->session->userdata('username')
         );
         $result= $this->db->insert("m_barang",$data);
@@ -569,11 +575,17 @@ class M_master extends CI_Model{
             'id_m_barang' => $id->id,
             'qty_plus' => $_POST['qty'],
             'qty_ket' => $_POST['qty_ket'],
-            'status' => $_POST['status_plus'],
             'harga' => $_POST['harga'],
+            'status' => $_POST['status_plus'],
             'created_by' => $this->session->userdata('username')
         );
         $result= $this->db->insert("m_barang_plus",$data_plus);
+
+        // insert id barang plus di master barang
+        $id_plus = $this->db->query("SELECT id FROM m_barang_plus WHERE id_m_barang='$id->id' ORDER BY id DESC LIMIT 1")->row();
+        $this->db->set('id_m_barang_plus', $id_plus->id);
+        $this->db->where('id', $id->id);
+        $result = $this->db->update('m_barang');
 
         return $result;
     }
@@ -670,24 +682,28 @@ class M_master extends CI_Model{
     function update_load_barang(){
         
         $this->db->set('tgl', $_POST['tgl']);
-        $this->db->set('id_m_nota', $_POST['supplier']);
         $this->db->set('nama_barang', $_POST['nama_barang']);
         $this->db->set('merek', $_POST['merek']);
         $this->db->set('spesifikasi', $_POST['spesifikasi']);
         $this->db->set('qty', $_POST['qty']);
-        $this->db->set('qty_ket', $_POST['qty_ket']);
-        $this->db->set('harga', $_POST['harga']);
         $this->db->set('updated_at', date("Y-m-d h:i:s"));
         $this->db->set('updated_by', $this->session->userdata('username'));
         $this->db->where('id', $_POST['id']);
         $result = $this->db->update('m_barang');
 
-        if($_POST['qty_plus'] <> 0){
-            $id = $_POST['id'];
-            $id = $this->db->query("SELECT id FROM m_barang WHERE id = '$id'")->row();
+        if($_POST['qty_plus'] == 0){
+            $this->db->set('tgl_bayar', $_POST['tgl_byr']);
+            $this->db->set('qty_ket', $_POST['qty_ket']);
+            $this->db->set('harga', $_POST['harga']);
+            $this->db->set('status', $_POST['status_plus']);
+            $this->db->set('updated_at', date("Y-m-d h:i:s"));
+            $this->db->set('updated_by', $this->session->userdata('username'));
+            $this->db->where('id', $_POST['id_m_barang_plus']);
+            $result = $this->db->update('m_barang_plus');
+        }else if($_POST['qty_plus'] <> 0){
             $data_plus = array(
                 'tgl_bayar' => $_POST['tgl_byr'],
-                'id_m_barang' => $id->id,
+                'id_m_barang' => $_POST['id'],
                 'qty_plus' => $_POST['qty_plus'],
                 'qty_ket' => $_POST['qty_ket'],
                 'status' => $_POST['status_plus'],
@@ -696,6 +712,14 @@ class M_master extends CI_Model{
             );
             $result= $this->db->insert("m_barang_plus",$data_plus);
         }
+
+        // update id barang plus di master barang
+        $id = $_POST['id'];
+        $id_plus = $this->db->query("SELECT id FROM m_barang_plus WHERE id_m_barang='$id' ORDER BY id DESC LIMIT 1")->row();
+        $this->db->set('id_m_barang_plus', $id_plus->id);
+        $this->db->where('id', $id);
+        $result = $this->db->update('m_barang');
+
         return $result;
     }
 

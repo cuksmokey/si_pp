@@ -461,50 +461,6 @@
       });
     }
 
-    // function tampil_edit(id){
-    // $(".box-data").hide();
-    // $(".box-form").show();
-    // $('.box-form').animateCss('fadeInDown');
-    // $("#judul").html('<h3>Form Edit Data</h3>');
-
-    // $('#detail_cart').load("<?php echo base_url();?>Master/destroy_cart_plpl");
-
-    // status = "update";
-
-    //      $.ajax({
-    //           url: '<?php echo base_url('Master/get_edit'); ?>',
-    //           type: 'POST',
-    //           data: {id: id,jenis:"PL_pl_pl"},
-    //       })
-    //       .done(function(data) {
-    //           json = JSON.parse(data);
-
-    //           $("#idid").val(json.header.id);
-    //           $("#tgl").val(json.header.tgl);
-    //           $("#no_surat").val(json.header.no_surat);
-    //           $("#no_so").val(json.header.no_so);
-    //           $("#no_po").val(json.header.no_po);
-    //           $("#no_nota").val(json.header.no_nota);
-    //           $("#kepada").val(json.pt.kepada);
-    //           $("#pimpinan").val(json.pt.pimpinan);
-    //           $("#npwp").val(json.pt.npwp);
-    //           $("#alamat").val(json.pt.alamat);
-    //           $("#no_telp").val(json.pt.no_telp);
-
-    //           for (var i = 0 ; i < json.detail.length; i++) {
-    //             tampil_plpl(json.detail[i].kode_barang,json.detail[i].harga_price_list,json.detail[i].qty,json.detail[i].i_qty);
-    //           }
-
-    //           $("#btn-simpan").prop("disabled",true);
-
-    //           $("#txt-btn-simpan").html("Update");
-
-    //           edit_cart = "update";
-
-    //       }) 
-
-    // }
-
     function view_detail(id){
     
          $.ajax({
@@ -577,43 +533,6 @@
         });
 
     }
-
-    function confirmCekPo(id,nm){
-        swal({
-          title: "Apakah Anda Yakin Konfirmasi Data ?",
-          text: nm,
-          type: "warning",
-          showCancelButton: true,
-          confirmButtonClass: "btn-danger",
-          confirmButtonText: "Ya",
-          cancelButtonText: "Batal",
-          closeOnConfirm: false,
-          closeOnCancel: false
-        },
-        function(isConfirm) {
-          if (isConfirm) {
-            $.ajax({
-              url   : '<?php echo base_url(); ?>Master/confirm_cek_po',
-              type  : "POST",
-              data  : {id: id},
-              success : function(data){
-                json = JSON.parse(data);
-                if (json.msg == true) {
-                  swal("Berhasil", "", "success");
-                  reloadTable();
-                  // // alert(json.g.id+' - '+json.g.id_perusahaan+' - '+json.g.tgl+' - '+json.g.g_label+' - '+json.g.width+' - '+json.g.tonase+' - '+json.g.no_po);
-                }else{
-                  swal(json.g, "", "error");
-                  // alert(json.g);
-                }
-              }
-            });
-          } else {
-            swal("", "Data Batal Di Konfirmasi", "error");
-          }
-        });
-    }
-
 
     function kosong(){
       $("#judul").html('<h3> Form Tambah Data Packing List</h3>');
@@ -702,7 +621,7 @@
             });
     }
 
-    function addToCart(id,kode_barang,nama_barang,qty,i){
+    function addToCart(id,kode_barang,nama_barang,qty,qty_ket,i){
       $("#btn-simpan").prop("disabled",false);
       $("#i_qty"+i).prop("disabled",true).attr('style','background:#ddd;');
       $(".btn_list_barang").prop("disabled",true);
@@ -729,6 +648,7 @@
             kode_barang:kode_barang,
             nama_barang:nama_barang,
             qty:qty,
+            qty_ket:qty_ket,
             i_qty:i_qty
           },
           success: function(data){

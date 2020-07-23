@@ -470,50 +470,6 @@
       });
     }
 
-    // function tampil_edit(id){
-    // $(".box-data").hide();
-    // $(".box-form").show();
-    // $('.box-form').animateCss('fadeInDown');
-    // $("#judul").html('<h3>Form Edit Data</h3>');
-
-    // $('#detail_cart').load("<?php echo base_url();?>Master/destroy_cart_plpl");
-
-    // status = "update";
-
-    //      $.ajax({
-    //           url: '<?php echo base_url('Master/get_edit'); ?>',
-    //           type: 'POST',
-    //           data: {id: id,jenis:"PL_pl_pl"},
-    //       })
-    //       .done(function(data) {
-    //           json = JSON.parse(data);
-
-    //           $("#idid").val(json.header.id);
-    //           $("#tgl").val(json.header.tgl);
-    //           $("#no_surat").val(json.header.no_surat);
-    //           $("#no_so").val(json.header.no_so);
-    //           $("#no_po").val(json.header.no_po);
-    //           $("#no_nota").val(json.header.no_nota);
-    //           $("#kepada").val(json.pt.kepada);
-    //           $("#pimpinan").val(json.pt.pimpinan);
-    //           $("#npwp").val(json.pt.npwp);
-    //           $("#alamat").val(json.pt.alamat);
-    //           $("#no_telp").val(json.pt.no_telp);
-
-    //           for (var i = 0 ; i < json.detail.length; i++) {
-    //             tampil_plpl(json.detail[i].kode_barang,json.detail[i].harga_price_list,json.detail[i].qty,json.detail[i].i_qty);
-    //           }
-
-    //           $("#btn-simpan").prop("disabled",true);
-
-    //           $("#txt-btn-simpan").html("Update");
-
-    //           edit_cart = "update";
-
-    //       }) 
-
-    // }
-
     function view_detail(id){
     
          $.ajax({
@@ -645,33 +601,6 @@
       $('#detail_cart').load("<?php echo base_url();?>Master/destroy_cart_inv");
     }
 
-    // function view_timbang(id){
-    //   // alert(id);
-    //   var table = $('#datatable-view-timbang').DataTable();
-
-    //      table.destroy();
-
-    //      tabel = $('#datatable-view-timbang').DataTable({
-
-    //            "processing": true,
-    //            "pageLength":true,
-    //            "paging": true,
-    //            "ajax": {
-    //                "url" : '<?php echo base_url(); ?>Master/load_data' ,
-    //                "data" : ({jenis:"view_timbang",id:id}),
-    //                "type": "POST"
-    //            },
-    //            responsive: true,
-    //            "pageLength": 10,
-    //            "language": {
-    //                    "emptyTable":     "Tidak ada data.."
-    //                },
-    //            "order": [[ 2, "asc" ]]
-    //     });
-
-    //   $("#modal-view-timbang").modal("show");
-    // }
-
     $(".btn-tambah").click(function(){
       id_pl = $("#id_pl").val();
      
@@ -739,57 +668,6 @@
         });
       }
     }
-
-    // function tampil_plpl(kode_barang,harga_price_list,qty,i_qty_barang){
-
-    //   $("#btn-simpan").prop("disabled",true);
-
-    //   $.ajax({
-    //     url : "<?php echo base_url();?>Master/view_edit_cart_pl",
-    //     method : "POST",
-    //     data : {
-    //       kode_barang:kode_barang,
-    //       harga_price_list:harga_price_list,
-    //       qty:qty,
-    //       i_qty_barang:i_qty_barang
-    //       },
-    //     success: function(data){
-    //       $('#detail_cart').html(data);
-    //     }
-    //   });
-    // }
-
-    // function edit_plpl(kode_barang,harga_price_list,qty,i_qty_barang,i){
-    //   qty = $("#qty"+i).val();
-    //   i_qty = $("#i_qty"+i).val();
-
-    //   ss_stok = qty - i_qty;
-
-    //   // alert("STOK :("+qty+"). INPUT=("+i_qty+"). "+i_qty_barang);
-
-    //   $("#btn-simpan").prop("disabled",false);
-
-    //   if(i_qty == 0 || i_qty == ""){
-    //     swal("Input QTY Tidak Boleh Kosong", "", "error");
-    //   }else if(ss_stok < 0){
-    //     swal("Melebihi STOK", "", "error");
-    //   }else{
-    //     $.ajax({
-    //       url : "<?php echo base_url();?>Master/save_edit_cart_pl",
-    //       method : "POST",
-    //       data : {
-    //         kode_barang:kode_barang,
-    //         harga_price_list:harga_price_list,
-    //         qty:qty,
-    //         i_qty:i_qty,
-    //         i_qty_barang:i_qty_barang
-    //         },
-    //       success: function(data){
-    //         $('#detail_cart').html(data);
-    //       }
-    //     });
-    //   }
-    // }
 
     $(document).on('click','.hapus_cart',function(){
        var row_id=$(this).attr("id");

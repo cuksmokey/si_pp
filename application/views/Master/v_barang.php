@@ -44,7 +44,7 @@
                                             <th>Merek</th>
                                             <th>Spesifikasi</th>
                                             <th>Qty</th>
-                                            <th>Harga</th>
+                                            <!-- <th>Harga</th> -->
                                             <th width="15%">Aksi</th>
                                         </tr>
                                     </thead>
@@ -69,6 +69,7 @@
                                         <td>:</td>
                                         <td>
                                             <input type="date" id="tgl" value="<?php echo date('Y-m-d') ?>"  class="form-control">
+                                            <input type="hidden" value="" id="tgl_lama">
                                         </td>
                                     </tr>
                                     <tr>
@@ -119,7 +120,7 @@
                                         <td>
                                             <input type="text" id="nama_barang" autocomplete="off" class="form-control">
                                             <input type="hidden" value="" id="id">
-                                            <!-- <input type="hidden" value="" id="kode_barang_lama"> -->
+                                            <input type="hidden" value="" id="id_m_barang_plus">
                                             <input type="hidden" value="" id="supplier_lama">
                                         </td>
                                     </tr>
@@ -145,6 +146,8 @@
                                         <td>:</td>
                                         <td>
                                             <input type="date" id="tgl_byr" value=""  class="form-control">
+                                            <input type="hidden" value="" id="tgl_byr_lama">
+                                            <input type="hidden" value="" id="status_plus_lama">
                                         </td>
                                     </tr>
                                     <tr>
@@ -236,6 +239,7 @@
 
 <script>
   status = '';
+  opsi = '';
     $(document).ready(function(){
       $(".box-form").hide();
      load_data();
@@ -310,9 +314,11 @@
 
     function simpan(){
       id = $("#id").val();
+      id_m_barang_plus = $("#id_m_barang_plus").val();
       tgl = $("#tgl").val();
+      tgl_lama = $("#tgl_lama").val();
       
-      data = $('#supplier').select2('data');
+      // data = $('#supplier').select2('data');
       // supplier = data[0].id;
       // supplier_lama = $("#supplier_lama").val();
       supplier = $("#id_supplier").val();
@@ -325,8 +331,10 @@
       merek = $("#merek").val();
       spesifikasi = $("#spesifikasi").val();
 
-      status_plus = $("#status_plus").val();
       tgl_byr = $("#tgl_byr").val();
+      tgl_byr_lama = $("#tgl_byr_lama").val();
+      status_plus = $("#status_plus").val();
+      status_plus_lama = $("#status_plus_lama").val();
       
       i_qty = $("#qty").val();
       i_plus_qty = $("#plus_qty").val();
@@ -361,7 +369,9 @@
           url      : '<?php echo base_url(); ?>Master/'+status,
           data     : ({
             id : id,
+            id_m_barang_plus : id_m_barang_plus,
             tgl : tgl,
+            tgl_lama : tgl_lama,
             supplier : supplier,
             kode_barang : kode_barang,
             kode_barang_lama : kode_barang_lama,
@@ -370,10 +380,13 @@
             spesifikasi : spesifikasi,
             qty : qty,
             qty_plus : qty_plus,
-            status_plus : status_plus,
             tgl_byr : tgl_byr,
+            tgl_byr_lama : tgl_byr_lama,
+            status_plus : status_plus,
+            status_plus_lama : status_plus_lama,
             qty_ket : qty_ket,
             harga : harga,
+            opsi : opsi,
             jenis : "Simpan_Barang" }),
           dataType : "json",
           success  : function(data){
@@ -381,16 +394,18 @@
             if (data.data == true) {
               
               reloadTable();
-              showNotification("alert-success", "Berhasil", "bottom", "center", "", "");
+              showNotification("alert-success", data.msg, "bottom", "center", "", "");
               
               status = 'update';
 
             }else{
-              showNotification("alert-danger", "Kode Barang Sudah Ada", "bottom", "center", "", "");
+              showNotification("alert-danger", data.msg, "bottom", "center", "", "");
             }
           }
       });
     }
+
+        ///////// E D I T ///////////////
 
     function tampil_edit(id){
       $(".box-data").hide();
@@ -402,6 +417,7 @@
       $("#no_nota").val("");
 
       status = "update";
+      opsi = "edit";
 
       // alert(id);
 
@@ -416,26 +432,90 @@
           json = JSON.parse(data);
           $("#btn-simpan").prop("disabled",false);
 
-          // $("#kode_barang_lama").val(json.kode_barang);
           a = json.kode_barang.split("/");
 
-          // $("#kode_barang").val(json.kode_barang).prop("disabled",true);
           $("#supplier").val("").prop("disabled",true).attr('style','background:#ddd;');
 
           $("#id1").val(a[0]).prop("disabled",true).attr('style','background:#ddd;');
           $("#id2").val(a[1]).prop("disabled",true).attr('style','background:#ddd;');
 
           $("#id").val(json.id);
-          $("#tgl").val(json.tgl);
+          $("#id_m_barang_plus").val(json.id_m_barang_plus);
+
+          $("#tgl").val(json.tgl).prop("disabled",false).attr('style','background:#fff;');
+          $("#tgl_lama").val(json.tgl);
           $("#id_supplier").val(json.id_m_nota);
           $("#supplier_note").val(json.nama_supplier);
           $("#no_nota").val(json.no_nota);
-          $("#nama_barang").val(json.nama_barang);
-          $("#merek").val(json.merek);
-          $("#spesifikasi").val(json.spesifikasi);
+          
+          $("#nama_barang").val(json.nama_barang).prop("disabled",false).attr('style','background:#fff;');
+          $("#merek").val(json.merek).prop("disabled",false).attr('style','background:#fff;');
+          $("#spesifikasi").val(json.spesifikasi).prop("disabled",false).attr('style','background:#fff;');
 
-          $("#status_plus").val("0");
-          $("#tgl_byr").val("0");
+          $("#tgl_byr").val(json.tgl_bayar);
+          $("#tgl_byr_lama").val(json.tgl_bayar);
+          $("#status_plus").val(json.status);
+          $("#status_plus_lama").val(json.status);
+          
+          $("#qty").val(json.qty).prop("disabled",true).attr('style','background:#ddd;');
+          $("#plus_qty").val("").prop("disabled",true).attr('style','background:#ddd;');
+          
+          $("#qty_ket").val(json.qty_ket);
+          $("#harga").val(json.harga);
+      })
+    }
+
+          ///////// P L U S  Q T Y ///////////////
+
+    function plus_qty(id){
+      $(".box-data").hide();
+      $(".box-form").show();
+      $('.box-form').animateCss('fadeInDown');
+      $("#judul").html('<h3>Form Edit Data Barang</h3>');
+      $("#supplier").val("");
+      $("#supplier_note").val("");
+      $("#no_nota").val("");
+
+      status = "update";
+      opsi = "add_qty";
+
+      // alert(id);
+
+      $.ajax({
+          url : '<?php echo base_url('Master/get_edit'); ?>',
+          type: 'POST',
+          data: {
+            id: id,
+            jenis:"edit_barang"},
+      })
+      .done(function(data) {
+          json = JSON.parse(data);
+          $("#btn-simpan").prop("disabled",false);
+
+          a = json.kode_barang.split("/");
+
+          $("#supplier").val("").prop("disabled",true).attr('style','background:#ddd;');
+
+          $("#id1").val(a[0]).prop("disabled",true).attr('style','background:#ddd;');
+          $("#id2").val(a[1]).prop("disabled",true).attr('style','background:#ddd;');
+
+          $("#id").val(json.id);
+          $("#id_m_barang_plus").val(json.id_m_barang_plus);
+
+          $("#tgl").val(json.tgl).prop("disabled",true).attr('style','background:#ddd;');
+          $("#tgl_lama").val(json.tgl);
+          $("#id_supplier").val(json.id_m_nota);
+          $("#supplier_note").val(json.nama_supplier);
+          $("#no_nota").val(json.no_nota);
+          
+          $("#nama_barang").val(json.nama_barang).prop("disabled",true).attr('style','background:#ddd;');
+          $("#merek").val(json.merek).prop("disabled",true).attr('style','background:#ddd;');
+          $("#spesifikasi").val(json.spesifikasi).prop("disabled",true).attr('style','background:#ddd;');
+
+          $("#tgl_byr").val(json.tgl_bayar);
+          $("#tgl_byr_lama").val(json.tgl_bayar);
+          $("#status_plus").val(json.status);
+          $("#status_plus_lama").val(json.status);
           
           $("#qty").val(json.qty).prop("disabled",true).attr('style','background:#ddd;');
           $("#plus_qty").val("").prop("disabled",false).attr('style','background:#fff;');
@@ -444,6 +524,7 @@
           $("#harga").val(json.harga);
       })
     }
+
     function deleteData(id,nm){
         swal({
           title: "Apakah Anda Yakin ?",
@@ -483,14 +564,19 @@
     function kosong(){
       
       status = "insert";
+      opsi = "";
 
-      $("#tgl").val("");
+      $("#id").val("");
+      $("#id_m_barang_plus").val("");
+
+      $("#tgl").val("").prop("disabled",false).attr('style','background:#fff;');
+      $("#tgl_lama").val("");
       $("#id1").val("").prop("disabled",false).attr('style','background:#fff;');
       $("#id2").val("").prop("disabled",false).attr('style','background:#fff;');
       $("#kode_barang_lama").val("");
-      $("#nama_barang").val("");
-      $("#merek").val("");
-      $("#spesifikasi").val("");
+      $("#nama_barang").val("").prop("disabled",false).attr('style','background:#fff;');
+      $("#merek").val("").prop("disabled",false).attr('style','background:#fff;');
+      $("#spesifikasi").val("").prop("disabled",false).attr('style','background:#fff;');
       $("#id_supplier").val("");
       $("#supplier").val("").prop("disabled",false).attr('style','background:#fff;');
       $("#supplier_note").val("");
@@ -498,11 +584,13 @@
       $("#supplier_lama").val("");
       $("#qty").val("").prop("disabled",false).attr('style','background:#fff;');
       $("#plus_qty").val("").prop("disabled",true).attr('style','background:#ddd;');
-      $("#qty_ket").val("0");
-      $("#harga").val("");
+      $("#qty_ket").val("0").prop("disabled",false).attr('style','background:#fff;');
+      $("#harga").val("").prop("disabled",false).attr('style','background:#fff;');
 
-      $("#status_plus").val("0");
-      $("#tgl_byr").val("");
+      $("#tgl_byr").val("").prop("disabled",false).attr('style','background:#fff;');
+      $("#tgl_byr_lama").val("");
+      $("#status_plus").val("0").prop("disabled",false).attr('style','background:#fff;');
+      $("#status_plus_lama").val("0");
 
       $("#btn-simpan").prop("disabled",false);
       $("#txt-btn-simpan").html("SIMPAN");
@@ -541,7 +629,6 @@
 
  $('#supplier').on('change', function() {
     data = $('#supplier').select2('data');
-    // $("#supplier").val(data[0].text);
     $("#supplier_note").val(data[0].nama_supplier);
     $("#id_supplier").val(data[0].id);
     $("#no_nota").val(data[0].no_nota);

@@ -133,14 +133,14 @@ class Master extends CI_Controller {
                     echo json_encode(array('data' =>  TRUE));
                 }
             }else if ($jenis == "Simpan_Barang") {
-                $id      = $this->input->post('kode_barang');
+                $id = $this->input->post('kode_barang');
                 $cek = $this->m_master->get_data_one("m_barang","kode_barang",$id)->num_rows();
                 
                 if ($cek > 0 ) {
-                    echo json_encode(array('data' =>  FALSE));
+                    echo json_encode(array('data' =>  FALSE,'msg' => 'Kode Barang Sudah Dipakai'));
                 }else{
                     $result     = $this->m_master->insert_load_barang();    
-                    echo json_encode(array('data' =>  TRUE));
+                    echo json_encode(array('data' =>  TRUE,'msg' => 'Berhasil'));
                 }
             }else if ($jenis == "Simpan_Supplier") {
                 $id = $this->input->post('supplier');
@@ -447,7 +447,7 @@ class Master extends CI_Controller {
                         <input type="hidden" id="qty'.$i.'" value="'.$r->qty.'">';
                         $row[] = $r->qty_ket;
 
-                        $aksi = '<a type="button" onclick="addToCart('."'".$id."'".','."'".$r->kode_barang."'".','."'".$r->nama_barang."'".','."'".$r->qty."'".','."'".$i."'".')" class="btn bg-brown btn-circle waves-effect waves-circle waves-float">
+                        $aksi = '<a type="button" onclick="addToCart('."'".$id."'".','."'".$r->kode_barang."'".','."'".$r->nama_barang."'".','."'".$r->qty."'".','."'".$r->qty_ket."'".','."'".$i."'".')" class="btn bg-brown btn-circle waves-effect waves-circle waves-float">
                         <i class="material-icons">check</i>
                             </a>';
 
@@ -649,19 +649,9 @@ class Master extends CI_Controller {
                             </button>';
 
                         if (($this->session->userdata('level') == "Developer" || $this->session->userdata('level') == "SuperAdmin" ) && $r->cek_po == 0) {
-                            $aksi = ''.$superbtn.'
-                            <a type="button" onclick="confirmCekPo('.$id.','."".')" class="btn bg-green btn-circle waves-effect waves-circle waves-float">
-                                <i class="material-icons">check</i>
-                            </a>';
-                        }else if ($r->cek_po == 1) {
-                                $aksi = '<button type="button" onclick="view_detail('.$id.')" class="btn btn-info btn-circle waves-effect waves-circle waves-float">
-                                <i class="material-icons">remove_red_eye</i>
-                            </button>
-                                <a type="button" onclick="vvvv" class="btn bg-blue btn-circle waves-effect waves-circle waves-float">
-                                <i class="material-icons">check</i>
-                            </a>';
-                        }else{
                             $aksi = ''.$superbtn.'';
+                        }else{
+                            $aksi = ''.$superbtn2.'';
                         }    
                             
                         $row[] = $aksi;
@@ -828,7 +818,7 @@ class Master extends CI_Controller {
                 $query = $this->m_master->get_load_barang();
 
                 if ($query->num_rows() == 0) {
-                    $data[] =  ["","","","","","","","","","",""];
+                    $data[] =  ["","","","","","","","","",""];
                 }else{
                     $i=1;
 
@@ -843,19 +833,25 @@ class Master extends CI_Controller {
                         $row[] = $r->nama_barang;
                         $row[] = $r->merek;
                         $row[] = $r->spesifikasi;
+                        // $row[] = number_format($r->qty);
                         $row[] = number_format($r->qty)." ".$r->qty_ket;
-                        $row[] = "Rp. ".number_format($r->harga);
+                        // $row[] = "Rp. ".number_format($r->harga);
                         $aksi ="";
 
                         $btn_edit = '<button type="button" onclick="tampil_edit('.$id.')" class="btn bg-orange btn-circle waves-effect waves-circle waves-float">
                         <i class="material-icons">edit</i>
                         </button>';
+
+                        $btn_plus_qty = '<button type="button" onclick="plus_qty('.$id.')" class="btn bg-green btn-circle waves-effect waves-circle waves-float">
+                        <i class="material-icons">add</i>
+                        </button>';
+
                         $btn_hapus = '<button type="button" onclick="deleteData('.$id.','."".')" class="btn btn-danger btn-circle waves-effect waves-circle waves-float">
                         <i class="material-icons">delete</i>
                         </button>';
 
                         if ($this->session->userdata('level') == "Developer" || $this->session->userdata('level') == "SuperAdmin") {
-                            $aksi = $btn_edit.' '.$btn_hapus;
+                            $aksi = $btn_plus_qty.' '.$btn_edit.' '.$btn_hapus;
                         }else if ($this->session->userdata('level') == "Admin") {
                             $aksi = $btn_edit;
                         }else{
@@ -1337,6 +1333,7 @@ class Master extends CI_Controller {
     
     function update(){
             $jenis      = $_POST['jenis'];
+            $opsi      = $_POST['opsi'];
             
             if ($jenis == "Timbangan") {
                 $result= $this->m_master->update_timbangan();
@@ -1408,20 +1405,23 @@ class Master extends CI_Controller {
                     echo json_encode(array('data' =>  TRUE));
                 }
             }else if ($jenis == "Simpan_Barang") {
-                // $id = $this->input->post('kode_barang');
-                // $s_n = $this->input->post('supplier');
-                // $s_n_l = $this->input->post('supplier_lama');
+                $tgl_byr = $this->input->post('tgl_byr');
+                $tgl_byr_lama = $this->input->post('tgl_byr_lama');
+                $qty_plus = $this->input->post('qty_plus');
 
-                // $cek = $this->m_master->get_data_one("m_barang","kode_barang",$id)->num_rows();
-
-                // if ($s_n == $s_n_l && $cek > 0) {
-                //     echo json_encode(array('data' =>  FALSE));
-                // }else if ($s_n <> $s_n_l && $cek > 0) {
-                //     echo json_encode(array('data' =>  FALSE));
-                // }else{
-                    $result= $this->m_master->update_load_barang();
-                    echo json_encode(array('data' =>  TRUE));
-                // }
+                if($opsi == "edit"){
+                    $this->m_master->update_load_barang();
+                    echo json_encode(array('data' =>  TRUE,'msg' => 'Berhasil'));
+                }else if($opsi == "add_qty"){
+                    if($qty_plus == 0) {
+                        echo json_encode(array('data' =>  FALSE,'msg' => 'Tambah QTY Tidak Boleh Kosong'));
+                    }else if ($tgl_byr < $tgl_byr_lama) {
+                        echo json_encode(array('data' =>  FALSE,'msg' => 'Tanggal Bayar Tidak Boleh Lebih Kecil Dari Tanggal Sebelumnya!'));
+                    }else{
+                        $this->m_master->update_load_barang();
+                        echo json_encode(array('data' =>  TRUE,'msg' => 'Berhasil'));
+                    }
+                }
             }else if ($jenis == "PoMaster") {
                 $id      = $this->input->post('kode_barang');
                 $id_lama = $this->input->post('kode_barang_lama');
@@ -1571,7 +1571,8 @@ class Master extends CI_Controller {
                 'id_barang' => $_POST['id_barang'],
                 'kode_barang' => $_POST['kode_barang'],
                 'i_qty' => $_POST['i_qty'],
-                'qty' => $_POST['qty']
+                'qty' => $_POST['qty'],
+                'qty_ket' => $_POST['qty_ket']
             )
         );
         $this->cart->insert($data);
@@ -1600,7 +1601,7 @@ class Master extends CI_Controller {
                     <td>'.$items['options']['kode_barang'].'</td>
                     <td>'.$items['name'].'</td>
                     <td>'.number_format($stok).'</td>
-                    <td>'.$iqty.'</td>
+                    <td>'.$iqty.' '.$items['options']['qty_ket'].'</td>
                     <td><button type="button" id="'.$items['rowid'].'" class="hapus_cart btn btn-danger btn-xs">Batal</button></td>
                 </tr>
             ';
@@ -1860,8 +1861,8 @@ class Master extends CI_Controller {
     
 
     function get_edit(){
-        $id    = $_POST['id'];
-        $jenis    = $_POST['jenis'];
+        $id = $_POST['id'];
+        $jenis = $_POST['jenis'];
 
         if ($jenis == "Timbangan") {
             $data =  $this->m_master->get_data_one("m_timbangan", "id", $id)->row();
