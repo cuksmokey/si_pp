@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 21, 2020 at 05:48 PM
+-- Generation Time: Jul 23, 2020 at 06:13 PM
 -- Server version: 10.1.38-MariaDB
 -- PHP Version: 5.6.40
 
@@ -30,6 +30,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `m_barang` (
   `id` int(11) NOT NULL,
+  `id_m_barang_plus` int(11) NOT NULL,
   `id_m_nota` int(11) NOT NULL,
   `tgl` date DEFAULT NULL,
   `kode_barang` varchar(99) NOT NULL,
@@ -37,13 +38,19 @@ CREATE TABLE `m_barang` (
   `merek` varchar(99) DEFAULT NULL,
   `spesifikasi` varchar(99) DEFAULT NULL,
   `qty` int(99) DEFAULT NULL,
-  `qty_ket` varchar(99) DEFAULT NULL,
-  `harga` int(11) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `created_by` varchar(99) DEFAULT NULL,
-  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_by` varchar(99) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `m_barang`
+--
+
+INSERT INTO `m_barang` (`id`, `id_m_barang_plus`, `id_m_nota`, `tgl`, `kode_barang`, `nama_barang`, `merek`, `spesifikasi`, `qty`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
+(6, 18, 21, '2020-07-01', '01/KD1', 'NAMA BARANG SATU', 'MEREK SATU', 'SPESIFIKASI SATU', 30, '2020-07-23 14:06:37', 'developer', '2020-07-23 03:22:57', 'developer'),
+(7, 20, 26, '2020-07-23', '213/KDKD99', 'NAMA CUY', 'MEREK CUY', 'SPEC CUY', 50, '2020-07-23 15:24:21', 'developer', '2020-07-23 03:27:39', 'developer');
 
 -- --------------------------------------------------------
 
@@ -65,6 +72,21 @@ CREATE TABLE `m_barang_plus` (
   `updated_by` varchar(99) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `m_barang_plus`
+--
+
+INSERT INTO `m_barang_plus` (`id`, `tgl_bayar`, `id_m_barang`, `qty_plus`, `qty_ket`, `harga`, `status`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
+(12, '2020-07-01', 6, 10, 'PCS', 10000, 'Cash', '2020-07-23 14:06:37', 'developer', '2020-07-23 14:06:37', NULL),
+(13, '2020-07-02', 6, 10, 'PCS', 10000, 'Cash', '2020-07-23 14:18:46', 'developer', '2020-07-23 14:18:46', NULL),
+(14, '2020-07-03', 6, 10, 'Batang', 100000, 'Cash', '2020-07-23 14:19:03', 'developer', '2020-07-23 14:19:03', NULL),
+(15, '2020-07-04', 6, 10, 'PCS', 100000, 'Cash', '2020-07-23 14:19:20', 'developer', '2020-07-23 14:19:20', NULL),
+(16, '2020-07-05', 6, 10, 'PCS', 20000, 'Cash', '2020-07-23 14:26:04', 'developer', '2020-07-23 14:26:04', NULL),
+(17, '2020-07-06', 6, 20, 'Box', 50000, 'Kredit', '2020-07-23 14:28:12', 'developer', '2020-07-23 03:22:26', 'developer'),
+(18, '2020-07-07', 6, 30, 'Box', 90000, 'Cash', '2020-07-23 15:22:57', 'developer', '2020-07-23 15:22:57', NULL),
+(19, '2020-07-22', 7, 100, 'PCS', 1000000, 'Kredit', '2020-07-23 15:24:21', 'developer', '2020-07-23 03:27:12', 'developer'),
+(20, '2020-07-23', 7, 50, 'PCS', 50000, 'Cash', '2020-07-23 15:27:39', 'developer', '2020-07-23 15:27:39', NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -81,6 +103,13 @@ CREATE TABLE `m_invoice` (
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_by` varchar(99) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `m_invoice`
+--
+
+INSERT INTO `m_invoice` (`id`, `id_pl`, `tgl_jt`, `no_nota`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
+(1, 2, '2020-07-23', 'NOTA 001', '2020-07-23 16:05:49', 'superadmin', '0000-00-00 00:00:00', NULL);
 
 -- --------------------------------------------------------
 
@@ -149,12 +178,21 @@ CREATE TABLE `m_pl_list_barang` (
   `id_m_barang` int(11) NOT NULL,
   `tgl` date DEFAULT NULL,
   `qty` int(11) DEFAULT NULL,
+  `qty_ket` varchar(99) DEFAULT NULL,
   `harga_invoice` int(11) DEFAULT '0',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `created_by` varchar(99) DEFAULT NULL,
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_by` varchar(99) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `m_pl_list_barang`
+--
+
+INSERT INTO `m_pl_list_barang` (`id`, `id_pl`, `id_m_barang`, `tgl`, `qty`, `qty_ket`, `harga_invoice`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
+(3, 2, 6, '2020-07-23', 20, 'Box', 20000, '2020-07-23 16:00:08', 'superadmin', '0000-00-00 00:00:00', NULL),
+(4, 2, 7, '2020-07-23', 50, 'PCS', 50000, '2020-07-23 16:00:08', 'superadmin', '0000-00-00 00:00:00', NULL);
 
 -- --------------------------------------------------------
 
@@ -177,6 +215,13 @@ CREATE TABLE `m_pl_price_list` (
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_by` varchar(99) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `m_pl_price_list`
+--
+
+INSERT INTO `m_pl_price_list` (`id`, `id_m_perusahaan`, `tgl`, `no_surat`, `no_so`, `no_po`, `cek_po`, `cek_inv`, `data_inv`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
+(2, 23, '2020-07-23', 'SJSARU', 'SOSATU', 'PO1', 0, 0, 1, '2020-07-23 16:00:08', 'superadmin', '0000-00-00 00:00:00', NULL);
 
 -- --------------------------------------------------------
 
@@ -379,19 +424,19 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `m_barang`
 --
 ALTER TABLE `m_barang`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `m_barang_plus`
 --
 ALTER TABLE `m_barang_plus`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `m_invoice`
 --
 ALTER TABLE `m_invoice`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `m_nota`
@@ -409,13 +454,13 @@ ALTER TABLE `m_perusahaan`
 -- AUTO_INCREMENT for table `m_pl_list_barang`
 --
 ALTER TABLE `m_pl_list_barang`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `m_pl_price_list`
 --
 ALTER TABLE `m_pl_price_list`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `m_price_list`
