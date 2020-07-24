@@ -895,9 +895,10 @@ class M_master extends CI_Model{
     }
 
     function list_m_barang_pl($searchTerm=""){
-    $users = $this->db->query("SELECT c.id AS id_supplier,c.nama_supplier,CONCAT(a.kode_barang,' | ', a.nama_barang) AS kbnb,a.* FROM m_barang a
+    $users = $this->db->query("SELECT c.id AS id_supplier,c.nama_supplier,CONCAT(a.kode_barang,' | ', a.nama_barang) AS kbnb,d.harga,a.* FROM m_barang a
     INNER JOIN m_nota b ON a.id_m_nota=b.id
     INNER JOIN m_supplier c ON b.id_supplier=c.id
+    INNER JOIN m_barang_plus d ON a.id_m_barang_plus=d.id
     WHERE kode_barang LIKE '%$searchTerm%' OR nama_barang LIKE '%$searchTerm%'
     ORDER BY kode_barang ASC")->result_array();
 

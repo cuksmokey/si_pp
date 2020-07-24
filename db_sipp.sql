@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 23, 2020 at 06:13 PM
+-- Generation Time: Jul 24, 2020 at 06:01 PM
 -- Server version: 10.1.38-MariaDB
 -- PHP Version: 5.6.40
 
@@ -50,7 +50,10 @@ CREATE TABLE `m_barang` (
 
 INSERT INTO `m_barang` (`id`, `id_m_barang_plus`, `id_m_nota`, `tgl`, `kode_barang`, `nama_barang`, `merek`, `spesifikasi`, `qty`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
 (6, 18, 21, '2020-07-01', '01/KD1', 'NAMA BARANG SATU', 'MEREK SATU', 'SPESIFIKASI SATU', 30, '2020-07-23 14:06:37', 'developer', '2020-07-23 03:22:57', 'developer'),
-(7, 20, 26, '2020-07-23', '213/KDKD99', 'NAMA CUY', 'MEREK CUY', 'SPEC CUY', 50, '2020-07-23 15:24:21', 'developer', '2020-07-23 03:27:39', 'developer');
+(7, 20, 26, '2020-07-23', '213/KDKD99', 'NAMA CUY', 'MEREK CUY', 'SPEC CUY', 50, '2020-07-23 15:24:21', 'developer', '2020-07-23 03:27:39', 'developer'),
+(8, 23, 26, '2020-07-01', '01/KDPPI1', 'PPI NM SATU', 'PPI MR SATU', 'PPI SS SATU', 150, '2020-07-24 12:05:09', 'developer', '2020-07-24 00:09:13', 'superadmin'),
+(9, 24, 22, '2020-07-24', '02/SNAKNDA1', 'ASJKLJNF', 'NSFAJKFN', 'NASJKFNA', 500, '2020-07-24 12:10:02', 'superadmin', '2020-07-24 12:10:02', NULL),
+(10, 26, 21, '2020-07-24', '99/ZZZZ', 'RA JELAS', 'ANJAY', 'OKEY', 300, '2020-07-24 14:30:46', 'developer', '2020-07-24 03:53:57', 'developer');
 
 -- --------------------------------------------------------
 
@@ -85,7 +88,13 @@ INSERT INTO `m_barang_plus` (`id`, `tgl_bayar`, `id_m_barang`, `qty_plus`, `qty_
 (17, '2020-07-06', 6, 20, 'Box', 50000, 'Kredit', '2020-07-23 14:28:12', 'developer', '2020-07-23 03:22:26', 'developer'),
 (18, '2020-07-07', 6, 30, 'Box', 90000, 'Cash', '2020-07-23 15:22:57', 'developer', '2020-07-23 15:22:57', NULL),
 (19, '2020-07-22', 7, 100, 'PCS', 1000000, 'Kredit', '2020-07-23 15:24:21', 'developer', '2020-07-23 03:27:12', 'developer'),
-(20, '2020-07-23', 7, 50, 'PCS', 50000, 'Cash', '2020-07-23 15:27:39', 'developer', '2020-07-23 15:27:39', NULL);
+(20, '2020-07-23', 7, 50, 'PCS', 50000, 'Cash', '2020-07-23 15:27:39', 'developer', '2020-07-23 15:27:39', NULL),
+(21, '2020-07-01', 8, 20, 'PCS', 200000, 'Cash', '2020-07-24 12:05:09', 'developer', '2020-07-24 12:05:09', NULL),
+(22, '2020-07-02', 8, 100, 'PCS', 1200000, 'Cash', '2020-07-24 12:07:56', 'superadmin', '2020-07-24 12:07:56', NULL),
+(23, '2020-07-03', 8, 50, 'PCS', 500000, 'Cash', '2020-07-24 12:09:13', 'superadmin', '2020-07-24 12:09:13', NULL),
+(24, '2020-07-24', 9, 500, 'PCS', 5000000, 'Cash', '2020-07-24 12:10:02', 'superadmin', '2020-07-24 12:10:02', NULL),
+(25, '2020-07-24', 10, 200, 'PCS', 600000, 'Cash', '2020-07-24 14:30:46', 'developer', '2020-07-24 14:30:46', NULL),
+(26, '2020-07-24', 10, 100, 'PCS', 400000, 'Cash', '2020-07-24 14:33:30', 'developer', '2020-07-24 03:53:58', 'developer');
 
 -- --------------------------------------------------------
 
@@ -192,7 +201,8 @@ CREATE TABLE `m_pl_list_barang` (
 
 INSERT INTO `m_pl_list_barang` (`id`, `id_pl`, `id_m_barang`, `tgl`, `qty`, `qty_ket`, `harga_invoice`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
 (3, 2, 6, '2020-07-23', 20, 'Box', 20000, '2020-07-23 16:00:08', 'superadmin', '0000-00-00 00:00:00', NULL),
-(4, 2, 7, '2020-07-23', 50, 'PCS', 50000, '2020-07-23 16:00:08', 'superadmin', '0000-00-00 00:00:00', NULL);
+(4, 2, 7, '2020-07-23', 50, 'PCS', 50000, '2020-07-23 16:00:08', 'superadmin', '0000-00-00 00:00:00', NULL),
+(5, 3, 8, '2020-07-01', 20, 'PCS', 0, '2020-07-24 12:07:00', 'superadmin', '0000-00-00 00:00:00', NULL);
 
 -- --------------------------------------------------------
 
@@ -221,7 +231,8 @@ CREATE TABLE `m_pl_price_list` (
 --
 
 INSERT INTO `m_pl_price_list` (`id`, `id_m_perusahaan`, `tgl`, `no_surat`, `no_so`, `no_po`, `cek_po`, `cek_inv`, `data_inv`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
-(2, 23, '2020-07-23', 'SJSARU', 'SOSATU', 'PO1', 0, 0, 1, '2020-07-23 16:00:08', 'superadmin', '0000-00-00 00:00:00', NULL);
+(2, 23, '2020-07-23', 'SJSARU', 'SOSATU', 'PO1', 0, 0, 1, '2020-07-23 16:00:08', 'superadmin', '0000-00-00 00:00:00', NULL),
+(3, 20, '2020-07-01', 'PPISJ1', 'PPISO1', 'PPIPO1', 0, 0, 0, '2020-07-24 12:07:00', 'superadmin', '0000-00-00 00:00:00', NULL);
 
 -- --------------------------------------------------------
 
@@ -240,6 +251,13 @@ CREATE TABLE `m_price_list` (
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_by` varchar(99) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `m_price_list`
+--
+
+INSERT INTO `m_price_list` (`id`, `tgl`, `id_m_barang`, `id_m_supplier`, `harga_price_list`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
+(1, '2020-07-24', 6, 15, 100000, '2020-07-24 12:15:25', 'developer', '0000-00-00 00:00:00', NULL);
 
 -- --------------------------------------------------------
 
@@ -424,13 +442,13 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `m_barang`
 --
 ALTER TABLE `m_barang`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `m_barang_plus`
 --
 ALTER TABLE `m_barang_plus`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `m_invoice`
@@ -454,19 +472,19 @@ ALTER TABLE `m_perusahaan`
 -- AUTO_INCREMENT for table `m_pl_list_barang`
 --
 ALTER TABLE `m_pl_list_barang`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `m_pl_price_list`
 --
 ALTER TABLE `m_pl_price_list`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `m_price_list`
 --
 ALTER TABLE `m_price_list`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `m_supplier`

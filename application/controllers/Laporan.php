@@ -197,22 +197,22 @@ class Laporan extends CI_Controller {
         // content
         $html .= '<table cellspacing="0" style="font-size:11px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;font-family:Arial !important">
             <tr>
-                <th style="border:0;width:4%;padding:5px 0"></th>
-                <th style="border:0;width:11%;padding:5px"></th>
-                <th style="border:0;width:29%;padding:5px"></th>
+                <th style="border:0;width:5%;padding:5px"></th>
+                <th style="border:0;width:6%;padding:5px"></th>
+                <th style="border:0;width:6%;padding:5px"></th>
+                <th style="border:0;width:15%;padding:5px"></th>
+                <th style="border:0;width:20%;padding:5px"></th>
                 <th style="border:0;width:19%;padding:5px"></th>
                 <th style="border:0;width:19%;padding:5px"></th>
-                <th style="border:0;width:8%;padding:5px"></th>
                 <th style="border:0;width:10%;padding:5px"></th>
             </tr>
             <tr>
-                <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">No.</td>
-                <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">Tanggal</td>
-                <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">Nama Barang</td>
-                <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">Merek</td>
-                <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">Spesifikasi</td>
-                <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">QTY</td>
-                <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">Harga</td>
+                <td style="border:1px solid #000;padding:8px 5px;text-align:center;font-weight:bold">No.</td>
+                <td style="border:1px solid #000;padding:8px 5px;text-align:center;font-weight:bold" colspan="2">Tanggal</td>
+                <td style="border:1px solid #000;padding:8px 5px;text-align:center;font-weight:bold" colspan="2">Nama Barang</td>
+                <td style="border:1px solid #000;padding:8px 5px;text-align:center;font-weight:bold">Merek</td>
+                <td style="border:1px solid #000;padding:8px 5px;text-align:center;font-weight:bold">Spesifikasi</td>
+                <td style="border:1px solid #000;padding:8px 5px;text-align:center;font-weight:bold">STOK</td>
             </tr>';
         
         // data barang per supplier
@@ -229,38 +229,79 @@ class Laporan extends CI_Controller {
         GROUP BY a.id_m_nota
         ORDER BY c.nama_supplier ASC,b.no_nota ASC");
 
+        $s = 0;
         foreach($sql_barang_supplier->result() as $r) {
+            $s++;
             $html .= '<tr>
-                <td style="border:1px solid #000;padding:5px;font-weight:bold" colspan="7">
-                    SUPPLIER : '.$r->nama_supplier.' | NO. NOTA : '.$r->no_nota.'
-                </td>
+                <td style="border:1px solid #000;padding:5px 2px;font-weight:bold;text-align:center">'.$s.'</td>
+                <td style="border:1px solid #000;border-width:1px 0 1px 1px;padding:5px;font-weight:bold" colspan="4">SUPPLIER : '.$r->nama_supplier.'</td>
+                <td style="border:1px solid #000;border-width:1px 1px 1px 0;padding:5px;font-weight:bold" colspan="3">NO. NOTA : '.$r->no_nota.'</td>
             </tr>';
 
             // tampil data
-            $sql_barang = $this->db->query("SELECT c.nama_supplier,b.no_nota,a.* FROM m_barang a
+            $sql_barang = $this->db->query("SELECT c.nama_supplier,b.no_nota,d.qty_ket,d.harga,a.* FROM m_barang a
             INNER JOIN m_nota b ON a.id_m_nota=b.id
             INNER JOIN m_supplier c ON b.id_supplier=c.id
+            INNER JOIN m_barang_plus d ON a.id_m_barang_plus=d.id
             WHERE tgl BETWEEN '$tgl1' AND '$tgl2' AND a.id_m_nota='$r->id_m_nota'
             ORDER BY tgl ASC,a.nama_barang ASC");
 
             $i = 0;
             foreach($sql_barang->result() as $r){
                 $i++;
+                // $this->m_fungsi->tanggal_format_indonesia($r->tgl)
                 $html .='<tr>
-                    <td style="border:1px solid #000;padding:5px;text-align:center">'.$i.'</td>
-                    <td style="border:1px solid #000;padding:5px">'.$this->m_fungsi->tanggal_format_indonesia($r->tgl).'</td>
-                    <td style="border:1px solid #000;padding:5px">'.$r->nama_barang.'</td>
+                    <td style="border:1px solid #000;border-width:0 1px;padding:5px 2px;text-align:center">'.$i.'</td>
+                    <td style="border:1px solid #000;padding:5px;text-align:center" colspan="2">'.$this->m_fungsi->tanggal_format_indonesia($r->tgl).'</td>
+                    <td style="border:1px solid #000;padding:5px" colspan="2">'.$r->nama_barang.'</td>
                     <td style="border:1px solid #000;padding:5px">'.$r->merek.'</td>
                     <td style="border:1px solid #000;padding:5px">'.$r->spesifikasi.'</td>
-                    <td style="border:1px solid #000;padding:5px">'.$r->qty.' '.$r->qty_ket.'</td>
-                    <td style="border:1px solid #000;padding:5px">Rp. '.number_format($r->harga).'</td>
+                    <td style="border:1px solid #000;padding:5px;font-weight:bold;text-align:right">'.number_format($r->qty).'</td>
+                </tr>';
+
+                $html .='<tr>
+                    <td style="border:1px solid #000;border-width:0 1px;padding:5px"></td>
+                    <td style="border:1px solid #000;padding:5px;text-align:center">No.</td>
+                    <td style="border:1px solid #000;padding:5px;text-align:center" colspan="2">Tanggal Pembelian</td>
+                    <td style="border:1px solid #000;padding:5px;text-align:center">QTY</td>
+                    <td style="border:1px solid #000;padding:5px;text-align:center">KET</td>
+                    <td style="border:1px solid #000;padding:5px;text-align:center">Harga</td>
+                    <td style="border:1px solid #000;padding:5px;text-align:center">Status</td>
+                </tr>';
+
+                // tampil data barang plus
+                $sql_barang = $this->db->query("SELECT*FROM m_barang_plus WHERE id_m_barang='$r->id' ORDER BY tgl_bayar ASC");
+
+                $p = 0;
+                $sum_harga = 0;
+                foreach($sql_barang->result() as $r){
+                    $p++;
+                    $html .= '<tr>
+                        <td style="border:1px solid #000;border-width:0 1px"></td>
+                        <td style="border:1px solid #000;padding:5px;text-align:center">'.$p.'</td>
+                        <td style="border:1px solid #000;padding:5px;text-align:center" colspan="2">'.$this->m_fungsi->tanggal_format_indonesia($r->tgl_bayar).'</td>
+                        <td style="border:1px solid #000;padding:5px;text-align:center">'.$r->qty_plus.'</td>
+                        <td style="border:1px solid #000;padding:5px;text-align:center">'.$r->qty_ket.'</td>
+                        <td style="border:1px solid #000;padding:5px">Rp. '.number_format($r->harga).'</td>
+                        <td style="border:1px solid #000;padding:5px;text-align:center">'.$r->status.'</td>
+                    </tr>';
+
+                    $sum_harga += $r->harga;
+                }
+
+                // total barang plus
+                $html .='<tr>
+                    <td style="border:1px solid #000;border-width:0 1px 1px;padding:5px"></td>
+                    <td style="border:1px solid #000;padding:5px;font-weight:bold;text-align:center" colspan="5">TOTAL PEMBELIAN</td>
+                    <td style="border:1px solid #000;padding:5px;font-weight:bold" colspan="2">Rp. '.number_format($sum_harga).'</td>
                 </tr>';
             }
         }
 
         $html .= '</table>';
 
-        $this->m_fungsi->_mpdf2('',$html,10,10,10,'L');
+        // $this->m_fungsi->_mpdf2('',$html,10,10,10,'L');
+        $this->m_fungsi->mPDFL($html);
 
     }
 
@@ -291,17 +332,16 @@ class Laporan extends CI_Controller {
         // content
         $html .= '<table cellspacing="0" style="font-size:11px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;font-family:Arial !important">
             <tr>
-                <th style="border:0;width:5%;padding:5px 0"></th>
-                <th style="border:0;width:15%;padding:5px"></th>
+                <th style="border:0;width:5%;padding:5px"></th>
+                <th style="border:0;width:16%;padding:5px"></th>
                 <th style="border:0;width:29%;padding:5px"></th>
-                <th style="border:0;width:29%;padding:5px"></th>
-                <th style="border:0;width:22%;padding:5px"></th>
+                <th style="border:0;width:20%;padding:5px"></th>
+                <th style="border:0;width:30%;padding:5px"></th>
             </tr>
             <tr>
                 <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">No.</td>
                 <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">Tanggal</td>
-                <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">Supplier</td>
-                <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">No. Nota</td>
+                <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold" colspan="2">Nama Barang</td>
                 <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">Total Pembelian</td>
             </tr>';
         
@@ -310,23 +350,50 @@ class Laporan extends CI_Controller {
         }else if($jenis <> 0){
             $where = "AND a.id_m_nota='$jenis'";
         }
-        
-        $sql_nota = $this->db->query("SELECT c.nama_supplier,b.no_nota,SUM(a.harga) AS tot_harga,a.* FROM m_barang a
+
+        $sql_supp = $this->db->query("SELECT c.nama_supplier,b.no_nota,a.* FROM m_barang a
         INNER JOIN m_nota b ON a.id_m_nota=b.id
         INNER JOIN m_supplier c ON b.id_supplier=c.id
         WHERE tgl BETWEEN '$tgl1' AND '$tgl2' $where
         GROUP BY a.id_m_nota
-        ORDER BY tgl ASC,a.nama_barang ASC");
+        ORDER BY c.nama_supplier ASC,b.no_nota ASC,tgl ASC");
 
         $i = 0;
-        foreach($sql_nota->result() as $r){
+        foreach($sql_supp->result() as $r){
             $i++;
             $html .= '<tr>
-                <td style="border:1px solid #000;padding:5px;text-align:center">'.$i.'</td>
-                <td style="border:1px solid #000;padding:5px">'.$this->m_fungsi->tanggal_format_indonesia($r->tgl).'</td>
-                <td style="border:1px solid #000;padding:5px">'.$r->nama_supplier.'</td>
-                <td style="border:1px solid #000;padding:5px">'.$r->no_nota.'</td>
-                <td style="border:1px solid #000;padding:5px">Rp. '.number_format($r->tot_harga).'</td>
+                <td style="border:1px solid #000;padding:5px;font-weight:bold;text-align:center">'.$i.'</td>
+                <td style="border:1px solid #000;border-width:1px 0 1px 1px;padding:5px;font-weight:bold" colspan="2">SUPPLIER : '.$r->nama_supplier.'</td>
+                <td style="border:1px solid #000;border-width:1px 1px 1px 0;padding:5px;font-weight:bold" colspan="2">NO. NOTA : '.$r->no_nota.'</td>
+            </tr>';
+
+            // tampil data barang plus
+            $sql_nm_b = $this->db->query("SELECT (SELECT SUM(harga) FROM m_barang_plus d WHERE a.id=d.id_m_barang AND a.id_m_nota=b.id) AS tot_harga,a.* FROM m_barang a
+            INNER JOIN m_nota b ON a.id_m_nota=b.id
+            INNER JOIN m_supplier c ON b.id_supplier=c.id
+            WHERE tgl BETWEEN '$tgl1' AND '$tgl2' AND a.id_m_nota='$r->id_m_nota'
+            GROUP BY a.id
+            ORDER BY c.nama_supplier ASC,b.no_nota ASC,tgl ASC");
+
+            $ii = 0;
+            $sum_harga = 0;
+            foreach($sql_nm_b->result() as $r){
+                $ii++;
+                $html .= '<tr>
+                    <td style="border:1px solid #000;border-width:0 1px;padding:5px;text-align:center">'.$ii.'</td>
+                    <td style="border:1px solid #000;padding:5px 2px;text-align:center">'.$this->m_fungsi->tanggal_format_indonesia($r->tgl).'</td>
+                    <td style="border:1px solid #000;padding:5px" colspan="2">'.$r->nama_barang.'</td>
+                    <td style="border:1px solid #000;padding:5px;text-align:right">Rp. '.number_format($r->tot_harga).'</td>
+                </tr>';
+
+                $sum_harga += $r->tot_harga;
+            }
+
+            // total
+            $html.= '<tr>
+                <td style="border:1px solid #000;border-width:0 1px 1px"></td>
+                <td style="border:1px solid #000;border-width:0 1px 1px;padding:5px;text-align:center;font-weight:bold" colspan="3">TOTAL KESELURUHAN PEMBELIAN</td>
+                <td style="border:1px solid #000;border-width:0 1px 1px;padding:5px;font-weight:bold;text-align:right">Rp. '.number_format($sum_harga).'</td>
             </tr>';
         }
 

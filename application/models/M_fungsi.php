@@ -269,6 +269,15 @@ class M_fungsi extends CI_Model {
 		$mpdf->Output();
 	}
 
+	function mPDFL($html){
+		$mpdf = new \Mpdf\Mpdf([
+			'default_font_size' => 9
+		]);
+		$mpdf->AddPage('L');
+		$mpdf->WriteHTML($html);
+		$mpdf->Output();
+	}
+
 	function _mpdf2($judul='',$isi='',$lMargin='',$rMargin='',$font=0,$orientasi='',$title='PL') {
         
         ini_set("memory_limit","512M");
