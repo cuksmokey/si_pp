@@ -7,9 +7,9 @@
                     <div class="card">
                         <div class="header">
                             <h2>
-                                COMING SOON
+                                TANGGAL JATUH TEMPO PEMBAYARAN
                             </h2>
-                            <!-- <ul class="header-dropdown m-r--5">
+                            <ul class="header-dropdown m-r--5">
                                 <li class="dropdown">
                                     <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                         <i class="material-icons">more_vert</i>
@@ -23,11 +23,13 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>No Invoice</th>
-                                        <th>No Surat Jalan</th>
-                                        <th>No PO</th>
-                                        <th>Nama Perusahaan</th>
-                                        <th>Total</th>
+                                        <th>Supplier</th>
+                                        <th>No Nota</th>
+                                        <th>Kode Barang</th>
+                                        <th>Nama Barang</th>
+                                        <th>QTY</th>
+                                        <th>Harga</th>
+                                        <th>Status</th>
                                         <th>Tanggal Tatuh Tempo</th>
                                     </tr>
                                 </thead>
@@ -35,7 +37,7 @@
                                     
                                 </tbody>
                             </table>
-                        </div> -->
+                        </div>
                     </div>
                 </div>
             </div>
@@ -70,7 +72,7 @@
                "language": {
                        "emptyTable":     "Tidak ada data.."
                    },
-               "order": [[ 6, "asc" ]]
+               "order": [[ 0, "asc" ]]
                });
 
      

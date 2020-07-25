@@ -953,8 +953,18 @@ class M_master extends CI_Model{
         return $this->db->query($query);
     }
 
-    function get_jatuh_tempo(){
-        $query = "SELECT a.*,(SELECT SUM(harga) FROM tr_invoice WHERE no_invoice = a.no_invoice)AS total FROM th_invoice a where status ='Closed' ORDER BY jto DESC,no_invoice asc";
+    function get_jatuh_tempo(){ //
+        $date_now = date("Y-m-d");
+        
+        // ambil tanggal bayar terakhir
+        $date_last = $this->db->query("SELECT tgl_bayar FROM m_barang_plus ORDER BY tgl_bayar DESC LIMIT 1")->row();
+
+        $query = "SELECT d.nama_supplier,c.no_nota,b.kode_barang,b.nama_barang,a.* FROM m_barang_plus a
+        INNER JOIN m_barang b ON a.id_m_barang=b.id
+        INNER JOIN m_nota c ON b.id_m_nota=c.id
+        INNER JOIN m_supplier d ON c.id_supplier=d.id
+        WHERE a.tgl_bayar BETWEEN '$date_now' AND '$date_last->tgl_bayar'
+        ORDER BY d.nama_supplier ASC,c.no_nota ASC,a.id_m_barang ASC,a.tgl_bayar DESC";
         return $this->db->query($query);
     }
 

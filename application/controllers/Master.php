@@ -1153,7 +1153,7 @@ class Master extends CI_Controller {
                 $query = $this->m_master->get_jatuh_tempo();
 
                 if ($query->num_rows() == 0) {
-                    $data[] =  ["","","","","","",""];
+                    $data[] =  ["","","","","","","","",""];
                 }else{
 
                     $i=1;
@@ -1161,25 +1161,25 @@ class Master extends CI_Controller {
                     foreach ($query->result() as $r) {
                         $row = array();
                         $row[] = $i;
-                        $row[] = $r->no_invoice;
-                        $row[] = $r->no_surat;
-                        $row[] = $r->no_po;
-                        $row[] = $r->nm_perusahaan;
-                        $row[] = number_format($r->total);
-                        // $row[] = $r->jto;
+                        $row[] = $r->nama_supplier;
+                        $row[] = $r->no_nota;
+                        $row[] = $r->kode_barang;
+                        $row[] = $r->nama_barang;
+                        $row[] = $r->qty_plus;
+                        $row[] = $r->harga;
+                        $row[] = $r->status;
 
                         $date_now = date('Y-m-d');
-
-                        if($date_now == $r->jto){
-                            $row[] = '<div style="color:#ff8c00;font-weight:bold">'.$r->jto.'</div>';
-                        }else if($date_now <= $r->jto){
-                            $row[] = '<div style="color:#0a0;font-weight:bold">'.$r->jto.'</div>';
-                        }else if($date_now >= $r->jto){
-                            $row[] = '<div style="color:#f00;font-weight:bold">'.$r->jto.'</div>';
+                        
+                        if($r->tgl_bayar == $date_now && $r->status == "Kredit"){
+                            $style = 'style="color:#ff8c00;font-weight:bold"';
+                        }else if($r->tgl_bayar >= $date_now && $r->status == "Kredit"){
+                            $style = 'style="color:#f00;font-weight:bold"';
+                        }else{
+                            $style = 'style="color:#0f0;font-weight:bold"';
                         }
 
-                        
-
+                        $row[] = '<div '.$style.'>'.$this->m_fungsi->tanggal_format_indonesia($r->tgl_bayar).'</div>';
                         
                         $data[] = $row;
                             
