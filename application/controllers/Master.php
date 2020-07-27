@@ -777,28 +777,26 @@ class Master extends CI_Controller {
 
                         $aksi ="";
 
-                        if ($this->session->userdata('level') == "SuperAdmin") {
+                        if ($this->session->userdata('level') == "Developer" || $this->session->userdata('level') == "SuperAdmin") {
                             $aksi = '   
                             <button type="button" onclick="tampil_edit('.$id.')" class="btn bg-orange btn-circle waves-effect waves-circle waves-float">
                                 <i class="material-icons">edit</i>
                             </button>
                           <button type="button" onclick="deleteData('.$id.','."".')" class="btn btn-danger btn-circle waves-effect waves-circle waves-float">
                                 <i class="material-icons">delete</i>
-                            </button>';
-
-                            $row[] = $aksi;
-                            $data[] = $row;
-                            
+                            </button>';    
                         }else{
                             $aksi .='-';
-                            $row[] = $aksi;
-                            $data[] = $row;
+                            
                         }
+
+                        $row[] = $aksi;
+                        $data[] = $row;
                         $i++;
                     }
                 }
                 $output = array("data" => $data);
-            }else if ($jenis == "Load_Barang") {
+            }else if ($jenis == "Load_Barang") { //
 
                 $query = $this->m_master->get_load_barang();
 
@@ -1133,7 +1131,7 @@ class Master extends CI_Controller {
                 $output = array("data" => $data);
 
 
-            }else if ($jenis == "Home") {
+            }else if ($jenis == "Home") { //
 
                 $query = $this->m_master->get_jatuh_tempo();
 
