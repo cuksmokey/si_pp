@@ -120,6 +120,7 @@
                         </a>
                     </li>
                     
+                    <?php if($this->session->userdata('level') <> "User") { ?>
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">book</i>
@@ -151,6 +152,7 @@
                             </li> -->
                         </ul>
                     </li>
+                    <?php } ?>
                     <!-- <li>
                         <a href="<?php echo base_url('Master/Packing_list') ?>">
                             <i class="material-icons">list</i>
@@ -181,6 +183,8 @@
                         </a>
                     </li>
                     <?php } ?>
+
+                    <?php if($this->session->userdata('level') <> "User") { ?>
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">equalizer</i>
@@ -201,6 +205,7 @@
                             <?php } ?>
                         </ul>
                     </li>
+                    <?php } ?>
                     
                 </ul>
             </div>
