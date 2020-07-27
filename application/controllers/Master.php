@@ -114,7 +114,7 @@ class Master extends CI_Controller {
                     echo json_encode(array('data' =>  TRUE));
                 }
             }else if ($jenis == "Perusahaan") {
-                $id      = $this->input->post('id');
+                $id      = $this->input->post('nm_perusahaan');
                 $cek = $this->m_master->get_data_one("m_perusahaan","nm_perusahaan",$id)->num_rows();
                 if ($cek > 0 ) {
                     echo json_encode(array('data' =>  FALSE));
@@ -1144,6 +1144,7 @@ class Master extends CI_Controller {
                     $i=1;
 
                     foreach ($query->result() as $r) {
+                        // $id = "'$r->id'";
                         $row = array();
                         $row[] = $i;
                         $row[] = $r->nama_supplier;
@@ -1318,7 +1319,6 @@ class Master extends CI_Controller {
     
     function update(){
             $jenis      = $_POST['jenis'];
-            $opsi      = $_POST['opsi'];
             
             if ($jenis == "Timbangan") {
                 $result= $this->m_master->update_timbangan();
@@ -1390,6 +1390,7 @@ class Master extends CI_Controller {
                     echo json_encode(array('data' =>  TRUE));
                 }
             }else if ($jenis == "Simpan_Barang") {
+                $opsi      = $_POST['opsi'];
                 $tgl_byr = $this->input->post('tgl_byr');
                 $tgl_byr_lama = $this->input->post('tgl_byr_lama');
                 $qty_plus = $this->input->post('qty_plus');
