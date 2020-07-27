@@ -30,7 +30,7 @@
                                         <th>QTY</th>
                                         <th>Harga</th>
                                         <th>Status</th>
-                                        <th>Tanggal Tatuh Tempo</th>
+                                        <th>Tgl Tatuh Tempo</th>
                                     </tr>
                                 </thead>
                                 <tbody>

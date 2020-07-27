@@ -663,6 +663,8 @@ class M_master extends CI_Model{
         $this->db->set('no_telp', $_POST['no_telp']);
         $this->db->set('npwp', $_POST['npwp']);
         $this->db->where('id', $_POST['id']);
+        $this->db->set('updated_at', date("Y-m-d h:i:s"));
+        $this->db->set('updated_by', $this->session->userdata('username'));
         $result = $this->db->update('m_perusahaan');
         return $result;
     }

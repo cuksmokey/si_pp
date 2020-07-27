@@ -697,17 +697,9 @@ class Master extends CI_Controller {
                             </button>';
 
                         if (($this->session->userdata('level') == "Developer" || $this->session->userdata('level') == "SuperAdmin" ) && $r->cek_inv == 0) {
-                            $aksi = ''.$superbtn.'
-                            <a type="button" onclick="confirmCekPo('.$id.','."".')" class="btn bg-green btn-circle waves-effect waves-circle waves-float">
-                                <i class="material-icons">check</i>
-                            </a>';
+                            $aksi = ''.$superbtn.'';
                         }else if ($r->cek_inv == 1) {
-                                $aksi = '<button type="button" onclick="view_detail('.$id.')" class="btn btn-info btn-circle waves-effect waves-circle waves-float">
-                                <i class="material-icons">remove_red_eye</i>
-                            </button>
-                                <a type="button" onclick="vvvv" class="btn bg-blue btn-circle waves-effect waves-circle waves-float">
-                                <i class="material-icons">check</i>
-                            </a>';
+                            $aksi = ''.$superbtn2.'';
                         }else{
                             $aksi = ''.$superbtn.'';
                         }    
@@ -727,7 +719,7 @@ class Master extends CI_Controller {
                 $query = $this->m_master->get_perusahaan();
 
                 if ($query->num_rows() == 0) {
-                    $data[] =  ["","","","","",""];
+                    $data[] =  ["","","","","","",""];
                 }else{
                     $i=1;
 
@@ -744,28 +736,21 @@ class Master extends CI_Controller {
 
                         $aksi ="";
 
-                        if ($this->session->userdata('level') == "SuperAdmin") {
+                        if ($this->session->userdata('level') == "Developer" || $this->session->userdata('level') == "SuperAdmin") {
                         
-
-                            $aksi = '   
-                            
+                            $aksi = '       
                             <button type="button" onclick="tampil_edit('.$id.')" class="btn bg-orange btn-circle waves-effect waves-circle waves-float">
                                 <i class="material-icons">edit</i>
                             </button>
-                          <button type="button" onclick="deleteData('.$id.','."".')" class="btn btn-danger btn-circle waves-effect waves-circle waves-float">
+                            <button type="button" onclick="deleteData('.$id.','."".')" class="btn btn-danger btn-circle waves-effect waves-circle waves-float">
                                 <i class="material-icons">delete</i>
                             </button>';
-
-                            $row[] = $aksi;
-                            $data[] = $row;
-                            
                         }else{
                             $aksi .='-';
-                            $row[] = $aksi;
-                            $data[] = $row;
                         }
-                            
-                        // $i++;
+
+                        $row[] = $aksi;
+                        $data[] = $row;
                     }
                 }
                 $output = array("data" => $data);
@@ -1166,15 +1151,15 @@ class Master extends CI_Controller {
                         $row[] = $r->kode_barang;
                         $row[] = $r->nama_barang;
                         $row[] = $r->qty_plus;
-                        $row[] = $r->harga;
+                        $row[] = 'Rp. '.number_format($r->harga);
                         $row[] = $r->status;
 
                         $date_now = date('Y-m-d');
                         
                         if($r->tgl_bayar == $date_now && $r->status == "Kredit"){
-                            $style = 'style="color:#ff8c00;font-weight:bold"';
-                        }else if($r->tgl_bayar >= $date_now && $r->status == "Kredit"){
                             $style = 'style="color:#f00;font-weight:bold"';
+                        }else if($r->tgl_bayar >= $date_now && $r->status == "Kredit"){
+                            $style = 'style="color:#ff8c00;font-weight:bold"';
                         }else{
                             $style = 'style="color:#0f0;font-weight:bold"';
                         }
