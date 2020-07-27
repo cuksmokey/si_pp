@@ -56,7 +56,7 @@
                                         <td>Pimpinan</td>
                                         <td>:</td>
                                         <td  colspan="2">
-                                            <input type="text" id="pimpinan" value="" class="form-control" style="width: 40%">
+                                            <input type="text" id="pimpinan" value="" class="form-control" style="width: 40%" autocomplete="off">
                                         </td>
                                     </tr>
                                     <tr>
@@ -64,7 +64,7 @@
                                         <td>:</td>
                                         <td colspan="2">
                                           <input type="hidden" id="id" value="" class="form-control" style="width: 40%">
-                                          <input type="text" id="nm_perusahaan" value="" class="form-control" style="width: 40%">
+                                          <input type="text" id="nm_perusahaan" value="" class="form-control" style="width: 40%" autocomplete="off">
                                           <input type="hidden" id="nm_perusahaan_lama" value="" class="form-control" style="width: 40%">
                                         </td>
                                     </tr>
@@ -72,21 +72,21 @@
                                         <td>Alamat</td>
                                         <td>:</td>
                                         <td colspan="2">
-                                          <textarea id="alamat" cols="30" rows="5" class="form-control"></textarea> 
+                                          <textarea id="alamat" cols="30" rows="5" class="form-control" autocomplete="off"></textarea> 
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>NPWP</td>
                                         <td>:</td>
                                         <td colspan="2">
-                                            <input type="text" class="form-control" placeholder=""  id="npwp"> 
+                                            <input type="text" class="form-control" placeholder="" id="npwp" autocomplete="off"> 
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>No Telepon</td>
                                         <td>:</td>
                                         <td colspan="2">
-                                            <input type="text" class="form-control" placeholder=""  id="no_telp"> 
+                                            <input type="text" class="form-control" placeholder="" id="no_telp" autocomplete="off"> 
                                         </td>
                                     </tr>
                                     <tr>
