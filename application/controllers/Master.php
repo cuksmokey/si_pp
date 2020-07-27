@@ -727,7 +727,8 @@ class Master extends CI_Controller {
                         $id = "'$r->id'";
 
                         $row = array();
-                        $row[] = $r->id;
+                        // $row[] = $r->id;
+                        $row[] = $i;
                         $row[] = $r->pimpinan;
                         $row[] = $r->nm_perusahaan;
                         $row[] = $r->alamat;
@@ -751,6 +752,7 @@ class Master extends CI_Controller {
 
                         $row[] = $aksi;
                         $data[] = $row;
+                        $i++;
                     }
                 }
                 $output = array("data" => $data);
