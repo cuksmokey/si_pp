@@ -701,7 +701,7 @@ class Master extends CI_Controller {
                         }else if ($r->cek_inv == 1) {
                             $aksi = ''.$superbtn2.'';
                         }else{
-                            $aksi = ''.$superbtn.'';
+                            $aksi = ''.$superbtn2.'';
                         }    
                             
                         $row[] = $aksi;

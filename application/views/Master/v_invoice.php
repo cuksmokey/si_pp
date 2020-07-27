@@ -17,10 +17,13 @@
                             <div class="box-data">
                               <table width="100%">
                                 <tr>
-                                  <td align="left"> <button type="button" class="btn-add btn btn-default btn-sm waves-effect">
+                                  <td align="left">
+                                  <?php if ($this->session->userdata('level') <> "User") { ?>
+                                    <button type="button" class="btn-add btn btn-default btn-sm waves-effect">
                                         <i class="material-icons">library_add</i>
                                         <span>New</span>
                                     </button>
+                                  <?php } ?>
                                   </td>
                                 </tr>
                               </table>
