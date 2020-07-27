@@ -16,7 +16,7 @@
 <div class="box-data">
 <button style="background:#ddd;padding:8px 10px;color:#000;border:0" id="btn_barang">BARANG</button>
 <button style="background:#ddd;padding:8px 10px;color:#000;border:0" id="btn_nota">TOTAL PEMBELIAN</button>
-<button style="background:#ddd;padding:8px 10px;color:#000;border:0" id="btn_rekap">REKAP HARIAN BULANAN</button>
+<!-- <button style="background:#ddd;padding:8px 10px;color:#000;border:0" id="btn_rekap">REKAP HARIAN BULANAN</button> -->
 <br><br>
 
 <!-- BARANG -->
