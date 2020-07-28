@@ -765,7 +765,7 @@
       // $("#nama").val(data[0].text);
       $("#id_kepada").val(data[0].id);
       $("#pimpinan").val(data[0].pimpinan);
-      $("#nama_perusahaan").val(data[0].text);
+      $("#nama_perusahaan").val(data[0].nama_perusahaan);
       $("#npwp").val(data[0].npwp);
       $("textarea#alamat").val(data[0].alamat);
       $("#no_telp").val(data[0].no_telp);
