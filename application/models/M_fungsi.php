@@ -1,4 +1,8 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php
+
+use setasign\Fpdi\PdfReader\Page;
+
+if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
  * Fungsi Model
@@ -262,9 +266,10 @@ class M_fungsi extends CI_Model {
 	}
 	
 	function mPDF($html){
-		$mpdf = new \Mpdf\Mpdf([
-			'default_font_size' => 9
-		]);
+		$mpdf = new \Mpdf\Mpdf;
+		// $mpdf = new \Mpdf\Mpdf([
+		// 	'default_font_size' => 11
+		// ]);		
 		$mpdf->WriteHTML($html);
 		$mpdf->Output();
 	}
