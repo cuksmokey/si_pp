@@ -107,7 +107,7 @@
                                         <td>
                                           <table style="width:100%" border="0">
                                             <tr>
-                                              <td width="30%"><input type="text" id="id1" class="angka form-control" maxlength="5" autocomplete="off"></td>
+                                              <td width="30%"><input type="text" id="id1" class="form-control" maxlength="5" autocomplete="off"></td>
                                               <td style="text-align: center;" width="1%">/</td>
                                               <td width="64%"><input type="text" id="id2" class="form-control" maxlength="15" autocomplete="off"></td>
                                             </tr>
@@ -250,6 +250,20 @@
       });
 
      
+    });
+
+    $("#id1").on({
+      keydown: function(e) {
+        if (e.which === 32)
+          return false;
+      },
+      keyup: function(){
+        this.value = this.value.toUpperCase();
+      },
+      change: function() {
+        this.value = this.value.replace(/\s/g, "");
+        
+      }
     });
 
     $("#id2").on({
