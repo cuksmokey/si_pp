@@ -125,7 +125,7 @@
                                             <input type="hidden" value="" id="id_m_barang_plus">
                                             <input type="hidden" value="" id="supplier_lama">
                                         </td>
-                                        <td style="padding:5px"><b>NOTE:</b> Simbol Nama Barang yang diperbolehkan hanya: <b>-</b>, dan <b>_</b></td>
+                                        <td style="padding:5px"><b>NOTE:</b> Simbol Nama Barang yang diperbolehkan hanya: <b>-</b> , <b>_</b> ,dan <b>titik</b>(<b>.</b>)</td>
                                     </tr>
                                     <tr>
                                         <td>Merek</td>
