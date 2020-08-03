@@ -159,6 +159,9 @@
                                     </button>
                                   </td>
                                 </tr>
+                                <tr>
+                                  <td style="padding:10px 5px 0 0"><b>NOTE:</b> Jika <b>List Barang</b> Tidak Muncul / <b>Aksi</b> Tidak Berfungsi, Cek/Edit Kembali <b>Kode Barang</b> dan <b>Nama Barang</b> Sudah Tidak Ada Simbol yang tidak diperbolehkan!</td>
+                                </tr>
                               </table>
                               <br>
                               <table class="table" style="background-color: grey; color:white">

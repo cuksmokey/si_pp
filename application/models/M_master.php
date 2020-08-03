@@ -684,6 +684,7 @@ class M_master extends CI_Model{
     function update_load_barang(){
         
         $this->db->set('tgl', $_POST['tgl']);
+        $this->db->set('kode_barang', $_POST['kode_barang']);
         $this->db->set('nama_barang', $_POST['nama_barang']);
         $this->db->set('merek', $_POST['merek']);
         $this->db->set('spesifikasi', $_POST['spesifikasi']);

@@ -1391,13 +1391,20 @@ class Master extends CI_Controller {
                 }
             }else if ($jenis == "Simpan_Barang") {
                 $opsi      = $_POST['opsi'];
+                $kode_barang = $this->input->post('kode_barang');
+                $cek = $this->m_master->get_data_one("m_barang","kode_barang",$kode_barang)->num_rows();
+
                 $tgl_byr = $this->input->post('tgl_byr');
                 $tgl_byr_lama = $this->input->post('tgl_byr_lama');
                 $qty_plus = $this->input->post('qty_plus');
 
                 if($opsi == "edit"){
-                    $this->m_master->update_load_barang();
-                    echo json_encode(array('data' =>  TRUE,'msg' => 'Berhasil'));
+                    if($cek > 0){
+                        echo json_encode(array('data' =>  FALSE,'msg' => 'Kode Barang Sudah Ada!'));
+                    }else{
+                        $this->m_master->update_load_barang();
+                        echo json_encode(array('data' =>  TRUE,'msg' => 'Berhasil'));
+                    }
                 }else if($opsi == "add_qty"){
                     if($qty_plus == 0) {
                         echo json_encode(array('data' =>  FALSE,'msg' => 'Tambah QTY Tidak Boleh Kosong'));
@@ -1547,7 +1554,6 @@ class Master extends CI_Controller {
     }
 
     function add_to_cart_pl_barang(){
-
         $data = array(
             // 'id' => str_replace("/", "_", $_POST['kode_barang']), 
             'id' => $_POST['id_barang'], 

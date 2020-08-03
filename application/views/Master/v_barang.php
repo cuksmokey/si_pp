@@ -104,7 +104,7 @@
                                     <tr>
                                         <td>Kode Barang</td>
                                         <td>:</td>
-                                        <td>
+                                        <td style="vertical-align: top;">
                                           <table style="width:100%" border="0">
                                             <tr>
                                               <td width="30%"><input type="text" id="id1" class="form-control" maxlength="5" autocomplete="off"></td>
@@ -113,6 +113,7 @@
                                             </tr>
                                           </table>
                                         </td>
+                                        <td style="padding:5px"><b>NOTE:</b> Penulisan <b>Kode Barang</b> dan <b>Nama Barang</b> Sebisa Mungkin Tanpa Menggunakan Simbol!<br>Simbol Kode Barang yang diperbolehkan hanya: <b>/</b>, <b>-</b>, dan <b>_</b></td>
                                     </tr>
                                     <tr>
                                         <td>Nama Barang</td>
@@ -123,6 +124,7 @@
                                             <input type="hidden" value="" id="id_m_barang_plus">
                                             <input type="hidden" value="" id="supplier_lama">
                                         </td>
+                                        <td style="padding:5px"><b>NOTE:</b> Simbol Nama Barang yang diperbolehkan hanya: <b>-</b>, dan <b>_</b></td>
                                     </tr>
                                     <tr>
                                         <td>Merek</td>
@@ -342,7 +344,7 @@
       kode_barang = $("#id1").val()+"/"+$("#id2").val();
       kb1 = $("#id1").val();
       kb2 = $("#id2").val();
-      kode_barang_lama = $("#kode_barang_lama").val();
+      // kode_barang_lama = $("#kode_barang_lama").val();
       nama_barang = $("#nama_barang").val();
       merek = $("#merek").val();
       spesifikasi = $("#spesifikasi").val();
@@ -390,7 +392,7 @@
             tgl_lama : tgl_lama,
             supplier : supplier,
             kode_barang : kode_barang,
-            kode_barang_lama : kode_barang_lama,
+            // kode_barang_lama : kode_barang_lama,
             nama_barang : nama_barang,
             merek : merek,
             spesifikasi : spesifikasi,
@@ -452,8 +454,8 @@
 
           $("#supplier").val("").prop("disabled",true).attr('style','background:#ddd;');
 
-          $("#id1").val(a[0]).prop("disabled",true).attr('style','background:#ddd;');
-          $("#id2").val(a[1]).prop("disabled",true).attr('style','background:#ddd;');
+          $("#id1").val(a[0]).prop("disabled",false).attr('style','background:#fff;');
+          $("#id2").val(a[1]).prop("disabled",false).attr('style','background:#fff;');
 
           $("#id").val(json.id);
           $("#id_m_barang_plus").val(json.id_m_barang_plus);
@@ -589,7 +591,7 @@
       $("#tgl_lama").val("");
       $("#id1").val("").prop("disabled",false).attr('style','background:#fff;');
       $("#id2").val("").prop("disabled",false).attr('style','background:#fff;');
-      $("#kode_barang_lama").val("");
+      // $("#kode_barang_lama").val("");
       $("#nama_barang").val("").prop("disabled",false).attr('style','background:#fff;');
       $("#merek").val("").prop("disabled",false).attr('style','background:#fff;');
       $("#spesifikasi").val("").prop("disabled",false).attr('style','background:#fff;');
