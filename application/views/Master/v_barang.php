@@ -121,6 +121,7 @@
                                         <td>
                                             <input type="text" id="nama_barang" autocomplete="off" class="form-control">
                                             <input type="hidden" value="" id="id">
+                                            <input type="hidden" value="" id="kode_barang_lama">
                                             <input type="hidden" value="" id="id_m_barang_plus">
                                             <input type="hidden" value="" id="supplier_lama">
                                         </td>
@@ -344,7 +345,7 @@
       kode_barang = $("#id1").val()+"/"+$("#id2").val();
       kb1 = $("#id1").val();
       kb2 = $("#id2").val();
-      // kode_barang_lama = $("#kode_barang_lama").val();
+      kode_barang_lama = $("#kode_barang_lama").val();
       nama_barang = $("#nama_barang").val();
       merek = $("#merek").val();
       spesifikasi = $("#spesifikasi").val();
@@ -392,7 +393,7 @@
             tgl_lama : tgl_lama,
             supplier : supplier,
             kode_barang : kode_barang,
-            // kode_barang_lama : kode_barang_lama,
+            kode_barang_lama : kode_barang_lama,
             nama_barang : nama_barang,
             merek : merek,
             spesifikasi : spesifikasi,
@@ -462,6 +463,7 @@
 
           $("#tgl").val(json.tgl).prop("disabled",false).attr('style','background:#fff;');
           $("#tgl_lama").val(json.tgl);
+          $("#kode_barang_lama").val(json.kode_barang);
           $("#id_supplier").val(json.id_m_nota);
           $("#supplier_note").val(json.nama_supplier);
           $("#no_nota").val(json.no_nota);
@@ -591,7 +593,7 @@
       $("#tgl_lama").val("");
       $("#id1").val("").prop("disabled",false).attr('style','background:#fff;');
       $("#id2").val("").prop("disabled",false).attr('style','background:#fff;');
-      // $("#kode_barang_lama").val("");
+      $("#kode_barang_lama").val("");
       $("#nama_barang").val("").prop("disabled",false).attr('style','background:#fff;');
       $("#merek").val("").prop("disabled",false).attr('style','background:#fff;');
       $("#spesifikasi").val("").prop("disabled",false).attr('style','background:#fff;');

@@ -1392,6 +1392,7 @@ class Master extends CI_Controller {
             }else if ($jenis == "Simpan_Barang") {
                 $opsi      = $_POST['opsi'];
                 $kode_barang = $this->input->post('kode_barang');
+                $kd_lama = $this->input->post('kode_barang_lama');
                 $cek = $this->m_master->get_data_one("m_barang","kode_barang",$kode_barang)->num_rows();
 
                 $tgl_byr = $this->input->post('tgl_byr');
@@ -1399,7 +1400,7 @@ class Master extends CI_Controller {
                 $qty_plus = $this->input->post('qty_plus');
 
                 if($opsi == "edit"){
-                    if($cek > 0){
+                    if($cek > 0 && $kode_barang <> $kd_lama){
                         echo json_encode(array('data' =>  FALSE,'msg' => 'Kode Barang Sudah Ada!'));
                     }else{
                         $this->m_master->update_load_barang();
