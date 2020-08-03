@@ -340,6 +340,8 @@
       no_nota = $("#no_nota").val();
 
       kode_barang = $("#id1").val()+"/"+$("#id2").val();
+      kb1 = $("#id1").val();
+      kb2 = $("#id2").val();
       kode_barang_lama = $("#kode_barang_lama").val();
       nama_barang = $("#nama_barang").val();
       merek = $("#merek").val();
@@ -370,7 +372,7 @@
       qty = Number.parseInt(k_qty) + Number.parseInt(k_plus_qty);
       qty_plus = Number.parseInt(k_plus_qty);
 
-      if (tgl == "" || kode_barang == "" || nama_barang == ""|| merek == "" || spesifikasi == "" || supplier_note == "" || i_qty == "" || qty_ket == "" || qty_ket == 0 || harga == "" || harga == 0 || no_nota == "" || status_plus == "" || tgl_byr == "")  {
+      if (tgl == "" || kode_barang == "" || kb1 == "" || kb2 == "" || nama_barang == ""|| merek == "" || spesifikasi == "" || supplier_note == "" || i_qty == "" || qty_ket == "" || qty_ket == 0 || harga == "" || harga == 0 || no_nota == "" || status_plus == "" || tgl_byr == "")  {
         showNotification("alert-info", "Harap Lengkapi Form", "bottom", "center", "", ""); return;
       }
 

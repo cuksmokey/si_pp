@@ -1549,7 +1549,8 @@ class Master extends CI_Controller {
     function add_to_cart_pl_barang(){
 
         $data = array(
-            'id' => str_replace("/", "_", $_POST['kode_barang']), 
+            // 'id' => str_replace("/", "_", $_POST['kode_barang']), 
+            'id' => $_POST['id_barang'], 
             'name' => $_POST['nama_barang'],
             'price' => 0, 
             'qty' => $_POST['i_qty'],
