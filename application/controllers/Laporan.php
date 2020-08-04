@@ -767,8 +767,7 @@ class Laporan extends CI_Controller {
             $html .= '';
             $nm_ttd = 'Pembayaran mohon ditransfer ke BCA
             <br/>Rekening : 079.0302.231
-            <br/>Atas Nama : Niken Pangastuti
-            <br/>Cabang Pasar Legi';
+            <br/>Atas Nama : Niken Pangastuti - Cabang Pasar Legi';
 
             $html .= '<tr>
             <td style="border:0;padding:2px" colspan="2"></td>
@@ -776,13 +775,13 @@ class Laporan extends CI_Controller {
             </tr>';
 
             $html .= '<tr>
-            <td style="border:0;padding:0" colspan="2">'.$nm_ttd.'</td>
+            <td style="border:0;padding:0" colspan="3">'.$nm_ttd.'</td>
             <td style="border:0;padding:5px" colspan="4"></td>
             </tr>';
 
             $html .= '<tr>
-            <td style="border:0;padding:5px 0 0;text-align:center" colspan="2">Penerima</td>
-            <td style="border:0;padding:5px 0 0;text-align:center" colspan="4">Hormat Kami,</td>
+            <td style="border:0;padding:9px 0 0;text-align:center" colspan="2">Penerima</td>
+            <td style="border:0;padding:9px 0 0;text-align:center" colspan="4">Hormat Kami,</td>
             </tr>
             <tr>
             <td style="border:0;padding:40px 0" colspan="2"></td>
