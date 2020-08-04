@@ -269,7 +269,8 @@ class M_fungsi extends CI_Model {
 		$mpdf = new \Mpdf\Mpdf;
 		// $mpdf = new \Mpdf\Mpdf([
 		// 	'default_font_size' => 11
-		// ]);		
+		// ]);
+		ini_set("memory_limit","-1");
 		$mpdf->WriteHTML($html);
 		$mpdf->Output();
 	}
@@ -278,6 +279,7 @@ class M_fungsi extends CI_Model {
 		$mpdf = new \Mpdf\Mpdf([
 			'default_font_size' => 9
 		]);
+		ini_set("memory_limit","-1");
 		$mpdf->AddPage('L');
 		$mpdf->WriteHTML($html);
 		$mpdf->Output();
