@@ -620,7 +620,7 @@ class Laporan extends CI_Controller {
         if($pt == "st"){
             $npwp = '';
             $kop_nota = 'N O T A
-            <div style="font-weight:normal;font-size:12px !important">Klaten, '.$this->m_fungsi->tanggal_format_indonesia(date('Y-m-d')).'<br/>
+            <br><div style="font-weight:normal;font-size:12px !important">Klaten, '.$this->m_fungsi->tanggal_format_indonesia(date('Y-m-d')).'<br/>
             '.$sql_kop->nm_perusahaan.'<br/>
             '.$sql_kop->alamat.'
             </div>';
