@@ -639,10 +639,15 @@ class Master extends CI_Controller {
 
                         $superbtn = '<button type="button" onclick="view_detail('.$id.')" class="btn btn-info btn-circle waves-effect waves-circle waves-float">
                                 <i class="material-icons">remove_red_eye</i>
-                            </button> 
-                        <button type="button" onclick="deleteData('.$id.','."".')" class="btn btn-danger btn-circle waves-effect waves-circle waves-float">
-                                <i class="material-icons">delete</i>
                             </button>';
+                            
+                        if($r->data_inv == 1){
+                            $superbtn .= '';
+                        }else{
+                            $superbtn .= '<button type="button" onclick="deleteData('.$id.','."".')" class="btn btn-danger btn-circle waves-effect waves-circle waves-float">
+                            <i class="material-icons">delete</i>
+                            </button>';
+                        }
                             
                         $superbtn2 = '<button type="button" onclick="view_detail('.$id.')" class="btn btn-info btn-circle waves-effect waves-circle waves-float">
                                 <i class="material-icons">remove_red_eye</i>
