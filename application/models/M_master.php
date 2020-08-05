@@ -340,6 +340,7 @@ class M_master extends CI_Model{
         $data = array(
             'id_pl' => $_POST['id_pl'],
             'no_nota' => $_POST['no_nota'],
+            'no_faktur' => $_POST['no_faktur'],
             'tgl_jt' => $_POST['tgl_jt'],
             'created_by' => $this->session->userdata('username')
         );
@@ -856,7 +857,7 @@ class M_master extends CI_Model{
     }
 
     function list_p_nota($s=""){
-        $users = $this->db->query("SELECT CONCAT(no_nota, ' | ', c.nm_perusahaan) AS ket,a.tgl_jt AS jt_nota,c.nm_perusahaan,b.no_po,a.* FROM m_invoice a
+        $users = $this->db->query("SELECT CONCAT(no_nota, ' | ', c.nm_perusahaan) AS ket,a.tgl_jt AS jt_nota,c.nm_perusahaan,a.* FROM m_invoice a
         INNER JOIN m_pl_price_list b ON a.id_pl=b.id
         INNER JOIN m_perusahaan c ON b.id_m_perusahaan=c.id
         WHERE (no_nota LIKE '%$s%' OR b.no_po LIKE '%$s%' OR c.nm_perusahaan LIKE '%$s%')
@@ -871,7 +872,7 @@ class M_master extends CI_Model{
                "jt_nota"=>$user['jt_nota'],
                "nm_perusahaan"=>$user['nm_perusahaan'],
                "no_nota"=>$user['no_nota'],
-               "no_po"=>$user['no_po']
+               "no_po"=>$user['no_faktur']
            );
         }
         return $data;

@@ -684,7 +684,7 @@ class Master extends CI_Controller {
                         $row[] = $i;
                         $row[] = $this->m_fungsi->tanggal_format_indonesia($r->tgl_jt);
                         $row[] = $r->no_nota;
-                        $row[] = $r->no_po;
+                        $row[] = $r->no_faktur;
                         $row[] = '
                         <a type="button" class="btn btn-default btn-circle waves-effect waves-circle waves-float">'.$r->jml_timbang.'</a>' ;
 

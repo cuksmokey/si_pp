@@ -134,7 +134,7 @@
     </td>
   </tr>
   <tr>
-    <td>No PO</td>
+    <td>No Faktur</td>
     <td>:</td>
     <td colspan="3">
       <input type="text" id="no_po" autocomplete="off" class="form-control" disabled="true" style="background:#ddd">

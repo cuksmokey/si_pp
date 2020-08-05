@@ -448,13 +448,15 @@ class Laporan extends CI_Controller {
         if($pt == "sma"){
             // $jpg = "http://localhost/si_pp/assets/images/logo_sma.jpg";
             $jpg = "http://sinarmuktiabadi.com/assets/images/logo_sma.jpg";
-            $top = 'left';
-            $px = '70px 0 35px';
+            $top = 'top';
+            $px = '0 0 70px';
+            $dd = '5px 0';
         }else if($pt == "st"){
             // $jpg = "http://localhost/si_pp/assets/images/logo_st.jpg";
             $jpg = "http://sinarmuktiabadi.com/assets/images/logo_st.jpg";
-            $top = 'left';
-            $px = '83px 0 35px';
+            $top = 'top';
+            $px = '0 0 80px';
+            $dd = '0';
         }
         
         $html .= '<table cellspacing="0" style="font-size:11px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;font-family:Arial !important">
@@ -469,7 +471,7 @@ class Laporan extends CI_Controller {
                 <td style="border:0;padding:18px 0 0;font-weight:bold;text-align:center;font-size:14px !important">SURAT JALAN</td>
             </tr>
             <tr>
-                <td style="border:0;padding:5px 0" colspan="4"></td>
+                <td style="border:0;padding:'.$dd.'" colspan="4"></td>
             </tr>
             <tr>
                 <td style="padding:1px 0">No Surat Jalan</td>
@@ -560,6 +562,12 @@ class Laporan extends CI_Controller {
         $html .= '</table>';
 
         // TANDA TANGAN
+        if($pt == "sma"){
+            $atn = 'Andreas Purwanto';
+        }else if($pt == "st"){
+            $atn = 'Novan Krisna';
+        }
+
         $html .= '<table cellspacing="0" style="font-size:11px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;text-align:center;font-family:Arial !important">
             <tr>
                 <th style="border:0;width:50%;padding:8px 0"></th>
@@ -574,7 +582,7 @@ class Laporan extends CI_Controller {
                 <td style="border:0;padding:40px 0"></td>
             </tr>
             <tr>
-                <td style="font-weight:bold">Andreas Purwanto</td>
+                <td style="font-weight:bold">'.$atn.'</td>
                 <td>____________________</td>
             </tr>
         </table>';
@@ -606,13 +614,13 @@ class Laporan extends CI_Controller {
     if($pt == "sma"){
         // $jpg = "http://localhost/si_pp/assets/images/logo_sma.jpg";
         $jpg = "http://sinarmuktiabadi.com/assets/images/logo_sma.jpg";
-        $top = 'left';
-        $px = '70px 0 35px';
+        $top = 'top';
+        $px = '0 0 70px';
     }else if($pt == "st"){
         // $jpg = "http://localhost/si_pp/assets/images/logo_st.jpg";
         $jpg = "http://sinarmuktiabadi.com/assets/images/logo_st.jpg";
-        $top = 'left';
-        $px = '83px 0 35px';
+        $top = 'top';
+        $px = '0 0 80px';
     }
 
         # # # # # # # # # # # # # KOP # # # # # # # # # # # # #
@@ -624,9 +632,11 @@ class Laporan extends CI_Controller {
             '.$sql_kop->nm_perusahaan.'<br/>
             '.$sql_kop->alamat.'
             </div>';
+            $dd = '0';
         }else if($pt == "sma"){
             $npwp = 'NPWP :'.$sql_kop->npwp;
             $kop_nota = 'NOTA PENJUALAN';
+            $dd = '0 0 0 65px';
         }
 
         $html .= '<table cellspacing="0" style="font-size:11px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;font-family:Arial !important">
@@ -638,20 +648,20 @@ class Laporan extends CI_Controller {
         </tr>
         <tr>
         <td style="border:0;background:url('.$jpg.')'.$top.' center no-repeat;padding:'.$px.'" colspan="3"></td>
-        <td style="border:0;padding:0 5px 5px 15px;font-weight:bold;font-size:14px !important">'.$kop_nota.'</td>
+        <td style="border:0;padding:'.$dd.';font-weight:bold;font-size:14px !important">'.$kop_nota.'</td>
         </tr>';
 
         if($pt == "st"){
             $html .='';
             $html .='<tr>
-            <td style="border:0;padding:0">No. Nota</td>
-            <td style="border:0;padding:0">:</td>
-            <td style="border:0;padding:0 5px 0 0">'.$sql_kop->no_nota.'</td>
-            <td style="border:0;padding:0">No. PO: '.$sql_kop->no_po.'</td>
+            <td style="border:0;padding:0 0 1px">No. Nota</td>
+            <td style="border:0;padding:0 0 1px">:</td>
+            <td style="border:0;padding:0 0 1px 5px 0 0">'.$sql_kop->no_nota.'</td>
+            <td style="border:0;padding:0 0 1px">No. PO: '.$sql_kop->no_po.'</td>
             </tr>';
         }else if($pt == "sma"){
             $html .='<tr>
-            <td style="padding:0" colspan="3">Kepoh RT 003 RW 007 Bowan, Delanggu, Klaten</td>
+            <td style="padding:2px 0 0" colspan="3">Kepoh RT 003 RW 007 Bowan, Delanggu, Klaten</td>
             <td></td>
             </tr>';
             $html .='<tr>
@@ -672,12 +682,12 @@ class Laporan extends CI_Controller {
             <tr>
             <td style="padding:1px 0">Alamat</td>
             <td style="padding:1px 0">:</td>
-            <td style="padding:1px 200px  3px 0" colspan="2">'.$sql_kop->alamat.'</td>
+            <td style="padding:1px 0" colspan="2">'.$sql_kop->alamat.'</td>
             </tr>
             <tr>
             <td style="padding:1px 0">No. PO</td>
             <td style="padding:1px 0">:</td>
-            <td style="padding:1px 200px  3px 0">'.$sql_kop->no_po.'</td>
+            <td style="padding:1px 200px 0 0">'.$sql_kop->no_po.'</td>
             <td></td>
             </tr>';
         }   
@@ -688,12 +698,12 @@ class Laporan extends CI_Controller {
 
         $html .= '<table cellspacing="0" style="font-size:11px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;font-family:Arial !important">
         <tr>
-        <th style="border:0;width:5%;padding:3px 0"></th>
-        <th style="border:0;width:42%;padding:3px 0"></th>
-        <th style="border:0;width:8%;padding:3px 0"></th>
-        <th style="border:0;width:8%;padding:3px 0"></th>
-        <th style="border:0;width:17%;padding:3px 0"></th>
-        <th style="border:0;width:20%;padding:3px 0"></th>
+        <th style="border:0;width:5%;padding:0"></th>
+        <th style="border:0;width:42%;padding:0"></th>
+        <th style="border:0;width:8%;padding:0"></th>
+        <th style="border:0;width:8%;padding:0"></th>
+        <th style="border:0;width:17%;padding:0"></th>
+        <th style="border:0;width:20%;padding:0"></th>
         </tr>
         <tr>
         <td style="border:1px solid #000;padding:5px 3px;text-align:center;font-weight:bold">NO</td>
@@ -793,7 +803,7 @@ class Laporan extends CI_Controller {
             </tr>
             ';
         }else if($pt == "sma") {
-            $no_faktur = 'No Faktur Pajak<br/>010.003.20.45831433';
+            $no_faktur = 'No Faktur Pajak<br/>'.$sql_kop->no_faktur.'';
             $nm_ttd = 'Andreas Purwanto<br/>Bank : BRI KCP DELANGGU-KLATEN A/C : 2055 - 01 - 000246 - 30 - 0 A/N : SINAR MUKTI ABADI';
 
             $html .= '<tr>

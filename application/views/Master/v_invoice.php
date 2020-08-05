@@ -36,7 +36,7 @@
                                             <th>Tanggal Jatuh Tempo</th>
                                             <!-- <th>No Invoice</th> -->
                                             <th>No Nota</th>
-                                            <th>No PO</th>
+                                            <th>No Faktur</th>
                                             <th width="5%">Jumlah Barang</th>
                                             <th width="20%">Aksi</th>
                                         </tr>
@@ -62,6 +62,14 @@
                                         <td>:</td>
                                         <td>
                                             <input type="text" class="form-control" id="no_nota" autocomplete="off">
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>No. Faktur</td>
+                                        <td>:</td>
+                                        <td>
+                                            <input type="text" class="form-control" id="no_faktur" autocomplete="off">
                                         </td>
                                         <td></td>
                                     </tr>
@@ -318,9 +326,9 @@
                         <td align="" width="1%">:</td>
                         <td align="left" width="10%"><div id="txt-alamat"></div></td>
                         <td align="center" width="10%"></td>
-                        <td align="left" width="8%"></td>
-                        <td align="" width="1%"></td>
-                        <td align="left" width="20%"></td>
+                        <td align="left" width="8%">No. Faktur</td>
+                        <td align="" width="1%">:</td>
+                        <td align="left" width="20%"><div id="txt-faktur"></div></td>
                     </tr>
                     <tr>
                         <td align="left" width="8%">No Po</td>
@@ -426,6 +434,7 @@
 
       tgl_jt = $("#tgl_jt").val();
       no_nota = $("#no_nota").val();
+      no_faktur = $("#no_faktur").val();
 
       tgl = $("#tgl").val();
       no_surat = $("#no_surat").val();
@@ -440,7 +449,7 @@
 
       cart = $('#detail_cart').html();
       
-      if (cart == ""  || tgl_jt == "" || tgl == "" || no_surat == "" || no_so == "" || no_po == "" || nama_perusahaan == "" || pimpinan == "" || npwp == "" || alamat == "" || no_telp == "")  {
+      if (cart == ""  || tgl_jt == "" || tgl == "" || no_nota == "" || no_faktur == "" || no_surat == "" || no_so == "" || no_po == "" || nama_perusahaan == "" || pimpinan == "" || npwp == "" || alamat == "" || no_telp == "")  {
         showNotification("alert-info", "Harap Lengkapi Form", "bottom", "center", "", ""); return;
       }
 
@@ -454,6 +463,7 @@
           data     : ({
             id_pl:id_pl,
             no_nota:no_nota,
+            no_faktur:no_faktur,
             tgl_jt:tgl_jt,
             jenis : "Save_invoice"}),
             dataType : "json",
@@ -484,6 +494,7 @@
               json = JSON.parse(data);
 
               $("#txt-no_nota").html(json.header.no_nota);
+              $("#txt-faktur").html(json.header.no_faktur);
               $("#txt-no_po").html(json.pl.no_po);
               $("#txt-tgl_jt").html(json.header.tgl_jt);
               $("#txt-kepada").html(json.pt.nm_perusahaan);
@@ -591,6 +602,7 @@
       $("#no_so").val("");
       $("#no_po").val("");
       $("#no_nota").val("");
+      $("#no_faktur").val("");
 
       $("#nama_perusahaan").val("");
       $("#pimpinan").val("");
