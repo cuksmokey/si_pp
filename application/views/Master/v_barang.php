@@ -113,7 +113,11 @@
                                             </tr>
                                           </table>
                                         </td>
-                                        <td style="padding:5px"><b>NOTE:</b> Penulisan <b>Kode Barang</b> dan <b>Nama Barang</b> Sebisa Mungkin Tanpa Menggunakan Simbol!<br>Simbol Kode Barang yang diperbolehkan hanya: <b>/</b>, <b>-</b>, dan <b>_</b></td>
+                                    </tr>
+                                    <tr>
+                                      <td></td>
+                                      <td></td>
+                                      <td style="padding:0 0 5px;vertical-align:top" colspan="2"><b>NOTE:</b> Penulisan <b>Kode Barang</b> dan <b>Nama Barang</b> Sebisa Mungkin Tanpa Menggunakan Simbol!<br>Simbol Kode Barang yang diperbolehkan hanya: <b>/</b>, <b>-</b>, dan <b>_</b></td>
                                     </tr>
                                     <tr>
                                         <td>Nama Barang</td>
@@ -125,7 +129,12 @@
                                             <input type="hidden" value="" id="id_m_barang_plus">
                                             <input type="hidden" value="" id="supplier_lama">
                                         </td>
-                                        <td style="padding:5px"><b>NOTE:</b> Simbol Nama Barang yang diperbolehkan hanya: <b>-</b> , <b>_</b> ,dan <b>titik</b>(<b>.</b>)</td>
+                                        <!-- <td style="padding:5px"><b>NOTE:</b> Simbol Nama Barang yang diperbolehkan hanya: <b>-</b> , <b>_</b> ,dan <b>titik</b>(<b>.</b>)</td> -->
+                                    </tr>
+                                    <tr>
+                                      <td></td>
+                                      <td></td>
+                                      <td style="padding:0 0 5px;vertical-align:top" colspan="2"><b>NOTE:</b> Simbol <b>Nama Barang</b> yang diperbolehkan hanya: <b>-</b> , <b>_</b> ,dan <b>titik</b>(<b>.</b>)</td>
                                     </tr>
                                     <tr>
                                         <td>Merek</td>
@@ -179,6 +188,8 @@
                                             <option value="Liter">Liter</option>
                                             <option value="KG">KG</option>
                                             <option value="Unit">Unit</option>
+                                            <option value="Set">Set</option>
+                                            <option value="PSG">PSG</option>
                                           </select>
                                         </td>
                                     </tr>
