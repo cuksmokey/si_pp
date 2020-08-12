@@ -833,11 +833,17 @@ class Laporan extends CI_Controller {
         $tgl1 = $_GET['tgl1'];
         $tgl2 = $_GET['tgl2'];
         $pt = $_GET['pt'];
+        $jenis = $_GET['jenis'];
         $ctk = $_GET['ctk'];
 
         $html = '';
         
-        //$this->m_fungsi->tanggal_format_indonesia(date('Y-m-d'))
+        if($jenis == "sj"){
+            $kkop = "SURAT JALAN";
+        }else if($jenis == "nota"){
+            $kkop = "NOTA PENJUALAN";
+        }
+
         if($tgl1 == $tgl2){
             $tgll = $this->m_fungsi->tanggal_format_indonesia($tgl1);
         }else{
@@ -846,29 +852,68 @@ class Laporan extends CI_Controller {
 
         $html .= '<table cellspacing="0" style="font-size:11px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;font-family:Arial !important">
         <tr>
-            <th style="border:1px solid #000;padding:5px;width:25%"></th>
-            <th style="border:1px solid #000;padding:5px;width:25%"></th>
-            <th style="border:1px solid #000;padding:5px;width:25%"></th>
-            <th style="border:1px solid #000;padding:5px;width:25%"></th>
-            <th style="border:1px solid #000;padding:5px;width:25%"></th>
+            <th style="border:1px solid #000;padding:5px;width:5%"></th>
+            <th style="border:1px solid #000;padding:5px;width:15%"></th>
+            <th style="border:1px solid #000;padding:5px;width:40%"></th>
+            <th style="border:1px solid #000;padding:5px;width:20%"></th>
+            <th style="border:1px solid #000;padding:5px;width:20%"></th>
         </tr>
         <tr>
-            <td style="border:1px solid #000;text-align:center" colspan="5">REKAP LAPORAN SURAT JALAN</td>
+            <td style="border:1px solid #000;font-size:14px;font-weight:bold;text-align:center" colspan="5">REKAP LAPORAN '.$kkop.'</td>
         </tr>
         <tr>
-            <td style="border:1px solid #000;text-align:center" colspan="5">TANGGAL : '.strtoupper($tgll).'</td>
+            <td style="border:1px solid #000;text-align:center;font-weight:bold" colspan="5">JATUH TEMPO : '.strtoupper($tgll).'</td>
         </tr>
         <tr>
             <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">No</td>
+            <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">Tgl Jatuh Tempo</td>
             <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">Kepada</td>
-            <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">Tanggal</td>
-            <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">No Surat Jalan</td>
-            <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">Cetak Nota</td>
+            <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">No Nota</td>
+            <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">Total</td>
         </tr>';
-        $html .= '';
+
+        // ambil data
+        $sql_isi = $this->db->query("SELECT c.nm_perusahaan,
+        (SELECT SUM(harga_invoice*qty) FROM m_pl_list_barang WHERE id_pl=a.id_pl) AS tonase,
+        a.* FROM m_invoice a
+        INNER JOIN m_pl_price_list b ON a.id_pl=b.id
+        INNER JOIN m_perusahaan c ON b.id_m_perusahaan=c.id
+        WHERE tgl_jt BETWEEN '$tgl1' AND '$tgl2'");
+
+        $i = 0;
+        $tot_all = 0;
+        foreach($sql_isi->result() as $r){
+            // $ppn = round($sub_tot * 0.1);
+            // $tot_all = round($sub_tot + $ppn);
+
+            if($pt == "sma"){
+                $ppn = round($r->tonase * 0.1);
+                $tot = round($r->tonase + $ppn);
+            }else if($pt == "st"){
+                $tot = round($r->tonase);
+            }
+
+            $i++;
+            $html .= '<tr>
+                <td style="border:1px solid #000;padding:5px;text-align:center">'.$i.'</td>
+                <td style="border:1px solid #000;padding:5px">'.$this->m_fungsi->tanggal_format_indonesia($r->tgl_jt).'</td>
+                <td style="border:1px solid #000;padding:5px">'.$r->nm_perusahaan.'</td>
+                <td style="border:1px solid #000;padding:5px">'.$r->no_nota.'</td>
+                <td style="border:1px solid #000;padding:5px">Rp. '.number_format($tot).'</td>
+            </tr>';
+
+            $tot_all += $tot;
+        }
+
+        // total keseluruhan
+        $html .='<tr>
+            <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold" colspan="4">TOTAL KESELURUHAN</td>
+            <td style="border:1px solid #000;padding:5px;font-weight:bold">Rp. '.number_format($tot_all).'</td>
+        </tr>';
+
         $html .= '</table>';
 
-        $this->m_fungsi->mPDF($html);
+        $this->m_fungsi->mPDFL($html);
     }
 
     function print_surat_jalan(){

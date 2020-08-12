@@ -192,7 +192,7 @@
     </td>
   </tr>
   <tr>
-    <td>Tanggal</td>
+    <td>Tgl Jatuh Tempo</td>
     <td>:</td>
     <td><input type="date" class="form-control" value="<?= date('Y-m-d') ?>" id="tgl1_rekap_barang"></td>
     <td style="text-align:center">s/d</td>
@@ -409,12 +409,16 @@
     pt = $("#logo_rekap_sj").val(); 
 
     if (pt == 0 || pt == "" || pt == null){
-      showNotification("alert-info", "PILIH PT DAHULU !!!", "top", "center", "", ""); return;
+      showNotification("alert-info", "PILIH PT DAHULU !!!", "bottom", "center", "", ""); return;
     }
 
     if (jenis == 0 || jenis == "" || jenis == null){
-      showNotification("alert-info", "PILIH Laporan Dahulu !!!", "top", "center", "", ""); return;
+      showNotification("alert-info", "PILIH Laporan Dahulu !!!", "bottom", "center", "", ""); return;
     }
+
+    if (jenis == "sj"){
+      showNotification("alert-info", "COMING SOON", "bottom", "center", "", ""); return;
+    }    
 
     if (tgl1 == ""){
       showNotification("alert-info", "Pilih Tanggal Mulai", "bottom", "right", "", ""); return;
