@@ -231,7 +231,8 @@ class M_master extends CI_Model{
 
     function get_load_inv(){
         $query = "SELECT b.no_po,b.cek_inv,(SELECT COUNT(id_pl) FROM m_pl_list_barang WHERE id_pl = b.id) AS jml_timbang,a.* FROM m_invoice a
-        INNER JOIN m_pl_price_list b ON a.id_pl=b.id";
+        INNER JOIN m_pl_price_list b ON a.id_pl=b.id
+        ORDER BY a.id DESC";
         return $this->db->query($query);
     }
 

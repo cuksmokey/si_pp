@@ -16,6 +16,7 @@
 <div class="box-data">
 <button style="background:#ddd;padding:8px 10px;color:#000;border:0" id="btn_barang">SURAT JALAN</button>
 <button style="background:#ddd;padding:8px 10px;color:#000;border:0" id="btn_nota">NOTA PENJUALAN</button>
+<button style="background:#ddd;padding:8px 10px;color:#000;border:0" id="btn_rekap_barang">REKAP</button>
 <br><br>
 
 <!-- SURAT JALAN -->
@@ -33,7 +34,7 @@
         <td>PT</td>
         <td>:</td>
         <td colspan="3">
-        <select name="" id="logo" class="form-control" style="margin: 5px">
+        <select name="" id="logo" class="form-control">
           <option value="0">Pilih...</option>
           <option value="sma">Sinar Mukti Abadi</option>
           <option value="st">Sinar Teknindo</option>
@@ -103,7 +104,7 @@
     <td>PT</td>
     <td>:</td>
     <td colspan="3">
-    <select name="" id="logo_nota" class="form-control" style="margin: 5px">
+    <select name="" id="logo_nota" class="form-control">
       <option value="0">Pilih...</option>
       <option value="sma">Sinar Mukti Abadi</option>
       <option value="st">Sinar Teknindo</option>
@@ -159,8 +160,50 @@
 <!-- # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # -->
 
 <!-- REKAP -->
-<div id="box_rekap">
-  rekap
+<div id="box_rekap_barang">
+<table style="border:0;width:50%;">
+  <tr>
+    <th style="border:0;width:12%"></th>
+    <th style="border:0;width:1%"></th>
+    <th style="border:0;width:12%"></th>
+    <th style="border:0;width:3%"></th>
+    <th style="border:0;width:12%"></th>
+  </tr>
+  <tr>
+    <td>PT</td>
+    <td>:</td>
+    <td colspan="3">
+    <select name="" id="logo_rekap_sj" class="form-control">
+      <option value="0">Pilih...</option>
+      <option value="sma">Sinar Mukti Abadi</option>
+      <option value="st">Sinar Teknindo</option>
+    </select>
+    </td>
+  </tr>
+  <tr>
+    <td>Laporan</td>
+    <td>:</td>
+    <td colspan="3">
+    <select name="" id="jenis_lap" class="form-control">
+      <option value="0">Pilih...</option>
+      <option value="sj">Surat Jalan</option>
+      <option value="nota">Nota Penjualan</option>
+    </select>
+    </td>
+  </tr>
+  <tr>
+    <td>Tanggal</td>
+    <td>:</td>
+    <td><input type="date" class="form-control" value="<?= date('Y-m-d') ?>" id="tgl1_rekap_barang"></td>
+    <td style="text-align:center">s/d</td>
+    <td><input type="date" class="form-control" value="<?= date('Y-m-d') ?>" id="tgl2_rekap_barang"></td>
+  </tr>
+</table>
+
+<!-- cetak rekap sj -->
+<br/><button type="button" onclick="cetak_rekap(0)" class="btn btn-default btn-sm waves-effect">
+  <i class="material-icons">personal_video</i> CETAK
+</button>
 </div>
 <!-- END REKAP -->
 
@@ -188,7 +231,7 @@
     $("#box_barang_all").hide();
     $("#box_barang_supplier").hide();
     $("#box_nota").hide();
-    $("#box_rekap").hide();
+    $("#box_rekap_barang").hide();
   
   //#####################################################################
 
@@ -196,8 +239,11 @@
     $("#btn_barang").click(function() {
       $("#btn_barang").attr('style','background:#287FB8;padding:8px 10px;color:#fff;border:0');
       $("#btn_nota").attr('style','background:#ddd;padding:8px 10px;color:#000;border:0');
+      $("#btn_rekap_barang").attr('style','background:#ddd;padding:8px 10px;color:#000;border:0');
+      $("#btn_rekap_nota").attr('style','background:#ddd;padding:8px 10px;color:#000;border:0');
 
       $("#box_barang").show();
+      $("#box_rekap_barang").hide();
       $("#box_nota").hide();
 
       $("#logo").val("");
@@ -210,12 +256,31 @@
 
   //#####################################################################
 
+    // rekap sj
+    $("#btn_rekap_barang").click(function() {
+      $("#btn_rekap_barang").attr('style','background:#287FB8;padding:8px 10px;color:#fff;border:0');
+      $("#btn_rekap_nota").attr('style','background:#ddd;padding:8px 10px;color:#000;border:0');
+      $("#btn_nota").attr('style','background:#ddd;padding:8px 10px;color:#000;border:0');
+      $("#btn_barang").attr('style','background:#ddd;padding:8px 10px;color:#000;border:0');
+
+      $("#box_rekap_barang").show();
+      $("#box_barang").hide();
+      $("#box_nota").hide();
+
+      $("#logo_rekap_sj").val("");
+    });    
+
+  //#####################################################################
+
     // nota
       $("#btn_nota").click(function() {
       $("#btn_barang").attr('style','background:#ddd;padding:8px 10px;color:#000;border:0');
+      $("#btn_rekap_barang").attr('style','background:#ddd;padding:8px 10px;color:#000;border:0');
+      $("#btn_rekap_nota").attr('style','background:#ddd;padding:8px 10px;color:#000;border:0');
       $("#btn_nota").attr('style','background:#287FB8;padding:8px 10px;color:#fff;border:0');
 
       $("#box_barang").hide();
+      $("#box_rekap_barang").hide();
       $("#box_nota").show();
 
       $("#logo_nota").val("");
@@ -226,6 +291,8 @@
       $("#no_po").val("");
     });
   });
+
+  //#####################################################################
 
   // load surat jalan packing list
   function load_p_sj(){
@@ -271,7 +338,7 @@
     jenis = $("#id_pl_sj").val(); 
     pt = $("#logo").val(); 
 
-    if (jenis == "" || pt == 0){
+    if (jenis == "" || pt == 0 || pt == null){
       showNotification("alert-info", "PILIH PT / PACKING LIST DAHULU !!!", "top", "center", "", ""); return;
     }
 
@@ -325,12 +392,37 @@
     jenis = $("#id_pl_nota").val(); 
     pt = $("#logo_nota").val(); 
 
-    if (jenis == "" || pt == 0){
+    if (jenis == "" || pt == 0 || pt == null){
       showNotification("alert-info", "PILIH PT / PACKING LIST DAHULU !!!", "top", "center", "", ""); return;
     }
 
     var url    = "<?php echo base_url('Laporan/Nota_Penjualan?'); ?>";
     window.open(url+'jenis='+jenis+'&ctk='+ctk+'&pt='+pt, '_blank');
+  }
 
+  /////////////////////////////////////////////////////////////////////
+
+  function cetak_rekap(ctk){
+    tgl1 = $("#tgl1_rekap_barang").val(); 
+    tgl2 = $("#tgl2_rekap_barang").val(); 
+    jenis = $("#jenis_lap").val(); 
+    pt = $("#logo_rekap_sj").val(); 
+
+    if (pt == 0 || pt == "" || pt == null){
+      showNotification("alert-info", "PILIH PT DAHULU !!!", "top", "center", "", ""); return;
+    }
+
+    if (jenis == 0 || jenis == "" || jenis == null){
+      showNotification("alert-info", "PILIH Laporan Dahulu !!!", "top", "center", "", ""); return;
+    }
+
+    if (tgl1 == ""){
+      showNotification("alert-info", "Pilih Tanggal Mulai", "bottom", "right", "", ""); return;
+    }else if (tgl2 == ""){
+      showNotification("alert-info", "Pilih Tanggal Akhir", "bottom", "right", "", ""); return;
+    }
+
+    var url    = "<?php echo base_url('Laporan/Rekap_Laporan?'); ?>";
+    window.open(url+'ctk='+ctk+'&tgl1='+tgl1+'&tgl2='+tgl2+'&jenis='+jenis+'&pt='+pt, '_blank');
   }
 </script>

@@ -829,6 +829,48 @@ class Laporan extends CI_Controller {
         $this->m_fungsi->mPDF($html);
     }
 
+    function Rekap_Laporan(){
+        $tgl1 = $_GET['tgl1'];
+        $tgl2 = $_GET['tgl2'];
+        $pt = $_GET['pt'];
+        $ctk = $_GET['ctk'];
+
+        $html = '';
+        
+        //$this->m_fungsi->tanggal_format_indonesia(date('Y-m-d'))
+        if($tgl1 == $tgl2){
+            $tgll = $this->m_fungsi->tanggal_format_indonesia($tgl1);
+        }else{
+            $tgll = $this->m_fungsi->tanggal_format_indonesia($tgl1).' s/d '.$this->m_fungsi->tanggal_format_indonesia($tgl2);
+        }
+
+        $html .= '<table cellspacing="0" style="font-size:11px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;font-family:Arial !important">
+        <tr>
+            <th style="border:1px solid #000;padding:5px;width:25%"></th>
+            <th style="border:1px solid #000;padding:5px;width:25%"></th>
+            <th style="border:1px solid #000;padding:5px;width:25%"></th>
+            <th style="border:1px solid #000;padding:5px;width:25%"></th>
+            <th style="border:1px solid #000;padding:5px;width:25%"></th>
+        </tr>
+        <tr>
+            <td style="border:1px solid #000;text-align:center" colspan="5">REKAP LAPORAN SURAT JALAN</td>
+        </tr>
+        <tr>
+            <td style="border:1px solid #000;text-align:center" colspan="5">TANGGAL : '.strtoupper($tgll).'</td>
+        </tr>
+        <tr>
+            <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">No</td>
+            <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">Kepada</td>
+            <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">Tanggal</td>
+            <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">No Surat Jalan</td>
+            <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">Cetak Nota</td>
+        </tr>';
+        $html .= '';
+        $html .= '</table>';
+
+        $this->m_fungsi->mPDF($html);
+    }
+
     function print_surat_jalan(){
         $jenis = $_GET['jenis'];
         $ctk = $_GET['ctk'];
