@@ -1303,6 +1303,15 @@ class Master extends CI_Controller {
         echo json_encode($response);
     }
 
+    function laod_p_cust(){
+        $s = $_GET['search'];
+
+        // Get users
+        $response = $this->m_master->list_p_cust($s);
+
+        echo json_encode($response);
+    }
+
     function laod_supplier_nota(){
         $searchTerm = $_GET['search'];
     

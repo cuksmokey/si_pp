@@ -16,7 +16,7 @@
 <div class="box-data">
 <button style="background:#ddd;padding:8px 10px;color:#000;border:0" id="btn_barang">SURAT JALAN</button>
 <button style="background:#ddd;padding:8px 10px;color:#000;border:0" id="btn_nota">NOTA PENJUALAN</button>
-<button style="background:#ddd;padding:8px 10px;color:#000;border:0" id="btn_rekap_barang">REKAP</button>
+<button style="background:#ddd;padding:8px 10px;color:#000;border:0" id="btn_rekap_barang">REKAP NOTA</button>
 <br><br>
 
 <!-- SURAT JALAN -->
@@ -181,15 +181,22 @@
     </td>
   </tr>
   <tr>
-    <td>Laporan</td>
+    <td>Pilih</td>
+    <td>:</td>
+    <td colspan="3"><select class="form-control" id="pilih_cust" style="width:100%"></select></td>
+  </tr>
+  <tr>
+    <td>Customer</td>
     <td>:</td>
     <td colspan="3">
-    <select name="" id="jenis_lap" class="form-control">
-      <option value="0">Pilih...</option>
-      <option value="sj">Surat Jalan</option>
-      <option value="nota">Nota Penjualan</option>
-    </select>
+      <input type="text" id="text_cust" autocomplete="off" class="form-control" disabled="true" style="background:#ddd">
+      <input type="hidden" value="" id="id_cust">
     </td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td style="padding:0 0 5px" colspan="3"><b>NOTE:</b> Kolom Customer Kosong, Cetak Semua Customer</td>
   </tr>
   <tr>
     <td>Tgl Jatuh Tempo</td>
@@ -227,6 +234,7 @@
   $(document).ready(function() {
     load_p_sj();
     load_p_nota();
+    load_p_cust();
     $("#box_barang").hide();
     $("#box_barang_all").hide();
     $("#box_barang_supplier").hide();
@@ -256,7 +264,7 @@
 
   //#####################################################################
 
-    // rekap sj
+    // rekap nota
     $("#btn_rekap_barang").click(function() {
       $("#btn_rekap_barang").attr('style','background:#287FB8;padding:8px 10px;color:#fff;border:0');
       $("#btn_rekap_nota").attr('style','background:#ddd;padding:8px 10px;color:#000;border:0');
@@ -268,6 +276,8 @@
       $("#box_nota").hide();
 
       $("#logo_rekap_sj").val("");
+      $("#text_cust").val("");
+      $("#id_cust").val("");
     });    
 
   //#####################################################################
@@ -402,10 +412,46 @@
 
   /////////////////////////////////////////////////////////////////////
 
+  // load nota 
+  function load_p_cust(){
+  $('#pilih_cust').select2({
+    // minimumInputLength: 3,
+    allowClear: true,
+    placeholder: 'SELECT',
+    ajax: {
+      dataType: 'json',
+      url      : '<?php echo base_url(); ?>/Master/laod_p_cust',
+      delay: 800,
+      data: function(params) {
+        if (params.term == undefined) {
+          return {
+            search: ""
+          }  
+        }else{
+          return {
+            search: params.term
+          }
+        }
+      },
+      processResults: function (data, page) {
+      return {
+        results: data
+      };
+    },
+    }
+  });
+ }
+  // load nota
+  $('#pilih_cust').on('change', function() {
+    data = $('#pilih_cust').select2('data');
+    $("#id_cust").val(data[0].id);
+    $("#text_cust").val(data[0].nm_perusahaan);
+  });
+
   function cetak_rekap(ctk){
     tgl1 = $("#tgl1_rekap_barang").val(); 
     tgl2 = $("#tgl2_rekap_barang").val(); 
-    jenis = $("#jenis_lap").val(); 
+    jenis = $("#id_cust").val(); 
     pt = $("#logo_rekap_sj").val(); 
 
     if (pt == 0 || pt == "" || pt == null){
@@ -413,12 +459,14 @@
     }
 
     if (jenis == 0 || jenis == "" || jenis == null){
-      showNotification("alert-info", "PILIH Laporan Dahulu !!!", "bottom", "center", "", ""); return;
+      xjenis = 0;
+    }else{
+      xjenis = jenis;
     }
 
-    if (jenis == "sj"){
-      showNotification("alert-info", "COMING SOON", "bottom", "center", "", ""); return;
-    }    
+    // if (jenis == "sj"){
+    //   showNotification("alert-info", "COMING SOON", "bottom", "center", "", ""); return;
+    // }    
 
     if (tgl1 == ""){
       showNotification("alert-info", "Pilih Tanggal Mulai", "bottom", "right", "", ""); return;
@@ -427,6 +475,6 @@
     }
 
     var url    = "<?php echo base_url('Laporan/Rekap_Laporan?'); ?>";
-    window.open(url+'ctk='+ctk+'&tgl1='+tgl1+'&tgl2='+tgl2+'&jenis='+jenis+'&pt='+pt, '_blank');
+    window.open(url+'ctk='+ctk+'&tgl1='+tgl1+'&tgl2='+tgl2+'&jenis='+xjenis+'&pt='+pt, '_blank');
   }
 </script>

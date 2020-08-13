@@ -879,6 +879,25 @@ class M_master extends CI_Model{
         return $data;
     }
 
+    function list_p_cust($s=""){
+        $users = $this->db->query("SELECT c.id,c.nm_perusahaan FROM m_invoice a
+        INNER JOIN m_pl_price_list b ON a.id_pl=b.id
+        INNER JOIN m_perusahaan c ON b.id_m_perusahaan=c.id
+        GROUP BY c.id,c.nm_perusahaan
+        ORDER BY c.nm_perusahaan ASC")->result_array();
+   
+        // Initialize Array with fetched data
+        $data = array();
+        foreach($users as $user){
+           $data[] = array(
+               "id"=>$user['id'],
+               "text"=>$user['nm_perusahaan'],
+               "nm_perusahaan"=>$user['nm_perusahaan']
+           );
+        }
+        return $data;
+    }
+
     function list_supplier_nota($searchTerm=""){
         $users = $this->db->query("SELECT a.id,b.nama_supplier,CONCAT(b.nama_supplier, ' | ', a.no_nota) AS id_n,a.no_nota FROM m_nota a
         INNER JOIN m_supplier b ON a.id_supplier=b.id

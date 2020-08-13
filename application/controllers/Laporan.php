@@ -837,12 +837,6 @@ class Laporan extends CI_Controller {
         $ctk = $_GET['ctk'];
 
         $html = '';
-        
-        if($jenis == "sj"){
-            $kkop = "SURAT JALAN";
-        }else if($jenis == "nota"){
-            $kkop = "NOTA PENJUALAN";
-        }
 
         if($tgl1 == $tgl2){
             $tgll = $this->m_fungsi->tanggal_format_indonesia($tgl1);
@@ -850,19 +844,42 @@ class Laporan extends CI_Controller {
             $tgll = $this->m_fungsi->tanggal_format_indonesia($tgl1).' s/d '.$this->m_fungsi->tanggal_format_indonesia($tgl2);
         }
 
+        // jika pilih customer
+        $kop_kop = $this->db->query("SELECT*FROM m_perusahaan WHERE id='$jenis'")->row();
+
+        if($jenis == 0){
+            $where = ""; 
+            $kkop = 'SEMUA CUSTOMER';
+        }else{
+            $where = "AND c.id='$jenis'"; 
+            $kkop = $kop_kop->nm_perusahaan;
+        }
+
+        if($pt == "sma"){
+            $lpp = "SINAR MUKTI ABADI";
+        }else if($pt == "st"){
+            $lpp = "SINAR TEKNINDO";
+        }
+
         $html .= '<table cellspacing="0" style="font-size:11px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;font-family:Arial !important">
         <tr>
-            <th style="border:1px solid #000;padding:5px;width:5%"></th>
-            <th style="border:1px solid #000;padding:5px;width:15%"></th>
-            <th style="border:1px solid #000;padding:5px;width:40%"></th>
-            <th style="border:1px solid #000;padding:5px;width:20%"></th>
-            <th style="border:1px solid #000;padding:5px;width:20%"></th>
+            <th style="border:0;padding:0;width:5%"></th>
+            <th style="border:0;padding:0;width:15%"></th>
+            <th style="border:0;padding:0;width:40%"></th>
+            <th style="border:0;padding:0;width:20%"></th>
+            <th style="border:0;padding:0;width:20%"></th>
         </tr>
         <tr>
-            <td style="border:1px solid #000;font-size:14px;font-weight:bold;text-align:center" colspan="5">REKAP LAPORAN '.$kkop.'</td>
+            <td style="border:0;font-weight:bold;text-align:center" colspan="5">REKAP LAPORAN NOTA PENJUALAN</td>
         </tr>
         <tr>
-            <td style="border:1px solid #000;text-align:center;font-weight:bold" colspan="5">JATUH TEMPO : '.strtoupper($tgll).'</td>
+            <td style="border:0;text-align:center;font-weight:bold" colspan="5">'.$lpp.'</td>
+        </tr>
+        <tr>
+            <td style="border:0;text-align:center;font-weight:bold" colspan="5">'.strtoupper($kkop).'</td>
+        </tr>
+        <tr>
+            <td style="border:0;padding:0 0 10px;text-align:center;font-weight:bold" colspan="5">JATUH TEMPO : '.strtoupper($tgll).'</td>
         </tr>
         <tr>
             <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">No</td>
@@ -878,7 +895,8 @@ class Laporan extends CI_Controller {
         a.* FROM m_invoice a
         INNER JOIN m_pl_price_list b ON a.id_pl=b.id
         INNER JOIN m_perusahaan c ON b.id_m_perusahaan=c.id
-        WHERE tgl_jt BETWEEN '$tgl1' AND '$tgl2'");
+        WHERE tgl_jt BETWEEN '$tgl1' AND '$tgl2' $where
+        ORDER BY a.id DESC");
 
         $i = 0;
         $tot_all = 0;
@@ -916,7 +934,7 @@ class Laporan extends CI_Controller {
         $this->m_fungsi->mPDFL($html);
     }
 
-    function print_surat_jalan(){
+    function print_surat_jalan(){ //
         $jenis = $_GET['jenis'];
         $ctk = $_GET['ctk'];
 
