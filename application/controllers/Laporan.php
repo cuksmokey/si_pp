@@ -615,13 +615,13 @@ class Laporan extends CI_Controller {
 
     // KOP
     if($pt == "sma"){
-        $jpg = "http://localhost/si_pp/assets/images/logo_sma.jpg";
-        // $jpg = "http://sinarmuktiabadi.com/assets/images/logo_sma.jpg";
+        // $jpg = "http://localhost/si_pp/assets/images/logo_sma.jpg";
+        $jpg = "http://sinarmuktiabadi.com/assets/images/logo_sma.jpg";
         $top = 'top';
         $px = '0 0 70px';
     }else if($pt == "st"){
-        $jpg = "http://localhost/si_pp/assets/images/logo_st.jpg";
-        // $jpg = "http://sinarmuktiabadi.com/assets/images/logo_st.jpg";
+        // $jpg = "http://localhost/si_pp/assets/images/logo_st.jpg";
+        $jpg = "http://sinarmuktiabadi.com/assets/images/logo_st.jpg";
         $top = 'top';
         $px = '0 0 80px';
     }
