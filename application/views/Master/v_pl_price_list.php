@@ -103,6 +103,13 @@
                                         <td colspan="4"><hr>Dikirim Ke<hr></td>
                                     </tr>
                                     <tr>
+                                        <td>UP</td>
+                                        <td>:</td>
+                                        <td colspan="2" style="padding:0 0 10px">
+                                            <input type="text" class="form-control" id="upup" autocomplete="off"> 
+                                        </td>
+                                    </tr>
+                                    <tr>
                                         <td>Pilih</td>
                                         <td>:</td>
                                         <td colspan="2">
@@ -310,9 +317,9 @@
                         <td align="" width="1%">:</td>
                         <td align="left" width="10%"><div id="txt-no_so"></div></td>
                         <td align="center" width="10%"></td>
-                        <td align="left" width="8%">ATTN</td>
+                        <td align="left" width="8%">UP</td>
                         <td align="" width="1%">:</td>
-                        <td align="left" width="20%"><div id="txt-nama"></div></td>
+                        <td align="left" width="20%"><div id="txt-up"></div></td>
                     </tr>
                     <tr>
                         <td align="left" width="8%">No PO</td>
@@ -423,6 +430,7 @@
       no_so = $("#no_so").val();
       no_po = $("#no_po").val();
       
+      upup = $("#upup").val();
       kepada = $("#id_kepada").val();
       pimpinan = $("#pimpinan").val();
       nama_perusahaan = $("#nama_perusahaan").val();
@@ -432,7 +440,7 @@
 
       cart = $('#detail_cart').html();
       
-      if (cart == "" || tgl == "" || no_surat == "" || no_so == "" || no_po == "" || nama_perusahaan == "" || pimpinan == "" || npwp == "" || alamat == "" || no_telp == "")  {
+      if (cart == "" || tgl == "" || no_surat == "" || no_so == "" || no_po == "" || nama_perusahaan == "" || pimpinan == "" || npwp == "" || alamat == "" || no_telp == "" || upup == "")  {
         showNotification("alert-info", "Harap Lengkapi Form", "bottom", "center", "", ""); return;
       }
 
@@ -448,6 +456,7 @@
             no_surat:no_surat,
             no_so:no_so,
             no_po:no_po,
+            upup:upup,
             kepada:kepada,
             jenis : "PL_pl_barang"}),
             dataType : "json",
@@ -483,8 +492,9 @@
               $("#txt-no_surat").html(json.header.no_surat);
               $("#txt-no_so").html(json.header.no_so);
               $("#txt-no_po").html(json.header.no_po);
+              $("#txt-up").html(json.header.up);
               $("#txt-nm_perusahaan").html(json.pt.nm_perusahaan);
-              $("#txt-nama").html(json.pt.pimpinan);
+              // $("#txt-nama").html(json.pt.pimpinan);
               $("#txt-npwp").html(json.pt.npwp);
               $("#txt-alamat_perusahaan").html(json.pt.alamat);
               $("#txt-no_telp").html(json.pt.no_telp);
@@ -551,6 +561,7 @@
       $("#no_po").val("");
       $("#no_nota").val("");
 
+      $("#upup").val("");
       $("#id_kepada").val("");
       $("#nama_perusahaan").val("");
       $("#pimpinan").val("");

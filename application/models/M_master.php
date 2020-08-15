@@ -298,6 +298,7 @@ class M_master extends CI_Model{
             'no_surat' => $_POST['no_surat'],
             'no_so' => $_POST['no_so'],
             'no_po' => $_POST['no_po'],
+            'up' => $_POST['upup'],
             'created_by' => $this->session->userdata('username')
         );
         $result= $this->db->insert("m_pl_price_list",$data);
@@ -343,6 +344,7 @@ class M_master extends CI_Model{
             'no_nota' => $_POST['no_nota'],
             'no_faktur' => $_POST['no_faktur'],
             'tgl_jt' => $_POST['tgl_jt'],
+            'ongkir' => $_POST['ongkir'],
             'created_by' => $this->session->userdata('username')
         );
         $result= $this->db->insert("m_invoice",$data);

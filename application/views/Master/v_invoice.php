@@ -129,6 +129,13 @@
                                         <td colspan="4"><hr>Dikirim Ke<hr></td>
                                     </tr>
                                     <tr>
+                                        <td>UP</td>
+                                        <td>:</td>
+                                        <td colspan="2" style="padding:0 0 10px">
+                                            <input type="text" class="form-control" id="upup" disabled="true" style="background:#ddd"> 
+                                        </td>
+                                    </tr>
+                                    <tr>
                                         <td>Pimpinan</td>
                                         <td>:</td>
                                         <td colspan="2">
@@ -164,10 +171,15 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="4" align="right">
-                                            <br>
-                                            
+                                        <td>Ongkos Kirim</td>
+                                        <td>:</td>
+                                        <td style="padding:10px 0 0">
+                                            <input type="text" class="angka form-control" id="ongkir" autocomplete="off">
                                         </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4" align="right"><br></td>
                                     </tr>
                                 </table>
                                 <table width="100%">
@@ -335,9 +347,9 @@
                         <td align="" width="1%">:</td>
                         <td align="left" width="10%"><div id="txt-no_po"></div></td>
                         <td align="center" width="10%"></td>
-                        <td align="left" width="8%"></td>
-                        <td align="" width="1%"></td>
-                        <td align="left" width="20%"></td>
+                        <td align="left" width="8%">Ongkir</td>
+                        <td align="" width="1%">:</td>
+                        <td align="left" width="20%"><div id="txt-ongkir"></td>
                     </tr>
                 </table>
 
@@ -447,9 +459,11 @@
       alamat = $("#alamat").val();
       no_telp = $("#no_telp").val();
 
+      ongkir = $("#ongkir").val();
+
       cart = $('#detail_cart').html();
       
-      if (cart == ""  || tgl_jt == "" || tgl == "" || no_nota == "" || no_faktur == "" || no_surat == "" || no_so == "" || no_po == "" || nama_perusahaan == "" || pimpinan == "" || npwp == "" || alamat == "" || no_telp == "")  {
+      if (cart == ""  || tgl_jt == "" || tgl == "" || no_nota == "" || no_faktur == "" || no_surat == "" || no_so == "" || no_po == "" || nama_perusahaan == "" || pimpinan == "" || npwp == "" || alamat == "" || no_telp == "" || ongkir == "")  {
         showNotification("alert-info", "Harap Lengkapi Form", "bottom", "center", "", ""); return;
       }
 
@@ -465,6 +479,7 @@
             no_nota:no_nota,
             no_faktur:no_faktur,
             tgl_jt:tgl_jt,
+            ongkir:ongkir,
             jenis : "Save_invoice"}),
             dataType : "json",
           success  : function(data){
@@ -500,6 +515,7 @@
               $("#txt-kepada").html(json.pt.nm_perusahaan);
               $("#txt-npwp").html(json.pt.npwp);
               $("#txt-alamat").html(json.pt.alamat);
+              $("#txt-ongkir").html(json.header.ongkir);
 
               let idr = new Intl.NumberFormat();
               html = '';
@@ -609,6 +625,8 @@
       $("#npwp").val("");
       $("#alamat").val("");
       $("#no_telp").val("");
+      
+      $("#ongkir").val("");
 
       $("#btn-simpan").prop("disabled",false);
       $(".btn_list_barang").prop("disabled",false);
