@@ -148,6 +148,16 @@
       <input type="text" id="kepada_nota" autocomplete="off" class="form-control" disabled="true" style="background:#ddd">
     </td>
   </tr>
+  <tr>
+    <td style="padding:10px" colspan="5"></td>
+  </tr>
+  <tr>
+    <td>Tanggal Cetak</td>
+    <td>:</td>
+    <td><input type="date" class="form-control" value="<?= date('Y-m-d') ?>" id="tgl_cetak"></td>
+    <!-- <td style="text-align:center">s/d</td>
+    <td><input type="date" class="form-control" value="<?= date('Y-m-d') ?>" id="tgl2_rekap_barang"></td> -->
+  </tr>
 </table>
 
 <!-- cetak nota -->
@@ -401,13 +411,18 @@
   function cetak_nota(ctk){
     jenis = $("#id_pl_nota").val(); 
     pt = $("#logo_nota").val(); 
+    tgl_ctk = $("#tgl_cetak").val(); 
 
     if (jenis == "" || pt == 0 || pt == null){
       showNotification("alert-info", "PILIH PT / PACKING LIST DAHULU !!!", "top", "center", "", ""); return;
     }
 
+    if (tgl_ctk == "" || tgl_ctk == 0){
+      showNotification("alert-info", "Pilih Tanggal Cetak", "top", "center", "", ""); return;
+    }
+
     var url    = "<?php echo base_url('Laporan/Nota_Penjualan?'); ?>";
-    window.open(url+'jenis='+jenis+'&ctk='+ctk+'&pt='+pt, '_blank');
+    window.open(url+'jenis='+jenis+'&ctk='+ctk+'&pt='+pt+'&tgl_ctk='+tgl_ctk, '_blank');
   }
 
   /////////////////////////////////////////////////////////////////////

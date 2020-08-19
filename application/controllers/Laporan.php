@@ -604,6 +604,7 @@ class Laporan extends CI_Controller {
     //
     $jenis = $_GET['jenis'];
     $ctk = $_GET['ctk'];
+    $tgl_ctk = $_GET['tgl_ctk'];
     $pt = $_GET['pt'];
 
     $html = '';
@@ -752,7 +753,7 @@ class Laporan extends CI_Controller {
             $ppn = round($sub_tot * 0.1);
             $tot_all = round($sub_tot + $ppn + $sql_kop->ongkir);
             $rs = '2';
-            $t_td = '<td style="border:0;padding:5px 5px 5px 0" colspan="4">Klaten, '.$this->m_fungsi->tanggal_format_indonesia(date('Y-m-d')).'</td>';
+            $t_td = '<td style="border:0;padding:5px 5px 5px 0" colspan="4">Klaten, '.$this->m_fungsi->tanggal_format_indonesia($tgl_ctk).'</td>';
         }
 
         // fungsi terbilang
