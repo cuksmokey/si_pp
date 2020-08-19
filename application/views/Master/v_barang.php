@@ -190,6 +190,8 @@
                                             <option value="Unit">Unit</option>
                                             <option value="Set">Set</option>
                                             <option value="PSG">PSG</option>
+                                            <option value="Meter">Meter</option>
+                                            <option value="Roll">Roll</option>
                                           </select>
                                         </td>
                                     </tr>
