@@ -721,8 +721,8 @@ class Laporan extends CI_Controller {
         <td style="border:1px solid #000;padding:5px 3px;text-align:center;font-weight:bold">NO</td>
         <td style="border:1px solid #000;padding:5px 3px;text-align:center;font-weight:bold">Nama Barang</td>
         <td style="border:1px solid #000;padding:5px 3px;text-align:center;font-weight:bold" colspan="2">Quantity</td>
-        <td style="border:1px solid #000;padding:5px 3px;text-align:center;font-weight:bold">Harga Satuan</td>
-        <td style="border:1px solid #000;padding:5px 3px;text-align:center;font-weight:bold">Total Harga</td>
+        <td style="border:1px solid #000;padding:5px 3px;text-align:center;font-weight:bold">Satuan (Rp.)</td>
+        <td style="border:1px solid #000;padding:5px 3px;text-align:center;font-weight:bold">Jumlah (Rp.)</td>
         </tr>';
 
         // isinya
@@ -741,8 +741,8 @@ class Laporan extends CI_Controller {
                 <td style="border:1px solid #000;padding:5px 3px;text-align:center">'.$ii.'</td>
                 <td style="border:1px solid #000;padding:5px 3px">'.$r->nama_barang.'</td>
                 <td style="border:1px solid #000;border-width:1px 0 1px 1px;padding:5px 3px" colspan="2">'.$r->qty.' '.$r->qty_ket.'</td>
-                <td style="border:1px solid #000;padding:5px 3px;text-align:right">Rp. '.number_format($r->harga_invoice).'</td>
-                <td style="border:1px solid #000;padding:5px 3px;text-align:right">Rp. '.number_format($tot_hrg).'</td>
+                <td style="border:1px solid #000;padding:5px 3px;text-align:right">'.number_format($r->harga_invoice).'</td>
+                <td style="border:1px solid #000;padding:5px 3px;text-align:right">'.number_format($tot_hrg).'</td>
             </tr>';
 
             $sub_tot += $tot_hrg;
@@ -757,7 +757,7 @@ class Laporan extends CI_Controller {
             $t_td = '';
         }else if($pt == "sma") {
             $ppn = round($sub_tot * 0.1);
-            $tot_all = round($sub_tot + $ppn + $sql_kop->ongkir);
+            $tot_all = round($sub_tot + $ppn);
             $rs = '2';
             $t_td = '<td style="border:0;padding:5px 5px 5px 0" colspan="4">Klaten, '.$this->m_fungsi->tanggal_format_indonesia($tgl_ctk).'</td>';
         }
@@ -766,7 +766,7 @@ class Laporan extends CI_Controller {
         $html .= '<tr>
         <td style="border:0;padding:3px 3px 0 0" colspan="4" rowspan="'.$rs.'">Terbilang : <b><i>'.ucwords($this->m_fungsi->terbilang($tot_all)).'</i></b></td>
         <td style="border:1px solid #000;padding:5px">Sub Total</td>
-        <td style="border:1px solid #000;padding:5px;text-align:right">Rp. '.number_format($sub_tot).'</td>
+        <td style="border:1px solid #000;padding:5px;text-align:right">'.number_format($sub_tot).'</td>
         </tr>';
 
         // ppn
@@ -778,23 +778,36 @@ class Laporan extends CI_Controller {
         }else if($pt == "sma") {
             $html .='<tr>
             <td style="border:1px solid #000;padding:5px">PPN</td>
-            <td style="border:1px solid #000;padding:5px;text-align:right">Rp. '.number_format($ppn).'</td>
+            <td style="border:1px solid #000;padding:5px;text-align:right">'.number_format($ppn).'</td>
             </tr>';
         }
 
-        // ongkir
-        $html .='<tr>
+        // ongkir + total all
+        if($pt == "st"){
+            $html .='<tr>
             '.$t_td.'
-            <td style="border:1px solid #000;padding:5px">Ongkir</td>
-            <td style="border:1px solid #000;padding:5px;text-align:right">Rp. '.number_format($sql_kop->ongkir).'</td>
-        </tr>';
+                <td style="border:1px solid #000;padding:5px">Ongkir</td>
+                <td style="border:1px solid #000;padding:5px;text-align:right">'.number_format($sql_kop->ongkir).'</td>
+            </tr>';
+            $html.='<tr>
+                <td style="border:0;padding:0" colspan="4" rowspan="2">'.$nm_ttd.'</td>
+                <td style="border:1px solid #000;padding:5px">Total</td>
+                <td style="border:1px solid #000;padding:5px;text-align:right">'.number_format($tot_all).'</td>
+            </tr>';
+        }else if($pt == "sma"){
+            $html .='<tr>
+            '.$t_td.'
+            <td style="border:1px solid #000;padding:5px">Total</td>
+            <td style="border:1px solid #000;padding:5px;text-align:right">'.number_format($tot_all).'</td>
+            </tr>';
+        }
 
         // total all
-        $html.='<tr>
-            <td style="border:0;padding:0" colspan="4" rowspan="2">'.$nm_ttd.'</td>
-            <td style="border:1px solid #000;padding:5px">Total</td>
-            <td style="border:1px solid #000;padding:5px;text-align:right">Rp. '.number_format($tot_all).'</td>
-        </tr>';
+        // $html.='<tr>
+        //     <td style="border:0;padding:0" colspan="4" rowspan="2">'.$nm_ttd.'</td>
+        //     <td style="border:1px solid #000;padding:5px">Total</td>
+        //     <td style="border:1px solid #000;padding:5px;text-align:right">Rp. '.number_format($tot_all).'</td>
+        // </tr>';
 
         # # # # # # # # # # # # # TANDA TANGAN # # # # # # # # # # # # # 
 
@@ -834,7 +847,7 @@ class Laporan extends CI_Controller {
             <td style="border:0;padding:0" colspan="3"></td>
             </tr>
             <tr>
-            <td style="border:0;padding:10px 0 0" colspan="6">'.$nm_ttd.'</td>
+            <td style="border:0;padding:40px 0 0" colspan="6">'.$nm_ttd.'</td>
             </tr>';
         }
 
