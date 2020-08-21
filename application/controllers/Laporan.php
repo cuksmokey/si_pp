@@ -632,7 +632,7 @@ class Laporan extends CI_Controller {
         if($pt == "st"){
             $npwp = '';
             $kop_nota = 'N O T A
-            <br><div style="font-weight:normal;font-size:12px !important">Klaten, '.$this->m_fungsi->tanggal_format_indonesia(date('Y-m-d')).'
+            <br><div style="font-weight:normal;font-size:12px !important">Klaten, '.$this->m_fungsi->tanggal_format_indonesia($tgl_ctk).'
             <br/>Yth. '.$sql_kop->nm_perusahaan.'
             <br/>Up. '.$sql_kop->up.'
             <br/>'.$sql_kop->alamat.'
@@ -665,6 +665,12 @@ class Laporan extends CI_Controller {
             <td style="border:0;padding:0 0 1px">No. PO: '.$sql_kop->no_po.'</td>
             </tr>';
         }else if($pt == "sma"){
+            if($sql_kop->up == ""){
+                $upup = "";
+            }else{
+                $upup = 'Up. '.$sql_kop->up;
+            }
+
             $html .='<tr>
             <td style="padding:2px 0 0" colspan="3">Kepoh RT 003 RW 007 Bowan, Delanggu, Klaten</td>
             <td></td>
@@ -682,7 +688,7 @@ class Laporan extends CI_Controller {
             <td style="padding:1px 0">Kepada</td>
             <td style="padding:1px 0">:</td>
             <td style="padding:1px 0">'.$sql_kop->nm_perusahaan.'</td>
-            <td style="padding:1px 0">Up. '.$sql_kop->up.'</td>
+            <td style="padding:1px 0">'.$upup.'</td>
             <td></td>
             </tr>
             <tr>
@@ -817,7 +823,6 @@ class Laporan extends CI_Controller {
             $nm_ttd = 'Andreas Purwanto<br/>Bank : BRI KCP DELANGGU-KLATEN A/C : 2055 - 01 - 000246 - 30 - 0 A/N : SINAR MUKTI ABADI';
 
             $html .= '<tr>
-            <td style="border:0;padding:1px" colspan="4"></td>
             <td style="border:0;padding:1px" colspan="2"></td>
             </tr>';
 
@@ -829,7 +834,7 @@ class Laporan extends CI_Controller {
             <td style="border:0;padding:0" colspan="3"></td>
             </tr>
             <tr>
-            <td style="border:0;padding:0" colspan="6">'.$nm_ttd.'</td>
+            <td style="border:0;padding:10px 0 0" colspan="6">'.$nm_ttd.'</td>
             </tr>';
         }
 
