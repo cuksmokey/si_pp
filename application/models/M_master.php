@@ -885,6 +885,7 @@ class M_master extends CI_Model{
         $users = $this->db->query("SELECT c.id,c.nm_perusahaan FROM m_invoice a
         INNER JOIN m_pl_price_list b ON a.id_pl=b.id
         INNER JOIN m_perusahaan c ON b.id_m_perusahaan=c.id
+        WHERE c.nm_perusahaan LIKE '%$s%'
         GROUP BY c.id,c.nm_perusahaan
         ORDER BY c.nm_perusahaan ASC")->result_array();
    
