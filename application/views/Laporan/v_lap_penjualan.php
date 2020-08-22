@@ -209,7 +209,7 @@
     <td style="padding:0 0 5px" colspan="3"><b>NOTE:</b> Kolom Customer Kosong, Cetak Semua Customer</td>
   </tr>
   <tr>
-    <td>Tgl Jatuh Tempo</td>
+    <td>Tanggal PL</td>
     <td>:</td>
     <td><input type="date" class="form-control" value="<?= date('Y-m-d') ?>" id="tgl1_rekap_barang"></td>
     <td style="text-align:center">s/d</td>
