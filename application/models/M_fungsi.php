@@ -277,7 +277,7 @@ class M_fungsi extends CI_Model {
 
 	function mPDFL($html){
 		ini_set('max_execution_time', '300');
-		ini_set("pcre.backtrack_limit", "5000000");
+		ini_set("pcre.backtrack_limit", "9000000");
 		$mpdf = new \Mpdf\Mpdf([
 			'default_font_size' => 9
 		]);
