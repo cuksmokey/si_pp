@@ -923,7 +923,7 @@ class Laporan extends CI_Controller {
         a.* FROM m_invoice a
         INNER JOIN m_pl_price_list b ON a.id_pl=b.id
         INNER JOIN m_perusahaan c ON b.id_m_perusahaan=c.id
-        WHERE tgl_jt BETWEEN '$tgl1' AND '$tgl2' $where
+        WHERE b.tgl BETWEEN '$tgl1' AND '$tgl2' $where
         ORDER BY a.id DESC");
 
         $i = 0;
