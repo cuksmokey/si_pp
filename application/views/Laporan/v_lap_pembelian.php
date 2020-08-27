@@ -39,6 +39,9 @@
     </table>
     <br/><button type="button" onclick="cetak_barang(0,0)" class="btn btn-default btn-sm waves-effect">
       <i class="material-icons">personal_video</i> CETAK
+    </button>&nbsp;
+    <button type="button" onclick="cetak_barang(1,0)" class="btn btn-default btn-sm waves-effect">
+      <i class="material-icons">sms</i> EXCEL
     </button>
   </div>
 
@@ -79,6 +82,9 @@
     <!-- cetak barang -->
     <br/><button type="button" onclick="cetak_barang(0,1)" class="btn btn-default btn-sm waves-effect">
       <i class="material-icons">personal_video</i> CETAK
+    </button>&nbsp;
+    <button type="button" onclick="cetak_barang(1,1)" class="btn btn-default btn-sm waves-effect">
+      <i class="material-icons">sms</i> EXCEL
     </button>
   </div>
 </div>
@@ -116,6 +122,9 @@
     <!-- cetak barang -->
     <br/><button type="button" onclick="cetak_nota(0,0)" class="btn btn-default btn-sm waves-effect">
       <i class="material-icons">personal_video</i> CETAK
+    </button>&nbsp;
+    <button type="button" onclick="cetak_nota(1,0)" class="btn btn-default btn-sm waves-effect">
+      <i class="material-icons">sms</i> EXCEL
     </button>
   </div>
 
@@ -161,6 +170,9 @@
     <!-- cetak barang -->
     <br/><button type="button" onclick="cetak_nota(0,1)" class="btn btn-default btn-sm waves-effect">
       <i class="material-icons">personal_video</i> CETAK
+    </button>&nbsp;
+    <button type="button" onclick="cetak_nota(1,1)" class="btn btn-default btn-sm waves-effect">
+      <i class="material-icons">sms</i> EXCEL
     </button>
   </div>
 </div>

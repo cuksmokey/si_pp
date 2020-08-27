@@ -170,10 +170,11 @@ class Laporan extends CI_Controller {
         }
     }
 
-    function lap_barang(){ //
+    function lap_barang(){
         $tgl1 = $_GET['tgl1'];
         $tgl2 = $_GET['tgl2'];
         $jenis = $_GET['jenis'];
+        $ctk = $_GET['ctk'];
 
         $html = '';
         //$this->m_fungsi->tanggal_format_indonesia($data_pl->tgl)
@@ -185,12 +186,20 @@ class Laporan extends CI_Controller {
         }
 
         // JUDUL
+        $judul = 'LAPORAN BARANG TANGGAL '.strtoupper($ttgl);
+
+        if($ctk == 0){
+            $s_cp = '';
+        }else if($ctk == 1){
+            $s_cp = 'colspan="8"';
+        }
+
         $html .= '<table cellspacing="0" style="font-size:12px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;text-align:center;font-family:Arial !important">
             <tr>
-                <th>LAPORAN BARANG</th>
+                <th '.$s_cp.'>LAPORAN BARANG</th>
             </tr>
             <tr>
-                <th>TANGGAL '.strtoupper($ttgl).'</th>
+                <th '.$s_cp.'>TANGGAL '.strtoupper($ttgl).'</th>
             </tr>
         </table>';
 
@@ -300,8 +309,16 @@ class Laporan extends CI_Controller {
 
         $html .= '</table>';
 
-        // $this->m_fungsi->_mpdf2('',$html,10,10,10,'L');
-        $this->m_fungsi->mPDFL($html);
+        if($ctk == 0){
+            $this->m_fungsi->mPDFL($html);
+        }else if($ctk == 1){
+            header("Content-type: application/octet-stream");
+            header("Content-Disposition: attachment; filename=$judul.xls");
+            header("Pragma: no-cache");
+            header("Expires: 0");
+            $data2['prev']= $html;
+            $this->load->view('view_excel', $data2);
+        }
 
     }
 
@@ -309,6 +326,7 @@ class Laporan extends CI_Controller {
         $tgl1 = $_GET['tgl1'];
         $tgl2 = $_GET['tgl2'];
         $jenis = $_GET['jenis'];
+        $ctk = $_GET['ctk'];
 
         $html = '';
         //$this->m_fungsi->tanggal_format_indonesia($data_pl->tgl)
@@ -320,12 +338,20 @@ class Laporan extends CI_Controller {
         }
 
         // JUDUL
+        $judul = 'LAPORAN TOTAL PEMBELIAN TANGGAL '.strtoupper($ttgl);
+
+        if($ctk == 0){
+            $s_cp = '';
+        }else if($ctk == 1){
+            $s_cp = 'colspan="5"';
+        }
+
         $html .= '<table cellspacing="0" style="font-size:12px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;text-align:center;font-family:Arial !important">
             <tr>
-                <th>LAPORAN TOTAL PEMBELIAN</th>
+                <th '.$s_cp.'>LAPORAN TOTAL PEMBELIAN</th>
             </tr>
             <tr>
-                <th>TANGGAL '.strtoupper($ttgl).'</th>
+                <th '.$s_cp.'>TANGGAL '.strtoupper($ttgl).'</th>
             </tr>
         </table>';
 
@@ -399,7 +425,16 @@ class Laporan extends CI_Controller {
 
         $html .= '</table>';
 
-        $this->m_fungsi->_mpdf2('',$html,10,10,10,'P');
+        if($ctk == 0){
+            $this->m_fungsi->_mpdf2('',$html,10,10,10,'P');
+        }else if($ctk == 1){
+            header("Content-type: application/octet-stream");
+            header("Content-Disposition: attachment; filename=$judul.xls");
+            header("Pragma: no-cache");
+            header("Expires: 0");
+            $data2['prev']= $html;
+            $this->load->view('view_excel', $data2);            
+        }
 
     }
 
