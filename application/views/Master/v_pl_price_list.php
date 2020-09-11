@@ -67,6 +67,18 @@
                                         <td></td>
                                     </tr>
                                     <tr>
+                                        <td>Laporan</td>
+                                        <td>:</td>
+                                        <td>
+                                        <select name="" id="laporan" class="form-control">
+                                          <option value="0">Pilih...</option>
+                                          <option value="sma">Sinar Mukti Abadi</option>
+                                          <option value="st">Sinar Teknindo</option>
+                                        </select>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
                                         <td>No. Surat Jalan</td>
                                         <td>:</td>
                                         <td>
@@ -426,6 +438,7 @@
       // data = $('#kepada').select2('data');
       // kepada = data[0].id;
       tgl = $("#tgl").val();
+      laporan = $("#laporan").val();
       no_surat = $("#no_surat").val();
       no_so = $("#no_so").val();
       no_po = $("#no_po").val();
@@ -440,7 +453,7 @@
 
       cart = $('#detail_cart').html();
       
-      if (cart == "" || tgl == "" || no_surat == "" || no_so == "" || no_po == "" || nama_perusahaan == "" || pimpinan == "" || npwp == "" || alamat == "" || no_telp == "" || upup == "")  {
+      if (cart == "" || tgl == "" || laporan == 0 || no_surat == "" || no_so == "" || no_po == "" || nama_perusahaan == "" || pimpinan == "" || npwp == "" || alamat == "" || no_telp == "" || upup == "")  {
         showNotification("alert-info", "Harap Lengkapi Form", "bottom", "center", "", ""); return;
       }
 
@@ -453,6 +466,7 @@
           data     : ({
             id:id,
             tgl:tgl,
+            laporan:laporan,
             no_surat:no_surat,
             no_so:no_so,
             no_po:no_po,
@@ -556,6 +570,7 @@
       status = "insert";
 
       $("#tgl").val("");
+      $("#laporan").val("0");
       $("#no_surat").val("");
       $("#no_so").val("");
       $("#no_po").val("");

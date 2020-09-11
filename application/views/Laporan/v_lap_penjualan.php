@@ -31,17 +31,6 @@
         <th style="border:0;width:12%"></th>
       </tr>
       <tr>
-        <td>PT</td>
-        <td>:</td>
-        <td colspan="3">
-        <select name="" id="logo" class="form-control">
-          <option value="0">Pilih...</option>
-          <option value="sma">Sinar Mukti Abadi</option>
-          <option value="st">Sinar Teknindo</option>
-        </select>
-        </td>
-      </tr>
-      <tr>
         <td style="padding:10px" colspan="5"></td>
       </tr>
       <tr>
@@ -99,17 +88,6 @@
     <th style="border:0;width:12%"></th>
     <th style="border:0;width:3%"></th>
     <th style="border:0;width:12%"></th>
-  </tr>
-  <tr>
-    <td>PT</td>
-    <td>:</td>
-    <td colspan="3">
-    <select name="" id="logo_nota" class="form-control">
-      <option value="0">Pilih...</option>
-      <option value="sma">Sinar Mukti Abadi</option>
-      <option value="st">Sinar Teknindo</option>
-    </select>
-    </td>
   </tr>
   <tr>
     <td style="padding:10px" colspan="5"></td>
@@ -354,16 +332,15 @@
     $("#no_so").val(data[0].no_so);
   });
 
-  function cetak_sj(ctk){
+  function cetak_sj(ctk){ //
     jenis = $("#id_pl_sj").val(); 
-    pt = $("#logo").val(); 
 
-    if (jenis == "" || pt == 0 || pt == null){
+    if (jenis == ""){
       showNotification("alert-info", "PILIH PT / PACKING LIST DAHULU !!!", "top", "center", "", ""); return;
     }
 
     var url    = "<?php echo base_url('Laporan/Surat_Jalan?'); ?>";
-    window.open(url+'jenis='+jenis+'&ctk='+ctk+'&pt='+pt, '_blank');
+    window.open(url+'jenis='+jenis+'&ctk='+ctk, '_blank');
 
   }
 
@@ -410,10 +387,9 @@
 
   function cetak_nota(ctk){
     jenis = $("#id_pl_nota").val(); 
-    pt = $("#logo_nota").val(); 
     tgl_ctk = $("#tgl_cetak").val(); 
 
-    if (jenis == "" || pt == 0 || pt == null){
+    if (jenis == ""){
       showNotification("alert-info", "PILIH PT / PACKING LIST DAHULU !!!", "top", "center", "", ""); return;
     }
 
@@ -422,7 +398,7 @@
     }
 
     var url    = "<?php echo base_url('Laporan/Nota_Penjualan?'); ?>";
-    window.open(url+'jenis='+jenis+'&ctk='+ctk+'&pt='+pt+'&tgl_ctk='+tgl_ctk, '_blank');
+    window.open(url+'jenis='+jenis+'&ctk='+ctk+'&tgl_ctk='+tgl_ctk, '_blank');
   }
 
   /////////////////////////////////////////////////////////////////////

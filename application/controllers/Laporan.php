@@ -471,7 +471,7 @@ class Laporan extends CI_Controller {
         //
         $jenis = $_GET['jenis'];
         $ctk = $_GET['ctk'];
-        $pt = $_GET['pt'];
+        // $pt = $_GET['pt'];
 
         $html = '';
 
@@ -480,13 +480,13 @@ class Laporan extends CI_Controller {
         WHERE a.id='$jenis'")->row();
 
         // KOP
-        if($pt == "sma"){
+        if($sql_kop->laporan == "sma" || $sql_kop->laporan == ""){
             // $jpg = "http://localhost/si_pp/assets/images/logo_sma.jpg";
             $jpg = "http://sinarmuktiabadi.com/assets/images/logo_sma.jpg";
             $top = 'top';
             $px = '0 0 70px';
             $dd = '5px 0';
-        }else if($pt == "st"){
+        }else if($sql_kop->laporan == "st"){
             // $jpg = "http://localhost/si_pp/assets/images/logo_st.jpg";
             $jpg = "http://sinarmuktiabadi.com/assets/images/logo_st.jpg";
             $top = 'top';
@@ -599,10 +599,10 @@ class Laporan extends CI_Controller {
 
         $html .= '</table>';
 
-        // TANDA TANGAN
-        if($pt == "sma"){
+        // TANDA TANGAN //
+        if($sql_kop->laporan == "sma"){
             $atn = 'Andreas Purwanto';
-        }else if($pt == "st"){
+        }else if($sql_kop->laporan == "st"){
             $atn = 'Novan Krisna';
         }
 
@@ -640,22 +640,22 @@ class Laporan extends CI_Controller {
     $jenis = $_GET['jenis'];
     $ctk = $_GET['ctk'];
     $tgl_ctk = $_GET['tgl_ctk'];
-    $pt = $_GET['pt'];
+    // $pt = $_GET['pt'];
 
     $html = '';
 
-    $sql_kop = $this->db->query("SELECT b.no_surat,b.no_po,b.up,a.tgl_jt,c.nm_perusahaan,c.npwp,c.alamat,a.* FROM m_invoice a
+    $sql_kop = $this->db->query("SELECT b.no_surat,b.no_po,b.up,b.laporan,a.tgl_jt,c.nm_perusahaan,c.npwp,c.alamat,a.* FROM m_invoice a
     INNER JOIN m_pl_price_list b ON a.id_pl=b.id
     INNER JOIN m_perusahaan c ON b.id_m_perusahaan=c.id
     WHERE a.id='$jenis'")->row();
 
     // KOP
-    if($pt == "sma"){
+    if($sql_kop->laporan == "sma" || $sql_kop->laporan == ""){
         // $jpg = "http://localhost/si_pp/assets/images/logo_sma.jpg";
         $jpg = "http://sinarmuktiabadi.com/assets/images/logo_sma.jpg";
         $top = 'top';
         $px = '0 0 70px';
-    }else if($pt == "st"){
+    }else if($sql_kop->laporan == "st"){
         // $jpg = "http://localhost/si_pp/assets/images/logo_st.jpg";
         $jpg = "http://sinarmuktiabadi.com/assets/images/logo_st.jpg";
         $top = 'top';
@@ -664,7 +664,7 @@ class Laporan extends CI_Controller {
 
         # # # # # # # # # # # # # KOP # # # # # # # # # # # # #
 
-        if($pt == "st"){
+        if($sql_kop->laporan == "st"){
             $npwp = '';
             $kop_nota = 'N O T A
             <br><div style="font-weight:normal;font-size:12px !important">Klaten, '.$this->m_fungsi->tanggal_format_indonesia($tgl_ctk).'
@@ -673,7 +673,7 @@ class Laporan extends CI_Controller {
             <br/>'.$sql_kop->alamat.'
             </div>';
             $dd = '0';
-        }else if($pt == "sma"){
+        }else if($sql_kop->laporan == "sma"){
             $npwp = 'NPWP : '.$sql_kop->npwp;
             $kop_nota = 'NOTA PENJUALAN';
             $dd = '0 0 0 65px';
@@ -691,7 +691,7 @@ class Laporan extends CI_Controller {
         <td style="border:0;padding:'.$dd.';font-weight:bold;font-size:14px !important">'.$kop_nota.'</td>
         </tr>';
 
-        if($pt == "st"){
+        if($sql_kop->laporan == "st"){
             $html .='';
             $html .='<tr>
             <td style="border:0;padding:0 0 1px">No. Nota</td>
@@ -699,7 +699,7 @@ class Laporan extends CI_Controller {
             <td style="border:0;padding:0 0 1px 5px 0 0">'.$sql_kop->no_nota.'</td>
             <td style="border:0;padding:0 0 1px">No. PO: '.$sql_kop->no_po.'</td>
             </tr>';
-        }else if($pt == "sma"){
+        }else if($sql_kop->laporan == "sma"){
             if($sql_kop->up == ""){
                 $upup = "";
             }else{
@@ -785,12 +785,12 @@ class Laporan extends CI_Controller {
 
         # # # # # # # # # # # # # SUB TOTAL - PPN - ONGKIR - TOTAL # # # # # # # # # # # # #
 
-        if($pt == "st") {
+        if($sql_kop->laporan == "st") {
             $tot_all = round($sub_tot + $sql_kop->ongkir);
             $rs = '2';
             $html .= '';
             $t_td = '';
-        }else if($pt == "sma") {
+        }else if($sql_kop->laporan == "sma") {
             $ppn = round($sub_tot * 0.1);
             $tot_all = round($sub_tot + $ppn);
             $rs = '2';
@@ -805,12 +805,12 @@ class Laporan extends CI_Controller {
         </tr>';
 
         // ppn
-        if($pt == "st") {
+        if($sql_kop->laporan == "st") {
             $html .= '';
             $nm_ttd = 'Pembayaran mohon ditransfer ke BCA
             <br/>Rekening : 079.0302.231
             <br/>Atas Nama : Niken Pangastuti - Cabang Pasar Legi';
-        }else if($pt == "sma") {
+        }else if($sql_kop->laporan == "sma") {
             $html .='<tr>
             <td style="border:1px solid #000;padding:5px">PPN</td>
             <td style="border:1px solid #000;padding:5px;text-align:right">'.number_format($ppn).'</td>
@@ -818,7 +818,7 @@ class Laporan extends CI_Controller {
         }
 
         // ongkir + total all
-        if($pt == "st"){
+        if($sql_kop->laporan == "st"){
             $html .='<tr>
             '.$t_td.'
                 <td style="border:1px solid #000;padding:5px">Ongkir</td>
@@ -829,7 +829,7 @@ class Laporan extends CI_Controller {
                 <td style="border:1px solid #000;padding:5px">Total</td>
                 <td style="border:1px solid #000;padding:5px;text-align:right">'.number_format($tot_all).'</td>
             </tr>';
-        }else if($pt == "sma"){
+        }else if($sql_kop->laporan == "sma"){
             $html .='<tr>
             '.$t_td.'
             <td style="border:1px solid #000;padding:5px">Total</td>
@@ -846,7 +846,7 @@ class Laporan extends CI_Controller {
 
         # # # # # # # # # # # # # TANDA TANGAN # # # # # # # # # # # # # 
 
-        if($pt == "st") {
+        if($sql_kop->laporan == "st") {
             $html .= '';
 
             $html .= '<tr>
@@ -866,7 +866,7 @@ class Laporan extends CI_Controller {
             <td style="border:0;padding:0 0 5px;text-align:center" colspan="4">Niken Pangastuti</td>
             </tr>
             ';
-        }else if($pt == "sma") {
+        }else if($sql_kop->laporan == "sma") {
             $no_faktur = 'No Faktur Pajak<br/>'.$sql_kop->no_faktur.'';
             $nm_ttd = 'Andreas Purwanto<br/>Bank : BRI KCP DELANGGU-KLATEN A/C : 2055 - 01 - 000246 - 30 - 0 A/N : SINAR MUKTI ABADI';
 
@@ -914,7 +914,7 @@ class Laporan extends CI_Controller {
             $where = ""; 
             $kkop = 'SEMUA CUSTOMER';
         }else{
-            $where = "AND c.id='$jenis'"; 
+            $where = "AND c.id='$jenis' AND b.laporan='$pt'"; 
             $kkop = $kop_kop->nm_perusahaan;
         }
 
@@ -942,7 +942,7 @@ class Laporan extends CI_Controller {
             <td style="border:0;text-align:center;font-weight:bold" colspan="5">'.strtoupper($kkop).'</td>
         </tr>
         <tr>
-            <td style="border:0;padding:0 0 10px;text-align:center;font-weight:bold" colspan="5">JATUH TEMPO : '.strtoupper($tgll).'</td>
+            <td style="border:0;padding:0 0 10px;text-align:center;font-weight:bold" colspan="5">TANGGAL : '.strtoupper($tgll).'</td>
         </tr>
         <tr>
             <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">No</td>

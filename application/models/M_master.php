@@ -295,6 +295,7 @@ class M_master extends CI_Model{
         $data = array(
             'id_m_perusahaan' => $_POST['kepada'],
             'tgl' => $_POST['tgl'],
+            'laporan' => $_POST['laporan'],
             'no_surat' => $_POST['no_surat'],
             'no_so' => $_POST['no_so'],
             'no_po' => $_POST['no_po'],
