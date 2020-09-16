@@ -200,6 +200,9 @@
                                 <li>
                                     <a href="<?php echo base_url('Laporan/BarangMasuk') ?>">Barang Masuk</a>
                                 </li>
+                                <li>
+                                    <a href="<?php echo base_url('Laporan/DaftarHutangCash') ?>">Daftar Hutang dan Cash</a>
+                                </li>
                             <?php } ?>
                             <?php if($this->session->userdata('otoritas') == "Penjualan") { ?>
                                 <li>

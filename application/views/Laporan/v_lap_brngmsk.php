@@ -27,7 +27,7 @@
     <br/><button type="button" onclick="cetak_barang(0)" class="btn btn-default btn-sm waves-effect">
       <i class="material-icons">personal_video</i> CETAK
     </button>&nbsp;
-    <button type="button" onclick="cetak_barang(0)" class="btn btn-default btn-sm waves-effect">
+    <button type="button" onclick="cetak_barang(1)" class="btn btn-default btn-sm waves-effect">
       <i class="material-icons">sms</i> EXCEL
     </button>
   </div>
@@ -55,7 +55,6 @@
     
       tgl1 = $("#tgl1").val();
       tgl2 = $("#tgl2").val();
-      id_supplier = $("#sid_supplier").val();
     
     if (tgl1 == ""){
       showNotification("alert-info", "Pilih Tanggal Mulai", "bottom", "right", "", ""); return;
@@ -63,7 +62,7 @@
       showNotification("alert-info", "Pilih Tanggal Akhir", "bottom", "right", "", ""); return;
     }
 
-    var url    = "<?php echo base_url('Laporan/lap_barang?'); ?>";
+    var url    = "<?php echo base_url('Laporan/LapBarangMasuk?'); ?>";
     window.open(url+'tgl1='+tgl1+'&tgl2='+tgl2+'&ctk='+ctk, '_blank');
 
    }

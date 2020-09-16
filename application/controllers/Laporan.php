@@ -45,6 +45,12 @@ class Laporan extends CI_Controller {
         $this->load->view('footer');
     }
 
+    function DaftarHutangCash(){
+        $this->load->view('header');
+        $this->load->view('Laporan/v_lap_hutangcash');
+        $this->load->view('footer');
+    }
+
     function Pembelian(){
         $this->load->view('header');
         $this->load->view('Laporan/v_lap_pembelian');
@@ -2635,6 +2641,176 @@ class Laporan extends CI_Controller {
             $this->load->view('view_excel', $data2);
         }
 
+    }
+
+    function LapBarangMasuk(){
+        $tgl1 = $_GET['tgl1'];
+        $tgl2 = $_GET['tgl2'];
+        $ctk = $_GET['ctk'];
+        $html = '';
+
+        if($tgl1 == $tgl2){
+            $ttgl = $this->m_fungsi->tanggal_format_indonesia($tgl1);
+        }else{
+            $ttgl = $this->m_fungsi->tanggal_format_indonesia($tgl1).' S/D '.$this->m_fungsi->tanggal_format_indonesia($tgl2);
+        }
+
+        // K O P
+        $html .='<table cellspacing="0" style="font-size:11px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;font-family:Arial !important">
+        <tr>
+            <th style="border:0;padding:0 5px" colspan="7">DATA BARANG MASUK</th>
+        </tr>
+        <tr>
+            <th style="border:0;padding:0 5px 10px" colspan="7">TANGGAL : '.strtoupper($ttgl).'</th>
+        </tr>
+        <tr>
+            <th style="border:1px solid #000;padding:5px;width:5%">No</th>
+            <th style="border:1px solid #000;padding:5px;width:11%">Tanggal</th>
+            <th style="border:1px solid #000;padding:5px;width:13%">Merk</th>
+            <th style="border:1px solid #000;padding:5px;width:32%">Nama dan Spesifikasi</th>
+            <th style="border:1px solid #000;padding:5px;width:10%">Jumlah</th>
+            <th style="border:1px solid #000;padding:5px;width:16%">Dari</th>
+            <th style="border:1px solid #000;padding:5px;width:13%">Ket</th>
+        </tr>
+        ';
+
+        // ambil data
+        $sql_isi = $this->db->query("SELECT b.nama_barang,b.merek,b.spesifikasi,d.nama_supplier,a.* FROM m_barang_plus a
+        INNER JOIN m_barang b ON b.id=a.id_m_barang
+        INNER JOIN m_nota c ON b.id_m_nota=c.id
+        INNER JOIN m_supplier d ON c.id_supplier=d.id
+        WHERE a.tgl_bayar BETWEEN '$tgl1' AND '$tgl2'
+        ORDER BY a.tgl_bayar ASC,b.nama_barang ASC");
+
+        $i = 0;
+        foreach($sql_isi->result() as $r){
+            $i++;
+            $html .='<tr>
+                <td style="border:1px solid #000;padding:4px 3px;text-align:center">'.$i.'</td>
+                <td style="border:1px solid #000;padding:4px 3px;text-align:center">'.$this->m_fungsi->TglIndSingkat($r->tgl_bayar).'</td>
+                <td style="border:1px solid #000;padding:4px 3px;">'.$r->merek.'</td>
+                <td style="border:1px solid #000;padding:4px 3px;">'.$r->nama_barang.' '.$r->spesifikasi.'</td>
+                <td style="border:1px solid #000;padding:4px 3px;">'.number_format($r->qty_plus).' '.$r->qty_ket.'</td>
+                <td style="border:1px solid #000;padding:4px 3px;">'.$r->nama_supplier.'</td>
+                <td style="border:1px solid #000;padding:4px 3px;">'.$r->status.'</td>
+            </tr>';
+        }
+
+        $html .='</table>';
+
+        $judul = 'DATA BARANG MASUK TGL '.$ttgl;
+
+        if($ctk == 0){
+            $this->m_fungsi->mPDFB($html);
+        }else if($ctk == 1){
+            header("Content-type: application/octet-stream");
+            header("Content-Disposition: attachment; filename=$judul.xls");
+            header("Pragma: no-cache");
+            header("Expires: 0");
+            $data2['prev']= $html;
+            $this->load->view('view_excel', $data2);
+        }
+    }
+
+    function HutangCashSupplier(){
+        $tgl1 = $_GET['tgl1'];
+        $tgl2 = $_GET['tgl2'];
+        $jenis = $_GET['jenis'];
+        $ctk = $_GET['ctk'];
+        $html = '';
+
+        $date_now = date('Y-m-d');
+
+        if($tgl1 == $tgl2){
+            $ttgl = $this->m_fungsi->tanggal_format_indonesia($tgl1);
+        }else{
+            $ttgl = $this->m_fungsi->tanggal_format_indonesia($tgl1).' S/D '.$this->m_fungsi->tanggal_format_indonesia($tgl2);
+        }
+
+        // K O P
+        $html .='<table cellspacing="0" style="font-size:11px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;font-family:Arial !important">
+        <tr>
+            <th style="border:0;padding:0 5px" colspan="6">PEMBELIAN</th>
+        </tr>
+        <tr>
+            <th style="border:0;padding:0 5px" colspan="6">DAFTAR HUTANG DAN CASH PER SUPPLIER</th>
+        </tr>
+        <tr>
+            <th style="border:0;padding:0 5px 10px" colspan="6">TANGGAL : '.strtoupper($ttgl).'</th>
+        </tr>
+        <tr>
+            <th style="border:0;padding:0 5px 10px" colspan="6">TGL CETAK : '.strtoupper($this->m_fungsi->tanggal_format_indonesia($date_now)).'</th>
+        </tr>
+        <tr>
+            <th style="border:1px solid #000;padding:5px;width:5%">No</th>
+            <th style="border:1px solid #000;padding:5px;width:18%">No Nota</th>
+            <th style="border:1px solid #000;padding:5px;width:19%">Nominal Nota</th>
+            <th style="border:1px solid #000;padding:5px;width:18%">Tgl Bayar</th>
+            <th style="border:1px solid #000;padding:5px;width:18%">Tgl Jth Tempo</th>
+            <th style="border:1px solid #000;padding:5px;width:22%">Ket</th>
+        </tr>
+        ';
+
+        // ambil data
+        $sql_isi = $this->db->query("SELECT c.no_nota,a.* FROM m_barang_plus a
+        INNER JOIN m_barang b ON b.id=a.id_m_barang
+        INNER JOIN m_nota c ON b.id_m_nota=c.id
+        INNER JOIN m_supplier d ON c.id_supplier=d.id
+        WHERE a.tgl_bayar BETWEEN '$tgl1' AND '$tgl2' AND d.id='$jenis'
+        ORDER BY a.tgl_bayar ASC,b.nama_barang ASC");
+
+        $i = 0;
+        foreach($sql_isi->result() as $r){
+            $i++;
+            $html .='<tr>
+                <td style="border:1px solid #000;padding:4px 3px;text-align:center">'.$i.'</td>
+                <td style="border:1px solid #000;padding:4px 3px;">'.$r->no_nota.'</td>
+                <td style="border:1px solid #000;padding:4px 3px;">Rp. '.number_format($r->harga).'</td>';
+            
+            $t_tglbyr = $this->m_fungsi->TglIndSingkat($r->tgl_bayar);
+
+            if($r->tgl_bayar == $date_now && $r->status == "Kredit"){
+                $style = 'color:#ff8c00;font-weight:bold';
+                $c_tglbayar = '-';
+                $c_tgltempo = $t_tglbyr;
+            }else if($r->tgl_bayar <= $date_now && $r->status == "Kredit"){
+                $style = 'color:#f00;font-weight:bold';
+                $c_tglbayar = '-';
+                $c_tgltempo = $t_tglbyr;
+            }else if($r->tgl_bayar >= $date_now && $r->status == "Kredit"){
+                $style = 'color:#000;font-weight:bold';
+                $c_tglbayar = '-';
+                $c_tgltempo = $t_tglbyr;
+            }else if($r->status == "Cash"){
+                $style = 'color:#080;font-weight:bold';
+                $c_tglbayar = $t_tglbyr;
+                $c_tgltempo = '-';
+            }else{
+                $style = 'color:#080;font-weight:bold';
+                $c_tglbayar = $t_tglbyr;
+                $c_tgltempo = '-';
+            }
+            
+            $html .='<td style="border:1px solid #000;padding:4px 3px;text-align:center">'.$c_tglbayar.'</td>
+                <td style="border:1px solid #000;padding:4px 3px;text-align:center">'.$c_tgltempo.'</td>
+                <td style="border:1px solid #000;padding:4px 3px;text-align:center;'.$style.'">'.$r->status.'</td>
+            </tr>';
+        }
+
+        $html .='</table>';
+
+        $judul = 'DAFTAR HUTANG DAN CASH PER SUPPLIER TGL '.$ttgl;
+
+        if($ctk == 0){
+            $this->m_fungsi->mPDFB($html);
+        }else if($ctk == 1){
+            header("Content-type: application/octet-stream");
+            header("Content-Disposition: attachment; filename=$judul.xls");
+            header("Pragma: no-cache");
+            header("Expires: 0");
+            $data2['prev']= $html;
+            $this->load->view('view_excel', $data2);
+        }
     }
 
  }

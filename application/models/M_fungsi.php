@@ -275,6 +275,17 @@ class M_fungsi extends CI_Model {
 		$mpdf->Output();
 	}
 
+	function mPDFB($html){
+		$mpdf = new \Mpdf\Mpdf;
+		// $mpdf = new \Mpdf\Mpdf([
+		$mpdf = new \Mpdf\Mpdf([
+			'default_font_size' => 8
+		]);
+		// ini_set("memory_limit","-1");
+		$mpdf->WriteHTML($html);
+		$mpdf->Output();
+	}
+
 	function mPDFL($html){
 		ini_set('max_execution_time', '300');
 		ini_set("pcre.backtrack_limit", "9000000");
@@ -365,6 +376,15 @@ class M_fungsi extends CI_Model {
         $tahun  =  $tanggal[0];
         return  $tanggal[2].' '.$bulan.' '.$tahun;
 
+	}
+	
+	function TglIndSingkat($tgl){
+            
+        $tanggal  = explode('-',$tgl); 
+        $bulan  = $this-> getBulan2($tanggal[1]);
+        $tahun  =  $tanggal[0];
+        return  $tanggal[2].' '.$bulan.' '.$tahun;
+
     }
 	
 	function  tanggal_format_indonesia_sebelum($tgl){
@@ -421,6 +441,47 @@ class M_fungsi extends CI_Model {
         break;
         case  12:
         return  "Desember";
+        break;
+    }
+	}
+	
+	function  getBulan2($bln){
+        switch  ($bln){
+        case  1:
+        return  "Jan";
+        break;
+        case  2:
+        return  "Feb";
+        break;
+        case  3:
+        return  "Mar";
+        break;
+        case  4:
+        return  "Apr";
+        break;
+        case  5:
+        return  "Mei";
+        break;
+        case  6:
+        return  "Jun";
+        break;
+        case  7:
+        return  "Jul";
+        break;
+        case  8:
+        return  "Agus";
+        break;
+        case  9:
+        return  "Sep";
+        break;
+        case  10:
+        return  "Okt";
+        break;
+        case  11:
+        return  "Nov";
+        break;
+        case  12:
+        return  "Des";
         break;
     }
     }
