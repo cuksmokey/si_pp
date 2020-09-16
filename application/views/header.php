@@ -197,6 +197,9 @@
                                 <li>
                                     <a href="<?php echo base_url('Laporan/Pembelian') ?>">Pembelian</a>
                                 </li>
+                                <li>
+                                    <a href="<?php echo base_url('Laporan/BarangMasuk') ?>">Barang Masuk</a>
+                                </li>
                             <?php } ?>
                             <?php if($this->session->userdata('otoritas') == "Penjualan") { ?>
                                 <li>
