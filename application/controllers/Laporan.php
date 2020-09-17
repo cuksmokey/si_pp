@@ -2631,6 +2631,7 @@ class Laporan extends CI_Controller {
     function LapBarangMasuk(){
         $tgl1 = $_GET['tgl1'];
         $tgl2 = $_GET['tgl2'];
+        $jenis = $_GET['jenis'];
         $ctk = $_GET['ctk'];
         $html = '';
 
@@ -2659,12 +2660,18 @@ class Laporan extends CI_Controller {
         </tr>
         ';
 
+        if($jenis == 0){
+            $where = '';
+        }else{
+            $where = "AND d.id='$jenis'";
+        }
+
         // ambil data
         $sql_isi = $this->db->query("SELECT b.nama_barang,b.merek,b.spesifikasi,d.nama_supplier,a.* FROM m_barang_plus a
         INNER JOIN m_barang b ON b.id=a.id_m_barang
         INNER JOIN m_nota c ON b.id_m_nota=c.id
         INNER JOIN m_supplier d ON c.id_supplier=d.id
-        WHERE a.tgl_bayar BETWEEN '$tgl1' AND '$tgl2'
+        WHERE a.tgl_bayar BETWEEN '$tgl1' AND '$tgl2' $where
         ORDER BY a.tgl_bayar ASC,b.nama_barang ASC");
 
         $i = 0;
