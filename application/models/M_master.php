@@ -225,7 +225,7 @@ class M_master extends CI_Model{
 
     function get_PL_price_list(){
         $query = "SELECT a.*,(SELECT COUNT(id_pl)
-        FROM m_pl_list_barang WHERE id_pl = a.id) AS jml_timbang FROM m_pl_price_list a";
+        FROM m_pl_list_barang WHERE id_pl = a.id) AS jml_timbang FROM m_pl_price_list a ORDER BY a.id DESC";
         return $this->db->query($query);
     }
 
