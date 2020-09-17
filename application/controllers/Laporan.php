@@ -580,22 +580,7 @@ class Laporan extends CI_Controller {
         if($count == 1) {
             for($i = 0; $i < 4; $i++){ 
                 $cc = 1;
-                $xx = 4;
-            }
-        }else if($count == 2){
-            for($i = 0; $i < 3; $i++){
-                $cc = 2;
-                $xx = 3;
-            }
-        }else if($count == 3){
-            for($i = 0; $i < 2; $i++){
-                $cc = 3;
                 $xx = 2;
-            }
-        }else if($count == 4){
-            for($i = 0; $i < 1; $i++){ 
-                $cc = 4;
-                $xx = 1;
             }
         }
         
@@ -620,16 +605,16 @@ class Laporan extends CI_Controller {
 
         $html .= '<table cellspacing="0" style="font-size:11px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;text-align:center;font-family:Arial !important">
             <tr>
-                <th style="border:0;width:50%;padding:8px 0"></th>
-                <th style="border:0;width:50%;padding:8px 0"></th>
+                <th style="border:0;width:50%;padding:4px 0"></th>
+                <th style="border:0;width:50%;padding:4px 0"></th>
             </tr>
             <tr>
                 <td>Hormat Kami</td>
                 <td>Penerima</td>
             </tr>
             <tr>
-                <td style="border:0;padding:40px 0"></td>
-                <td style="border:0;padding:40px 0"></td>
+                <td style="border:0;padding:45px 0"></td>
+                <td style="border:0;padding:45px 0"></td>
             </tr>
             <tr>
                 <td style="font-weight:bold">'.$atn.'</td>
@@ -824,8 +809,8 @@ class Laporan extends CI_Controller {
             <br/>Atas Nama : Niken Pangastuti - Cabang Pasar Legi';
         }else if($sql_kop->laporan == "sma") {
             $html .='<tr>
-            <td style="border:1px solid #000;padding:5px">PPN</td>
-            <td style="border:1px solid #000;padding:5px;text-align:right">'.number_format($ppn).'</td>
+            <td style="border:1px solid #000;padding:4px 5px">PPN</td>
+            <td style="border:1px solid #000;padding:4px 5px;text-align:right">'.number_format($ppn).'</td>
             </tr>';
         }
 
@@ -833,19 +818,19 @@ class Laporan extends CI_Controller {
         if($sql_kop->laporan == "st"){
             $html .='<tr>
             '.$t_td.'
-                <td style="border:1px solid #000;padding:5px">Ongkir</td>
-                <td style="border:1px solid #000;padding:5px;text-align:right">'.number_format($sql_kop->ongkir).'</td>
+                <td style="border:1px solid #000;padding:4px 5px">Ongkir</td>
+                <td style="border:1px solid #000;padding:4px 5px;text-align:right">'.number_format($sql_kop->ongkir).'</td>
             </tr>';
             $html.='<tr>
                 <td style="border:0;padding:0" colspan="4" rowspan="2">'.$nm_ttd.'</td>
-                <td style="border:1px solid #000;padding:5px">Total</td>
-                <td style="border:1px solid #000;padding:5px;text-align:right">'.number_format($tot_all).'</td>
+                <td style="border:1px solid #000;padding:4px 5px">Total</td>
+                <td style="border:1px solid #000;padding:4px 5px;text-align:right">'.number_format($tot_all).'</td>
             </tr>';
         }else if($sql_kop->laporan == "sma"){
             $html .='<tr>
             '.$t_td.'
-            <td style="border:1px solid #000;padding:5px">Total</td>
-            <td style="border:1px solid #000;padding:5px;text-align:right">'.number_format($tot_all).'</td>
+            <td style="border:1px solid #000;padding:4px 5px">Total</td>
+            <td style="border:1px solid #000;padding:4px 5px;text-align:right">'.number_format($tot_all).'</td>
             </tr>';
         }
 
