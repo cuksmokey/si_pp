@@ -650,6 +650,16 @@ class Laporan extends CI_Controller {
     INNER JOIN m_perusahaan c ON b.id_m_perusahaan=c.id
     WHERE a.id='$jenis'")->row();
 
+    // update tanggal cetak
+    $data_pl_u =  $this->m_master->get_data_one("m_pl_price_list", "id", $sql_kop->id_pl)->result();
+    foreach($data_pl_u as $r){
+        $data = array(
+            'tgl_ctk' => $tgl_ctk
+        );
+        $this->db->where('id', $r->id);
+        $this->db->update('m_pl_price_list', $data);
+    }
+
     // KOP
     if($sql_kop->laporan == "sma" || $sql_kop->laporan == ""){
         // $jpg = "http://localhost/si_pp/assets/images/logo_sma.jpg";

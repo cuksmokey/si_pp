@@ -427,7 +427,7 @@ class Master extends CI_Controller {
                                 "data" => $data,
                         );
 
-            }else if ($jenis == "list_pl_barang") {
+            }else if ($jenis == "list_pl_barang") { //
                 
                 $query = $this->m_master->get_pl_barang();
                 
@@ -669,7 +669,7 @@ class Master extends CI_Controller {
                 $output = array("data" => $data);
                 
 
-            }else if ($jenis == "pl_inv") {
+            }else if ($jenis == "pl_inv") { //
                 $i=1;
                 $query = $this->m_master->get_load_inv();
                 
@@ -699,7 +699,7 @@ class Master extends CI_Controller {
                                 <i class="material-icons">remove_red_eye</i>
                             </button>';
 
-                        $confirmByr = '<a type="button" onclick="confirmByr('.$id.','."".')" class="btn bg-green btn-circle waves-effect waves-circle waves-float">
+                        $confirmByr = '<a type="button" onclick="confirmByr('.$id.','.$i.')" class="btn bg-green btn-circle waves-effect waves-circle waves-float">
                             <i class="material-icons">check</i>
                         </a>';
 
@@ -707,7 +707,7 @@ class Master extends CI_Controller {
                             $ketTglCtk = "Belum Cetak Nota Penjualan!";
                             $btn = $superbtn;
                         }else if($r->tgl_ctk <> NULL && $r->tgl_byr === NULL){
-                            $ketTglCtk = 'Pilih Tgl Pembayaran <br/><input type="date" id="plh_tgl_inv" value="" class="form-control">';
+                            $ketTglCtk = 'Pilih Tgl Pembayaran <br/><input type="date" id="plhTglInvc'.$i.'" value="" class="form-control">';
                             $btn = $superbtn.' '.$confirmByr;
                         }else{
                             $ketTglCtk = "Sudah Pembayaran";
@@ -717,7 +717,7 @@ class Master extends CI_Controller {
                         $row[] = $ketTglCtk;
 
                         $aksi ="";
-                        if (($this->session->userdata('level') == "Developer" || $this->session->userdata('level') == "SuperAdmin" ) && $r->cek_inv == 0) {
+                        if (($this->session->userdata('level') == "Developer" || $this->session->userdata('level') == "SuperAdmin" )) {
                             $aksi = $btn;
                         }else{
                             $aksi = ''.$superbtn2.'';
@@ -1783,6 +1783,30 @@ class Master extends CI_Controller {
         echo "1";
     }
 
+    function confirmBayarInv(){
+        $id_inv = $_POST['id'];
+        $tgl_byr = $_POST['tglByrInv'];
+
+        $data =  $this->m_master->get_data_one("m_invoice", "id", $id_inv)->row();
+
+        // ubah cek inv jadi 1
+        $data_pl_u =  $this->m_master->get_data_one("m_pl_price_list", "id", $data->id_pl)->result();
+        foreach($data_pl_u as $u_pl){
+            $data = array(
+                'cek_inv' => 1
+            );
+            $this->db->where('id', $u_pl->id);
+            $this->db->update('m_pl_price_list', $data);
+        }
+
+        // update tgl bayar inv
+        $this->db->set("tgl_byr", $tgl_byr);
+        $this->db->where('id', $id_inv);
+        $this->db->update('m_invoice');
+
+        echo json_encode(array('msg' => true));
+    }
+
     function confirm_cek_po(){
         $id_pl = $_POST['id'];
 
@@ -1868,9 +1892,12 @@ class Master extends CI_Controller {
             // ubah data inv jadi 0
             $data_pl_u =  $this->m_master->get_data_one("m_pl_price_list", "id", $data->id_pl)->result();
             foreach($data_pl_u as $u_pl){
-                $this->db->set("data_inv", "0");
+                $data = array(
+                    'data_inv' => 0,
+                    'cek_inv' => 0
+                );
                 $this->db->where('id', $u_pl->id);
-                $this->db->update('m_pl_price_list');
+                $this->db->update('m_pl_price_list', $data);
             }
 
             // update harga list barang jadi 0

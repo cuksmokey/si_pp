@@ -130,11 +130,16 @@
     <td style="padding:10px" colspan="5"></td>
   </tr>
   <tr>
+    <td>Cek Cetak</td>
+    <td></td>
+    <td colspan="3">
+      <input type="text" id="cek_cetak" autocomplete="off" disabled="true" value="" style="background:transparent;border:0">
+    </td>
+  </tr>
+  <tr>
     <td>Tanggal Cetak</td>
     <td>:</td>
-    <td><input type="date" class="form-control" value="<?= date('Y-m-d') ?>" id="tgl_cetak"></td>
-    <!-- <td style="text-align:center">s/d</td>
-    <td><input type="date" class="form-control" value="<?= date('Y-m-d') ?>" id="tgl2_rekap_barang"></td> -->
+    <td><input type="date" class="form-control" value="" id="tgl_cetak"></td>
   </tr>
 </table>
 
@@ -248,6 +253,8 @@
       $("#kepada").val("");
       $("#no_surat").val("");
       $("#no_so").val("");
+      $("#tgl_cetak").val("");
+      $("#cek_cetak").val("");
     });    
 
   //#####################################################################
@@ -266,6 +273,8 @@
       $("#logo_rekap_sj").val("");
       $("#text_cust").val("");
       $("#id_cust").val("");
+      $("#tgl_cetak").val("");
+      $("#cek_cetak").val("");
     });    
 
   //#####################################################################
@@ -287,6 +296,8 @@
       $("#kepada_nota").val("");
       $("#no_nota").val("");
       $("#no_po").val("");
+      $("#tgl_cetak").val("");
+      $("#cek_cetak").val("");
     });
   });
 
@@ -380,6 +391,7 @@
     data = $('#pilih_pl_nota').select2('data');
     $("#id_pl_nota").val(data[0].id);
     $("#tgl_pl_nota").val(data[0].jt_nota);
+    $("#cek_cetak").val(data[0].tgl_ctk);
     $("#kepada_nota").val(data[0].nm_perusahaan);
     $("#no_nota").val(data[0].no_nota);
     $("#no_po").val(data[0].no_po);

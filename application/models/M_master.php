@@ -230,7 +230,7 @@ class M_master extends CI_Model{
     }
 
     function get_load_inv(){
-        $query = "SELECT b.no_po,b.cek_inv,(SELECT COUNT(id_pl) FROM m_pl_list_barang WHERE id_pl = b.id) AS jml_timbang,a.* FROM m_invoice a
+        $query = "SELECT b.no_po,b.cek_inv,b.tgl_ctk,(SELECT COUNT(id_pl) FROM m_pl_list_barang WHERE id_pl = b.id) AS jml_timbang,a.* FROM m_invoice a
         INNER JOIN m_pl_price_list b ON a.id_pl=b.id
         ORDER BY a.id DESC";
         return $this->db->query($query);
@@ -882,7 +882,7 @@ class M_master extends CI_Model{
     }
 
     function list_p_nota($s=""){
-        $users = $this->db->query("SELECT CONCAT(no_nota, ' | ', c.nm_perusahaan) AS ket,a.tgl_jt AS jt_nota,c.nm_perusahaan,a.* FROM m_invoice a
+        $users = $this->db->query("SELECT CONCAT(no_nota, ' | ', c.nm_perusahaan) AS ket,a.tgl_jt AS jt_nota,c.nm_perusahaan,b.tgl_ctk,a.* FROM m_invoice a
         INNER JOIN m_pl_price_list b ON a.id_pl=b.id
         INNER JOIN m_perusahaan c ON b.id_m_perusahaan=c.id
         WHERE (no_nota LIKE '%$s%' OR b.no_po LIKE '%$s%' OR c.nm_perusahaan LIKE '%$s%')
@@ -891,10 +891,17 @@ class M_master extends CI_Model{
         // Initialize Array with fetched data
         $data = array();
         foreach($users as $user){
+            if($user['tgl_ctk'] === NULL){
+                $tgl_ctk = 'BELUM CETAK';
+            }else{
+                $tgl_ctk = $user['tgl_ctk'];
+            }
+
            $data[] = array(
                "id"=>$user['id'],
                "text"=>$user['ket'],
                "jt_nota"=>$user['jt_nota'],
+               "tgl_ctk"=>$tgl_ctk,
                "nm_perusahaan"=>$user['nm_perusahaan'],
                "no_nota"=>$user['no_nota'],
                "no_po"=>$user['no_faktur']

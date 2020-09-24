@@ -418,7 +418,7 @@
        tabel.ajax.reload(null,false);
    }
 
-    function load_data(){
+    function load_data(){ //
       var table = $('#datatable11').DataTable();
 
          table.destroy();
@@ -569,40 +569,27 @@
 
     }
 
-    function confirmCekPo(id,nm){
-        swal({
-          title: "Apakah Anda Yakin Konfirmasi Data ?",
-          text: nm,
-          type: "warning",
-          showCancelButton: true,
-          confirmButtonClass: "btn-danger",
-          confirmButtonText: "Ya",
-          cancelButtonText: "Batal",
-          closeOnConfirm: false,
-          closeOnCancel: false
-        },
-        function(isConfirm) {
-          if (isConfirm) {
-            $.ajax({
-              url   : '<?php echo base_url(); ?>Master/confirm_cek_po',
-              type  : "POST",
-              data  : {id: id},
-              success : function(data){
-                json = JSON.parse(data);
-                if (json.msg == true) {
-                  swal("Berhasil", "", "success");
-                  reloadTable();
-                  // // alert(json.g.id+' - '+json.g.id_perusahaan+' - '+json.g.tgl+' - '+json.g.g_label+' - '+json.g.width+' - '+json.g.tonase+' - '+json.g.no_po);
-                }else{
-                  swal(json.g, "", "error");
-                  // alert(json.g);
-                }
-              }
-            });
-          } else {
-            swal("", "Data Batal Di Konfirmasi", "error");
+    function confirmByr(id,i){
+      tglByrInv = $("#plhTglInvc"+i).val();
+
+      // alert("ID:"+id+". ii:"+i+". tttbyr:"+tglByrInv);
+
+      if(tglByrInv == 0 || tglByrInv == ""){
+        swal("Pilih Tanggal Bayar Terlebih Dahulu!", "", "error");
+      }else{
+        $.ajax({
+          url : "<?php echo base_url();?>Master/confirmBayarInv",
+          method : "POST",
+          data : {
+            id:id,
+            tglByrInv:tglByrInv
+          },
+          success: function(data){
+            swal("Berhasil Terbayar", "", "success");
+            reloadTable();
           }
         });
+      }
     }
 
 
