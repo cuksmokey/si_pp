@@ -2829,10 +2829,9 @@ class Laporan extends CI_Controller {
         </tr>';
 
         // ambil data
-        $sql_isi = $this->db->query("SELECT c.nama_barang,b.qty,e.harga,d.nm_perusahaan,d.alamat,d.no_telp,a.* FROM m_pl_price_list a
+        $sql_isi = $this->db->query("SELECT c.nama_barang,b.qty,b.harga_invoice,d.nm_perusahaan,d.alamat,d.no_telp,a.* FROM m_pl_price_list a
         INNER JOIN m_pl_list_barang b ON b.id_pl=a.id
         INNER JOIN m_barang c ON b.id_m_barang=c.id
-        INNER JOIN m_barang_plus e ON c.id_m_barang_plus=e.id
         INNER JOIN m_perusahaan d ON a.id_m_perusahaan=d.id
         WHERE a.id='$jenis'
         ORDER BY c.nama_barang ASC");
@@ -2895,7 +2894,7 @@ class Laporan extends CI_Controller {
                 <td style="border:1px solid #000;padding:5px 3px;text-align:center">'.$i.'</td>
                 <td style="border:1px solid #000;padding:5px 3px">'.$r->nama_barang.'</td>
                 <td style="border:1px solid #000;padding:5px 3px;text-align:center">'.$r->qty.'</td>
-                <td style="border:1px solid #000;padding:5px 3px;text-align:right">'.number_format($r->harga).'</td>
+                <td style="border:1px solid #000;padding:5px 3px;text-align:right">'.number_format($r->harga_invoice).'</td>
                 <td style="border:1px solid #000;padding:5px 3px"></td>
                 <td style="border:1px solid #000;padding:5px 3px"></td>
                 <td style="border:1px solid #000;padding:5px 3px"></td>
