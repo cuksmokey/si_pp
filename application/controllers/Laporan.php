@@ -2845,7 +2845,7 @@ class Laporan extends CI_Controller {
         }else if($kop->laporan == "st"){
             $ksmast = "Sinar Teknindo";
         }else{
-
+            $ksmast = "SMA ST";
         }
 
         $html .='<tr>
