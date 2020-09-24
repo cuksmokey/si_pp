@@ -2854,7 +2854,7 @@ class Laporan extends CI_Controller {
             <td style="padding:3px">'.$kop->nm_perusahaan.'</td>
             <td style="padding:3px 0">Tanggal</td>
             <td style="padding:3px 0;text-align:center">:</td>
-            <td style="padding:3px">'.$kop->tgl.'</td>
+            <td style="padding:3px">'.$this->m_fungsi->tanggal_format_indonesia($kop->tgl).'</td>
         </tr>
         <tr>
             <td style="padding:3px 0">Contact Person</td>
