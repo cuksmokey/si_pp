@@ -674,7 +674,7 @@ class Master extends CI_Controller {
                 $query = $this->m_master->get_load_inv();
                 
                 if ($query->num_rows() == 0) {
-                    $data[] =  ["","","","","",""];
+                    $data[] =  ["","","","","","",""];
                 }else{
 
                     foreach ($query->result() as $r) {
@@ -688,8 +688,6 @@ class Master extends CI_Controller {
                         $row[] = '
                         <a type="button" class="btn btn-default btn-circle waves-effect waves-circle waves-float">'.$r->jml_timbang.'</a>' ;
 
-                        $aksi ="";
-
                         $superbtn = '<button type="button" onclick="view_detail('.$id.')" class="btn btn-info btn-circle waves-effect waves-circle waves-float">
                                 <i class="material-icons">remove_red_eye</i>
                             </button> 
@@ -701,10 +699,26 @@ class Master extends CI_Controller {
                                 <i class="material-icons">remove_red_eye</i>
                             </button>';
 
+                        $confirmByr = '<a type="button" onclick="confirmByr('.$id.','."".')" class="btn bg-green btn-circle waves-effect waves-circle waves-float">
+                            <i class="material-icons">check</i>
+                        </a>';
+
+                        if($r->tgl_ctk === NULL && $r->tgl_byr === NULL){
+                            $ketTglCtk = "Belum Cetak Nota Penjualan!";
+                            $btn = $superbtn;
+                        }else if($r->tgl_ctk <> NULL && $r->tgl_byr === NULL){
+                            $ketTglCtk = 'Pilih Tgl Pembayaran <br/><input type="date" id="plh_tgl_inv" value="" class="form-control">';
+                            $btn = $superbtn.' '.$confirmByr;
+                        }else{
+                            $ketTglCtk = "Sudah Pembayaran";
+                            $btn = $superbtn2;
+                        }
+
+                        $row[] = $ketTglCtk;
+
+                        $aksi ="";
                         if (($this->session->userdata('level') == "Developer" || $this->session->userdata('level') == "SuperAdmin" ) && $r->cek_inv == 0) {
-                            $aksi = ''.$superbtn.'';
-                        }else if ($r->cek_inv == 1) {
-                            $aksi = ''.$superbtn2.'';
+                            $aksi = $btn;
                         }else{
                             $aksi = ''.$superbtn2.'';
                         }    

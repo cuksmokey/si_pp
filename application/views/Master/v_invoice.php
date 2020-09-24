@@ -38,6 +38,7 @@
                                             <th>No Nota</th>
                                             <th>No Faktur</th>
                                             <th width="5%">Jumlah Barang</th>
+                                            <th>Keterangan</th>
                                             <th width="20%">Aksi</th>
                                         </tr>
                                     </thead>
