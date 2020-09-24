@@ -288,6 +288,18 @@ class M_fungsi extends CI_Model {
 		$mpdf->Output();
 	}
 
+	function mPDFN($html){
+		$mpdf = new \Mpdf\Mpdf;
+		// $mpdf = new \Mpdf\Mpdf([
+		$mpdf = new \Mpdf\Mpdf([
+			'default_font_size' => 9
+			// 'margin_top' => 5
+		]);
+		// ini_set("memory_limit","-1");
+		$mpdf->WriteHTML($html);
+		$mpdf->Output();
+	}
+
 	function mPDFL($html){
 		ini_set('max_execution_time', '300');
 		ini_set("pcre.backtrack_limit", "9000000");

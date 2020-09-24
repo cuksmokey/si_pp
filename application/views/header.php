@@ -208,6 +208,9 @@
                                 <li>
                                     <a href="<?php echo base_url('Laporan/Penjualan') ?>">Penjualan</a>
                                 </li>
+                                <li>
+                                    <a href="<?php echo base_url('Laporan/SuratOrder') ?>">Surat Order</a>
+                                </li>
                             <?php } ?>
                         </ul>
                     </li>

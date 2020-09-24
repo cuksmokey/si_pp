@@ -63,6 +63,12 @@ class Laporan extends CI_Controller {
         $this->load->view('footer');
     }
 
+    function SuratOrder(){
+        $this->load->view('header');
+        $this->load->view('Laporan/v_lap_so');
+        $this->load->view('footer');
+    }
+
     function update_stok_gudang(){
         $this->load->view('header');
         $this->load->view('Laporan/v_stok_gudang');
@@ -578,10 +584,8 @@ class Laporan extends CI_Controller {
         $count = $sql_isi->num_rows();
 
         if($count == 1) {
-            for($i = 0; $i < 4; $i++){ 
                 $cc = 1;
                 $xx = 2;
-            }
         }
         
         if($count == $cc) {
@@ -2803,6 +2807,105 @@ class Laporan extends CI_Controller {
             $data2['prev']= $html;
             $this->load->view('view_excel', $data2);
         }
+    }
+
+    function Lap_SO() {
+        $jenis = $_GET['jenis'];
+        $ctk = $_GET['ctk'];
+        $html = '';
+
+        // K O P
+        $html .='<table cellspacing="0" style="font-size:11px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;font-family:Arial !important">
+        <tr>
+            <th style="border:0;padding:0 0 10px" colspan="6">SURAT ORDER (SO)</th>
+        </tr>
+        <tr>
+            <th style="border:0;padding:0;width:14%"></th>
+            <th style="border:0;padding:0;width:1%"></th>
+            <th style="border:0;padding:0;width:35%"></th>
+            <th style="border:0;padding:0;width:9%"></th>
+            <th style="border:0;padding:0;width:1%"></th>
+            <th style="border:0;padding:0;width:40%"></th>
+        </tr>';
+
+        // ambil data
+        $sql_isi = $this->db->query("SELECT c.nama_barang,b.qty,e.harga,d.nm_perusahaan,d.alamat,d.no_telp,a.* FROM m_pl_price_list a
+        INNER JOIN m_pl_list_barang b ON b.id_pl=a.id
+        INNER JOIN m_barang c ON b.id_m_barang=c.id
+        INNER JOIN m_barang_plus e ON c.id_m_barang_plus=e.id
+        INNER JOIN m_perusahaan d ON a.id_m_perusahaan=d.id
+        WHERE a.id='$jenis'
+        ORDER BY c.nama_barang ASC");
+
+        $kop = $sql_isi->row();
+
+        // jenis laporan
+        if($kop->laporan == "sma"){
+            $ksmast = "Sinar Mukti Abadi";
+        }else if($kop->laporan == "st"){
+            $ksmast = "Sinar Teknindo";
+        }else{
+
+        }
+
+        $html .='<tr>
+            <td style="padding:3px 0">Pemesan</td>
+            <td style="padding:3px 0;text-align:center">:</td>
+            <td style="padding:3px">'.$kop->nm_perusahaan.'</td>
+            <td style="padding:3px 0">Tanggal</td>
+            <td style="padding:3px 0;text-align:center">:</td>
+            <td style="padding:3px">'.$kop->tgl.'</td>
+        </tr>
+        <tr>
+            <td style="padding:3px 0">Contact Person</td>
+            <td style="padding:3px 0;text-align:center">:</td>
+            <td style="padding:3px">'.$kop->no_telp.'</td>
+            <td style="padding:3px 0">Nomer</td>
+            <td style="padding:3px 0;text-align:center">:</td>
+            <td style="padding:3px">'.$kop->no_so.'</td>
+        </tr>
+        <tr>
+            <td style="padding:3px 0">Alamat</td>
+            <td style="padding:3px 0;text-align:center">:</td>
+            <td style="padding:3px">'.$kop->alamat.'</td>
+            <td style="padding:3px 0" colspan="3">'.$ksmast.'</td>
+        </tr>
+        <tr>
+            <td style="padding:5px" colspan="6"></td>
+        </tr>';
+
+        $html .='</table>';
+
+        // isi
+        $html .='<table cellspacing="0" style="font-size:11px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;font-family:Arial !important">
+        <tr>
+            <th style="border:1px solid #000;padding:5px;width:5%">No</th>
+            <th style="border:1px solid #000;padding:5px;width:37%">Nama Barang</th>
+            <th style="border:1px solid #000;padding:5px;width:10%">Qty</th>
+            <th style="border:1px solid #000;padding:5px;width:14%">Harga</th>
+            <th style="border:1px solid #000;padding:5px;width:11%">Disc</th>
+            <th style="border:1px solid #000;padding:5px;width:11%">CM</th>
+            <th style="border:1px solid #000;padding:5px 0;width:12%">Total Harga</th>
+        </tr>';
+
+        $i = 0;
+        foreach($sql_isi->result() as $r){
+            $i++;
+            $html .='<tr>
+                <td style="border:1px solid #000;padding:5px 3px;text-align:center">'.$i.'</td>
+                <td style="border:1px solid #000;padding:5px 3px">'.$r->nama_barang.'</td>
+                <td style="border:1px solid #000;padding:5px 3px;text-align:center">'.$r->qty.'</td>
+                <td style="border:1px solid #000;padding:5px 3px;text-align:right">'.number_format($r->harga).'</td>
+                <td style="border:1px solid #000;padding:5px 3px"></td>
+                <td style="border:1px solid #000;padding:5px 3px"></td>
+                <td style="border:1px solid #000;padding:5px 3px"></td>
+            </tr>';
+        }
+
+        $html .= '</table>';
+
+        $this->m_fungsi->mPDFN($html);
+
     }
 
  }

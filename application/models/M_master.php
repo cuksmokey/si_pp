@@ -860,6 +860,27 @@ class M_master extends CI_Model{
         return $data;
     }
 
+    function load_so($s=""){
+        $users = $this->db->query("SELECT CONCAT(no_surat, ' | ', no_so, ' | ', b.nm_perusahaan) AS ket,b.nm_perusahaan,a.* FROM m_pl_price_list a
+        INNER JOIN m_perusahaan b ON a.id_m_perusahaan=b.id
+        WHERE (no_surat LIKE '%$s%' OR no_so LIKE '%$s%' OR b.nm_perusahaan LIKE '%$s%')
+        ORDER BY no_surat ASC")->result_array();
+   
+        // Initialize Array with fetched data
+        $data = array();
+        foreach($users as $user){
+           $data[] = array(
+               "id"=>$user['id'],
+               "text"=>$user['ket'],
+               "tgl"=>$user['tgl'],
+               "nm_perusahaan"=>$user['nm_perusahaan'],
+               "no_surat"=>$user['no_surat'],
+               "no_so"=>$user['no_so']
+           );
+        }
+        return $data;
+    }
+
     function list_p_nota($s=""){
         $users = $this->db->query("SELECT CONCAT(no_nota, ' | ', c.nm_perusahaan) AS ket,a.tgl_jt AS jt_nota,c.nm_perusahaan,a.* FROM m_invoice a
         INNER JOIN m_pl_price_list b ON a.id_pl=b.id

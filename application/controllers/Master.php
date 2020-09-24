@@ -1294,6 +1294,15 @@ class Master extends CI_Controller {
         echo json_encode($response);
     }
 
+    function load_so(){
+        $s = $_GET['search'];
+
+        // Get users
+        $response = $this->m_master->load_so($s);
+
+        echo json_encode($response);
+    }
+
     function laod_p_nota(){
         $s = $_GET['search'];
 
