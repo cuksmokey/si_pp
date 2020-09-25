@@ -16,7 +16,7 @@
 <div class="box-data">
 <button style="background:#ddd;padding:8px 10px;color:#000;border:0" id="btn_barang">SURAT JALAN</button>
 <button style="background:#ddd;padding:8px 10px;color:#000;border:0" id="btn_nota">NOTA PENJUALAN</button>
-<button style="background:#ddd;padding:8px 10px;color:#000;border:0" id="btn_rekap_barang">REKAP NOTA</button>
+<button style="background:#ddd;padding:8px 10px;color:#000;border:0" id="btn_rekap_barang">DAFTAR NOTA</button>
 <br><br>
 
 <!-- SURAT JALAN -->
@@ -162,7 +162,7 @@
     <th style="border:0;width:3%"></th>
     <th style="border:0;width:12%"></th>
   </tr>
-  <tr>
+  <!-- <tr>
     <td>PT</td>
     <td>:</td>
     <td colspan="3">
@@ -172,7 +172,7 @@
       <option value="st">Sinar Teknindo</option>
     </select>
     </td>
-  </tr>
+  </tr> -->
   <tr>
     <td>Pilih</td>
     <td>:</td>
@@ -186,17 +186,17 @@
       <input type="hidden" value="" id="id_cust">
     </td>
   </tr>
-  <tr>
+  <!-- <tr>
     <td></td>
     <td></td>
     <td style="padding:0 0 5px" colspan="3"><b>NOTE:</b> Kolom Customer Kosong, Cetak Semua Customer</td>
-  </tr>
+  </tr> -->
   <tr>
-    <td>Tanggal PL</td>
+    <td>Tgl Bayar</td>
     <td>:</td>
-    <td><input type="date" class="form-control" value="<?= date('Y-m-d') ?>" id="tgl1_rekap_barang"></td>
+    <td><input type="date" class="form-control" value="" id="tgl1_rekap_barang"></td>
     <td style="text-align:center">s/d</td>
-    <td><input type="date" class="form-control" value="<?= date('Y-m-d') ?>" id="tgl2_rekap_barang"></td>
+    <td><input type="date" class="form-control" value="" id="tgl2_rekap_barang"></td>
   </tr>
 </table>
 
@@ -270,7 +270,7 @@
       $("#box_barang").hide();
       $("#box_nota").hide();
 
-      $("#logo_rekap_sj").val("");
+      // $("#logo_rekap_sj").val("");
       $("#text_cust").val("");
       $("#id_cust").val("");
       $("#tgl_cetak").val("");
@@ -455,14 +455,15 @@
     tgl1 = $("#tgl1_rekap_barang").val(); 
     tgl2 = $("#tgl2_rekap_barang").val(); 
     jenis = $("#id_cust").val(); 
-    pt = $("#logo_rekap_sj").val(); 
+    // pt = $("#logo_rekap_sj").val(); 
 
-    if (pt == 0 || pt == "" || pt == null){
-      showNotification("alert-info", "PILIH PT DAHULU !!!", "bottom", "center", "", ""); return;
-    }
+    // if (pt == 0 || pt == "" || pt == null){
+    //   showNotification("alert-info", "PILIH PT DAHULU !!!", "bottom", "center", "", ""); return;
+    // }
 
     if (jenis == 0 || jenis == "" || jenis == null){
-      xjenis = 0;
+      // xjenis = 0;
+      showNotification("alert-info", "PILIH CUSTOMER !!!", "bottom", "center", "", ""); return;
     }else{
       xjenis = jenis;
     }
@@ -477,7 +478,7 @@
       showNotification("alert-info", "Pilih Tanggal Akhir", "bottom", "right", "", ""); return;
     }
 
-    var url    = "<?php echo base_url('Laporan/Rekap_Laporan?'); ?>";
-    window.open(url+'ctk='+ctk+'&tgl1='+tgl1+'&tgl2='+tgl2+'&jenis='+xjenis+'&pt='+pt, '_blank');
+    var url    = "<?php echo base_url('Laporan/Daftar_Nota?'); ?>";
+    window.open(url+'ctk='+ctk+'&tgl1='+tgl1+'&tgl2='+tgl2+'&jenis='+xjenis, '_blank');
   }
 </script>

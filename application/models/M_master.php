@@ -797,6 +797,7 @@ class M_master extends CI_Model{
                "text"=>$user['ket'],
                "tgl"=>$user['tgl'],
                "no_surat"=>$user['no_surat'],
+               "up"=>$user['up'],
                "no_so"=>$user['no_so'],
                "no_po"=>$user['no_po'],
                "nama_perusahaan"=>$user['nm_perusahaan'],

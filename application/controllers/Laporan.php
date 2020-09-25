@@ -796,7 +796,7 @@ class Laporan extends CI_Controller {
 
         # # # # # # # # # # # # # SUB TOTAL - PPN - ONGKIR - TOTAL # # # # # # # # # # # # #
 
-        if($sql_kop->laporan == "st") {
+        if($sql_kop->laporan == "st" || $sql_kop->laporan == "") {
             $tot_all = round($sub_tot + $sql_kop->ongkir);
             $rs = '2';
             $html .= '';
@@ -901,111 +901,6 @@ class Laporan extends CI_Controller {
 
         // $this->m_fungsi->_mpdf2('',$html,10,10,10,'P');
         $this->m_fungsi->mPDF($html);
-    }
-
-    function Rekap_Laporan(){
-        $tgl1 = $_GET['tgl1'];
-        $tgl2 = $_GET['tgl2'];
-        $pt = $_GET['pt'];
-        $jenis = $_GET['jenis'];
-        $ctk = $_GET['ctk'];
-
-        $html = '';
-
-        if($tgl1 == $tgl2){
-            $tgll = $this->m_fungsi->tanggal_format_indonesia($tgl1);
-        }else{
-            $tgll = $this->m_fungsi->tanggal_format_indonesia($tgl1).' s/d '.$this->m_fungsi->tanggal_format_indonesia($tgl2);
-        }
-
-        // jika pilih customer
-        $kop_kop = $this->db->query("SELECT*FROM m_perusahaan WHERE id='$jenis'")->row();
-
-        if($jenis == 0){
-            $where = ""; 
-            $kkop = 'SEMUA CUSTOMER';
-        }else{
-            $where = "AND c.id='$jenis' AND b.laporan='$pt'"; 
-            $kkop = $kop_kop->nm_perusahaan;
-        }
-
-        if($pt == "sma"){
-            $lpp = "SINAR MUKTI ABADI";
-        }else if($pt == "st"){
-            $lpp = "SINAR TEKNINDO";
-        }
-
-        $html .= '<table cellspacing="0" style="font-size:11px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;font-family:Arial !important">
-        <tr>
-            <th style="border:0;padding:0;width:5%"></th>
-            <th style="border:0;padding:0;width:15%"></th>
-            <th style="border:0;padding:0;width:40%"></th>
-            <th style="border:0;padding:0;width:20%"></th>
-            <th style="border:0;padding:0;width:20%"></th>
-        </tr>
-        <tr>
-            <td style="border:0;font-weight:bold;text-align:center" colspan="5">REKAP LAPORAN NOTA PENJUALAN</td>
-        </tr>
-        <tr>
-            <td style="border:0;text-align:center;font-weight:bold" colspan="5">'.$lpp.'</td>
-        </tr>
-        <tr>
-            <td style="border:0;text-align:center;font-weight:bold" colspan="5">'.strtoupper($kkop).'</td>
-        </tr>
-        <tr>
-            <td style="border:0;padding:0 0 10px;text-align:center;font-weight:bold" colspan="5">TANGGAL : '.strtoupper($tgll).'</td>
-        </tr>
-        <tr>
-            <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">No</td>
-            <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">Tgl Jatuh Tempo</td>
-            <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">Kepada</td>
-            <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">No Nota</td>
-            <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold">Total</td>
-        </tr>';
-
-        // ambil data
-        $sql_isi = $this->db->query("SELECT c.nm_perusahaan,
-        (SELECT SUM(harga_invoice*qty) FROM m_pl_list_barang WHERE id_pl=a.id_pl) AS tonase,
-        a.* FROM m_invoice a
-        INNER JOIN m_pl_price_list b ON a.id_pl=b.id
-        INNER JOIN m_perusahaan c ON b.id_m_perusahaan=c.id
-        WHERE b.tgl BETWEEN '$tgl1' AND '$tgl2' $where
-        ORDER BY a.id DESC");
-
-        $i = 0;
-        $tot_all = 0;
-        foreach($sql_isi->result() as $r){
-            // $ppn = round($sub_tot * 0.1);
-            // $tot_all = round($sub_tot + $ppn);
-
-            if($pt == "sma"){
-                $ppn = round($r->tonase * 0.1);
-                $tot = round($r->tonase + $ppn);
-            }else if($pt == "st"){
-                $tot = round($r->tonase);
-            }
-
-            $i++;
-            $html .= '<tr>
-                <td style="border:1px solid #000;padding:5px;text-align:center">'.$i.'</td>
-                <td style="border:1px solid #000;padding:5px">'.$this->m_fungsi->tanggal_format_indonesia($r->tgl_jt).'</td>
-                <td style="border:1px solid #000;padding:5px">'.$r->nm_perusahaan.'</td>
-                <td style="border:1px solid #000;padding:5px">'.$r->no_nota.'</td>
-                <td style="border:1px solid #000;padding:5px">Rp. '.number_format($tot).'</td>
-            </tr>';
-
-            $tot_all += $tot;
-        }
-
-        // total keseluruhan
-        $html .='<tr>
-            <td style="border:1px solid #000;padding:5px;text-align:center;font-weight:bold" colspan="4">TOTAL KESELURUHAN</td>
-            <td style="border:1px solid #000;padding:5px;font-weight:bold">Rp. '.number_format($tot_all).'</td>
-        </tr>';
-
-        $html .= '</table>';
-
-        $this->m_fungsi->mPDFL($html);
     }
 
     function print_surat_jalan(){ //
@@ -2819,7 +2714,7 @@ class Laporan extends CI_Controller {
         }
     }
 
-    function Lap_SO() {
+    function Lap_SO() { //
         $jenis = $_GET['jenis'];
         $ctk = $_GET['ctk'];
         $html = '';
@@ -2915,6 +2810,67 @@ class Laporan extends CI_Controller {
 
         $this->m_fungsi->mPDFN($html);
 
+    }
+
+    function Daftar_Nota(){
+        $jenis = $_GET['jenis'];
+        $tgl1 = $_GET['tgl1'];
+        $tgl2 = $_GET['tgl2'];
+        // $ctk = $_GET['ctk'];
+        $html = '';
+
+        // ambil data
+        $sql = $this->db->query("SELECT b.tgl_ctk,SUM(c.qty * c.harga_invoice) AS hrg_inv,a.ongkir,b.laporan,d.nm_perusahaan,a.* FROM m_invoice a
+        INNER JOIN m_pl_price_list b ON b.id=a.id_pl
+        INNER JOIN m_pl_list_barang c ON b.id=c.id_pl
+        INNER JOIN m_perusahaan d ON b.id_m_perusahaan=d.id
+        WHERE d.id='$jenis' AND a.tgl_byr BETWEEN '$tgl1' AND '$tgl2'
+        GROUP BY a.id
+        ORDER BY a.id ASC");
+
+        // K O P
+        $html .='<table cellspacing="0" style="font-size:11px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;font-family:Arial !important">
+        <tr>
+            <th style="border:0;padding:0" colspan="7">DAFTAR NOTA PER CUSTOMER</th>
+        </tr>
+        <tr>
+            <th style="border:0;padding:0 0 15px" colspan="7">'.strtoupper($sql->row()->nm_perusahaan).'</th>
+        </tr>
+        <tr>
+            <th style="border:1px solid #000;padding:5px;width:5%">No</th>
+            <th style="border:1px solid #000;padding:5px;width:19%">No Faktur</th>
+            <th style="border:1px solid #000;padding:5px;width:14%">Tgl Faktur</th>
+            <th style="border:1px solid #000;padding:5px;width:14%">Nominal</th>
+            <th style="border:1px solid #000;padding:5px;width:14%">Tgl Bayar</th>
+            <th style="border:1px solid #000;padding:5px;width:14%">Via</th>
+            <th style="border:1px solid #000;padding:5px;width:20%">Keterangan</th>
+        </tr>';
+
+        $i = 0;
+        foreach($sql->result() as $r){
+
+            if($r->laporan == "st" || $r->laporan == "") {
+                $tot_all = round($r->hrg_inv + $r->ongkir);
+            }else if($r->laporan == "sma") {
+                $ppn = round($r->hrg_inv * 0.1);
+                $tot_all = round($r->hrg_inv + $ppn);
+            }
+            
+            $i++;
+            $html .='<tr>
+                <td style="border:1px solid #000;padding:5px 3px;text-align:center">'.$i.'</td>
+                <td style="border:1px solid #000;padding:5px">'.$r->no_faktur.'</td>
+                <td style="border:1px solid #000;padding:5px;text-align:center">'.$this->m_fungsi->TglIndSingkat($r->tgl_ctk).'</td>
+                <td style="border:1px solid #000;padding:5px;text-align:right">'.number_format($tot_all).'</td>
+                <td style="border:1px solid #000;padding:5px;text-align:center">'.$this->m_fungsi->TglIndSingkat($r->tgl_byr).'</td>
+                <td style="border:1px solid #000;padding:5px"></td>
+                <td style="border:1px solid #000;padding:5px"></td>
+            </tr>';
+        }
+
+        $html .='</table>';
+
+        $this->m_fungsi->mPDFN($html);
     }
 
  }

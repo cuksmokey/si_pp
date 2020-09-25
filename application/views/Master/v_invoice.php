@@ -745,6 +745,7 @@
       $("#no_po").val(data[0].no_po);
 
       $("#pimpinan").val(data[0].pimpinan);
+      $("#upup").val(data[0].up);
       $("#nama_perusahaan").val(data[0].text);
       $("#npwp").val(data[0].npwp);
       $("textarea#alamat").val(data[0].alamat);
