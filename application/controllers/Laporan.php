@@ -69,6 +69,12 @@ class Laporan extends CI_Controller {
         $this->load->view('footer');
     }
 
+    function BukuPenerimaanManual(){
+        $this->load->view('header');
+        $this->load->view('Laporan/v_lap_bpm');
+        $this->load->view('footer');
+    }
+
     function update_stok_gudang(){
         $this->load->view('header');
         $this->load->view('Laporan/v_stok_gudang');
@@ -2867,6 +2873,36 @@ class Laporan extends CI_Controller {
                 <td style="border:1px solid #000;padding:5px"></td>
             </tr>';
         }
+
+        $html .='</table>';
+
+        $this->m_fungsi->mPDFN($html);
+    }
+
+    function LapBukuPenerimaanManual(){
+        // $jenis = $_GET['jenis'];
+        $tgl1 = $_GET['tgl1'];
+        $tgl2 = $_GET['tgl2'];
+        $ctk = $_GET['ctk'];
+        $html = '';
+
+        // ambil data
+        // $sql = $this->db->query("");
+
+        // K O P
+        $html .='<table cellspacing="0" style="font-size:11px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;font-family:Arial !important">
+        <tr>
+            <th style="border:0;padding:0 0 15px" colspan="7">DAFTAR NOTA PER CUSTOMER</th>
+        </tr>
+        <tr>
+            <th style="border:1px solid #000;padding:5px;width:5%">No</th>
+            <th style="border:1px solid #000;padding:5px;width:19%">Tgl Bayar</th>
+            <th style="border:1px solid #000;padding:5px;width:14%">Customer</th>
+            <th style="border:1px solid #000;padding:5px;width:14%">Nominal</th>
+            <th style="border:1px solid #000;padding:5px;width:14%">Via</th>
+            <th style="border:1px solid #000;padding:5px;width:14%">No Nota</th>
+            <th style="border:1px solid #000;padding:5px;width:20%">Keterangan</th>
+        </tr>';
 
         $html .='</table>';
 

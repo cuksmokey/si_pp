@@ -211,6 +211,9 @@
                                 <li>
                                     <a href="<?php echo base_url('Laporan/SuratOrder') ?>">Surat Order</a>
                                 </li>
+                                <li>
+                                    <a href="<?php echo base_url('Laporan/BukuPenerimaanManual') ?>">Buku Penerimaan Manual</a>
+                                </li>
                             <?php } ?>
                         </ul>
                     </li>
