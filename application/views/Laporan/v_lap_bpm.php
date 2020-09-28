@@ -24,7 +24,7 @@
         <th style="border:0;width:3%"></th>
         <th style="border:0;width:12%"></th>
       </tr>
-      <tr>
+      <!-- <tr>
         <td style="padding:10px" colspan="5"></td>
       </tr>
       <tr>
@@ -44,9 +44,9 @@
         <td></td>
         <td></td>
         <td style="padding:0 0 5px" colspan="3"><b>NOTE:</b> Kolom Supplier Kosong, Cetak Semua Supplier</td>
-      </tr>
+      </tr> -->
       <tr>
-        <td style="border:0">Pilih Tanggal</td>
+        <td style="border:0">Tgl Bayar</td>
         <td style="border:0">:</td>
         <td style="border:0"><input type="date" class="form-control" value="" id="tgl1" style="width:100%"></td>
         <td style="border:0;text-align:center">S/d</td>
