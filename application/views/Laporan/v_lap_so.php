@@ -66,6 +66,9 @@
     <!-- cetak barang -->
     <br/><button type="button" onclick="cetak_sj(0)" class="btn btn-default btn-sm waves-effect">
       <i class="material-icons">personal_video</i> CETAK
+    </button>&nbsp;
+    <button type="button" onclick="cetak_sj(1)" class="btn btn-default btn-sm waves-effect">
+      <i class="material-icons">sms</i> EXCEL
     </button>
 </div>
 <!-- END BARANG -->

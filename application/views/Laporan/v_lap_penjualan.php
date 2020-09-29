@@ -186,11 +186,11 @@
       <input type="hidden" value="" id="id_cust">
     </td>
   </tr>
-  <!-- <tr>
+  <tr>
     <td></td>
     <td></td>
     <td style="padding:0 0 5px" colspan="3"><b>NOTE:</b> Kolom Customer Kosong, Cetak Semua Customer</td>
-  </tr> -->
+  </tr>
   <tr>
     <td>Tgl Bayar</td>
     <td>:</td>
@@ -203,7 +203,10 @@
 <!-- cetak rekap sj -->
 <br/><button type="button" onclick="cetak_rekap(0)" class="btn btn-default btn-sm waves-effect">
   <i class="material-icons">personal_video</i> CETAK
-</button>
+</button>&nbsp;
+    <button type="button" onclick="cetak_rekap(1)" class="btn btn-default btn-sm waves-effect">
+      <i class="material-icons">sms</i> EXCEL
+    </button>
 </div>
 <!-- END REKAP -->
 
@@ -462,8 +465,8 @@
     // }
 
     if (jenis == 0 || jenis == "" || jenis == null){
-      // xjenis = 0;
-      showNotification("alert-info", "PILIH CUSTOMER !!!", "bottom", "center", "", ""); return;
+      xjenis = 0;
+      // showNotification("alert-info", "PILIH CUSTOMER !!!", "bottom", "center", "", ""); return;
     }else{
       xjenis = jenis;
     }

@@ -2725,6 +2725,12 @@ class Laporan extends CI_Controller {
         $ctk = $_GET['ctk'];
         $html = '';
 
+        $html .='<style>
+            .str{
+                mso-number-format:\@;
+            }
+        </style>';
+
         // K O P
         $html .='<table cellspacing="0" style="font-size:11px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;font-family:Arial !important">
         <tr>
@@ -2769,10 +2775,10 @@ class Laporan extends CI_Controller {
         <tr>
             <td style="padding:3px 0">Contact Person</td>
             <td style="padding:3px 0;text-align:center">:</td>
-            <td style="padding:3px">'.$kop->no_telp.'</td>
+            <td class="str" style="padding:3px">'.$kop->no_telp.'</td>
             <td style="padding:3px 0">Nomer</td>
             <td style="padding:3px 0;text-align:center">:</td>
-            <td style="padding:3px">'.$kop->no_so.'</td>
+            <td class="str" style="padding:3px">'.$kop->no_so.'</td>
         </tr>
         <tr>
             <td style="padding:3px 0">Alamat</td>
@@ -2804,8 +2810,8 @@ class Laporan extends CI_Controller {
             $html .='<tr>
                 <td style="border:1px solid #000;padding:5px 3px;text-align:center">'.$i.'</td>
                 <td style="border:1px solid #000;padding:5px 3px">'.$r->nama_barang.'</td>
-                <td style="border:1px solid #000;padding:5px 3px;text-align:center">'.$r->qty.'</td>
-                <td style="border:1px solid #000;padding:5px 3px;text-align:right">'.number_format($r->harga_invoice).'</td>
+                <td class="str" style="border:1px solid #000;padding:5px 3px;text-align:center">'.$r->qty.'</td>
+                <td class="str" style="border:1px solid #000;padding:5px 3px;text-align:right">'.number_format($r->harga_invoice).'</td>
                 <td style="border:1px solid #000;padding:5px 3px"></td>
                 <td style="border:1px solid #000;padding:5px 3px"></td>
                 <td style="border:1px solid #000;padding:5px 3px"></td>
@@ -2814,7 +2820,19 @@ class Laporan extends CI_Controller {
 
         $html .= '</table>';
 
-        $this->m_fungsi->mPDFN($html);
+        $judul = 'SURAT ORDER - '.$kop->no_so.' - '.$kop->nm_perusahaan;
+
+        if($ctk == 0){
+            $this->m_fungsi->mPDFN($html);
+            // $this->m_fungsi->_mpdf2('',$html,10,10,10,'P');
+        }else if($ctk == 1){
+            header("Content-type: application/octet-stream");
+            header("Content-Disposition: attachment; filename=$judul.xls");
+            header("Pragma: no-cache");
+            header("Expires: 0");
+            $data2['prev']= $html;
+            $this->load->view('view_excel', $data2);            
+        }
 
     }
 
@@ -2822,29 +2840,49 @@ class Laporan extends CI_Controller {
         $jenis = $_GET['jenis'];
         $tgl1 = $_GET['tgl1'];
         $tgl2 = $_GET['tgl2'];
-        // $ctk = $_GET['ctk'];
+        $ctk = $_GET['ctk'];
         $html = '';
+
+        if($jenis <> 0){
+            $where = "AND d.id='$jenis'";
+        }else{
+            $where = "";
+        }
+
+        $html .='<style>
+            .str{
+                mso-number-format:\@;
+            }
+        </style>';
 
         // ambil data
         $sql = $this->db->query("SELECT b.tgl_ctk,SUM(c.qty * c.harga_invoice) AS hrg_inv,a.ongkir,b.laporan,d.nm_perusahaan,a.* FROM m_invoice a
         INNER JOIN m_pl_price_list b ON b.id=a.id_pl
         INNER JOIN m_pl_list_barang c ON b.id=c.id_pl
         INNER JOIN m_perusahaan d ON b.id_m_perusahaan=d.id
-        WHERE d.id='$jenis' AND a.tgl_byr BETWEEN '$tgl1' AND '$tgl2'
+        WHERE a.tgl_byr BETWEEN '$tgl1' AND '$tgl2' $where
         GROUP BY a.id
         ORDER BY a.id ASC");
+
+        if($jenis <> 0){
+            $koopp = strtoupper($sql->row()->nm_perusahaan);
+            $judul = "DAFTAR NOTA CUST ".$koopp;
+        }else{
+            $koopp = "SEMUA CUSTOMER";
+            $judul = "DAFTAR NOTA ".$koopp;
+        }
 
         // K O P
         $html .='<table cellspacing="0" style="font-size:11px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;font-family:Arial !important">
         <tr>
-            <th style="border:0;padding:0" colspan="7">DAFTAR NOTA PER CUSTOMER</th>
+            <th style="border:0;padding:0" colspan="7">DAFTAR NOTA</th>
         </tr>
         <tr>
-            <th style="border:0;padding:0 0 15px" colspan="7">'.strtoupper($sql->row()->nm_perusahaan).'</th>
+            <th style="border:0;padding:0 0 15px" colspan="7">'.$koopp.'</th>
         </tr>
         <tr>
             <th style="border:1px solid #000;padding:5px;width:5%">No</th>
-            <th style="border:1px solid #000;padding:5px;width:19%">No Faktur</th>
+            <th style="border:1px solid #000;padding:5px;width:19%">No Nota</th>
             <th style="border:1px solid #000;padding:5px;width:14%">Tgl Faktur</th>
             <th style="border:1px solid #000;padding:5px;width:14%">Nominal</th>
             <th style="border:1px solid #000;padding:5px;width:14%">Tgl Bayar</th>
@@ -2865,9 +2903,9 @@ class Laporan extends CI_Controller {
             $i++;
             $html .='<tr>
                 <td style="border:1px solid #000;padding:5px 3px;text-align:center">'.$i.'</td>
-                <td style="border:1px solid #000;padding:5px">'.$r->no_faktur.'</td>
+                <td class="str" style="border:1px solid #000;padding:5px">'.$r->no_nota.'</td>
                 <td style="border:1px solid #000;padding:5px;text-align:center">'.$this->m_fungsi->TglIndSingkat($r->tgl_ctk).'</td>
-                <td style="border:1px solid #000;padding:5px;text-align:right">'.number_format($tot_all).'</td>
+                <td class="str" style="border:1px solid #000;padding:5px;text-align:right">'.number_format($tot_all).'</td>
                 <td style="border:1px solid #000;padding:5px;text-align:center">'.$this->m_fungsi->TglIndSingkat($r->tgl_byr).'</td>
                 <td style="border:1px solid #000;padding:5px"></td>
                 <td style="border:1px solid #000;padding:5px"></td>
@@ -2876,7 +2914,17 @@ class Laporan extends CI_Controller {
 
         $html .='</table>';
 
-        $this->m_fungsi->mPDFN($html);
+        if($ctk == 0){
+            $this->m_fungsi->mPDFN($html);
+            // $this->m_fungsi->_mpdf2('',$html,10,10,10,'P');
+        }else if($ctk == 1){
+            header("Content-type: application/octet-stream");
+            header("Content-Disposition: attachment; filename=$judul.xls");
+            header("Pragma: no-cache");
+            header("Expires: 0");
+            $data2['prev']= $html;
+            $this->load->view('view_excel', $data2);            
+        }
     }
 
     function LapBukuPenerimaanManual(){
@@ -2885,6 +2933,12 @@ class Laporan extends CI_Controller {
         $tgl2 = $_GET['tgl2'];
         $ctk = $_GET['ctk'];
         $html = '';
+
+        $html .='<style>
+            .str{
+                mso-number-format:\@;
+            }
+        </style>';
 
         // ambil data
         $sql = $this->db->query("SELECT b.tgl_ctk,SUM(c.qty * c.harga_invoice) AS hrg_inv,a.ongkir,b.laporan,d.nm_perusahaan,a.* FROM m_invoice a
@@ -2925,16 +2979,34 @@ class Laporan extends CI_Controller {
                 <td style="border:1px solid #000;padding:5px 3px;text-align:center">'.$i.'</td>
                 <td style="border:1px solid #000;padding:5px;text-align:center">'.$this->m_fungsi->TglIndSingkat($r->tgl_byr).'</td>
                 <td style="border:1px solid #000;padding:5px">'.$r->nm_perusahaan.'</td>
-                <td style="border:1px solid #000;padding:5px;text-align:right">'.number_format($tot_all).'</td>
+                <td class="str" style="border:1px solid #000;padding:5px;text-align:right">'.number_format($tot_all).'</td>
                 <td style="border:1px solid #000;padding:5px"></td>
-                <td style="border:1px solid #000;padding:5px">'.$r->no_nota.'</td>
+                <td class="str" style="border:1px solid #000;padding:5px">'.$r->no_nota.'</td>
                 <td style="border:1px solid #000;padding:5px"></td>
             </tr>';
         }
 
         $html .='</table>';
 
-        $this->m_fungsi->mPDFN($html);
+        if($tgl1 == $tgl2){
+            $ttgl = strtoupper($this->m_fungsi->TglIndSingkat($tgl1));
+        }else{
+            $ttgl = strtoupper($this->m_fungsi->TglIndSingkat($tgl1)).' - '.strtoupper($this->m_fungsi->TglIndSingkat($tgl2));
+        }
+
+        $judul = 'BUKU PENERIMAAN MANUAL - '.$ttgl;
+
+        if($ctk == 0){
+            $this->m_fungsi->mPDFN($html);
+            // $this->m_fungsi->_mpdf2('',$html,10,10,10,'P');
+        }else if($ctk == 1){
+            header("Content-type: application/octet-stream");
+            header("Content-Disposition: attachment; filename=$judul.xls");
+            header("Pragma: no-cache");
+            header("Expires: 0");
+            $data2['prev']= $html;
+            $this->load->view('view_excel', $data2);            
+        }
     }
 
  }

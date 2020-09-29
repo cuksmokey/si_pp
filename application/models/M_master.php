@@ -93,6 +93,13 @@ class M_master extends CI_Model{
         return $this->db->query($query);
     }
 
+    function cari_supNo($id_supp,$id){
+        $query = "SELECT*FROM m_nota a
+        INNER JOIN m_supplier b ON a.id_supplier=b.id
+        WHERE a.id_supplier='$id_supp' AND no_nota='$id'";
+        return $this->db->query($query);
+    }
+
     function get_data_ijpl($table,$kolom,$id){
         $query = "SELECT a.*,b.id AS id_barang,b.kode_barang,b.nama_barang,b.merek,b.spesifikasi,c.id AS id_supplier,c.nama_supplier FROM $table a
         INNER JOIN m_barang b ON a.id_m_barang=b.id

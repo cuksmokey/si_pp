@@ -166,10 +166,14 @@ class Master extends CI_Controller {
                 }
             }else if ($jenis == "Simpan_Nota") {
                 $id = $this->input->post('no_nota');
+                $id_supp = $this->input->post('supplier');
 
-                $cek = $this->m_master->get_data_one("m_nota","no_nota",$id)->num_rows();
+                // cek supp
+                $cek_supNo = $this->m_master->cari_supNo($id_supp,$id)->num_rows();
 
-                if ($cek > 0 ) {
+                // $cek = $this->m_master->get_data_one("m_nota","no_nota",$id)->num_rows();
+
+                if ($cek_supNo > 0 ) {
                     echo json_encode(array('data' =>  FALSE,'msg' => 'No. Nota Sudah Ada'));
                 }else{
                     $result = $this->m_master->insert_nota();    
