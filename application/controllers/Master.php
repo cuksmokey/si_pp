@@ -174,7 +174,7 @@ class Master extends CI_Controller {
                 // $cek = $this->m_master->get_data_one("m_nota","no_nota",$id)->num_rows();
 
                 if ($cek_supNo > 0 ) {
-                    echo json_encode(array('data' =>  FALSE,'msg' => 'No. Nota Sudah Ada'));
+                    echo json_encode(array('data' =>  FALSE,'msg' => 'Supplier Dengan No. Nota Tersebut Sudah Ada!'));
                 }else{
                     $result = $this->m_master->insert_nota();    
                     echo json_encode(array('data' =>  TRUE));
@@ -1416,16 +1416,17 @@ class Master extends CI_Controller {
                 // $id_lama = $this->input->post('supplier_lama');
                 $nota      = $this->input->post('no_nota');
                 $nota_lama = $this->input->post('no_nota_lama');
+                $id_supp = $this->input->post('supplier');
 
-                $cek = $this->m_master->get_data_one("m_nota","no_nota",$nota)->num_rows();
+                // $cek = $this->m_master->get_data_one("m_nota","no_nota",$nota)->num_rows();
 
-                // if ($id <> $id_lama) {
-                //     echo json_encode(array('data' =>  FALSE,'msg' => 'Supplier Tidak Sama'));
-                // }else
+                // cek supp
+                $cek_supNo = $this->m_master->cari_supNo($id_supp,$nota)->num_rows();
+
                 if ($nota == $nota_lama) {
                     echo json_encode(array('data' =>  FALSE,'msg' => 'No. Nota Sama Dengan Sebelumnya'));
-                }else if ($cek > 0) {
-                    echo json_encode(array('data' =>  FALSE,'msg' => 'No. Nota Sudah Ada'));
+                }else if ($cek_supNo > 0) {
+                    echo json_encode(array('data' =>  FALSE,'msg' => 'Supplier Dengan No. Nota Tersebut Sudah Ada!'));
                 }else{
                     $result= $this->m_master->update_nonota();
                     echo json_encode(array('data' =>  TRUE));

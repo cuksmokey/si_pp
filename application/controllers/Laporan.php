@@ -75,6 +75,12 @@ class Laporan extends CI_Controller {
         $this->load->view('footer');
     }
 
+    function LapPiutang(){
+        $this->load->view('header');
+        $this->load->view('Laporan/v_lap_piutang');
+        $this->load->view('footer');
+    }
+
     function update_stok_gudang(){
         $this->load->view('header');
         $this->load->view('Laporan/v_stok_gudang');
@@ -751,7 +757,7 @@ class Laporan extends CI_Controller {
             <tr>
             <td style="padding:1px 0">No. PO</td>
             <td style="padding:1px 0">:</td>
-            <td style="padding:1px 200px 0 0">'.$sql_kop->no_po.'</td>
+            <td style="padding:1px 0 0 0">'.$sql_kop->no_po.'</td>
             <td></td>
             </tr>';
         }   
@@ -899,7 +905,7 @@ class Laporan extends CI_Controller {
             <td style="border:0;padding:0" colspan="3"></td>
             </tr>
             <tr>
-            <td style="border:0;padding:40px 0 0" colspan="6">'.$nm_ttd.'</td>
+            <td style="border:0;padding:55px 0 0" colspan="6">'.$nm_ttd.'</td>
             </tr>';
         }
 
@@ -3007,6 +3013,101 @@ class Laporan extends CI_Controller {
             $data2['prev']= $html;
             $this->load->view('view_excel', $data2);            
         }
+    }
+
+    function Piutang(){
+        $jenis = $_GET['jenis'];
+        $tgl1 = $_GET['tgl1'];
+        $tgl2 = $_GET['tgl2'];
+        $ctk = $_GET['ctk'];
+        $html = '';
+
+        if($jenis <> 0){
+            $where = "AND d.id='$jenis'";
+        }else{
+            $where = "";
+        }
+
+        $html .='<style>
+            .str{
+                mso-number-format:\@;
+            }
+        </style>';
+
+        // ambil data
+        $sql = $this->db->query("SELECT b.tgl_ctk,SUM(c.qty * c.harga_invoice) AS hrg_inv,a.ongkir,b.laporan,d.nm_perusahaan,a.* FROM m_invoice a
+        INNER JOIN m_pl_price_list b ON b.id=a.id_pl
+        INNER JOIN m_pl_list_barang c ON b.id=c.id_pl
+        INNER JOIN m_perusahaan d ON b.id_m_perusahaan=d.id
+        WHERE b.tgl_ctk BETWEEN '$tgl1' AND '$tgl2' AND a.tgl_byr IS NULL $where
+        GROUP BY a.id
+        ORDER BY a.id ASC");
+
+        // K O P
+        $html .='<table cellspacing="0" style="font-size:11px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;font-family:Arial !important">
+        <tr>
+            <th style="border:0;padding:0 0 15px" colspan="5">LAPORAN PIUTANG</th>
+        </tr>
+        <tr>
+            <th style="border:1px solid #000;padding:5px;width:5%">No</th>
+            <th style="border:1px solid #000;padding:5px;width:33%">Nama Customer</th>
+            <th style="border:1px solid #000;padding:5px;width:20%">No Nota</th>
+            <th style="border:1px solid #000;padding:5px;width:18%">Tgl Nota</th>
+            <th style="border:1px solid #000;padding:5px;width:24%">Nominal</th>
+        </tr>';
+
+        // ISI
+        $i = 0;
+        $tot_kel = 0;
+        foreach($sql->result() as $r){
+
+            if($r->laporan == "st" || $r->laporan == "") {
+                $tot_all = round($r->hrg_inv + $r->ongkir);
+            }else if($r->laporan == "sma") {
+                $ppn = round($r->hrg_inv * 0.1);
+                $tot_all = round($r->hrg_inv + $ppn);
+            }
+
+            $i++;
+            $html .='<tr>
+                <td style="border:1px solid #000;padding:5px 2px;text-align:center">'.$i.'</td>
+                <td style="border:1px solid #000;padding:5px">'.$r->nm_perusahaan.'</td>
+                <td class="str" style="border:1px solid #000;padding:5px">'.$r->no_nota.'</td>
+                <td style="border:1px solid #000;padding:5px;text-align:center">'.$this->m_fungsi->TglIndSingkat($r->tgl_ctk).'</td>
+                <td class="str" style="border:1px solid #000;padding:5px;text-align:right">'.number_format($tot_all).'</td>
+            </tr>';
+
+            $tot_kel += $tot_all;
+        }
+
+        // TOTAL
+        $html .='<tr>
+            <td style="border:1px solid #000;padding:5px;font-weight:bold;text-align:center" colspan="4">JUMLAH</td>
+            <td style="border:1px solid #000;padding:5px;font-weight:bold;text-align:right">'.number_format($tot_kel).'</td>
+        </tr>';
+
+        $html .='</table>';
+
+        // JUDUL LAPORAN EXCEL
+        if($tgl1 == $tgl2){
+            $ttgl = strtoupper($this->m_fungsi->TglIndSingkat($tgl1));
+        }else{
+            $ttgl = strtoupper($this->m_fungsi->TglIndSingkat($tgl1)).' - '.strtoupper($this->m_fungsi->TglIndSingkat($tgl2));
+        }
+
+        $judul = 'PIUTANG TGL CETAK '.$ttgl;
+
+        if($ctk == 0){
+            $this->m_fungsi->mPDFN($html);
+        }else if($ctk == 1){
+            header("Content-type: application/octet-stream");
+            header("Content-Disposition: attachment; filename=$judul.xls");
+            header("Pragma: no-cache");
+            header("Expires: 0");
+            $data2['prev']= $html;
+            $this->load->view('view_excel', $data2);            
+        }
+        
     }
 
  }
