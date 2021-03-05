@@ -821,7 +821,7 @@ class Master extends CI_Controller {
                     }
                 }
                 $output = array("data" => $data);
-            }else if ($jenis == "Load_Barang") { //
+            }else if ($jenis == "Load_Barang") {
 
                 $query = $this->m_master->get_load_barang();
 

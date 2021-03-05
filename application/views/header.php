@@ -120,7 +120,16 @@
                         </a>
                     </li>
                     
-                    <?php if($this->session->userdata('level') <> "User") { ?>
+                    <?php if($this->session->userdata('otoritas') == "Pembelian") { ?>
+                    <li>
+                        <a href="<?php echo base_url('Master/Price_List') ?>">
+                            <i class="material-icons">dns</i>
+                            <span>Etalase</span>
+                        </a>
+                    </li>
+                    <?php }
+                    
+                    if($this->session->userdata('level') <> "User") { ?>
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">book</i>
@@ -158,18 +167,14 @@
                             <i class="material-icons">list</i>
                             <span>Packing List</span>
                         </a>
-                    </li> -->
-                    <?php if($this->session->userdata('otoritas') == "Pembelian") { ?>
+                    </li>
                     <li>
                         <a href="<?php echo base_url('Master/Price_List') ?>">
                             <i class="material-icons">list</i>
                             <span>Price List</span>
                         </a>
-                    </li>
-                    <?php }
-                    
-                    if($this->session->userdata('otoritas') == "Penjualan") {
-                    ?>
+                    </li> -->
+                    <?php if($this->session->userdata('otoritas') == "Penjualan") { ?>
                     <li>
                         <a href="<?php echo base_url('Master/PL_Price_List') ?>">
                             <i class="material-icons">list</i>
