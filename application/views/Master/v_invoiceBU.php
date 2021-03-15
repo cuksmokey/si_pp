@@ -8,7 +8,7 @@
                         <div class="header">
                             <h2>
                                 <ol class="breadcrumb">
-                                    <li class="">Packing List </li>
+                                    <li class="">Invoice</li>
                                 </ol>
                             </h2>
                         </div>
@@ -32,13 +32,14 @@
                                 <table id="datatable11" class="table table-bordered table-striped table-hover dataTable ">
                                     <thead>
                                         <tr>
-                                            <th style="width: 6%;">No</th>
-                                            <th style="width: 8%;">Tanggal</th>
-                                            <th style="width: 20%;">No Surat Jalan</th>
-                                            <th style="width: 20%;">No SO</th>
-                                            <th style="width: 18%;">No PO</th>
-                                            <th style="width: 6%;">Jumlah Barang</th>
-                                            <th style="width: 22%;">Aksi</th>
+                                            <th>No</th>
+                                            <th>Tanggal Jatuh Tempo</th>
+                                            <!-- <th>No Invoice</th> -->
+                                            <th>No Nota</th>
+                                            <th>No Faktur</th>
+                                            <th width="5%">Jumlah Barang</th>
+                                            <th>Keterangan</th>
+                                            <th width="20%">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -58,22 +59,45 @@
                                       <th style="border:0;padding:5px;width:18%"></th>
                                     </tr>
                                     <tr>
-                                        <td>Tanggal </td>
+                                        <td>No. Nota</td>
                                         <td>:</td>
                                         <td>
-                                            <input type="date" id="tgl" value="<?php echo date('Y-m-d') ?>"  class="form-control">
+                                            <input type="text" class="form-control" id="no_nota" autocomplete="off">
                                         </td>
                                         <td></td>
                                     </tr>
                                     <tr>
-                                        <td>Laporan</td>
+                                        <td>No. Faktur</td>
                                         <td>:</td>
                                         <td>
-                                        <select name="" id="laporan" class="form-control">
-                                          <option value="0">Pilih...</option>
-                                          <option value="sma">Sinar Mukti Abadi</option>
-                                          <option value="st">Sinar Teknindo</option>
-                                        </select>
+                                            <input type="text" class="form-control" id="no_faktur" autocomplete="off">
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Jatuh Tempo</td>
+                                        <td>:</td>
+                                        <td>
+                                          <input type="date" id="tgl_jt" value=""  class="form-control">
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                      <td style="padding:10px"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Pilih</td>
+                                        <td>:</td>
+                                        <td colspan="2">
+                                          <select class="form-control" id="pilih_id_pl" style="width:100%"></select>
+                                          <input type="hidden" value="" id="id_pl">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Tanggal Packing List</td>
+                                        <td>:</td>
+                                        <td>
+                                            <input type="date" id="tgl" value="" class="form-control" disabled="true" style="background:#ddd">
                                         </td>
                                         <td></td>
                                     </tr>
@@ -81,7 +105,7 @@
                                         <td>No. Surat Jalan</td>
                                         <td>:</td>
                                         <td>
-                                            <input type="text" class="form-control" id="no_surat" autocomplete="off">
+                                            <input type="text" class="form-control" id="no_surat" autocomplete="off" disabled="true" style="background:#ddd">
                                             <input type="hidden"  id="idid" value="">
                                         </td>
                                         <td></td>
@@ -90,7 +114,7 @@
                                         <td>No. SO</td>
                                         <td>:</td>
                                         <td>
-                                            <input type="text" class="form-control" id="no_so" autocomplete="off"> 
+                                            <input type="text" class="form-control" id="no_so" autocomplete="off" disabled="true" style="background:#ddd"> 
                                         </td>
                                         <td></td>
                                     </tr>
@@ -98,18 +122,10 @@
                                         <td>No. PO</td>
                                         <td>:</td>
                                         <td>
-                                            <input type="text" class="form-control" id="no_po" autocomplete="off"> 
+                                            <input type="text" class="form-control" id="no_po" autocomplete="off" disabled="true" style="background:#ddd"> 
                                         </td>
                                         <td></td>
                                     </tr>
-                                    <!-- <tr>
-                                        <td>No. Nota</td>
-                                        <td>:</td>
-                                        <td>
-                                            <input type="text" class="form-control" id="no_nota" autocomplete="off"> 
-                                        </td>
-                                        <td></td>
-                                    </tr> -->
                                     <tr>
                                         <td colspan="4"><hr>Dikirim Ke<hr></td>
                                     </tr>
@@ -117,21 +133,14 @@
                                         <td>UP</td>
                                         <td>:</td>
                                         <td colspan="2" style="padding:0 0 10px">
-                                            <input type="text" class="form-control" id="upup" autocomplete="off"> 
+                                            <input type="text" class="form-control" id="upup" disabled="true" style="background:#ddd"> 
                                         </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Pilih</td>
-                                        <td>:</td>
-                                        <td colspan="2">
-                                          <select class="form-control" id="kepada" style="width:100%">
-                                          </select>
                                     </tr>
                                     <tr>
                                         <td>Pimpinan</td>
                                         <td>:</td>
                                         <td colspan="2">
-                                            <input type="text" class="form-control" id="pimpinan" disabled="true" style="background:#ddd"> <input type="hidden" value="" id="id_kepada">
+                                            <input type="text" class="form-control" id="pimpinan" disabled="true" style="background:#ddd">
                                         </td>
                                     </tr>
                                     <tr>
@@ -163,10 +172,15 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="4" align="right">
-                                            <br>
-                                            
+                                        <td>Ongkos Kirim</td>
+                                        <td>:</td>
+                                        <td style="padding:10px 0 0">
+                                            <input type="text" class="angka form-control" id="ongkir" autocomplete="off">
                                         </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4" align="right"><br></td>
                                     </tr>
                                 </table>
                                 <table width="100%">
@@ -177,9 +191,6 @@
                                     </button>
                                   </td>
                                 </tr>
-                                <tr>
-                                  <td style="padding:10px 5px 0 0"><b>NOTE:</b> Jika <b>List Barang</b> Tidak Muncul / <b>Aksi</b> Tidak Berfungsi, Cek/Edit Kembali <b>Kode Barang</b> dan <b>Nama Barang</b> Sudah Tidak Ada Simbol yang tidak diperbolehkan!</td>
-                                </tr>
                               </table>
                               <br>
                               <table class="table" style="background-color: grey; color:white">
@@ -188,8 +199,8 @@
                                       <th style="width:5%;text-align:center">No</th>
                                       <th style="width:15%;text-align:center">Kode Barang</th>
                                       <th style="width:45%;text-align:center">Nama Barang</th>
-                                      <th style="width:10%;text-align:center">Sisa Stok</th>
-                                      <th style="width:10%;text-align:center">Input QTY</th>
+                                      <th style="width:10%;text-align:center">QTY</th>
+                                      <th style="width:10%;text-align:center">Input Harga</th>
                                       <th style="width:15%;text-align:center">Aksi</th>
                                     </tr>
                                   </thead>
@@ -277,8 +288,8 @@
                             <tr>
                             <th>Kode Barang</th>
                             <th>Nama Barang</th>
-                            <th>STOK</th>
-                            <th>Input QTY</th>
+                            <th>QTY</th>
+                            <th>Input Harga</th>
                             <th>Satuan</th>
                             <th>Aksi</th>
                             </tr>
@@ -306,40 +317,40 @@
               <div class="modal-body">
                 <table width="100%" border="0" cellspacing="0" cellpadding="5" style="font-size:16px">
                   <tr>
-                      <td align="left" width="8%">Tanggal</td>
+                      <td align="left" width="8%">No Nota</td>
                       <td align="" width="1%">:</td>
-                      <td align="left" width="10%"><div id="txt-tgl"></div></td>
+                      <td align="left" width="10%"><div id="txt-no_nota"></div></td>
                       <td align="center" width="10%"></td>
-                      <td align="left" width="8%">Kepada</td>
+                      <td align="left" width="8%">Tanggal Jatuh Tempo</td>
                       <td align="" width="1%">:</td>
-                      <td align="left" width="20%"><div id="txt-nm_perusahaan"></div></td>
+                      <td align="left" width="20%"><div id="txt-tgl_jt"></div></td>
                   </tr>
                   <tr>
-                        <td align="left" width="8%">No Surat Jalan</td>
+                        <td align="left" width="8%">Kepada</td>
                         <td align="" width="1%">:</td>
-                        <td align="left" width="10%"><div id="txt-no_surat"></div></td>
+                        <td align="left" width="10%"><div id="txt-kepada"></div></td>
                         <td align="center" width="10%"></td>
+                        <td align="left" width="8%">NPWP</td>
+                        <td align="" width="1%">:</td>
+                        <td align="left" width="20%"><div id="txt-npwp"></div></td>
+                    </tr>
+                    <tr>
                         <td align="left" width="8%">Alamat</td>
                         <td align="" width="1%">:</td>
-                        <td align="left" width="20%"><div id="txt-alamat_perusahaan"></div></td>
-                    </tr>
-                    <tr>
-                        <td align="left" width="8%">No SO</td>
-                        <td align="" width="1%">:</td>
-                        <td align="left" width="10%"><div id="txt-no_so"></div></td>
+                        <td align="left" width="10%"><div id="txt-alamat"></div></td>
                         <td align="center" width="10%"></td>
-                        <td align="left" width="8%">UP</td>
+                        <td align="left" width="8%">No. Faktur</td>
                         <td align="" width="1%">:</td>
-                        <td align="left" width="20%"><div id="txt-up"></div></td>
+                        <td align="left" width="20%"><div id="txt-faktur"></div></td>
                     </tr>
                     <tr>
-                        <td align="left" width="8%">No PO</td>
+                        <td align="left" width="8%">No Po</td>
                         <td align="" width="1%">:</td>
                         <td align="left" width="10%"><div id="txt-no_po"></div></td>
                         <td align="center" width="10%"></td>
-                        <td align="left" width="8%">No Telp / No HP</td>
+                        <td align="left" width="8%">Ongkir</td>
                         <td align="" width="1%">:</td>
-                        <td align="left" width="20%"><div id="txt-no_telp"></div></td>
+                        <td align="left" width="20%"><div id="txt-ongkir"></td>
                     </tr>
                 </table>
 
@@ -350,8 +361,8 @@
                               <th>No</th>
                               <th>Kode Barang</th>
                               <th>Nama Barang</th>
-                              <th>STOK</th>
-                              <th>Input QTY</th>
+                              <th>QTY</th>
+                              <th>Input Harga</th>
                             </tr>
                         </thead>
                         <tbody id="list-timbangan">
@@ -376,7 +387,7 @@
     $(document).ready(function(){
       $(".box-form").hide();
      load_data();
-     load_perusahaan();
+     load_pl();
 
     $("input.angka").keypress(function(event) { //input text number only
             return /\d/.test(String.fromCharCode(event.keyCode));
@@ -389,10 +400,9 @@
         status = 'insert';
         kosong();
         $("#btn-simpan").prop("disabled",true);
-        $(".btn_list_barang").prop("disabled",false);
         $(".box-data").hide();
         $(".box-form").show();
-        $("#judul").html('<h3>Form Tambah Data Packing List</h3>');
+        $("#judul").html('<h3>Form Tambah Data Invoice</h3>');
       $('.box-form').animateCss('fadeInDown');
     });
 
@@ -420,7 +430,7 @@
                "paging": true,
                "ajax": {
                    "url" : '<?php echo base_url(); ?>Master/load_data' ,
-                   "data" : ({jenis:"PL_price_list"}),
+                   "data" : ({jenis:"pl_inv"}),
                    "type": "POST"
                },
                responsive: true,
@@ -433,45 +443,45 @@
     }
 
     function simpan(){
-      id = $("#idid").val();
-      // data = $('#kepada').select2('data');
-      // kepada = data[0].id;
+      id_pl = $("#id_pl").val();
+
+      tgl_jt = $("#tgl_jt").val();
+      no_nota = $("#no_nota").val();
+      no_faktur = $("#no_faktur").val();
+
       tgl = $("#tgl").val();
-      laporan = $("#laporan").val();
       no_surat = $("#no_surat").val();
       no_so = $("#no_so").val();
       no_po = $("#no_po").val();
       
-      upup = $("#upup").val();
-      kepada = $("#id_kepada").val();
       pimpinan = $("#pimpinan").val();
       nama_perusahaan = $("#nama_perusahaan").val();
       npwp = $("#npwp").val();
       alamat = $("#alamat").val();
       no_telp = $("#no_telp").val();
 
+      ongkir = $("#ongkir").val();
+
       cart = $('#detail_cart').html();
       
-      if (cart == "" || tgl == "" || laporan == 0 || no_surat == "" || no_so == "" || no_po == "" || nama_perusahaan == "" || pimpinan == "" || npwp == "" || alamat == "" || no_telp == "" || upup == "")  {
+      if (cart == ""  || tgl_jt == "" || tgl == "" || no_nota == "" || no_faktur == "" || no_surat == "" || no_so == "" || no_po == "" || nama_perusahaan == "" || pimpinan == "" || npwp == "" || alamat == "" || no_telp == "" || ongkir == "")  {
         showNotification("alert-info", "Harap Lengkapi Form", "bottom", "center", "", ""); return;
       }
 
       $("#btn-simpan").prop("disabled",true);
 
-      // alert(id);
+      // alert(id_pl+" "+no_invoice+" "+tgl_jt);
+      
       $.ajax({
           type     : "POST",
           url      : '<?php echo base_url(); ?>Master/'+status,
           data     : ({
-            id:id,
-            tgl:tgl,
-            laporan:laporan,
-            no_surat:no_surat,
-            no_so:no_so,
-            no_po:no_po,
-            upup:upup,
-            kepada:kepada,
-            jenis : "PL_pl_barang"}),
+            id_pl:id_pl,
+            no_nota:no_nota,
+            no_faktur:no_faktur,
+            tgl_jt:tgl_jt,
+            ongkir:ongkir,
+            jenis : "Save_invoice"}),
             dataType : "json",
           success  : function(data){
             $("#btn-simpan").prop("disabled",false);
@@ -494,29 +504,25 @@
          $.ajax({
               url: '<?php echo base_url('Master/get_edit'); ?>',
               type: 'POST',
-              data: {id: id,jenis:"PL_pl_pl"},
+              data: {id: id,jenis:"view_inv"},
           })
           .done(function(data) {
               json = JSON.parse(data);
 
-              // alert(json.header.no_surat);
-              // $("#idid").val(json.header.id);
-              $("#txt-tgl").html(json.header.tgl);
-              $("#txt-no_surat").html(json.header.no_surat);
-              $("#txt-no_so").html(json.header.no_so);
-              $("#txt-no_po").html(json.header.no_po);
-              $("#txt-up").html(json.header.up);
-              $("#txt-nm_perusahaan").html(json.pt.nm_perusahaan);
-              // $("#txt-nama").html(json.pt.pimpinan);
+              $("#txt-no_nota").html(json.header.no_nota);
+              $("#txt-faktur").html(json.header.no_faktur);
+              $("#txt-no_po").html(json.pl.no_po);
+              $("#txt-tgl_jt").html(json.header.tgl_jt);
+              $("#txt-kepada").html(json.pt.nm_perusahaan);
               $("#txt-npwp").html(json.pt.npwp);
-              $("#txt-alamat_perusahaan").html(json.pt.alamat);
-              $("#txt-no_telp").html(json.pt.no_telp);
+              $("#txt-alamat").html(json.pt.alamat);
+              $("#txt-ongkir").html(json.header.ongkir);
 
               let idr = new Intl.NumberFormat();
               html = '';
               for (var i = 0 ; i < json.detail.length; i++) {
                 ii = i+1;
-                html +='<tr><td><b>'+ii+'</b></td><td><b>'+json.detail[i].kode_barang+'</b></td><td><b>'+json.detail[i].nama_barang+'</b></td><td><b>'+json.detail[i].qty+' '+json.detail[i].qty_ket+'</b></td><td><b>'+json.detail[i].i_qty+'</b></td></tr>';
+                html +='<tr><td><b>'+ii+'</b></td><td><b>'+json.detail[i].kode_barang+'</b></td><td><b>'+json.detail[i].nama_barang+'</b></td><td><b>'+json.detail[i].i_qty+' '+json.detail[i].qty_ket+'</b></td><td><b>Rp. '+idr.format(json.detail[i].harga_invoice)+'</b></td></tr>';
               }
 
               $("#list-timbangan").html(html);
@@ -544,7 +550,7 @@
             $.ajax({
               url   : '<?php echo base_url(); ?>Master/hapus/',
               type  : "POST",
-              data  : {id: id,jenis:"plpl"},
+              data  : {id: id,jenis:"hapus_inv"},
               success : function(data){
                 if (data == 1) {
                 swal("Berhasil", "", "success");
@@ -563,69 +569,70 @@
 
     }
 
+    function confirmByr(id,i){
+      tglByrInv = $("#plhTglInvc"+i).val();
+
+      // alert("ID:"+id+". ii:"+i+". tttbyr:"+tglByrInv);
+
+      if(tglByrInv == 0 || tglByrInv == ""){
+        swal("Pilih Tanggal Bayar Terlebih Dahulu!", "", "error");
+      }else{
+        $.ajax({
+          url : "<?php echo base_url();?>Master/confirmBayarInv",
+          method : "POST",
+          data : {
+            id:id,
+            tglByrInv:tglByrInv
+          },
+          success: function(data){
+            swal("Berhasil Terbayar", "", "success");
+            reloadTable();
+          }
+        });
+      }
+    }
+
+
     function kosong(){
       $("#judul").html('<h3> Form Tambah Data Packing List</h3>');
       $("#btn-print").hide();
       status = "insert";
+      
+      $("#id_pl").val("");
+      $("#tgl_jt").val("");
 
       $("#tgl").val("");
-      $("#laporan").val("0");
       $("#no_surat").val("");
       $("#no_so").val("");
       $("#no_po").val("");
       $("#no_nota").val("");
+      $("#no_faktur").val("");
 
-      $("#upup").val("");
-      $("#id_kepada").val("");
       $("#nama_perusahaan").val("");
       $("#pimpinan").val("");
       $("#npwp").val("");
       $("#alamat").val("");
       $("#no_telp").val("");
+      
+      $("#ongkir").val("");
 
       $("#btn-simpan").prop("disabled",false);
       $(".btn_list_barang").prop("disabled",false);
       $("#txt-btn-simpan").html("SIMPAN");
-      $('#detail_cart').load("<?php echo base_url();?>Master/destroy_cart_plpl");
+      $('#detail_cart').load("<?php echo base_url();?>Master/destroy_cart_inv");
     }
 
-    function view_timbang(id){
-      // alert(id);
-      var table = $('#datatable-view-timbang').DataTable();
-
-         table.destroy();
-
-         tabel = $('#datatable-view-timbang').DataTable({
-
-               "processing": true,
-               "pageLength":true,
-               "paging": true,
-               "ajax": {
-                   "url" : '<?php echo base_url(); ?>Master/load_data' ,
-                   "data" : ({jenis:"view_timbang",id:id}),
-                   "type": "POST"
-               },
-               responsive: true,
-               "pageLength": 10,
-               "language": {
-                       "emptyTable":     "Tidak ada data.."
-                   },
-               "order": [[ 2, "asc" ]]
-        });
-
-      $("#modal-view-timbang").modal("show");
-    }
-
-    $(".btn-tambah").click(function(){ //
+    $(".btn-tambah").click(function(){
+      id_pl = $("#id_pl").val();
      
-        load_barang();
+        load_barang(id_pl);
         $("#btn-simpan").prop("disabled",true);
         
        $("#modal-tambah").modal("show");
       
     });
 
-    function load_barang(){ 
+    function load_barang(id_pl){ //
       $("#btn-simpan").prop("disabled",true);
       var table = $('#datatable-add').DataTable();
       
@@ -639,8 +646,8 @@
             "ajax": {
                 "url" : '<?php echo base_url(); ?>Master/load_data' ,
                 "data" : ({
-                  // edit_cart:edit_cart,
-                  jenis:"list_pl_barang"}),
+                  id_pl:id_pl,
+                  jenis:"list_pl_inv"}),
                 "type": "POST"
             },
             responsive: true,
@@ -652,103 +659,43 @@
             });
     }
 
-    function addToCart(id,kode_barang,nama_barang,qty,qty_ket,i){
+    function addToCart(id,kode_barang,nama_barang,qty,i){
       $("#btn-simpan").prop("disabled",false);
-      $("#i_qty"+i).prop("disabled",true).attr('style','background:#ddd;');
+      $("#harga_inv"+i).prop("disabled",true).attr('style','background:#ddd;');
       $(".btn_list_barang").prop("disabled",true);
 
-      qty = $("#qty"+i).val();
-      i_qty = $("#i_qty"+i).val();
-
-      ss_stok = qty - i_qty;
+      harga_inv = $("#harga_inv"+i).val();
 
       // alert("ID:"+id+". qty:"+qty+". i_qty:"+i_qty+". stok: "+ss_stok);
 
-      if(i_qty == 0 || i_qty == ""){
-        swal("Input QTY Tidak Boleh Kosong", "", "error");
-        $("#i_qty"+i).prop("disabled",false).attr('style','background:#fff;');
-      }else if(ss_stok < 0){
-        swal("Melebihi STOK!!", "", "error");
-        $("#i_qty"+i).prop("disabled",false).attr('style','background:#fff;');
+      if(harga_inv == 0 || harga_inv == ""){
+        swal("Input Harga Tidak Boleh Kosong", "", "error");
+        $("#harga_inv"+i).prop("disabled",false).attr('style','background:#fff;');
       }else{
         $.ajax({
-          url : "<?php echo base_url();?>Master/add_to_cart_pl_barang",
+          url : "<?php echo base_url();?>Master/add_to_cart_inv",
           method : "POST",
           data : {
-            id_barang:id,
+            id_list_barang:id,
             kode_barang:kode_barang,
             nama_barang:nama_barang,
-            qty:qty,
-            qty_ket:qty_ket,
-            i_qty:i_qty
+            harga_inv:harga_inv,
+            qty:qty
           },
           success: function(data){
           swal("Berhasil Ditambahkan", "", "success");
             $('#detail_cart').html(data);
-            $(".btn_list_barang").prop("disabled",false);
           }
         });
       }
     }
 
-    // function tampil_plpl(kode_barang,harga_price_list,qty,i_qty_barang){
-
-    //   $("#btn-simpan").prop("disabled",true);
-
-    //   $.ajax({
-    //     url : "<?php echo base_url();?>Master/view_edit_cart_pl",
-    //     method : "POST",
-    //     data : {
-    //       kode_barang:kode_barang,
-    //       harga_price_list:harga_price_list,
-    //       qty:qty,
-    //       i_qty_barang:i_qty_barang
-    //       },
-    //     success: function(data){
-    //       $('#detail_cart').html(data);
-    //     }
-    //   });
-    // }
-
-    // function edit_plpl(kode_barang,harga_price_list,qty,i_qty_barang,i){
-    //   qty = $("#qty"+i).val();
-    //   i_qty = $("#i_qty"+i).val();
-
-    //   ss_stok = qty - i_qty;
-
-    //   // alert("STOK :("+qty+"). INPUT=("+i_qty+"). "+i_qty_barang);
-
-    //   $("#btn-simpan").prop("disabled",false);
-
-    //   if(i_qty == 0 || i_qty == ""){
-    //     swal("Input QTY Tidak Boleh Kosong", "", "error");
-    //   }else if(ss_stok < 0){
-    //     swal("Melebihi STOK", "", "error");
-    //   }else{
-    //     $.ajax({
-    //       url : "<?php echo base_url();?>Master/save_edit_cart_pl",
-    //       method : "POST",
-    //       data : {
-    //         kode_barang:kode_barang,
-    //         harga_price_list:harga_price_list,
-    //         qty:qty,
-    //         i_qty:i_qty,
-    //         i_qty_barang:i_qty_barang
-    //         },
-    //       success: function(data){
-    //         $('#detail_cart').html(data);
-    //       }
-    //     });
-    //   }
-    // }
-
     $(document).on('click','.hapus_cart',function(){
-       var row_id=$(this).attr("id"); //mengambil row_id dari artibut id
+       var row_id=$(this).attr("id");
        $.ajax({
-         url : "<?php echo base_url();?>Master/hapus_cart_plpl",
+         url : "<?php echo base_url();?>Master/hapus_cart_inv",
          method : "POST",
          data : {
-            // edit_cart:edit_cart,
             row_id : row_id},
          success :function(data){
            $('#detail_cart').html(data);
@@ -757,15 +704,14 @@
        });
      });
 
-    function load_perusahaan(){
-    
-      $('#kepada').select2({
+    function load_pl(){
+      $('#pilih_id_pl').select2({
            // minimumInputLength: 3,
            allowClear: true,
            placeholder: '--select--',
            ajax: {
               dataType: 'json',
-              url      : '<?php echo base_url(); ?>/Master/load_perusahaan',
+              url      : '<?php echo base_url(); ?>/Master/load_pl',
               delay: 800,
               data: function(params) {
                 if (params.term == undefined) {
@@ -788,12 +734,19 @@
       });
    }
 
-   $('#kepada').on('change', function() {
-      data = $('#kepada').select2('data');
+   $('#pilih_id_pl').on('change', function() {
+      data = $('#pilih_id_pl').select2('data');
       // $("#nama").val(data[0].text);
-      $("#id_kepada").val(data[0].id);
+      $("#id_pl").val(data[0].id);
+
+      $("#tgl").val(data[0].tgl);
+      $("#no_surat").val(data[0].no_surat);
+      $("#no_so").val(data[0].no_so);
+      $("#no_po").val(data[0].no_po);
+
       $("#pimpinan").val(data[0].pimpinan);
-      $("#nama_perusahaan").val(data[0].nama_perusahaan);
+      $("#upup").val(data[0].up);
+      $("#nama_perusahaan").val(data[0].text);
       $("#npwp").val(data[0].npwp);
       $("textarea#alamat").val(data[0].alamat);
       $("#no_telp").val(data[0].no_telp);

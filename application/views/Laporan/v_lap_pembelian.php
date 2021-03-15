@@ -15,7 +15,7 @@
 
 <div class="box-data">
 <button style="background:#ddd;padding:8px 10px;color:#000;border:0" id="btn_barang">BARANG</button>
-<button style="background:#ddd;padding:8px 10px;color:#000;border:0" id="btn_nota">TOTAL PEMBELIAN</button>
+<!-- <button style="background:#ddd;padding:8px 10px;color:#000;border:0" id="btn_nota">TOTAL PEMBELIAN</button> -->
 <!-- <button style="background:#ddd;padding:8px 10px;color:#000;border:0" id="btn_rekap">REKAP HARIAN BULANAN</button> -->
 <br><br>
 
@@ -24,6 +24,7 @@
   <div>LAPORAN BARANG</div><br/>
   <button style="background:#ddd;padding:8px 10px;color:#000;border:0" id="btn_barang_all">SEMUA</button>
   <button style="background:#ddd;padding:8px 10px;color:#000;border:0" id="btn_barang_supplier">PER SUPPLIER</button>
+  <button style="background:#ddd;padding:8px 10px;color:#000;border:0" id="btn_barang_supplier_nota">PER SUPPLIER NO NOTA</button>
 
   <!-- SEMUA -->
   <div id="box_barang_all"><br/>
@@ -88,6 +89,54 @@
     </button>
   </div>
 </div>
+
+<!-- PER SUPPLIER NO NOTA -->
+<div id="box_barang_supplier_nota"><br/>
+    <!-- tampil data -->
+    <table style="border:0;width:50%;">
+      <tr>
+          <th style="border:0;width:12%"></th>
+          <th style="border:0;width:1%"></th>
+          <th style="border:0;width:12%"></th>
+          <th style="border:0;width:3%"></th>
+          <th style="border:0;width:12%"></th>
+        </tr>
+      <tr>
+        <td>Pilih</td>
+        <td>:</td>
+        <td colspan="3"><select class="form-control" id="supplier_nota" style="width:100%"></select>
+        </td>
+      </tr>
+      <tr>
+        <td>Supplier</td>
+        <td>:</td>
+        <td colspan="3">
+        <input type="text" id="supplier_note_nota" autocomplete="off" class="form-control" disabled="true" style="background:#ddd">
+        <input type="hidden" value="" id="id_supplier_nota">
+        </td>
+      </tr>
+      <tr>
+        <td>No. Nota</td>
+        <td>:</td>
+        <td colspan="3"><input type="text" id="no_nota" autocomplete="off" class="form-control" disabled="true" style="background:#ddd"></td>
+      </tr>
+      <tr>
+        <td>Pilih Tanggal</td>
+        <td>:</td>
+        <td><input type="date" class="form-control" value="" id="nntgl1" style="width:100%"></td>
+        <td style="text-align:center;">S/d</td>
+        <td><input type="date" class="form-control" value="" id="nntgl2" style="width:100%"></td>
+      </tr>
+    </table>
+
+    <!-- cetak barang -->
+    <br/><button type="button" onclick="cetak_barang(0,2)" class="btn btn-default btn-sm waves-effect">
+      <i class="material-icons">personal_video</i> CETAK
+    </button>&nbsp;
+    <button type="button" onclick="cetak_barang(1,2)" class="btn btn-default btn-sm waves-effect">
+      <i class="material-icons">sms</i> EXCEL
+    </button>
+  </div>
 <!-- END BARANG -->
 
 <!-- # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # -->
@@ -209,6 +258,7 @@
     $("#box_barang").hide();
     $("#box_barang_all").hide();
     $("#box_barang_supplier").hide();
+    $("#box_barang_supplier_nota").hide();
     $("#box_nota").hide();
     $("#box_rekap").hide();
   
@@ -225,6 +275,7 @@
       $("#box_barang").show();
       $("#box_barang_all").hide();
       $("#box_barang_supplier").hide();
+      $("#box_barang_supplier_nota").hide();
       $("#box_nota").hide();
       $("#box_nota_all").hide();
       $("#box_nota_supplier").hide();
@@ -235,25 +286,42 @@
       $("#tgl2").val("");
       $("#stgl1").val("");
       $("#stgl2").val("");
+      $("#nntgl1").val("");
+      $("#nntgl2").val("");
     });
 
       // barang all
       $("#btn_barang_all").click(function(){
         $("#btn_barang_all").attr('style','background:#287FB8;padding:8px 10px;color:#fff;border:0');
         $("#btn_barang_supplier").attr('style','background:#ddd;padding:8px 10px;color:#000;border:0');
+        $("#btn_barang_supplier_nota").attr('style','background:#ddd;padding:8px 10px;color:#000;border:0');
 
         $("#box_barang_all").show();
         $("#box_barang_supplier").hide();
+        $("#box_barang_supplier_nota").hide();
       });
 
       // barang supplier
       $("#btn_barang_supplier").click(function(){
         $("#btn_barang_all").attr('style','background:#ddd;padding:8px 10px;color:#000;border:0');
         $("#btn_barang_supplier").attr('style','background:#287FB8;padding:8px 10px;color:#fff;border:0');
+        $("#btn_barang_supplier_nota").attr('style','background:#ddd;padding:8px 10px;color:#000;border:0');
 
         $("#box_barang_all").hide();
         $("#box_barang_supplier").show();
-      });      
+        $("#box_barang_supplier_nota").hide();
+      });
+      
+      // barang supplier no nota
+      $("#btn_barang_supplier_nota").click(function(){
+        $("#btn_barang_all").attr('style','background:#ddd;padding:8px 10px;color:#000;border:0');
+        $("#btn_barang_supplier").attr('style','background:#ddd;padding:8px 10px;color:#000;border:0');
+        $("#btn_barang_supplier_nota").attr('style','background:#287FB8;padding:8px 10px;color:#fff;border:0');
+
+        $("#box_barang_all").hide();
+        $("#box_barang_supplier").hide();
+        $("#box_barang_supplier_nota").show();
+      }); 
 
   //#####################################################################
 
@@ -413,6 +481,14 @@
       if (id_supplier == "" || id_supplier == 0){
         showNotification("alert-info", "Pilih Supplier Dahulu", "bottom", "right", "", ""); return;
       }
+    }else if(jenis == 2){
+      tgl1 = $("#nntgl1").val();
+      tgl2 = $("#nntgl2").val();
+      id_supplier = $("#id_supplier_nota").val();
+
+    if (id_supplier == "" || id_supplier == 0){
+        showNotification("alert-info", "Pilih Supplier Dahulu", "bottom", "right", "", ""); return;
+      }
     }
 
     if (tgl1 == ""){
@@ -421,8 +497,9 @@
       showNotification("alert-info", "Pilih Tanggal Akhir", "bottom", "right", "", ""); return;
     }
 
+    // alert('ctk='+ctk+'. jenis='+jenis+'. tgl1='+tgl1+'. tgl2='+tgl2+'. id_supplier='+id_supplier);
     var url    = "<?php echo base_url('Laporan/lap_barang?'); ?>";
-    window.open(url+'tgl1='+tgl1+'&tgl2='+tgl2+'&jenis='+id_supplier+'&ctk='+ctk, '_blank');
+    window.open(url+'tgl1='+tgl1+'&tgl2='+tgl2+'&jenis='+id_supplier+'&ctk='+ctk+'&opsi='+jenis, '_blank');
 
    }
 

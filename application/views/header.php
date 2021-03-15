@@ -113,6 +113,7 @@
             <div class="menu">
                 <ul class="list">
                     <li class="header">MAIN NAVIGATION</li>
+                    <?php if($this->session->userdata('otoritas') == "Pembelian") { ?>
                     <li>
                         <a href="<?php echo base_url() ?>">
                             <i class="material-icons">home</i>
@@ -120,9 +121,9 @@
                         </a>
                     </li>
                     
-                    <?php if($this->session->userdata('otoritas') == "Pembelian") { ?>
+                    <?php } if($this->session->userdata('otoritas') == "Pembelian" || $this->session->userdata('otoritas') == "Penjualan") { ?>
                     <li>
-                        <a href="<?php echo base_url('Master/Price_List') ?>">
+                        <a href="<?php echo base_url('Master/Etalase') ?>">
                             <i class="material-icons">dns</i>
                             <span>Etalase</span>
                         </a>
@@ -148,10 +149,11 @@
                             <li>
                                 <a href="<?php echo base_url('Master/NoNota') ?>">No. Nota</a>
                             </li>
+                            <?php if($this->session->userdata('otoritas') == "Pembelian") { ?>
                             <li>
                                 <a href="<?php echo base_url('Master/Barang') ?>">Barang</a>
                             </li>
-                            <?php if($this->session->userdata('level') == "Developer" || $this->session->userdata('level') == "SuperAdmin") { ?>
+                            <?php } if(($this->session->userdata('level') == "Developer" || $this->session->userdata('level') == "SuperAdmin") && $this->session->userdata('otoritas') == "Pembelian") { ?>
                             <li>
                                 <a href="<?php echo base_url('Master/Administrator') ?>">Administrator</a>
                             </li>
@@ -221,6 +223,9 @@
                                 </li>
                                 <li>
                                     <a href="<?php echo base_url('Laporan/LapPiutang') ?>">Piutang</a>
+                                </li>
+                                <li>
+                                    <a href="<?php echo base_url('Laporan/LapBarangKeluar') ?>">Barang Keluar</a>
                                 </li>
                             <?php } ?>
                         </ul>

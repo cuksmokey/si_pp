@@ -100,7 +100,7 @@ class M_master extends CI_Model{
         return $this->db->query($query);
     }
 
-    function get_data_ijpl($table,$kolom,$id){
+    function get_data_ijpl($table,$kolom,$id){ //
         $query = "SELECT a.*,b.id AS id_barang,b.kode_barang,b.nama_barang,b.merek,b.spesifikasi,c.id AS id_supplier,c.nama_supplier FROM $table a
         INNER JOIN m_barang b ON a.id_m_barang=b.id
         INNER JOIN m_supplier c ON a.id_m_supplier=c.id
@@ -108,12 +108,21 @@ class M_master extends CI_Model{
         return $this->db->query($query);
     }
 
-    function get_data_ijb($table,$kolom,$id){
-        $query = "SELECT c.nama_supplier,b.no_nota,d.tgl_bayar,d.qty_ket,d.harga,d.status,a.* FROM $table a
+    function get_data_ijb($table,$kolom,$id){ //
+        $query = "SELECT c.nama_supplier,b.no_nota,d.tgl_bayar,d.qty_plus,d.qty_ket,d.harga,d.status,a.* FROM $table a
         INNER JOIN m_nota b ON a.id_m_nota=b.id
         INNER JOIN m_supplier c ON b.id_supplier=c.id
         INNER JOIN m_barang_plus d ON a.id_m_barang_plus=d.id
         WHERE a.$kolom='$id'";
+        return $this->db->query($query);
+    }
+
+    function get_data_bp($table,$kolom,$id){ //
+        $query = "SELECT c.id AS id_supplier,c.nama_supplier,b.no_nota,a.* FROM $table a
+        INNER JOIN m_nota b ON a.id_m_nota=b.id
+        INNER JOIN m_supplier c ON b.id_supplier=c.id
+        WHERE $kolom='$id'
+        ORDER BY a.id ASC";
         return $this->db->query($query);
     }
 
@@ -156,14 +165,6 @@ class M_master extends CI_Model{
         return $this->db->query($query);
     }
 
-    function get_cek_po_pl($id_pl,$no_pkb){
-        $query = "SELECT nm_ker AS nm_ker_po,g_label AS g_label_po,width AS width_po FROM m_timbangan a
-        INNER JOIN pl b ON a.id_pl = b.id
-        WHERE a.id_pl='$id_pl' AND b.no_pkb='$no_pkb'
-        GROUP BY nm_ker,g_label,width";
-        return $this->db->query($query)->num_rows();
-    }
-
     function query($query1){
         
         $query = $query1;
@@ -188,11 +189,6 @@ class M_master extends CI_Model{
         $query = "DELETE FROM $table WHERE $kolom='$id_perusahaan' AND $kolom2='$g_label' AND $kolom3='$width'";
         $result =  $this->db->query($query);
         return $result;
-    }
-
-    function get_timbangan(){
-        $query = "SELECT * FROM m_timbangan WHERE status = '0' ORDER BY id DESC ";
-        return $this->db->query($query);
     }
 
     function get_pl_barang(){
@@ -220,16 +216,6 @@ class M_master extends CI_Model{
         return $this->db->query($query);
     }
 
-    function get_view_timbangan($id){
-        $query = "SELECT * FROM m_timbangan WHERE id_pl = '$id' ";
-        return $this->db->query($query);
-    }
-
-    function get_PL(){
-        $query = "SELECT a.*,(SELECT COUNT(id_pl) FROM m_timbangan WHERE id_pl = a.id) AS jml_timbang FROM pl a ";
-        return $this->db->query($query);
-    }
-
     function get_PL_price_list(){
         $query = "SELECT a.*,(SELECT COUNT(id_pl)
         FROM m_pl_list_barang WHERE id_pl = a.id) AS jml_timbang FROM m_pl_price_list a ORDER BY a.id DESC";
@@ -237,64 +223,14 @@ class M_master extends CI_Model{
     }
 
     function get_load_inv(){
-        $query = "SELECT b.no_po,b.cek_inv,b.tgl_ctk,(SELECT COUNT(id_pl) FROM m_pl_list_barang WHERE id_pl = b.id) AS jml_timbang,a.* FROM m_invoice a
+        // $query = "SELECT b.no_po,b.cek_inv,b.tgl_ctk,(SELECT COUNT(id_pl) FROM m_pl_list_barang WHERE id_pl = b.id) AS jml_timbang,a.* FROM m_invoice a
+        // INNER JOIN m_pl_price_list b ON a.id_pl=b.id
+        // ORDER BY a.id DESC";
+        $query = "SELECT c.nm_perusahaan,b.no_po,b.cek_inv,b.tgl_ctk,(SELECT COUNT(id_pl) FROM m_pl_list_barang WHERE id_pl = b.id) AS jml_timbang,a.* FROM m_invoice a
         INNER JOIN m_pl_price_list b ON a.id_pl=b.id
+        INNER JOIN m_perusahaan c ON b.id_m_perusahaan=c.id
         ORDER BY a.id DESC";
         return $this->db->query($query);
-    }
-
-    function insert_timbangan(){
-        
-        $data = array(
-                'roll'     	=> $_POST['id'],
-                'tgl'      => $_POST['tgl'],
-                'nm_ker'       => $_POST['nm_ker'],
-                'g_ac'      => $_POST['g_ac'],
-                'g_label'      => $_POST['g_label'],
-                'width'       => $_POST['width'],
-                'weight'       => $_POST['weight'],
-                'diameter'      => $_POST['diameter'],
-                'joint'      => $_POST['joint'],
-                'rct'      => $_POST['rct'],
-                'bi'      => $_POST['bi'],
-                'ket'      => $_POST['ket']
-            );
-        $result= $this->db->insert("m_timbangan",$data);
-
-        return $result;
-    }
-
-    function insert_pl(){
-        
-        $data = array(
-                'tgl'      => $_POST['tgl'],
-                'no_surat'      => str_replace(" ", "", $_POST['no_surat']),
-                'no_so'       => $_POST['no_so'],
-                'no_pkb'      => $_POST['no_pkb'],
-                'no_kendaraan'      => $_POST['no_kendaraan'],
-                'nama'       => $_POST['nama'],
-                'id_perusahaan'       => $_POST['id_perusahaan'],
-                'nm_perusahaan'       => $_POST['nm_perusahaan'],
-                'alamat_perusahaan'      => $_POST['alamat_perusahaan'],
-                'no_telp'      => $_POST['no_telp'],
-                'no_po'      => $_POST['no_po']
-            );
-
-
-        $result= $this->db->insert("pl",$data);
-
-        $no_surat = $_POST['no_surat'];
-        $id = $this->db->query("SELECT id FROM pl WHERE no_surat = '$no_surat'")->row('id');
-
-        foreach ($this->cart->contents() as $items) {
-            $this->db->set('status', "1");
-            $this->db->set('id_pl', $id);
-
-            $this->db->where('roll', str_replace("_", "/", $items['name']));
-            $result= $this->db->update('m_timbangan');
-        }
-
-        return $result;
     }
 
     function insert_pl_pl_b(){
@@ -412,81 +348,19 @@ class M_master extends CI_Model{
         return $result;
     }
 
-    function update_timbangan(){
-        
-        $this->db->set('nm_ker', $_POST['nm_ker']);
-        $this->db->set('g_ac', $_POST['g_ac']);
-        $this->db->set('g_label', $_POST['g_label']);
-        $this->db->set('width', $_POST['width']);
-        $this->db->set('weight', $_POST['weight']);
-        $this->db->set('diameter', $_POST['diameter']);
-        $this->db->set('joint', $_POST['joint']);
-        $this->db->set('ket', $_POST['ket']);
-        $this->db->set('rct', $_POST['rct']);
-        $this->db->set('bi', $_POST['bi']);
-        $this->db->where('roll', $_POST['id']);
-        $result = $this->db->update('m_timbangan');
-
-
-
-        return $result;
-    }
-
-    function update_pl(){
-        $no_surat = $_POST['no_surat_lama'];
-        $id = $this->db->query("SELECT id FROM pl WHERE no_surat = '$no_surat'")->row('id');
-        
-
-        $this->db->set('tgl', $_POST['tgl']);
-        $this->db->set('no_surat', $_POST['no_surat']);
-        $this->db->set('no_so', $_POST['no_so']);
-        $this->db->set('no_pkb', $_POST['no_pkb']);
-        $this->db->set('no_kendaraan', $_POST['no_kendaraan']);
-        $this->db->set('nama', $_POST['nama']);
-        $this->db->set('id_perusahaan', $_POST['id_perusahaan']);
-        $this->db->set('nm_perusahaan', $_POST['nm_perusahaan']);
-        $this->db->set('alamat_perusahaan', $_POST['alamat_perusahaan']);
-        $this->db->set('no_telp', $_POST['no_telp']);
-        $this->db->set('no_po', $_POST['no_po']);
-
-        $this->db->set('updated_at', date('Y-m-d H:i:s'));
-        $this->db->set('updated_by', $this->session->userdata('username'));
-        $this->db->where('id', $id);
-        $result = $this->db->update('pl');
-
-        $this->db->set('status', "0");
-        $this->db->set('id_pl', "0");
-
-        $this->db->where('id_pl', $id);
-        $result= $this->db->update('m_timbangan');
-
-        foreach ($this->cart->contents() as $items) {
-            $this->db->set('status', "1");
-            $this->db->set('id_pl', $id);
-
-            $this->db->where('roll', str_replace("_", "/", $items['name']));
-            $result= $this->db->update('m_timbangan');
-        }
-
-        return $result;
-    }
-
     function get_lok($searchTerm=""){
+        $users = $this->db->query("SELECT * FROM lok WHERE acc like '%$searchTerm%' or  ket like '%$searchTerm%' ORDER BY ket ")->result_array();
 
-     
-
-     $users = $this->db->query("SELECT * FROM lok WHERE acc like '%$searchTerm%' or  ket like '%$searchTerm%' ORDER BY ket ")->result_array();
-
-     // Initialize Array with fetched data
-     $data = array();
-     foreach($users as $user){
-        $data[] = array(
-            "id"=>$user['acc'], 
-            "text"=>$user['acc']
-        );
-     }
-     return $data;
-  }
+        // Initialize Array with fetched data
+        $data = array();
+        foreach($users as $user){
+            $data[] = array(
+                "id"=>$user['acc'], 
+                "text"=>$user['acc']
+            );
+        }
+        return $data;
+    }
 
     function get_perusahaan(){
         $query = "SELECT * FROM m_perusahaan ORDER BY id DESC ";
@@ -501,7 +375,7 @@ class M_master extends CI_Model{
         return $this->db->query($query);
     }
 
-    function get_load_barang(){ //
+    function get_load_barang(){
         $query = "SELECT c.nama_supplier,b.no_nota,d.harga,d.qty_ket,a.* FROM m_barang a
         INNER JOIN m_nota b ON a.id_m_nota=b.id
         INNER JOIN m_supplier c ON b.id_supplier=c.id
@@ -563,7 +437,7 @@ class M_master extends CI_Model{
         return $result;
     }
 
-    function insert_load_barang(){
+    function insert_load_barang(){ //
         $data = array(
             'tgl' => $_POST['tgl'],
             // 'tgl_bayar' => $_POST['tgl_byr'],
@@ -583,8 +457,10 @@ class M_master extends CI_Model{
         $kd = $_POST['kode_barang'];
         $id = $this->db->query("SELECT id FROM m_barang WHERE kode_barang = '$kd'")->row();
         $data_plus = array(
+            'tgl_masuk' => $_POST['tgl'],
             'tgl_bayar' => $_POST['tgl_byr'],
             'id_m_barang' => $id->id,
+            'id_m_nota' => $_POST['supplier'],
             'qty_plus' => $_POST['qty'],
             'qty_ket' => $_POST['qty_ket'],
             'harga' => $_POST['harga'],
@@ -693,9 +569,10 @@ class M_master extends CI_Model{
         return $result;
     }
 
-    function update_load_barang(){
-        
+    function update_load_barang(){ //
+        // 'id_m_nota' => $_POST['supplier'],
         $this->db->set('tgl', $_POST['tgl']);
+        $this->db->set('id_m_nota', $_POST['supplier']);
         $this->db->set('kode_barang', $_POST['kode_barang']);
         $this->db->set('nama_barang', $_POST['nama_barang']);
         $this->db->set('merek', $_POST['merek']);
@@ -706,8 +583,16 @@ class M_master extends CI_Model{
         $this->db->where('id', $_POST['id']);
         $result = $this->db->update('m_barang');
 
+        // EDIT
         if($_POST['qty_plus'] == 0){
+            $this->db->set('id_m_nota', $_POST['supplier']);
+            $this->db->set('tgl_masuk', $_POST['tgl']);
             $this->db->set('tgl_bayar', $_POST['tgl_byr']);
+            // if($opsi == "uptok"){
+            //     $this->db->set('qty_plus', $_POST['qty_plus_lama']);
+            // }else if($opsi == "updel"){
+            $this->db->set('qty_plus', $_POST['qty_edit']);
+            // }
             $this->db->set('qty_ket', $_POST['qty_ket']);
             $this->db->set('harga', $_POST['harga']);
             $this->db->set('status', $_POST['status_plus']);
@@ -715,8 +600,12 @@ class M_master extends CI_Model{
             $this->db->set('updated_by', $this->session->userdata('username'));
             $this->db->where('id', $_POST['id_m_barang_plus']);
             $result = $this->db->update('m_barang_plus');
-        }else if($_POST['qty_plus'] <> 0){
+        }
+        // QTY PLUS
+        else if($_POST['qty_plus'] <> 0){
             $data_plus = array(
+                'id_m_nota' => $_POST['supplier'],
+                'tgl_masuk' => $_POST['tgl'],
                 'tgl_bayar' => $_POST['tgl_byr'],
                 'id_m_barang' => $_POST['id'],
                 'qty_plus' => $_POST['qty_plus'],
@@ -736,6 +625,10 @@ class M_master extends CI_Model{
         $result = $this->db->update('m_barang');
 
         return $result;
+    }
+
+    function hapusPembelianTerakhir(){
+
     }
 
     function update_load_supplier(){
@@ -938,7 +831,7 @@ class M_master extends CI_Model{
         return $data;
     }
 
-    function list_supplier_nota($searchTerm=""){
+    function list_supplier_nota($searchTerm=""){ //
         $users = $this->db->query("SELECT a.id,b.nama_supplier,CONCAT(b.nama_supplier, ' | ', a.no_nota) AS id_n,a.no_nota FROM m_nota a
         INNER JOIN m_supplier b ON a.id_supplier=b.id
         WHERE b.nama_supplier LIKE '%$searchTerm%' OR
@@ -1041,114 +934,6 @@ class M_master extends CI_Model{
         ORDER BY d.nama_supplier ASC,c.no_nota ASC,a.id_m_barang ASC,a.tgl_bayar DESC";
         return $this->db->query($query);
     }
-
-    function get_barang(){
-        $no_surat = $_POST['no_surat'];
-        $query = "SELECT a.g_label AS g_label,CONCAT('LB ', a.width) AS lb,COUNT(a.roll) AS roll,b.no_po,SUM(weight) weight FROM m_timbangan a JOIN pl b
-            ON a.`id_pl` = b.id
-            WHERE no_surat = '$no_surat'
-            GROUP BY a.width";
-
-        // $query = "SELECT a.g_label AS g_label,CONCAT('LB ', a.width) AS lb,COUNT(a.roll) AS roll,b.no_po,SUM(weight) weight FROM m_timbangan a JOIN pl b
-        //     ON a.`id_pl` = b.id
-        //     WHERE no_surat LIKE '%$no_surat%'
-        //     GROUP BY a.width";
-        return $this->db->query($query);
-    }
-
-    function insert_invoice(){
-        $data = array(
-                'no_invoice'    => $_POST['id'],
-                'jto'           => $_POST['jto'],
-                'no_surat'      => $_POST['no_surat'],
-                'no_po'         => $_POST['no_po'],
-                'no_pkb'        => $_POST['no_pkb'],
-                'id_perusahaan' => $_POST['id_perusahaan'],
-                'kepada'        => $_POST['nama'],
-                'nm_perusahaan' => $_POST['nm_perusahaan'],
-                'alamat'        => $_POST['alamat_perusahaan']
-            );
-
-        $result= $this->db->insert("th_invoice",$data);
-
-        $gsm = "";
-        foreach ($this->cart->contents() as $items) {
-            $this->db->set('no_invoice', $_POST['id']);
-            $this->db->set('g_label', $items['options']['gsm']);
-            $this->db->set('width_lb', $items['name']);
-            $this->db->set('roll', str_replace("_", "/", $items['options']['roll']));
-            $this->db->set('satuan', $items['options']['satuan']);
-            $this->db->set('jumlah', $items['qty']);
-            $this->db->set('harga', $items['price']);
-
-            $result= $this->db->insert('tr_invoice');
-
-            $gsm = $items['options']['gsm'];
-        }
-
-            $this->db->set('gsm', $gsm);
-            $this->db->where('no_invoice', $_POST['id']);
-            $result= $this->db->update('th_invoice');
-
-            $this->db->set('status', "Closed");
-            // $this->db->where('no_surat', $_POST['no_surat']);
-            $this->db->where('no_pkb', $_POST['no_pkb']);
-            $result= $this->db->update('pl');
-
-        return $result;
-    }
-
-    function reject()
-    {
-        $id = $_POST['id'];
-
-        // $no_surat = $this->db->get_where('th_invoice', array('id' => $id))->row("no_surat");
-        $no_pkb = $this->db->get_where('th_invoice', array('id' => $id))->row("no_pkb");
-
-        $this->db->set('status', "Open");
-        // $this->db->where('no_surat', $no_surat);
-        $this->db->where('no_pkb', $no_pkb);
-        $result= $this->db->update('pl');
-
-        $this->db->set('status', "Reject");
-        $this->db->where('id', $id);
-        $result= $this->db->update('th_invoice');
-
-        return $result;
-    }
-
-    function confirm()
-    {
-        $id = $_POST['id'];
-
-        $no_surat = $this->db->get_where('th_invoice', array('id' => $id))->row("no_surat");
-
-        // $this->db->set('status', "Open");
-        // $this->db->where('no_surat', $no_surat);
-        // $result= $this->db->update('pl');
-
-        $this->db->set('status', "Valid");
-        $this->db->where('id', $id);
-        $result= $this->db->update('th_invoice');
-
-        return $result;
-    }
-
-    function confirm_cek_po() {
-        $id = $_POST['id'];
-
-        // ambil po
-        $q_pl_no_po = $this->m_master->get_plpl($id)->row();
-        // $g_label = $q_pl_no_po->g_label;
-        // $width   = $q_pl_no_po->width;
-        // $no_po   = $q_pl_no_po->no_po;
-        
-        $result = $q_pl_no_po;        
-
-        return $result;
-    }
-
-  
  
 }
 

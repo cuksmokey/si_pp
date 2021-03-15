@@ -18,15 +18,11 @@ class Master extends CI_Controller {
     public function index()
     {
         $this->load->view('header');
-        $this->load->view('home');
-        $this->load->view('footer');
-    }
-
-
-    public function Timbangan()
-    {
-        $this->load->view('header');
-        $this->load->view('Master/v_timbangan');
+        if($this->session->userdata('otoritas') == "Penjualan") {
+            $this->load->view('Master/v_etalase');
+        }else{
+            $this->load->view('home');
+        }
         $this->load->view('footer');
     }
 
@@ -77,6 +73,12 @@ class Master extends CI_Controller {
         $this->load->view('footer');
     }
 
+    public function Etalase() {
+        $this->load->view('header');
+        $this->load->view('Master/v_etalase');
+        $this->load->view('footer');
+    }
+
     public function Administrator()
     {
         $this->load->view('header');
@@ -99,21 +101,11 @@ class Master extends CI_Controller {
     }
 
    
-    function Insert(){
+    function Insert(){ //
 
             $jenis      = $_POST['jenis'];
 
-            if ($jenis == "Timbangan") {
-                $id      = $this->input->post('id');
-                $cek = $this->m_master->get_data_one("m_timbangan","roll",$id)->num_rows();
-                // $cek = $this->m_master->get_data_one("admin", "username", $username)->num_rows();
-                if ($cek > 0 ) {
-                    echo json_encode(array('data' =>  FALSE));
-                }else{
-                    $result     = $this->m_master->insert_timbangan();    
-                    echo json_encode(array('data' =>  TRUE));
-                }
-            }else if ($jenis == "Perusahaan") {
+            if ($jenis == "Perusahaan") {
                 $id      = $this->input->post('nm_perusahaan');
                 $cek = $this->m_master->get_data_one("m_perusahaan","nm_perusahaan",$id)->num_rows();
                 if ($cek > 0 ) {
@@ -132,12 +124,17 @@ class Master extends CI_Controller {
                     $result = $this->m_master->insert_price_list();    
                     echo json_encode(array('data' =>  TRUE));
                 }
-            }else if ($jenis == "Simpan_Barang") {
+            }else if ($jenis == "Simpan_Barang") { //
                 $id = $this->input->post('kode_barang');
                 $cek = $this->m_master->get_data_one("m_barang","kode_barang",$id)->num_rows();
+
+                $status_plus = $this->input->post('status_plus');
+                $harga = $this->input->post('harga');
                 
                 if ($cek > 0 ) {
                     echo json_encode(array('data' =>  FALSE,'msg' => 'Kode Barang Sudah Dipakai'));
+                }else if(($harga == 0 || $harga == "") && $status_plus == "Cash"){
+                    echo json_encode(array('data' =>  FALSE,'msg' => 'Pembayaran Cash, Harga Tidak Boleh Kosong!'));
                 }else{
                     $result     = $this->m_master->insert_load_barang();    
                     echo json_encode(array('data' =>  TRUE,'msg' => 'Berhasil'));
@@ -290,148 +287,11 @@ class Master extends CI_Controller {
         }
     }
 
-    function load_data(){
+    function load_data(){ //
          $jenis = $this->input->post('jenis');
-        //  $edit_cart = $this->input->post('edit_cart');
+         $options = $this->input->post('opsi');
 
-            if ($jenis == "Timbangan") {
-                $query = $this->m_master->get_timbangan()->result();
-                $i=1;
-                foreach ($query as $r) {
-                    $id = "'$r->id'";
-
-                    $print = base_url("Master/print_timbangan?id=").$r->roll;
-                    $print2 = base_url("Master/print_timbangan2?id=").$r->roll;
-
-                    $row = array();
-                    $row[] = $r->roll;
-                    $row[] = $r->tgl;
-                    $row[] = $r->nm_ker;
-                    $row[] = $r->g_label;
-                    $row[] = $r->g_ac;
-                    $row[] = $r->width;
-                    $row[] = $r->diameter;
-                    $row[] = $r->weight;
-                    $row[] = $r->joint;
-                    $row[] = $r->ket;
-                    // $row[] = $r->ctk;
-
-                    $aksi ="";
-                    if ($this->session->userdata('level') == "SuperAdmin") {
-                      //   $aksi = '   
-                        
-                      //   <button type="button" onclick="tampil_edit('.$id.')" class="btn bg-orange btn-circle waves-effect waves-circle waves-float">
-                      //       <i class="material-icons">edit</i>
-                      //   </button>
-                      // <button type="button" onclick="deleteData('.$id.','."".')" class="btn btn-danger btn-circle waves-effect waves-circle waves-float">
-                      //       <i class="material-icons">delete</i>
-                      //   </button>
-                      //   <a type="button" href="'.$print.'" target="blank" class="btn btn-default btn-circle waves-effect waves-circle waves-float">
-                      //       <i class="material-icons">print</i>
-                      //   </a>
-                        // <a type="button" href="'.$print2.'" target="blank" class="btn bg-green btn-circle waves-effect waves-circle waves-float">
-                        //     <i class="material-icons">print</i>
-                        // </a>';
-
-                        $aksi = '   
-                        
-                        <button type="button" onclick="tampil_edit('.$id.')" class="btn bg-orange btn-circle waves-effect waves-circle waves-float">
-                            <i class="material-icons">edit</i>
-                        </button>
-                      <button type="button" onclick="deleteData('.$id.','."".')" class="btn btn-danger btn-circle waves-effect waves-circle waves-float">
-                            <i class="material-icons">delete</i>
-                        </button>';
-
-                        if($r->ctk == 1){
-                            $aksi .='';
-                        }else if($r->ctk == 0){  
-                            $aksi .='
-                                    <a type="button" href="'.$print.'" target="blank" class="btn bg-blue btn-circle waves-effect waves-circle waves-float">
-                                        <i class="material-icons">print</i>
-                                    </a>
-                                    <a type="button" href="'.$print2.'" target="blank" class="btn bg-green btn-circle waves-effect waves-circle waves-float">
-                                        <i class="material-icons">print</i>
-                                    </a>';
-                        }
-
-                        
-                    }else{
-                        // $aksi ='
-                        // <a type="button" href="'.$print.'" target="blank" class="btn btn-default btn-circle waves-effect waves-circle waves-float">
-                        //     <i class="material-icons">print</i>
-                        // </a>
-                        // <a type="button" href="'.$print2.'" target="blank" class="btn bg-green btn-circle waves-effect waves-circle waves-float">
-                        //     <i class="material-icons">print</i>
-                        // </a>';
-
-                        if($r->ctk == 1){
-                            $aksi .='';
-                        }else if($r->ctk == 0){  
-                            $aksi .='
-                                    <a type="button" href="'.$print.'" target="blank" class="btn bg-blue btn-circle waves-effect waves-circle waves-float">
-                                        <i class="material-icons">print</i>
-                                    </a>
-                                    <a type="button" href="'.$print2.'" target="blank" class="btn bg-green btn-circle waves-effect waves-circle waves-float">
-                                        <i class="material-icons">print</i>
-                                    </a>';
-                        }
-                    }
-                       
-                        
-                    $row[] = $aksi;
-                    $data[] = $row;
-
-                    // $i++;
-                }
-
-                $output = array(
-                                "data" => $data,
-                        );
-                
-            }else if ($jenis == "list_timbangan") {
-                $query = $this->m_master->get_timbangan();
-                $i=1;
-
-                if ($query->num_rows() == 0) {
-                    $data[] =  ["","","","","","","","","",""];
-                }else{
-
-                    foreach ($query->result() as $r) {
-                        $id = "$r->id";
-                        // $print = base_url("Master/print_timbangan?id=").$r->roll;
-
-                        $row = array();
-                        $row[] = $r->roll;
-                        $row[] = $r->tgl;
-                        $row[] = $r->nm_ker;
-                        $row[] = $r->g_label;
-                        $row[] = $r->g_ac;
-                        $row[] = $r->width;
-                        $row[] = $r->diameter;
-                        $row[] = $r->weight;
-                        $row[] = $r->joint;
-
-                        
-                            $aksi = '   
-                           
-                            <a type="button" onclick="addToCart('."'". $r->roll."'".')" class="btn bg-brown btn-circle waves-effect waves-circle waves-float">
-                                <i class="material-icons">check</i>
-                            </a>
-                                            ';
-                           
-                            
-                        $row[] = $aksi;
-                        $data[] = $row;
-
-                        // $i++;
-                    }
-                }
-
-                $output = array(
-                                "data" => $data,
-                        );
-
-            }else if ($jenis == "list_pl_barang") { //
+            if($jenis == "list_pl_barang") { //
                 
                 $query = $this->m_master->get_pl_barang();
                 
@@ -498,40 +358,6 @@ class Master extends CI_Controller {
                 $output = array(
                                 "data" => $data,
                         );
-            }else if ($jenis == "view_timbang") {
-                $id = $_POST['id'];
-                $query = $this->m_master->get_view_timbangan($id);
-
-                if ($query->num_rows() == 0) {
-                    $data[] =  ["","","","","","","","",""];
-                }else{
-                    $i=1;
-                    foreach ($query->result() as $r) {
-                        $id = "$r->id";
-                        // $print = base_url("Master/print_timbangan?id=").$r->roll;
-
-                        $row = array();
-                        $row[] = $r->roll;
-                        $row[] = $r->tgl;
-                        $row[] = $r->nm_ker;
-                        $row[] = $r->g_label;
-                        $row[] = $r->g_ac;
-                        $row[] = $r->width;
-                        $row[] = $r->diameter;
-                        $row[] = $r->weight;
-                        $row[] = $r->joint;
-
-                    
-                        $data[] = $row;
-
-                        // $i++;
-                    }
-                }
-
-                $output = array(
-                                "data" => $data,
-                        );
-
             }else if ($jenis == "PL") {
                 $i=1;
                 $query = $this->m_master->get_PL();
@@ -673,7 +499,7 @@ class Master extends CI_Controller {
                 $output = array("data" => $data);
                 
 
-            }else if ($jenis == "pl_inv") { //
+            }else if ($jenis == "pl_inv") {
                 $i=1;
                 $query = $this->m_master->get_load_inv();
                 
@@ -689,6 +515,7 @@ class Master extends CI_Controller {
                         $row[] = $this->m_fungsi->tanggal_format_indonesia($r->tgl_jt);
                         $row[] = $r->no_nota;
                         $row[] = $r->no_faktur;
+                        $row[] = $r->nm_perusahaan;
                         $row[] = '
                         <a type="button" class="btn btn-default btn-circle waves-effect waves-circle waves-float">'.$r->jml_timbang.'</a>' ;
 
@@ -708,16 +535,32 @@ class Master extends CI_Controller {
                         </a>';
 
                         if($r->tgl_ctk === NULL && $r->tgl_byr === NULL){
-                            $ketTglCtk = "Belum Cetak Nota Penjualan!";
+                            $ketPlhbyr = "Belum Cetak";
+                            $ketTglCtk = "Nota Penjualan!";
                             $btn = $superbtn;
                         }else if($r->tgl_ctk <> NULL && $r->tgl_byr === NULL){
-                            $ketTglCtk = 'Pilih Tgl Pembayaran <br/><input type="date" id="plhTglInvc'.$i.'" value="" class="form-control">';
+                            $ketPlhbyr = '<select name="" id="plhByrInvc'.$i.'" class="form-control">
+                                <option value="0">Pilih...</option>
+                                <option value="1">Cash</option>
+                                <option value="2">Transfer Bank</option>
+                            </select>';
+                            $ketTglCtk = '<input type="date" id="plhTglInvc'.$i.'" value="" class="form-control">';
                             $btn = $superbtn.' '.$confirmByr;
                         }else{
-                            $ketTglCtk = "Sudah Pembayaran";
+                            if($r->via == 1){
+                                $via = "Cash";
+                            }else if($r->via == 2){
+                                $via = "Transfer Bank";
+                            }else{
+                                $via = "-";
+                            }
+
+                            $ketPlhbyr = $via;
+                            $ketTglCtk = $r->tgl_byr;
                             $btn = $superbtn2;
                         }
 
+                        $row[] = $ketPlhbyr;
                         $row[] = $ketTglCtk;
 
                         $aksi ="";
@@ -821,7 +664,7 @@ class Master extends CI_Controller {
                     }
                 }
                 $output = array("data" => $data);
-            }else if ($jenis == "Load_Barang") {
+            }else if ($jenis == "Load_Barang") { //
 
                 $query = $this->m_master->get_load_barang();
 
@@ -834,39 +677,51 @@ class Master extends CI_Controller {
                         $id = "'$r->id'";
                         $row = array();
                         $row[] = $i;
-                        $row[] = $this->m_fungsi->tanggal_format_indonesia($r->tgl);
-                        $row[] = $r->nama_supplier;
-                        $row[] = $r->no_nota;
-                        $row[] = $r->kode_barang;
-                        $row[] = $r->nama_barang;
-                        $row[] = $r->merek;
-                        $row[] = $r->spesifikasi;
-                        // $row[] = number_format($r->qty);
-                        $row[] = number_format($r->qty)." ".$r->qty_ket;
-                        // $row[] = "Rp. ".number_format($r->harga);
-                        $aksi ="";
-
-                        $btn_edit = '<button type="button" onclick="tampil_edit('.$id.')" class="btn bg-orange btn-circle waves-effect waves-circle waves-float">
-                        <i class="material-icons">edit</i>
-                        </button>';
-
-                        $btn_plus_qty = '<button type="button" onclick="plus_qty('.$id.')" class="btn bg-green btn-circle waves-effect waves-circle waves-float">
-                        <i class="material-icons">add</i>
-                        </button>';
-
-                        $btn_hapus = '<button type="button" onclick="deleteData('.$id.','."".')" class="btn btn-danger btn-circle waves-effect waves-circle waves-float">
-                        <i class="material-icons">delete</i>
-                        </button>';
-
-                        if ($this->session->userdata('level') == "Developer" || $this->session->userdata('level') == "SuperAdmin") {
-                            $aksi = $btn_plus_qty.' '.$btn_edit.' '.$btn_hapus;
-                        }else if ($this->session->userdata('level') == "Admin") {
-                            $aksi = $btn_edit;
+                        // $row[] = $this->m_fungsi->tanggal_format_indonesia($r->tgl);
+                        // $row[] = $r->nama_supplier;
+                        // $row[] = $r->no_nota;
+                        if($options == "Etalase"){
+                            $row[] = $r->kode_barang;
+                            $row[] = $r->nama_barang;
+                            $row[] = $r->merek;
+                            $row[] = $r->spesifikasi;
+                            $row[] = number_format($r->qty);
+                            $row[] = $r->qty_ket;
+                            // $row[] = number_format($r->qty)." ".$r->qty_ket;
+                            // $row[] = "Rp. ".number_format($r->harga);
                         }else{
-                            $aksi .='-';
+                            $row[] = $r->kode_barang;
+                            $row[] = $r->nama_barang;
+                            $row[] = $r->merek;
+                            $row[] = $r->spesifikasi;
+                            $aksi ="";
+
+                            $btn_edit = '<button type="button" onclick="tampil_edit('.$id.')" class="btn bg-orange btn-circle waves-effect waves-circle waves-float">
+                            <i class="material-icons">edit</i>
+                            </button>';
+
+                            $btn_plus_qty = '<button type="button" onclick="plus_qty('.$id.')" class="btn bg-green btn-circle waves-effect waves-circle waves-float">
+                            <i class="material-icons">add</i>
+                            </button>';
+
+                            $btn_hapus = '<button type="button" onclick="deleteData('.$id.','."".')" class="btn btn-danger btn-circle waves-effect waves-circle waves-float">
+                            <i class="material-icons">delete</i>
+                            </button>';
+
+                            $detail = '<button type="button" onclick="view_detail('.$id.','."2".')" class="btn btn-info btn-circle waves-effect waves-circle waves-float">
+                            <i class="material-icons">remove_red_eye</i>
+                            </button>';
+
+                            if ($this->session->userdata('level') == "Developer" || $this->session->userdata('level') == "SuperAdmin") {
+                                $aksi = $detail.' '.$btn_plus_qty.' '.$btn_edit.' '.$btn_hapus;
+                            }else if ($this->session->userdata('level') == "Admin") {
+                                $aksi = $btn_edit;
+                            }else{
+                                $aksi .='-';
+                            }
+                            $row[] = $aksi;
                         }
 
-                        $row[] = $aksi;
                         $data[] = $row;
                         $i++;
                     }
@@ -1199,48 +1054,6 @@ class Master extends CI_Controller {
                 $output = array("data" => $data);
 
 
-            }else if ($jenis == "list_barang") {
-
-                $query = $this->m_master->get_barang();
-
-                if ($query->num_rows() == 0) {
-                    $data[] =  ["","","","","","",""];
-                }else{
-
-                    $i=1;
-                    foreach ($query->result() as $r) {
-                        // $id = "$r->lb";
-                        // $print = base_url("Master/print_timbangan?id=").$r->roll;
-
-                        $row = array();
-                        $row[] = $r->g_label;
-                        $row[] = $r->lb;
-                        $row[] = $r->roll;
-                        $row[] = "KG";
-                        $row[] = '<input type="text" class="form-control" id="jumlah'.$i.'" value="'.$r->weight.'" disabled > ';
-                        $row[] = '<input type="text" class="angka form-control" id="harga'.$i.'" > ';
-
-                        
-                            $aksi = '   
-                           
-                            <a type="button" onclick="addToCart('."'". $r->lb."'".','."'". $r->g_label."'".','."'". $r->roll."'".','."'". $i."'".')" class="btn bg-brown btn-circle waves-effect waves-circle waves-float">
-                                <i class="material-icons">check</i>
-                            </a>
-                                            ';
-                           
-                            
-                        $row[] = $aksi;
-                        $data[] = $row;
-
-                        $i++;
-                    }
-                }
-
-                $output = array(
-                                "data" => $data,
-                        );
-
-
             }
 
             echo json_encode($output);
@@ -1339,7 +1152,7 @@ class Master extends CI_Controller {
         echo json_encode($response);
     }
 
-    function laod_supplier_nota(){
+    function laod_supplier_nota(){ //
         $searchTerm = $_GET['search'];
     
         // Get users
@@ -1358,13 +1171,10 @@ class Master extends CI_Controller {
   
       }
     
-    function update(){
+    function update(){ //
             $jenis      = $_POST['jenis'];
             
-            if ($jenis == "Timbangan") {
-                $result= $this->m_master->update_timbangan();
-                echo json_encode(array('data' =>  TRUE));
-            }else if ($jenis == "Perusahaan") {
+            if ($jenis == "Perusahaan") {
                 $id      = $this->input->post('nm_perusahaan');
                 $id_lama      = $this->input->post('nm_perusahaan_lama');
                 $cek = $this->m_master->get_data_one("m_perusahaan","nm_perusahaan",$id)->num_rows();
@@ -1431,19 +1241,36 @@ class Master extends CI_Controller {
                     $result= $this->m_master->update_nonota();
                     echo json_encode(array('data' =>  TRUE));
                 }
-            }else if ($jenis == "Simpan_Barang") {
+            }else if ($jenis == "Simpan_Barang") { //
                 $opsi      = $_POST['opsi'];
                 $kode_barang = $this->input->post('kode_barang');
                 $kd_lama = $this->input->post('kode_barang_lama');
                 $cek = $this->m_master->get_data_one("m_barang","kode_barang",$kode_barang)->num_rows();
 
+                $idMBP = $this->input->post('id_m_barang_plus');
+                $tgl = $this->input->post('tgl');
+                $tgl_lama = $this->input->post('tgl_lama');
                 $tgl_byr = $this->input->post('tgl_byr');
                 $tgl_byr_lama = $this->input->post('tgl_byr_lama');
                 $qty_plus = $this->input->post('qty_plus');
+                $qty_edit = $this->input->post('qty_edit');
+
+                $status_plus = $this->input->post('status_plus');
+                $harga = $this->input->post('harga');
 
                 if($opsi == "edit"){
                     if($cek > 0 && $kode_barang <> $kd_lama){
                         echo json_encode(array('data' =>  FALSE,'msg' => 'Kode Barang Sudah Ada!'));
+                    }else if ($tgl < $tgl_lama) {
+                        echo json_encode(array('data' =>  FALSE,'msg' => 'Tanggal Masuk Tidak Boleh Lebih Kecil Dari Tanggal Masuk Pembelian Sebelumnya!'));
+                    }else if ($tgl_byr < $tgl) {
+                        echo json_encode(array('data' =>  FALSE,'msg' => 'Tanggal Bayar Tidak Boleh Lebih Kecil Dari Tanggal Masuk!'));
+                    }else if(($harga == 0 || $harga == "") && $status_plus == "Cash"){
+                        echo json_encode(array('data' =>  FALSE,'msg' => 'Pembayaran Cash, Harga Tidak Boleh Kosong!'));
+                    }else if($qty_edit == 0){
+                        $this->m_master->delete("m_barang_plus","id",$idMBP);
+                        $this->m_master->update_load_barang();
+                        echo json_encode(array('data' =>  TRUE,'msg' => 'Berhasil'));
                     }else{
                         $this->m_master->update_load_barang();
                         echo json_encode(array('data' =>  TRUE,'msg' => 'Berhasil'));
@@ -1451,8 +1278,14 @@ class Master extends CI_Controller {
                 }else if($opsi == "add_qty"){
                     if($qty_plus == 0) {
                         echo json_encode(array('data' =>  FALSE,'msg' => 'Tambah QTY Tidak Boleh Kosong'));
+                    }else if ($tgl < $tgl_lama) {
+                        echo json_encode(array('data' =>  FALSE,'msg' => 'Tanggal Masuk Tidak Boleh Lebih Kecil Dari Tanggal Masuk Pembelian Sebelumnya!'));
+                    }else if ($tgl_byr < $tgl) {
+                        echo json_encode(array('data' =>  FALSE,'msg' => 'Tanggal Bayar Tidak Boleh Lebih Kecil Dari Tanggal Masuk!'));
                     }else if ($tgl_byr < $tgl_byr_lama) {
-                        echo json_encode(array('data' =>  FALSE,'msg' => 'Tanggal Bayar Tidak Boleh Lebih Kecil Dari Tanggal Sebelumnya!'));
+                        echo json_encode(array('data' =>  FALSE,'msg' => 'Tanggal Bayar Tidak Boleh Lebih Kecil Dari Tanggal Pembayaran Sebelumnya!'));
+                    }else if(($harga == 0 || $harga == "") && $status_plus == "Cash"){
+                        echo json_encode(array('data' =>  FALSE,'msg' => 'Pembayaran Cash, Harga Tidak Boleh Kosong!'));
                     }else{
                         $this->m_master->update_load_barang();
                         echo json_encode(array('data' =>  TRUE,'msg' => 'Berhasil'));
@@ -1509,10 +1342,10 @@ class Master extends CI_Controller {
         echo $this->show_cart_inv();
     }
 
-    function destroy_cart_barang(){
-        $this->cart->destroy();
-        echo $this->show_cart_barang();
-    }
+    // function destroy_cart_barang(){
+    //     $this->cart->destroy();
+    //     echo $this->show_cart_barang();
+    // }
 
     function show_cart(){ //Fungsi untuk menampilkan Cart
 
@@ -1558,45 +1391,7 @@ class Master extends CI_Controller {
         return $output;
     }
 
-    function show_cart_barang(){ //Fungsi untuk menampilkan Cart
-
-        $output = '';
-        $no = 0;
-
-
-        foreach ($this->cart->contents() as $items) {
-            $no++;
-            $output .='
-                <tr>
-                    <td>'.$no.'</td>
-                    <td>'.str_replace("_", "/", $items['options']['gsm']).'</td>
-                    <td>'.str_replace("_", "/", $items['name']).'</td>
-                    <td>'.str_replace("_", "/", $items['options']['roll']).'</td>
-                    <td>KG</td>
-                    <td>'.$items['qty'].'</td>
-                    <td>'.$items['price'].'</td>
-                    <td><button type="button" id="'.$items['rowid'].'" class="hapus_cart btn btn-danger btn-xs">Batal</button></td>
-                </tr>
-            ';
-        }
-        
-
-        return $output;
-    }
-
-    function add_to_cart(){ //fungsi Add To Cart
-        
-        $data = array(
-            'id' => str_replace("/", "_", $_POST['roll']), 
-            'name' => str_replace("/", "_", $_POST['roll']),
-            'price' => 0, 
-            'qty' => 1
-        );
-        $this->cart->insert($data);
-        echo $this->show_cart(); //tampilkan cart setelah added
-    }
-
-    function add_to_cart_pl_barang(){
+    function add_to_cart_pl_barang(){ //
         $data = array(
             // 'id' => str_replace("/", "_", $_POST['kode_barang']), 
             'id' => $_POST['id_barang'], 
@@ -1737,21 +1532,6 @@ class Master extends CI_Controller {
         echo $this->show_edit_cart_pl();
     }
 
-    function add_to_cart_barang(){ //fungsi Add To Cart baran
-    
-        $data = array(
-            'id' => str_replace(" ", "_", $_POST['lb']), 
-            'name' => str_replace("/", "_", $_POST['lb']),
-            'price' => $_POST['harga'], 
-            'qty' => $_POST['jumlah'],
-            'options' => array('roll' => str_replace("/", "_", $_POST['roll']), 
-                               'satuan' => 'KG',
-                                'gsm' => $_POST['gsm'])
-        );
-        $this->cart->insert($data);
-        echo $this->show_cart_barang(); //tampilkan cart setelah added
-    }
-
     function hapus_cart(){ //fungsi untuk menghapus item cart
         $data = array(
             'rowid' => $this->input->post('row_id'), 
@@ -1759,23 +1539,6 @@ class Master extends CI_Controller {
         );
         $this->cart->update($data);
         echo $this->show_cart();
-    }
-
-    function hapus_cart_barang(){
-         //fungsi untuk menghapus item cart
-        $data = array(
-            'rowid' => $this->input->post('row_id'), 
-            'qty' => 0, 
-        );
-        $this->cart->update($data);
-
-        $edit_cart = $this->input->post('edit_cart');
-        if($edit_cart == "update"){
-            echo $this->show_edit_cart_pl();
-        }else{
-            echo $this->show_cart_barang();
-        }
-        
     }
 
     function reject(){
@@ -1791,6 +1554,7 @@ class Master extends CI_Controller {
     function confirmBayarInv(){
         $id_inv = $_POST['id'];
         $tgl_byr = $_POST['tglByrInv'];
+        $via = $_POST['plhByrInvc'];
 
         $data =  $this->m_master->get_data_one("m_invoice", "id", $id_inv)->row();
 
@@ -1805,6 +1569,7 @@ class Master extends CI_Controller {
         }
 
         // update tgl bayar inv
+        $this->db->set("via", $via);
         $this->db->set("tgl_byr", $tgl_byr);
         $this->db->where('id', $id_inv);
         $this->db->update('m_invoice');
@@ -1839,10 +1604,7 @@ class Master extends CI_Controller {
         $jenis   = $_POST['jenis'];
         $id      = $_POST['id'];
         
-        if ($jenis == "Timbangan") {
-            $return = $this->m_master->delete("m_timbangan","id",$id);
-            echo "1";
-        }else if ($jenis == "Perusahaan") {
+        if ($jenis == "Perusahaan") {
             $return = $this->m_master->delete("m_perusahaan","id",$id);
             echo "1";
         }else if ($jenis == "Hapus_price_list") {
@@ -1863,14 +1625,6 @@ class Master extends CI_Controller {
             echo "1";
         }else if ($jenis == "PoMaster") {
             $return = $this->m_master->delete("po_master","id",$id);
-            echo "1";
-        }else if ($jenis == "PL") {
-            $return = $this->m_master->delete("pl","id",$id);
-
-            $this->db->set("status",0);
-            $this->db->set("id_pl","");
-            $this->db->where('id_pl', $id);
-            $this->db->update('m_timbangan');
             echo "1";
         }else if ($jenis == "plpl") {
             $detail = $this->m_master->get_data_plpl("m_pl_list_barang", "id_pl", $id)->result();
@@ -1927,16 +1681,13 @@ class Master extends CI_Controller {
         $id = $_POST['id'];
         $jenis = $_POST['jenis'];
 
-        if ($jenis == "Timbangan") {
-            $data =  $this->m_master->get_data_one("m_timbangan", "id", $id)->row();
-            echo json_encode($data);
-        }else if ($jenis == "Perusahaan") {
+        if ($jenis == "Perusahaan") {
             $data =  $this->m_master->get_data_one("m_perusahaan", "id", $id)->row();
             echo json_encode($data);
         }else if ($jenis == "edit_price_list") {
             $data =  $this->m_master->get_data_ijpl("m_price_list", "id", $id)->row();
             echo json_encode($data);
-        }else if ($jenis == "edit_barang") {
+        }else if ($jenis == "edit_barang") { //
             $data =  $this->m_master->get_data_ijb("m_barang", "id", $id)->row();
             echo json_encode($data);
         }else if ($jenis == "edit_supplier") {
@@ -1951,10 +1702,9 @@ class Master extends CI_Controller {
         }else if ($jenis == "PoMaster") {
             $data =  $this->m_master->get_data_one("po_master", "id", $id)->row();
             echo json_encode($data);
-        }else if ($jenis == "PL") {
-            $data =  $this->m_master->get_data_one("pl", "id", $id)->row();
-            $detail = $this->m_master->get_data_one("m_timbangan", "id_pl", $data->id)->result();
-            echo json_encode(  array('header' => $data, 'detail' => $detail));
+        }else if ($jenis == "list_barang_plus") { //
+            $data =  $this->m_master->get_data_bp("m_barang_plus", "id_m_barang", $id)->result();
+            echo json_encode(array('header' => $data));
         }else if ($jenis == "PL_pl_pl") {
             $data =  $this->m_master->get_data_one("m_pl_price_list", "id", $id)->row();
 
@@ -1981,296 +1731,6 @@ class Master extends CI_Controller {
         }
         
     }
-
-    function print_timbangan(){
-    $id = $_GET['id'];
-
-    $data = $this->db->query("SELECT * FROM m_timbangan WHERE roll = '$id'")->row();
-    $data_perusahaan = $this->db->query("SELECT * FROM perusahaan limit 1")->row();
-    $query = $this->db->query("UPDATE m_timbangan SET ctk='1' WHERE roll='$id'");
-
-        $html = '';
-
-        $html .= '
-        <center> 
-            <h1> '.$data_perusahaan->nama.' </h1>  '.$data_perusahaan->daerah.' , Email : '.$data_perusahaan->email.'
-        </center>
-        <hr>
-        
-        <br><br><br>
-                 <table width="100%" border="1" cellspacing="0" cellpadding="5" style="font-size:52px">
-                    <tr>
-                        <td align="left" width="50%"><b>QUALITY</b></td>
-                        <td align="center"><b>'.$data->nm_ker.'</b></td>
-                    </tr>
-                    <tr>
-                        <td align="left"><b>GRAMMAGE</b></td>
-                        <td align="center"><b>'.$data->g_label.' GSM</b></td>
-                    </tr>
-                    <tr>
-                    <tr>
-                        <td align="left"><b>WIDTH</b></td>
-                        <td align="center"><b>'.round($data->width,2).' CM</b></td>
-                    </tr>
-                    <tr>
-                    <tr>
-                        <td align="left"><b>DIAMETER</b></td>
-                        <td align="center"><b>'.$data->diameter.' CM</b></td>
-                    </tr>
-                    <tr>
-                    <tr>
-                        <td align="left"><b>WEIGHT</b></td>
-                        <td align="center"><b>'.$data->weight.' KG</b></td>
-                    </tr>
-                    <tr>
-                    <tr>
-                        <td align="left"><b>JOINT</b></td>
-                        <td align="center"><b>'.$data->joint.' </b></td>
-                    </tr>
-                    <tr>
-                    <tr>
-                        <td align="left"><b>ROLL NUMBER</b></td>
-                        <td align="center"><b>'.$data->roll.' </b></td>
-                    </tr>
-                    <tr>
-                  </table>';
-
-
-        $this->m_fungsi->_mpdf('',$html,10,10,10,'L');
-  }
-
-  function print_timbangan2(){
-    $id = $_GET['id'];
-
-    $data = $this->db->query("SELECT * FROM m_timbangan WHERE roll = '$id'")->row();
-    $query = $this->db->query("UPDATE m_timbangan SET ctk='1' WHERE roll='$id'");
-
-        $html = '';
-
-        $html .= '<br><br><br><br><br><br>
-                 <table width="100%" border="1" cellspacing="0" cellpadding="5" style="font-size:37px">
-                    <tr>
-                        <td align="left"><b>QUALITY</b></td>
-                        <td align="center"><b>'.$data->nm_ker.'</b></td>
-                    </tr>
-                    <tr>
-                        <td align="left"><b>GRAMMAGE</b></td>
-                        <td align="center"><b>'.$data->g_label.' GSM</b></td>
-                    </tr>
-                    <tr>
-                    <tr>
-                        <td align="left"><b>WIDTH</b></td>
-                        <td align="center"><b>'.$data->width.' CM</b></td>
-                    </tr>
-                    <tr>
-                    <tr>
-                        <td align="left"><b>DIAMETER</b></td>
-                        <td align="center"><b>'.$data->diameter.' CM</b></td>
-                    </tr>
-                    <tr>
-                    <tr>
-                        <td align="left"><b>WEIGHT</b></td>
-                        <td align="center"><b>'.$data->weight.' KG</b></td>
-                    </tr>
-                    <tr>
-                    <tr>
-                        <td align="left"><b>JOINT</b></td>
-                        <td align="center"><b>'.$data->joint.' </b></td>
-                    </tr>
-                    <tr>
-                    <tr>
-                        <td align="left"><b>ROLL NUMBER</b></td>
-                        <td align="center"><b>'.$data->roll.' </b></td>
-                    </tr>
-                    <tr>
-                  </table>';
-
-
-        $this->m_fungsi->_mpdf('',$html,10,10,10,'P');
-  }
-
-  function print_pl(){
-    $id = $_GET['id'];
-
-    $data_header = $this->db->query("SELECT * FROM pl WHERE id = '$id'")->row();
-    $data_detail = $this->db->query("SELECT * FROM m_timbangan WHERE id_pl = '$id' ORDER BY roll");
-
-        $html = '';
-
-        $html .= '
-                 <table width="100%" border="0" cellspacing="0" cellpadding="2" style="font-size:10px;">
-                    <tr>
-                        <td align="center" colspan="7"><b><u>PACKING LIST</u></b> <br> &nbsp;</td>
-                    </tr>
-                    <tr>
-                        <td align="left" width="8%">Tanggal</td>
-                        <td align="" width="1%">:</td>
-                        <td align="left" width="10%">'.$this->m_fungsi->tanggal_format_indonesia($data_header->tgl).'</td>
-                        <td align="center" width="10%"></td>
-                        <td align="left" width="8%">Kepada</td>
-                        <td align="" width="1%">:</td>
-                        <td align="left" width="20%">'.$data_header->nm_perusahaan.'</td>
-                    </tr>
-                    <tr>
-                        <td align="left" width="8%">No Surat Jalan</td>
-                        <td align="" width="1%">:</td>
-                        <td align="left" width="10%">'.$data_header->no_surat.'</td>
-                        <td align="center" width="10%"></td>
-                        <td align="left" width="8%">Alamat</td>
-                        <td align="" width="1%">:</td>
-                        <td align="left" width="20%">'.$data_header->alamat_perusahaan.'</td>
-                    </tr>
-                    <tr>
-                        <td align="left" width="8%">No SO</td>
-                        <td align="" width="1%">:</td>
-                        <td align="left" width="10%">'.$data_header->no_so.'</td>
-                        <td align="center" width="10%"></td>
-                        <td align="left" width="8%">ATTN</td>
-                        <td align="" width="1%">:</td>
-                        <td align="left" width="20%">'.$data_header->nama.'</td>
-                    </tr>
-                    <tr>
-                        <td align="left" width="8%">No PKB</td>
-                        <td align="" width="1%">:</td>
-                        <td align="left" width="10%">'.$data_header->no_pkb.'</td>
-                        <td align="center" width="10%"></td>
-                        <td align="left" width="8%">No Telp / No HP</td>
-                        <td align="" width="1%">:</td>
-                        <td align="left" width="20%">'.$data_header->no_telp.'</td>
-                    </tr>
-                    <tr>
-                        <td align="left" width="8%">No Kendaraan</td>
-                        <td align="" width="1%">:</td>
-                        <td align="left" width="10%">'.$data_header->no_kendaraan.'</td>
-                        <td align="center" width="10%"></td>
-                        <td align="left" width="8%">No PO</td>
-                        <td align="" width="1%">:</td>
-                        <td align="left" width="20%">'.$data_header->no_po.'</td>
-                    </tr>
-                    
-                    <tr>
-                  </table>
-                  <br>
-                <table width="100%" border="1" cellspacing="0" cellpadding="5" style="font-size:11px;" >
-                    <tr>
-                        <td width="" align="center">No</td>
-                        <td width="" align="center" colspan="2">Nomer Roll</td>
-                        <td width="17%" align="center">Gramage (GSM)</td>
-                        <td width="" align="center">Lebar (CM)</td>
-                        <td width="" align="center">Berat (KG)</td>
-                        <td width="" align="center">JOINT</td>
-                        <td width="" align="center">KETERANGAN</td>
-                    </tr>';
-                    $no = 1;
-                    $tot_weigth = 0;
-                    foreach ($data_detail->result() as $r ) {
-                        $html .= '<tr>
-                                    <td width="" align="center">'.$no.'</td>
-                                    <td width="" align="center">'.substr($r->roll,0, 5).'</td>
-                                    <td width="" align="center">'.substr($r->roll,6, 15).'</td>
-                                    <td width="" align="center">'.$r->g_label.'</td>
-                                    <td width="" align="center">'.round($r->width,2).'</td>
-                                    <td width="" align="center">'.$r->weight.'</td>
-                                    <td width="" align="center">'.$r->joint.'</td>
-                                    <td width="" align="center"></td>
-                                </tr>';
-                     $no++;
-                     $tot_weigth += $r->weight;
-                    }
-
-                    $tmpl = strlen($data_detail->row('width'));
-// <td width="" colspan="4" align="center"><b>'.($no-1).' ROLL (@ LB '.number_format( $data_detail->row('width')).' )</b></td>
-                    $html .='
-                    <tr>
-                        <td width="" colspan="4" align="center"><b>'.($no-1).' ROLL (@ LB '.round( $data_detail->row('width'),2).' )</b></td>
-                        <td width=""  align="center"><b>Total</b></td>
-                        <td width=""  align="center"><b>'.number_format($tot_weigth).'</b></td>
-                        <td width=""  align="center"><b></b></td>
-                        <td width=""  align="center"><b></b></td>
-                    </tr>
-                </table>
-                  ';
-
-
-        $this->m_fungsi->_mpdf('',$html,10,10,10,'P');
-  }
-
-  function print_pl_cb(){
-    $id = $_GET['id'];
-
-    // $data_header = $this->db->query("SELECT * FROM pl WHERE id = '$id'")->row();
-    $data_detail = $this->db->query("SELECT * FROM m_timbangan WHERE id_pl = '$id' ORDER BY roll");
-
-    $width_pl = $this->db->query("SELECT DISTINCT width FROM m_timbangan WHERE id_pl = '$id'")->row();
-
-        $html = '<table cellspacing="0" cellpadding="0" style="font-size:14px;width:100%;font-weight:bold;text-align:center;border-collapse:collapse" >
-            <tr>
-                <tr>
-                    <td style="border:0">DATA ROLL WP '.round($width_pl->width).'</td>
-                </tr>
-            </tr>
-        </table>';
-
-        $html .= '<table cellspacing="0" cellpadding="5" style="font-size:11px;width:100%;text-align:center;border-collapse:collapse" >
-                    <tr>
-                        <th style="padding:5px 0;width:6%"></th>
-                        <th style="padding:5px 0;width:10%"></th>
-                        <th style="padding:5px 0;width:10%"></th>
-                        <th style="padding:5px 0;width:15%"></th>
-                        <th style="padding:5px 0;width:10%"></th>
-                        <th style="padding:5px 0;width:10%"></th>
-                        <th style="padding:5px 0;width:10%"></th>
-                        <th style="padding:5px 0;width:6%"></th>
-                        <th style="padding:5px 0;width:29%"></th>
-                    </tr>';
-
-        $html .= '<tr>
-                <td style="border:1px solid #000">No</td>
-                <td style="border:1px solid #000" colspan="2">Nomer Roll</td>
-                <td style="border:1px solid #000">Gramage (GSM)</td>
-                <td style="border:1px solid #000">Lebar (CM)</td>
-                <td style="border:1px solid #000">Diameter</td>
-                <td style="border:1px solid #000">Berat (KG)</td>
-                <td style="border:1px solid #000">JOINT</td>
-                <td style="border:1px solid #000">KETERANGAN</td>
-            </tr>';
-                    
-
-            $no = 1;
-            $tot_weigth = 0;
-            foreach ($data_detail->result() as $r ) {
-                $html .= '<tr>
-                            <td style="border:1px solid #000">'.$no.'</td>
-                            <td style="border:1px solid #000">'.substr($r->roll,0, 5).'</td>
-                            <td style="border:1px solid #000">'.substr($r->roll,6, 15).'</td>
-                            <td style="border:1px solid #000">'.$r->g_label.'</td>
-                            <td style="border:1px solid #000">'.round($r->width).'</td>
-                            <td style="border:1px solid #000">'.$r->diameter.'</td>
-                            <td style="border:1px solid #000">'.$r->weight.'</td>
-                            <td style="border:1px solid #000">'.$r->joint.'</td>
-                            <td style="border:1px solid #000">'.$r->ket.'</td>
-                        </tr>';
-             $no++;
-             $tot_weigth += $r->weight;
-            }
-
-//                     $tmpl = strlen($data_detail->row('width'));
-// // <td width="" colspan="4" align="center"><b>'.($no-1).' ROLL (@ LB '.number_format( $data_detail->row('width')).' )</b></td>
-//                     $html .='
-//                     <tr>
-//                         <td width="" colspan="4" align="center"><b>'.($no-1).' ROLL</b></td>
-//                         <td width=""  align="center"><b>Total</b></td>
-//                         <td width=""  align="center"><b>'.number_format($tot_weigth).'</b></td>
-//                         <td width=""  align="center"><b></b></td>
-//                         <td width=""  align="center"><b></b></td>
-//                     </tr>
-//                 </table>
-//                   ';
-        $html .= '</table>';
-
-
-        $this->m_fungsi->_mpdf('',$html,10,10,10,'P');
-  }
 
 
 }

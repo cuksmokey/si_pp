@@ -244,11 +244,11 @@ class M_fungsi extends CI_Model {
         */
         
         $this->mpdf->defaultheaderfontsize = 6;	/* in pts */
-        $this->mpdf->defaultheaderfontstyle = BI;	/* blank, B, I, or BI */
+        // $this->mpdf->defaultheaderfontstyle = BI;	/* blank, B, I, or BI */
         $this->mpdf->defaultheaderline = 1; 	/* 1 to include line below header/above footer */
 
         $this->mpdf->defaultfooterfontsize = 6;	/* in pts */
-        $this->mpdf->defaultfooterfontstyle = BI;	/* blank, B, I, or BI */
+        // $this->mpdf->defaultfooterfontstyle = BI;	/* blank, B, I, or BI */
         $this->mpdf->defaultfooterline = 1; 
         $this->mpdf->SetLeftMargin = $lMargin;
         $this->mpdf->SetRightMargin = $rMargin;
@@ -300,13 +300,23 @@ class M_fungsi extends CI_Model {
 		$mpdf->Output();
 	}
 
+	function mPDFP($html){
+		$mpdf = new \Mpdf\Mpdf;
+		$mpdf = new \Mpdf\Mpdf([
+			'default_font_size' => 9
+		]);
+		$mpdf->AddPage('P','','','','',10,10,10,10);
+		$mpdf->WriteHTML($html);
+		$mpdf->Output();
+	}
+
 	function mPDFL($html){
 		ini_set('max_execution_time', '300');
 		ini_set("pcre.backtrack_limit", "9000000");
 		$mpdf = new \Mpdf\Mpdf([
 			'default_font_size' => 9
 		]);
-		$mpdf->AddPage('L');
+		$mpdf->AddPage('L','','','','',10,10,5,5);
 		$mpdf->WriteHTML($html);
 		$mpdf->Output();
 	}
@@ -318,11 +328,11 @@ class M_fungsi extends CI_Model {
 
 
         $this->mpdf->defaultheaderfontsize = 6;	/* in pts */
-        $this->mpdf->defaultheaderfontstyle = BI;	/* blank, B, I, or BI */
+        // $this->mpdf->defaultheaderfontstyle = BI;	/* blank, B, I, or BI */
         $this->mpdf->defaultheaderline = 1; 	/* 1 to include line below header/above footer */
 
         $this->mpdf->defaultfooterfontsize = 6;	/* in pts */
-        $this->mpdf->defaultfooterfontstyle = BI;	/* blank, B, I, or BI */
+        // $this->mpdf->defaultfooterfontstyle = BI;	/* blank, B, I, or BI */
         $this->mpdf->defaultfooterline = 1; 
 
         $this->mpdf->SetTitle = $title;
@@ -352,11 +362,11 @@ class M_fungsi extends CI_Model {
         */
         
         $this->mpdf->defaultheaderfontsize = 6;	/* in pts */
-        $this->mpdf->defaultheaderfontstyle = BI;	/* blank, B, I, or BI */
+        // $this->mpdf->defaultheaderfontstyle = BI;	/* blank, B, I, or BI */
         $this->mpdf->defaultheaderline = 1; 	/* 1 to include line below header/above footer */
 
         $this->mpdf->defaultfooterfontsize = 6;	/* in pts */
-        $this->mpdf->defaultfooterfontstyle = BI;	/* blank, B, I, or BI */
+        // $this->mpdf->defaultfooterfontstyle = BI;	/* blank, B, I, or BI */
         $this->mpdf->defaultfooterline = 1; 
         $this->mpdf->SetLeftMargin = $lMargin;
         $this->mpdf->SetRightMargin = $rMargin;

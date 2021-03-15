@@ -32,14 +32,15 @@
                                 <table id="datatable11" class="table table-bordered table-striped table-hover dataTable ">
                                     <thead>
                                         <tr>
-                                            <th>No</th>
-                                            <th>Tanggal Jatuh Tempo</th>
-                                            <!-- <th>No Invoice</th> -->
-                                            <th>No Nota</th>
-                                            <th>No Faktur</th>
-                                            <th width="5%">Jumlah Barang</th>
-                                            <th>Keterangan</th>
-                                            <th width="20%">Aksi</th>
+                                            <th style="width: 6%;">No</th>
+                                            <th style="width: 10%;">Tgl Jth Tempo</th>
+                                            <th style="width: 10%;">No Nota</th>
+                                            <th style="width: 10%;">No Faktur</th>
+                                            <th style="width: 15%;">Customer</th>
+                                            <th style="width: 11%;">JML</th>
+                                            <th style="width: 11%;">Pilih Bayar</th>
+                                            <th style="width: 11%;">Tgl Bayar</th>
+                                            <th style="width: 16%;">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -571,10 +572,13 @@
 
     function confirmByr(id,i){
       tglByrInv = $("#plhTglInvc"+i).val();
+      plhByrInvc = $("#plhByrInvc"+i).val();
 
       // alert("ID:"+id+". ii:"+i+". tttbyr:"+tglByrInv);
 
-      if(tglByrInv == 0 || tglByrInv == ""){
+      if(plhByrInvc == 0 || plhByrInvc == ""){
+        swal("Pilih Pembayaran Terlebih Dahulu!", "", "error");
+      }else if(tglByrInv == 0 || tglByrInv == ""){
         swal("Pilih Tanggal Bayar Terlebih Dahulu!", "", "error");
       }else{
         $.ajax({
@@ -582,7 +586,8 @@
           method : "POST",
           data : {
             id:id,
-            tglByrInv:tglByrInv
+            tglByrInv:tglByrInv,
+            plhByrInvc:plhByrInvc
           },
           success: function(data){
             swal("Berhasil Terbayar", "", "success");
