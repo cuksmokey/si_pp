@@ -21,10 +21,10 @@
     <!-- Animation Css -->
     <link href="<?php echo base_url(); ?>assets/plugins/animate-css/animate.css" rel="stylesheet" />
 
-     <!-- Light Gallery Plugin Css -->
+    <!-- Light Gallery Plugin Css -->
     <link href="<?php echo base_url(); ?>assets/plugins/light-gallery/css/lightgallery.css" rel="stylesheet">
 
-     <!-- Animation Css -->
+    <!-- Animation Css -->
     <link href="<?php echo base_url(); ?>assets/plugins/select2/dist/css/select2.min.css" rel="stylesheet" />
 
     <!-- Multi Select Css -->
@@ -33,7 +33,7 @@
     <!-- Bootstrap Select Css -->
     <!-- <link href="<?php echo base_url(); ?>assets/plugins/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" /> -->
 
-     <!-- JQuery DataTable Css -->
+    <!-- JQuery DataTable Css -->
     <link href="<?php echo base_url(); ?>assets/plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css" rel="stylesheet">
 
     <!-- Sweetalert Css -->
@@ -99,7 +99,7 @@
                     <div class="btn-group user-helper-dropdown">
                         <i class="material-icons" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Logout</i>
                         <ul class="dropdown-menu pull-right">
-                            
+
                             <li><a href="<?php echo base_url('Login/logout') ?>">Logout</a></li>
                         </ul>
                     </div>
@@ -110,56 +110,58 @@
             <div class="menu">
                 <ul class="list">
                     <li class="header">MAIN NAVIGATION</li>
-                    <?php if($this->session->userdata('otoritas') == "Pembelian") { ?>
-                    <li>
-                        <a href="<?php echo base_url() ?>">
-                            <i class="material-icons">home</i>
-                            <span>Dashboard</span>
-                        </a>
-                    </li>
-                    
-                    <?php } if($this->session->userdata('otoritas') == "Pembelian" || $this->session->userdata('otoritas') == "Penjualan") { ?>
-                    <li>
-                        <a href="<?php echo base_url('Master/Etalase') ?>">
-                            <i class="material-icons">dns</i>
-                            <span>Etalase</span>
-                        </a>
-                    </li>
+                    <?php if ($this->session->userdata('otoritas') == "Pembelian") { ?>
+                        <li>
+                            <a href="<?php echo base_url() ?>">
+                                <i class="material-icons">home</i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+
                     <?php }
-                    
-                    if($this->session->userdata('level') <> "User") { ?>
-                    <li>
-                        <a href="javascript:void(0);" class="menu-toggle">
-                            <i class="material-icons">book</i>
-                            <span>Master</span>
-                        </a>
-                        <ul class="ml-menu">
-                            <!-- <li>
+                    if ($this->session->userdata('otoritas') == "Pembelian" || $this->session->userdata('otoritas') == "Penjualan") { ?>
+                        <li>
+                            <a href="<?php echo base_url('Master/Etalase') ?>">
+                                <i class="material-icons">dns</i>
+                                <span>Etalase</span>
+                            </a>
+                        </li>
+                    <?php }
+
+                    if ($this->session->userdata('level') <> "User") { ?>
+                        <li>
+                            <a href="javascript:void(0);" class="menu-toggle">
+                                <i class="material-icons">book</i>
+                                <span>Master</span>
+                            </a>
+                            <ul class="ml-menu">
+                                <!-- <li>
                                 <a href="<?php echo base_url('Master/Timbangan') ?>">Timbangan</a>
                             </li> -->
-                            <li>
-                                <a href="<?php echo base_url('Master/Customer') ?>">Customer</a>
-                            </li>
-                            <li>
-                                <a href="<?php echo base_url('Master/Supplier') ?>">Supplier</a>
-                            </li>
-                            <li>
-                                <a href="<?php echo base_url('Master/NoNota') ?>">No. Nota</a>
-                            </li>
-                            <?php if($this->session->userdata('otoritas') == "Pembelian") { ?>
-                            <li>
-                                <a href="<?php echo base_url('Master/Barang') ?>">Barang</a>
-                            </li>
-                            <?php } if(($this->session->userdata('level') == "Developer" || $this->session->userdata('level') == "SuperAdmin") && $this->session->userdata('otoritas') == "Pembelian") { ?>
-                            <li>
-                                <a href="<?php echo base_url('Master/Administrator') ?>">Administrator</a>
-                            </li>
-                            <?php } ?>
-                            <!-- <li>
+                                <li>
+                                    <a href="<?php echo base_url('Master/Customer') ?>">Customer</a>
+                                </li>
+                                <li>
+                                    <a href="<?php echo base_url('Master/Supplier') ?>">Supplier</a>
+                                </li>
+                                <li>
+                                    <a href="<?php echo base_url('Master/NoNota') ?>">No. Nota</a>
+                                </li>
+                                <?php if ($this->session->userdata('otoritas') == "Pembelian") { ?>
+                                    <li>
+                                        <a href="<?php echo base_url('Master/Barang') ?>">Barang</a>
+                                    </li>
+                                <?php }
+                                if (($this->session->userdata('level') == "Developer" || $this->session->userdata('level') == "SuperAdmin") && $this->session->userdata('otoritas') == "Pembelian") { ?>
+                                    <li>
+                                        <a href="<?php echo base_url('Master/Administrator') ?>">Administrator</a>
+                                    </li>
+                                <?php } ?>
+                                <!-- <li>
                                 <a href="<?php echo base_url('Master/PO') ?>">PO</a>
                             </li> -->
-                        </ul>
-                    </li>
+                            </ul>
+                        </li>
                     <?php } ?>
                     <!-- <li>
                         <a href="<?php echo base_url('Master/Packing_list') ?>">
@@ -173,67 +175,67 @@
                             <span>Price List</span>
                         </a>
                     </li> -->
-                    <?php if($this->session->userdata('otoritas') == "Penjualan") { ?>
-                    <li>
-                        <a href="<?php echo base_url('Master/PlPackingList') ?>">
-                            <i class="material-icons">list</i>
-                            <span>Packing List</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="<?php echo base_url('Master/Invoice') ?>">
-                            <i class="material-icons">list</i>
-                            <span>Invoice</span>
-                        </a>
-                    </li>
+                    <?php if ($this->session->userdata('otoritas') == "Penjualan") { ?>
+                        <li>
+                            <a href="<?php echo base_url('Master/PlPackingList') ?>">
+                                <i class="material-icons">list</i>
+                                <span>Packing List</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?php echo base_url('Master/Invoice') ?>">
+                                <i class="material-icons">list</i>
+                                <span>Invoice</span>
+                            </a>
+                        </li>
                     <?php } ?>
 
-                    <?php if($this->session->userdata('level') <> "User") { ?>
-                    <li>
-                        <a href="javascript:void(0);" class="menu-toggle">
-                            <i class="material-icons">equalizer</i>
-                            <span>Laporan</span>
-                        </a>
-                        <ul class="ml-menu">
-                            
-                            
-                            <?php if($this->session->userdata('otoritas') == "Pembelian") { ?>
-                                <li>
-                                    <a href="<?php echo base_url('Laporan/Pembelian') ?>">Pembelian</a>
-                                </li>
-                                <li>
-                                    <a href="<?php echo base_url('Laporan/BarangMasuk') ?>">Barang Masuk</a>
-                                </li>
-                                <li>
-                                    <a href="<?php echo base_url('Laporan/DaftarHutangCash') ?>">Daftar Hutang dan Cash</a>
-                                </li>
-                            <?php } ?>
-                            <?php if($this->session->userdata('otoritas') == "Penjualan") { ?>
-                                <li>
-                                    <a href="<?php echo base_url('Laporan/Penjualan') ?>">Penjualan</a>
-                                </li>
-                                <li>
-                                    <a href="<?php echo base_url('Laporan/SuratOrder') ?>">Surat Order</a>
-                                </li>
-                                <li>
-                                    <a href="<?php echo base_url('Laporan/BukuPenerimaanManual') ?>">Buku Penerimaan Manual</a>
-                                </li>
-                                <li>
-                                    <a href="<?php echo base_url('Laporan/LapPiutang') ?>">Piutang</a>
-                                </li>
-                                <li>
-                                    <a href="<?php echo base_url('Laporan/LapBarangKeluar') ?>">Barang Keluar</a>
-                                </li>
-                            <?php } ?>
-                        </ul>
-                    </li>
+                    <?php if ($this->session->userdata('level') <> "User") { ?>
+                        <li>
+                            <a href="javascript:void(0);" class="menu-toggle">
+                                <i class="material-icons">equalizer</i>
+                                <span>Laporan</span>
+                            </a>
+                            <ul class="ml-menu">
+
+
+                                <?php if ($this->session->userdata('otoritas') == "Pembelian") { ?>
+                                    <li>
+                                        <a href="<?php echo base_url('Laporan/Pembelian') ?>">Pembelian</a>
+                                    </li>
+                                    <li>
+                                        <a href="<?php echo base_url('Laporan/BarangMasuk') ?>">Barang Masuk</a>
+                                    </li>
+                                    <li>
+                                        <a href="<?php echo base_url('Laporan/DaftarHutangCash') ?>">Daftar Hutang dan Cash</a>
+                                    </li>
+                                <?php } ?>
+                                <?php if ($this->session->userdata('otoritas') == "Penjualan") { ?>
+                                    <li>
+                                        <a href="<?php echo base_url('Laporan/Penjualan') ?>">Penjualan</a>
+                                    </li>
+                                    <li>
+                                        <a href="<?php echo base_url('Laporan/SuratOrder') ?>">Surat Order</a>
+                                    </li>
+                                    <li>
+                                        <a href="<?php echo base_url('Laporan/BukuPenerimaanManual') ?>">Buku Penerimaan Manual</a>
+                                    </li>
+                                    <li>
+                                        <a href="<?php echo base_url('Laporan/LapPiutang') ?>">Piutang</a>
+                                    </li>
+                                    <li>
+                                        <a href="<?php echo base_url('Laporan/LapBarangKeluar') ?>">Barang Keluar</a>
+                                    </li>
+                                <?php } ?>
+                            </ul>
+                        </li>
                     <?php } ?>
-                    
+
                 </ul>
             </div>
             <!-- if($this->session->userdata('username') == "develop") -->
             <!-- #Menu -->
-             <!-- Footer -->
+            <!-- Footer -->
             <div class="legal">
                 <div class="copyright">
                     SI PP
@@ -245,9 +247,7 @@
         <!-- Right Sidebar -->
         <!-- #END# Right Sidebar -->
     </section>
-    
+
     <!-- Jquery Core Js -->
     <script src="<?php echo base_url(); ?>assets/plugins/jquery/jquery.min.js"></script>
     <!-- <script src="<?php echo base_url(); ?>assets/js/jquery.priceformat.js"></script> -->
-    
-           
