@@ -121,6 +121,20 @@
                   <td style="padding:10px"></td>
                 </tr>
                 <tr>
+                  <td>Pajak</td>
+                  <td>:</td>
+                  <td>
+                    <select name="" id="ppn" class="form-control" style="width:100%">
+                      <option value="">Pilih . . .</option>
+                      <option value="0">NON PPN</option>
+                      <option value="1">PPN 10%</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:10px"></td>
+                </tr>
+                <tr>
                   <td>Pilih </td>
                   <td>:</td>
                   <td>
@@ -244,15 +258,15 @@
 <table class="table" style="background:#ddd">
   <thead>
     <tr>
-      <th style="width:5%">No</th>
-      <th style="width:12%">Tgl Masuk</th>
-      <th style="width:12%">Tgl Bayar</th>
-      <th style="width:12%">Supplier</th>
-      <th style="width:12%">No Nota</th>
-      <th style="width:11%">QTY</th>
-      <th style="width:11%">KET</th>
-      <th style="width:12%">Harga</th>
-      <th style="width:12%">Pembayaran</th>
+      <th style="background:#aaa;width:5%">No</th>
+      <th style="background:#aaa;width:12%">Tgl Masuk</th>
+      <th style="background:#aaa;width:12%">Tgl Bayar</th>
+      <th style="background:#aaa;width:12%">Supplier</th>
+      <th style="background:#aaa;width:12%">No Nota</th>
+      <th style="background:#aaa;width:11%">QTY</th>
+      <th style="background:#aaa;width:11%">KET</th>
+      <th style="background:#aaa;width:12%">Harga</th>
+      <th style="background:#aaa;width:12%">Pembayaran</th>
     </tr>
   </thead>
   <tbody id="detail_cart">
@@ -325,13 +339,17 @@
   $(document).ready(function() {
     $(".box-form").hide();
     load_data();
-    load_supplier();
+    // load_supplier();
 
     $("input.angka").keypress(function(event) { //input text number only
       return /\d/.test(String.fromCharCode(event.keyCode));
     });
+  });
 
-
+  $('#ppn').on('change', function() {
+    // alert( this.value );
+    load_supplier(this.value);
+    // kosong();
   });
 
   $("#id1").on({
@@ -344,7 +362,6 @@
     },
     change: function() {
       this.value = this.value.replace(/\s/g, "");
-
     }
   });
 
@@ -376,6 +393,7 @@
     $(".box-form").hide();
     $(".box-data").show();
     $('.box-data').animateCss('fadeIn');
+    kosong();
     load_data();
   });
 
@@ -449,6 +467,8 @@
     tgl = $("#tgl").val();
     tgl_lama = $("#tgl_lama").val();
 
+    ppn = $("#ppn").val();
+
     supplier = $("#id_supplier").val();
     supplier_note = $("#supplier_note").val();
     no_nota = $("#no_nota").val();
@@ -501,7 +521,7 @@
     qty_plus = Number.parseInt(k_plus_qty);
     qty_edit = Number.parseInt(k_edit_qty);
 
-    if (tgl == "" || kode_barang == "" || kb1 == "" || kb2 == "" || nama_barang == "" || merek == "" || spesifikasi == "" || supplier_note == "" || i_qty == "" || qty_ket == "" || qty_ket == 0 || no_nota == "" || status_plus == "" || status_plus == 0 || tgl_byr == "") {
+    if (tgl == "" || kode_barang == "" || kb1 == "" || kb2 == "" || nama_barang == "" || merek == "" || spesifikasi == "" || ppn=="" || supplier_note == "" || i_qty == "" || qty_ket == "" || qty_ket == 0 || no_nota == "" || status_plus == "" || status_plus == 0 || tgl_byr == "") {
       showNotification("alert-info", "Harap Lengkapi Form", "bottom", "center", "", "");
       return;
     }
@@ -516,6 +536,7 @@
         id_m_barang_plus: id_m_barang_plus,
         tgl: tgl,
         tgl_lama: tgl_lama,
+        ppn: ppn,
         supplier: supplier,
         kode_barang: kode_barang,
         kode_barang_lama: kode_barang_lama,
@@ -596,6 +617,7 @@
         $("#tgl").val(json.tgl).prop("disabled", false).attr('style', 'background:#fff;');
         $("#tgl_lama").val(json.tgl);
         $("#kode_barang_lama").val(json.kode_barang);
+        $("#ppn").val(json.ppn);
         $("#id_supplier").val(json.id_m_nota);
         $("#supplier_note").val(json.nama_supplier);
         $("#no_nota").val(json.no_nota);
@@ -744,6 +766,8 @@
     $("#nama_barang").val("").prop("disabled", false).attr('style', 'background:#fff;');
     $("#merek").val("").prop("disabled", false).attr('style', 'background:#fff;');
     $("#spesifikasi").val("").prop("disabled", false).attr('style', 'background:#fff;');
+
+    $("#ppn").val("");
     $("#id_supplier").val("");
     $("#supplier").val("").prop("disabled", false).attr('style', 'background:#fff;');
     $("#supplier_note").val("");
@@ -767,7 +791,7 @@
     $("#detail_cart").html("");
   }
 
-  function load_supplier() {
+  function load_supplier(ppn) {
 
     $('#supplier').select2({
       // minimumInputLength: 3,
@@ -775,16 +799,19 @@
       placeholder: 'SELECT',
       ajax: {
         dataType: 'json',
-        url: '<?php echo base_url(); ?>/Master/laod_supplier_nota',
+        // url: '<?php echo base_url(); ?>/Master/laod_supplier_nota',
+        url: '<?php echo base_url(); ?>/Master/loadSuppBrng',
         delay: 800,
         data: function(params) {
           if (params.term == undefined) {
             return {
-              search: ""
+              search: "",
+              ppn: ppn
             }
           } else {
             return {
-              search: params.term
+              search: params.term,
+              ppn: ppn
             }
           }
 

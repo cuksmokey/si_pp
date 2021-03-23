@@ -37,6 +37,7 @@
                                         <tr>
                                             <th width="3%">No</th>
                                             <th>Supplier</th>
+                                            <th>Keterangan</th>
                                             <th width="15%">Aksi</th>
                                         </tr>
                                     </thead>
@@ -72,13 +73,18 @@
                                             <input type="hidden" value="" id="id">
                                         </td>
                                     </tr>
-                                    <!-- <tr>
-                                        <td>No. Nota</td>
-                                        <td>:</td>
-                                        <td>
-                                            <input type="text" id="no_nota" autocomplete="off" class="form-control">
-                                        </td>
-                                    </tr> -->
+                                    <tr>
+                                      <td>Pajak</td>
+                                      <td>:</td>
+                                      <td>
+                                        <select name="" id="ppn" class="form-control">
+                                          <option value=""></option>
+                                          <option value="0">NON PPN</option>
+                                          <option value="1">PPN 10%</option>
+                                        </select>
+                                      </td>
+                                      <td></td>
+                                    </tr>
                                     <tr>
                                         <td colspan="3" align="right">
                                             <br>
@@ -177,8 +183,9 @@
       id = $("#id").val();
       supplier = $("#supplier").val();
       supplier_lama = $("#supplier_lama").val();
+      ppn = $("#ppn").val();
 
-      if (supplier == "")  {
+      if (supplier == "" || ppn == "")  {
         showNotification("alert-info", "Harap Lengkapi Form", "bottom", "center", "", ""); return;
       }
 
@@ -194,6 +201,7 @@
             id : id,
             supplier : supplier,
             supplier_lama : supplier_lama,
+            ppn : ppn,
             jenis : "Simpan_Supplier" }),
           dataType : "json",
           success  : function(data){
@@ -235,6 +243,7 @@
           $("#id").val(json.id);
           $("#supplier").val(json.nama_supplier);
           $("#supplier_lama").val(json.nama_supplier);
+          $("#ppn").val(json.ppn);
       })
     }
     function deleteData(id,nm){
@@ -280,6 +289,7 @@
       // $("#tgl").val("");
       $("#supplier").val("");
       $("#supplier_lama").val("");
+      $("#ppn").val("");
 
       $("#btn-simpan").prop("disabled",false);
       $("#txt-btn-simpan").html("SIMPAN");

@@ -86,6 +86,16 @@ class M_master extends CI_Model{
         return $this->db->query($query);
     }
 
+    function getNoInv($id){
+        $query = "SELECT*FROM m_pl_price_list WHERE no_inv='$id' AND data_inv='1'";
+        return $this->db->query($query);
+    }
+
+    function getNoInvCustLap($id,$kepada,$laporan){
+        $query = "SELECT*FROM m_pl_price_list WHERE no_inv='$id' AND id_m_perusahaan='$kepada' AND laporan='$laporan'";
+        return $this->db->query($query);
+    }
+
     function get_data_ij($table,$kolom,$id){
         $query = "SELECT a.id,a.id_supplier,b.nama_supplier,a.no_nota FROM $table a
         INNER JOIN m_supplier b ON a.id_supplier=b.id
@@ -109,7 +119,7 @@ class M_master extends CI_Model{
     }
 
     function get_data_ijb($table,$kolom,$id){ //
-        $query = "SELECT c.nama_supplier,b.no_nota,d.tgl_bayar,d.qty_plus,d.qty_ket,d.harga,d.status,a.* FROM $table a
+        $query = "SELECT c.nama_supplier,b.no_nota,d.tgl_bayar,d.qty_plus,d.qty_ket,d.harga,d.status,c.ppn,a.* FROM $table a
         INNER JOIN m_nota b ON a.id_m_nota=b.id
         INNER JOIN m_supplier c ON b.id_supplier=c.id
         INNER JOIN m_barang_plus d ON a.id_m_barang_plus=d.id
@@ -141,7 +151,28 @@ class M_master extends CI_Model{
             a.id_pl AS id_pl
         FROM $m_pl_list_barang a 
         INNER JOIN m_barang b ON a.id_m_barang = b.id
-        WHERE a.$id_pl='$id'";
+        WHERE a.$id_pl='$id'
+        ORDER BY b.nama_barang ASC";
+        return $this->db->query($query);
+    }
+
+    function getDataInv($no_inv){
+        $query = "SELECT
+            a.id AS id_list_barang,
+            b.id AS id_m_brng,
+            b.qty AS qty,
+            a.tgl AS tgl,
+            b.kode_barang AS kode_barang,
+            b.nama_barang AS nama_barang,
+            a.harga_invoice AS harga_invoice,
+            a.qty AS i_qty,
+            a.qty_ket AS qty_ket,
+            a.id_pl AS id_pl
+        FROM m_pl_list_barang a 
+        INNER JOIN m_barang b ON a.id_m_barang = b.id
+        INNER JOIN m_pl_price_list c ON c.id = a.id_pl
+        WHERE c.no_inv='$no_inv'
+        ORDER BY b.nama_barang ASC";
         return $this->db->query($query);
     }
 
@@ -198,12 +229,28 @@ class M_master extends CI_Model{
         return $this->db->query($query);
     }
 
+    function getPlBrngEdit($ids){
+        $query = "SELECT b.qty_ket,a.* FROM m_barang a
+        INNER JOIN m_barang_plus b ON a.id_m_barang_plus=b.id
+        WHERE NOT EXISTS (SELECT*FROM m_pl_list_barang c WHERE id_pl='$ids' AND a.id=c.id_m_barang)
+        ORDER BY kode_barang ASC, nama_barang ASC";
+        return $this->db->query($query);
+    }
+
     function get_pl_inv(){
         $id_pl = $_POST['id_pl'];
+        $no_inv = $_POST['no_inv'];
+
+        if($no_inv == 0){
+            $where = "a.id='$id_pl'";
+        }else{
+            $where = "a.no_inv='$no_inv'";
+        }
+
         $query = "SELECT c.kode_barang,c.nama_barang,b.qty,b.qty_ket,b.id AS id_pl_list_barang,a.* FROM m_pl_price_list a
         INNER JOIN m_pl_list_barang b ON a.id=b.id_pl
         INNER JOIN m_barang c ON b.id_m_barang=c.id
-        WHERE a.id='$id_pl'";
+        WHERE $where";
         return $this->db->query($query);
     }
 
@@ -223,17 +270,28 @@ class M_master extends CI_Model{
     }
 
     function get_load_inv(){
-        // $query = "SELECT b.no_po,b.cek_inv,b.tgl_ctk,(SELECT COUNT(id_pl) FROM m_pl_list_barang WHERE id_pl = b.id) AS jml_timbang,a.* FROM m_invoice a
+        // $query = "SELECT c.nm_perusahaan,b.no_po,b.cek_inv,b.tgl_ctk,(SELECT COUNT(id_pl) FROM m_pl_list_barang WHERE id_pl = b.id) AS jml_timbang,a.* FROM m_invoice a
         // INNER JOIN m_pl_price_list b ON a.id_pl=b.id
+        // INNER JOIN m_perusahaan c ON b.id_m_perusahaan=c.id
         // ORDER BY a.id DESC";
-        $query = "SELECT c.nm_perusahaan,b.no_po,b.cek_inv,b.tgl_ctk,(SELECT COUNT(id_pl) FROM m_pl_list_barang WHERE id_pl = b.id) AS jml_timbang,a.* FROM m_invoice a
-        INNER JOIN m_pl_price_list b ON a.id_pl=b.id
+        $query = "SELECT c.nm_perusahaan,b.no_po,b.cek_inv,b.tgl_ctk,COUNT(d.id) AS jml_timbang,a.* FROM m_invoice a
+        INNER JOIN m_pl_price_list b ON a.id_pl=b.id OR a.id_pl = 0 AND a.no_inv=b.no_inv
         INNER JOIN m_perusahaan c ON b.id_m_perusahaan=c.id
+        INNER JOIN m_pl_list_barang d ON b.id = d.id_pl
+        WHERE b.data_inv = '1'
+        GROUP BY a.id
         ORDER BY a.id DESC";
         return $this->db->query($query);
     }
 
     function insert_pl_pl_b(){
+        // opsi untuk cetak beberapa invoice
+        if($_POST['no_inv'] == 0){
+            $no_inv = 0 ;
+        }else{
+            $no_inv = $_POST['no_inv'];
+        }
+
         // insert packing list
         $data = array(
             'id_m_perusahaan' => $_POST['kepada'],
@@ -242,6 +300,7 @@ class M_master extends CI_Model{
             'no_surat' => $_POST['no_surat'],
             'no_so' => $_POST['no_so'],
             'no_po' => $_POST['no_po'],
+            'no_inv' => $no_inv,
             'up' => $_POST['upup'],
             'created_by' => $this->session->userdata('username')
         );
@@ -282,11 +341,24 @@ class M_master extends CI_Model{
     }
 
     function insert_pl_inv(){
+        // kondisi jika ada no invoice
+        if($_POST['no_inv'] == 0){
+            $id_pl = $_POST['id_pl'];
+            $wid = 'id';
+            $www = $_POST['id_pl'];
+        }else{
+            $id_pl = 0;
+            $wid = 'no_inv';
+            $www = $_POST['no_inv'];
+        }
+
         // insert invoice
         $data = array(
-            'id_pl' => $_POST['id_pl'],
+            'id_pl' => $id_pl,
             'no_nota' => $_POST['no_nota'],
             'no_faktur' => $_POST['no_faktur'],
+            'no_inv' => $_POST['no_inv'],
+            'up' => $_POST['up'],
             'tgl_jt' => $_POST['tgl_jt'],
             'ongkir' => $_POST['ongkir'],
             'created_by' => $this->session->userdata('username')
@@ -295,7 +367,7 @@ class M_master extends CI_Model{
 
         // update data masuk invoice
         $this->db->set('data_inv', "1");
-        $this->db->where('id', $_POST['id_pl']);
+        $this->db->where($wid, $www);
         $result = $this->db->update('m_pl_price_list');
 
         // update harga list barang
@@ -309,41 +381,140 @@ class M_master extends CI_Model{
         return $result;
     }
 
+    function edit_pl_inv() {
+        // kondisi jika ada no invoice
+        if($_POST['no_inv'] == 0){
+            $wid = 'id';
+            $www = $_POST['id'];
+        }else{
+            $wid = 'no_inv';
+            $www = $_POST['no_inv'];
+        }
+
+        // update invoice
+        $this->db->set('no_nota', $_POST['no_nota']);
+        $this->db->set('no_faktur', $_POST['no_faktur']);
+        $this->db->set('up', $_POST['up']);
+        $this->db->set('tgl_jt', $_POST['tgl_jt']);
+        $this->db->set('ongkir', $_POST['ongkir']);
+        $this->db->set('updated_at', date('Y-m-d H:i:s'));
+        $this->db->set('updated_by', $this->session->userdata('username'));
+        $this->db->where($wid, $www);
+        // $this->db->where('id', $_POST['id']);
+        $result = $this->db->update('m_invoice');
+
+        return $result;
+    }
+
     function update_pl_edit(){
+        // opsi untuk cetak beberapa invoice
+        if($_POST['no_inv'] == 0){
+            $no_inv = 0 ;
+        }else{
+            $no_inv = $_POST['no_inv'];
+        }
 
         // update pl
+        $this->db->set('id_m_perusahaan', $_POST['kepada']);
         $this->db->set('tgl', $_POST['tgl']);
         $this->db->set('no_surat', $_POST['no_surat']);
         $this->db->set('no_so', $_POST['no_so']);
         $this->db->set('no_po', $_POST['no_po']);
-        $this->db->set('no_nota', $_POST['no_nota']);
-        $this->db->set('kepada', $_POST['kepada']);
+        $this->db->set('up', $_POST['upup']);
+        $this->db->set('laporan', $_POST['laporan']);
+        $this->db->set('no_inv', $no_inv);
         $this->db->set('updated_at', date('Y-m-d H:i:s'));
         $this->db->set('updated_by', $this->session->userdata('username'));
         $this->db->where('id', $_POST['id']);
         $result = $this->db->update('m_pl_price_list');
 
-        // delete dulu bos
-        $result = $this->m_master->delete("m_pl_list_barang","id_pl_price_list",$_POST['id']);
+        // update tgl list barang
+        $this->db->set('tgl', $_POST['tgl']);
+        $this->db->where('id_pl', $_POST['id']);
+        $result = $this->db->update('m_pl_list_barang');
 
-        // insert kembali
+        //////
+        $no_surat = $_POST['no_surat'];
+        $plpl = $this->db->query("SELECT * FROM m_pl_price_list WHERE no_surat = '$no_surat'")->row();
+
+        // insert pl list barang
         foreach ($this->cart->contents() as $items) {
-            $data_list = array(
-                'tgl' => $_POST['tgl'],
-                'kode_barang' => $items['options']['kode_barang'],
-                'harga_price_list' => $items['price'],
-                'qty' => $items['qty'],
-                'id_pl_price_list' => $_POST['id'],
-                'created_by' => $this->session->userdata('username')
-            );
-            $result= $this->db->insert("m_pl_list_barang",$data_list);
+            $sisa_stok = $items['options']['qty'] - $items['qty'];
 
-            // update stok 
-            $sisa = $items['options']['stok'] - $items['qty'];
-            $this->db->set('qty', $sisa);
-            $this->db->where('kode_barang', $items['options']['kode_barang']);
+            if($sisa_stok < 0){
+                $stok = 0;
+                $iqty = ($items['qty'] - $items['qty']) + $items['options']['qty'];
+            }else{
+                $stok = $sisa_stok;
+                $iqty = $items['qty'];
+            }
+
+            $idmm = $items['options']['id_barang'];
+            $count = $this->db->query("SELECT * FROM m_pl_list_barang WHERE id_pl = '$plpl->id' AND id_m_barang = '$idmm'");
+
+            $lb = $this->db->query("SELECT * FROM m_barang WHERE id = '$idmm'")->row();
+
+            // jika pl dan kode barang sama update jadi satu qtynya
+            if($count->num_rows() > 0){
+                $sAkhir = $lb->qty - $iqty;
+                $tmbh = $count->row()->qty + $iqty;
+
+                $this->db->set('tgl', $plpl->tgl);
+                $this->db->set('qty', $tmbh);
+                $this->db->set('updated_at', date('Y-m-d H:i:s'));
+                $this->db->set('updated_by', $this->session->userdata('username'));
+                $this->db->where('id_pl', $plpl->id);
+                $this->db->where('id_m_barang', $items['options']['id_barang']);
+                $result = $this->db->update('m_pl_list_barang');
+            }else{
+                $sAkhir = $stok;
+
+                $data_list = array(
+                    'id_pl' => $plpl->id,
+                    'id_m_barang' => $items['options']['id_barang'],
+                    'tgl' => $plpl->tgl,
+                    'qty' => $iqty,
+                    'qty_ket' => $items['options']['qty_ket'],
+                    'created_by' => $this->session->userdata('username')
+                );
+                $result= $this->db->insert("m_pl_list_barang",$data_list);
+            }
+
+            // update stok             
+            // $this->db->set('qty', $stok);
+            $this->db->set('qty', $sAkhir);
+            $this->db->where('id', $items['options']['id_barang']);
             $result = $this->db->update('m_barang');
         }
+
+        return $result;
+    }
+
+    function updatePListBarang() {
+        // update input qty
+        $this->db->set('qty', $_POST['i_qty']);
+        $this->db->set('updated_at', date('Y-m-d H:i:s'));
+        $this->db->set('updated_by', $this->session->userdata('username'));
+        $this->db->where('id', $_POST['id']);
+        $result = $this->db->update('m_pl_list_barang');
+
+        // update stok di master barang
+        $this->db->set('qty', $_POST['qty']);
+        $this->db->set('updated_at', date('Y-m-d H:i:s'));
+        $this->db->set('updated_by', $this->session->userdata('username'));
+        $this->db->where('id', $_POST['id_m_brng']);
+        $result = $this->db->update('m_barang');
+
+        return $result;
+    }
+
+    function updateInvListBarang() {
+        // update input harga
+        $this->db->set('harga_invoice', $_POST['i_hrg']);
+        $this->db->set('updated_at', date('Y-m-d H:i:s'));
+        $this->db->set('updated_by', $this->session->userdata('username'));
+        $this->db->where('id', $_POST['id']);
+        $result = $this->db->update('m_pl_list_barang');
 
         return $result;
     }
@@ -411,12 +582,13 @@ class M_master extends CI_Model{
     function insert_perusahaan(){
         
         $data = array(
-                'pimpinan'      => $_POST['pimpinan'],
-                'nm_perusahaan'       => $_POST['nm_perusahaan'],
-                'alamat'      => $_POST['alamat'],
-                'npwp'      => $_POST['npwp'],
-                'no_telp'      => $_POST['no_telp'],
-                'created_by'      => $this->session->userdata('username')
+                'pimpinan' => $_POST['pimpinan'],
+                'nm_perusahaan' => $_POST['nm_perusahaan'],
+                'alamat' => $_POST['alamat'],
+                'npwp' => $_POST['npwp'],
+                'no_telp' => $_POST['no_telp'],
+                'laporan' => $_POST['laporan'],
+                'created_by' => $this->session->userdata('username')
             );
         $result= $this->db->insert("m_perusahaan",$data);
 
@@ -447,6 +619,7 @@ class M_master extends CI_Model{
             'merek' => $_POST['merek'],
             'spesifikasi' => $_POST['spesifikasi'],
             'qty' => $_POST['qty'],
+            'ppn' => $_POST['ppn'],
             // 'qty_ket' => $_POST['qty_ket'],
             // 'harga' => $_POST['harga'],
             // 'status' => $_POST['status_plus'],
@@ -481,6 +654,7 @@ class M_master extends CI_Model{
     function insert_load_supplier(){
         $data = array(
             'nama_supplier' => $_POST['supplier'],
+            'ppn' => $_POST['ppn'],
             'created_by' => $this->session->userdata('username')
         );
         $result= $this->db->insert("m_supplier",$data);
@@ -550,6 +724,7 @@ class M_master extends CI_Model{
         $this->db->set('alamat', $_POST['alamat']);
         $this->db->set('npwp', $_POST['npwp']);
         $this->db->set('no_telp', $_POST['no_telp']);
+        $this->db->set('laporan', $_POST['laporan']);
         $this->db->set('updated_at', date("Y-m-d h:i:s"));
         $this->db->set('updated_by', $this->session->userdata('username'));
         $this->db->where('id', $_POST['id']);
@@ -578,6 +753,7 @@ class M_master extends CI_Model{
         $this->db->set('merek', $_POST['merek']);
         $this->db->set('spesifikasi', $_POST['spesifikasi']);
         $this->db->set('qty', $_POST['qty']);
+        $this->db->set('ppn', $_POST['ppn']);
         $this->db->set('updated_at', date("Y-m-d h:i:s"));
         $this->db->set('updated_by', $this->session->userdata('username'));
         $this->db->where('id', $_POST['id']);
@@ -633,8 +809,8 @@ class M_master extends CI_Model{
 
     function update_load_supplier(){
         
-        // $this->db->set('tgl', $_POST['tgl']);
         $this->db->set('nama_supplier', $_POST['supplier']);
+        $this->db->set('ppn', $_POST['ppn']);
         $this->db->set('updated_at', date("Y-m-d h:i:s"));
         $this->db->set('updated_by', $this->session->userdata('username'));
         $this->db->where('id', $_POST['id']);
@@ -683,28 +859,62 @@ class M_master extends CI_Model{
      return $data;
     }
 
-    function list_pl($searchTerm=""){
-        $users = $this->db->query("SELECT CONCAT(no_surat, ' | ',b.nm_perusahaan) AS ket,b.pimpinan,b.nm_perusahaan,b.alamat,b.npwp,b.no_telp,a.* FROM m_pl_price_list a
-        INNER JOIN m_perusahaan b ON a.id_m_perusahaan=b.id
-        WHERE a.data_inv='0' AND (no_surat LIKE '%$searchTerm%' OR b.nm_perusahaan LIKE '%$searchTerm%')
-        ORDER BY tgl DESC")->result_array();
+    function listCustPl($searchTerm="",$id=""){
+        $users = $this->db->query("SELECT CONCAT(pimpinan, ' | ', nm_perusahaan) AS cc,a.* FROM m_perusahaan a
+        WHERE (pimpinan LIKE '%$searchTerm%' OR nm_perusahaan LIKE '%$searchTerm%') AND laporan LIKE '%$id%'
+        ORDER BY pimpinan ")->result_array();
    
-        // Initialize Array with fetched data
         $data = array();
         foreach($users as $user){
            $data[] = array(
                "id"=>$user['id'], 
-               "text"=>$user['ket'],
-               "tgl"=>$user['tgl'],
-               "no_surat"=>$user['no_surat'],
-               "up"=>$user['up'],
-               "no_so"=>$user['no_so'],
-               "no_po"=>$user['no_po'],
+               "text"=>$user['cc'],
                "nama_perusahaan"=>$user['nm_perusahaan'],
                "pimpinan"=>$user['pimpinan'], 
                "no_telp"=>$user['no_telp'], 
                "npwp"=>$user['npwp'], 
                "alamat"=>$user['alamat']
+           );
+        }
+        return $data;
+       }
+
+    function list_pl($searchTerm="",$no_inv=""){
+        // satu nota
+        if($no_inv == "0"){
+            $sql = $this->db->query("SELECT CONCAT(no_surat, ' | ',b.nm_perusahaan) AS ket,b.pimpinan,b.nm_perusahaan,b.alamat,b.npwp,b.no_telp,a.* FROM m_pl_price_list a
+            INNER JOIN m_perusahaan b ON a.id_m_perusahaan=b.id
+            WHERE a.data_inv = 0 AND a.no_inv = '0' AND (a.no_surat LIKE '%$searchTerm%' OR b.nm_perusahaan LIKE '%$searchTerm%')
+            ORDER BY tgl DESC");
+        }else if($no_inv == "1"){
+            $sql = $this->db->query("SELECT CONCAT(no_inv, ' | ',b.nm_perusahaan) AS ket,b.pimpinan,b.nm_perusahaan,b.alamat,b.npwp,b.no_telp,a.* FROM m_pl_price_list a
+            INNER JOIN m_perusahaan b ON a.id_m_perusahaan=b.id
+            WHERE a.data_inv = 0 AND a.no_inv != '0' AND (a.no_inv LIKE '%$searchTerm%' OR b.nm_perusahaan LIKE '%$searchTerm%')
+            GROUP BY a.no_inv
+            ORDER BY tgl DESC");
+        }else{
+            $sql = "";
+        }
+
+        $users = $sql;
+   
+        $data = array();
+        foreach($users->result_array() as $user){
+            $data[] = array(
+               "id"=>$user['id'], 
+               "text"=>$user['ket'],
+               "tgl"=>$user['tgl'],
+               "no_surat"=>$user['no_surat'],
+               "no_so"=>$user['no_so'],
+               "no_po"=>$user['no_po'],
+               "no_inv"=>$user['no_inv'],
+               "up"=>$user['up'],
+               "nama_perusahaan"=>$user['nm_perusahaan'],
+               "pimpinan"=>$user['pimpinan'], 
+               "no_telp"=>$user['no_telp'], 
+               "npwp"=>$user['npwp'], 
+               "alamat"=>$user['alamat'],
+               "laporan"=>$user['laporan']
            );
         }
         return $data;
@@ -782,14 +992,19 @@ class M_master extends CI_Model{
         return $data;
     }
 
-    function list_p_nota($s=""){
+    function list_p_nota($s=""){ //
+        // $users = $this->db->query("SELECT CONCAT(no_nota, ' | ', c.nm_perusahaan) AS ket,a.tgl_jt AS jt_nota,c.nm_perusahaan,b.tgl_ctk,a.* FROM m_invoice a
+        // INNER JOIN m_pl_price_list b ON a.id_pl=b.id
+        // INNER JOIN m_perusahaan c ON b.id_m_perusahaan=c.id
+        // WHERE (no_nota LIKE '%$s%' OR b.no_po LIKE '%$s%' OR c.nm_perusahaan LIKE '%$s%')
+        // ORDER BY no_nota ASC")->result_array();
         $users = $this->db->query("SELECT CONCAT(no_nota, ' | ', c.nm_perusahaan) AS ket,a.tgl_jt AS jt_nota,c.nm_perusahaan,b.tgl_ctk,a.* FROM m_invoice a
-        INNER JOIN m_pl_price_list b ON a.id_pl=b.id
+        INNER JOIN m_pl_price_list b ON a.id_pl=b.id OR a.id_pl = 0 AND a.no_inv=b.no_inv
         INNER JOIN m_perusahaan c ON b.id_m_perusahaan=c.id
-        WHERE (no_nota LIKE '%$s%' OR b.no_po LIKE '%$s%' OR c.nm_perusahaan LIKE '%$s%')
+        WHERE (a.no_nota LIKE '%$s%' OR a.no_inv LIKE '%$s%' OR c.nm_perusahaan LIKE '%$s%')
+        GROUP BY a.id
         ORDER BY no_nota ASC")->result_array();
    
-        // Initialize Array with fetched data
         $data = array();
         foreach($users as $user){
             if($user['tgl_ctk'] === NULL){
@@ -811,9 +1026,9 @@ class M_master extends CI_Model{
         return $data;
     }
 
-    function list_p_cust($s=""){
+    function list_p_cust($s=""){ //
         $users = $this->db->query("SELECT c.id,c.nm_perusahaan FROM m_invoice a
-        INNER JOIN m_pl_price_list b ON a.id_pl=b.id
+        INNER JOIN m_pl_price_list b ON a.id_pl=b.id OR a.id_pl = 0 AND a.no_inv=b.no_inv
         INNER JOIN m_perusahaan c ON b.id_m_perusahaan=c.id
         WHERE c.nm_perusahaan LIKE '%$s%'
         GROUP BY c.id,c.nm_perusahaan
@@ -836,6 +1051,26 @@ class M_master extends CI_Model{
         INNER JOIN m_supplier b ON a.id_supplier=b.id
         WHERE b.nama_supplier LIKE '%$searchTerm%' OR
         a.no_nota LIKE '%$searchTerm%' 
+        ORDER BY b.nama_supplier ASC,a.no_nota ASC")->result_array();
+   
+        // Initialize Array with fetched data
+        $data = array();
+        foreach($users as $user){
+           $data[] = array(
+               "id"=>$user['id'],
+               "text"=>$user['id_n'],
+               "nama_supplier"=>$user['nama_supplier'],
+               "no_nota"=>$user['no_nota']
+           );
+        }
+        return $data;
+    }
+
+    function listSuppBrng($searchTerm="",$ppn=""){
+        $users = $this->db->query("SELECT a.id,b.nama_supplier,CONCAT(b.nama_supplier, ' | ', a.no_nota) AS id_n,a.no_nota FROM m_nota a
+        INNER JOIN m_supplier b ON a.id_supplier=b.id
+        WHERE (b.nama_supplier LIKE '%$searchTerm%' OR
+        a.no_nota LIKE '%$searchTerm%') AND b.ppn LIKE '%$ppn%'
         ORDER BY b.nama_supplier ASC,a.no_nota ASC")->result_array();
    
         // Initialize Array with fetched data

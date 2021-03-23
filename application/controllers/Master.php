@@ -26,7 +26,7 @@ class Master extends CI_Controller {
         $this->load->view('footer');
     }
 
-    public function Perusahaan()
+    public function Customer()
     {
         $this->load->view('header');
         $this->load->view('Master/v_perusahaan');
@@ -53,7 +53,7 @@ class Master extends CI_Controller {
         $this->load->view('footer');
     }
 
-    public function PL_Price_List() {
+    public function PlPackingList() {
         $this->load->view('header');
         $this->load->view('Master/v_pl_price_list');
         $this->load->view('footer');
@@ -188,29 +188,38 @@ class Master extends CI_Controller {
                     $result     = $this->m_master->insert_po_master();    
                     echo json_encode(array('data' =>  TRUE));
                 }
-            }elseif ($jenis == "PL") {
-                $no_surat      = $this->input->post('no_surat');
-                $no_so      = $this->input->post('no_so');
-
-                $cek = $this->m_master->get_data_one("pl","no_surat",$no_surat)->num_rows();
-
-                $cek2 = $this->m_master->get_data_one("pl","no_so",$no_so)->num_rows();
-                // $cek = $this->m_master->get_data_one("admin", "username", $username)->num_rows();
-                if ($cek > 0 ) {
-                    echo json_encode(array('data' =>  FALSE,'msg' => 'No Surat Jalan Sudah Ada'));
-                }else if ($cek2 > 0 ) {
-                    echo json_encode(array('data' =>  FALSE,'msg' => 'No SO Sudah Ada'));
-                }else{
-                    $result     = $this->m_master->insert_pl();    
-                    echo json_encode(array('data' =>  TRUE));
-                }
             }elseif ($jenis == "PL_pl_barang") {
                 $no_surat = $this->input->post('no_surat');
+                $no_inv = $this->input->post('no_inv');
+                $kepada = $this->input->post('kepada');
+                $laporan = $this->input->post('laporan');
 
                 $cek = $this->m_master->get_data_one("m_pl_price_list","no_surat",$no_surat)->num_rows();
+                $cek2 = $this->m_master->get_data_one("m_pl_price_list","no_inv",$no_inv)->num_rows();
 
+                $cekInv = $this->m_master->getNoInv($no_inv)->num_rows();
+                $cekInv2 = $this->m_master->getNoInvCustLap($no_inv,$kepada,$laporan)->num_rows();
+
+                // cek no surat jalan
                 if ($cek > 0 ) {
                     echo json_encode(array('data' =>  FALSE,'msg' => 'No Surat Jalan Sudah Ada!'));
+                // jika input no invoice
+                }else if($no_inv != 0){
+                    // cek no invoice sdh cetak nota
+                    if($cek2 > 0){
+                        if($cekInv > 0) {
+                            echo json_encode(array('data' =>  FALSE,'msg' => 'No Invoice Sudah Cetak Nota!'));
+                        }else if($cekInv2 == 0){
+                            echo json_encode(array('data' =>  FALSE,'msg' => 'Periksa Kembali!! Input No. Invoice. Customer dan Laporan Tidak Boleh Berbeda Dari Sebelumnya!!'));
+                        }else{
+                            $result = $this->m_master->insert_pl_pl_b();    
+                            echo json_encode(array('data' =>  TRUE));
+                        }
+                    }else{
+                        $result = $this->m_master->insert_pl_pl_b();    
+                        echo json_encode(array('data' =>  TRUE));
+                    }
+                // tidak input no invoice
                 }else{
                     $result = $this->m_master->insert_pl_pl_b();    
                     echo json_encode(array('data' =>  TRUE));
@@ -224,17 +233,6 @@ class Master extends CI_Controller {
                     echo json_encode(array('data' =>  FALSE,'msg' => 'No Nota Sudah Ada!'));
                 }else{
                     $result = $this->m_master->insert_pl_inv();    
-                    echo json_encode(array('data' =>  TRUE));
-                }
-            }elseif ($jenis == "Invoice") {
-                $id      = $this->input->post('id');
-
-                $cek = $this->m_master->get_data_one("th_invoice","no_invoice",$id)->num_rows();
-                // $cek = $this->m_master->get_data_one("admin", "username", $username)->num_rows();
-                if ($cek > 0 ) {
-                    echo json_encode(array('data' =>  FALSE,'msg' => 'No Invoice Sudah Ada'));
-                }else{
-                    $result     = $this->m_master->insert_invoice();    
                     echo json_encode(array('data' =>  TRUE));
                 }
             }
@@ -290,10 +288,15 @@ class Master extends CI_Controller {
     function load_data(){ //
          $jenis = $this->input->post('jenis');
          $options = $this->input->post('opsi');
+         $ids = $this->input->post('id');
 
-            if($jenis == "list_pl_barang") { //
+            if($jenis == "list_pl_barang") {
                 
-                $query = $this->m_master->get_pl_barang();
+                if($ids != ""){
+                    $query = $this->m_master->getPlBrngEdit($ids);
+                }else{
+                    $query = $this->m_master->get_pl_barang();
+                }
                 
                 $i=0;
 
@@ -325,7 +328,7 @@ class Master extends CI_Controller {
                 $output = array(
                                 "data" => $data,
                         );
-            }else if ($jenis == "list_pl_inv") { //
+            }else if ($jenis == "list_pl_inv") {
                 
                 $query = $this->m_master->get_pl_inv();
                 
@@ -358,94 +361,7 @@ class Master extends CI_Controller {
                 $output = array(
                                 "data" => $data,
                         );
-            }else if ($jenis == "PL") {
-                $i=1;
-                $query = $this->m_master->get_PL();
-                
-                if ($query->num_rows() == 0) {
-                    $data[] =  ["","","","","","","",""];
-                }else{
-
-                    foreach ($query->result() as $r) {
-                        $id = "'$r->id'";
-                        $print = base_url("Master/print_pl?id=").$r->id;
-
-                        $row = array();
-                        $row[] = $r->id;
-                        $row[] = $r->tgl;
-                        $row[] = $r->no_surat;
-                        $row[] = $r->no_so;
-                        $row[] = $r->no_pkb;
-                        $row[] = $r->nm_perusahaan;
-                        // $row[] = $r->no_telp;
-                        $row[] = 
-                        '<a type="button" onclick=view_timbang('.$r->id.') class="btn btn-default btn-circle waves-effect waves-circle waves-float">
-                                '.$r->jml_timbang.'
-                            </a>' ;
-
-                        $aksi ="";
-
-// print tunggal di pl
-// <a type="button" href="'.$print.'" target="blank" class="btn btn-default btn-circle waves-effect waves-circle waves-float">
-//     <i class="material-icons">print</i>
-// </a>
-
-                        $superbtn = '<button type="button" onclick="view_detail('.$id.')" class="btn btn-info btn-circle waves-effect waves-circle waves-float">
-                                <i class="material-icons">remove_red_eye</i>
-                            </button> 
-                            <button type="button" onclick="tampil_edit('.$id.')" class="btn bg-orange btn-circle waves-effect waves-circle waves-float">
-                                <i class="material-icons">edit</i>
-                            </button>
-                          <button type="button" onclick="deleteData('.$id.','."".')" class="btn btn-danger btn-circle waves-effect waves-circle waves-float">
-                                <i class="material-icons">delete</i>
-                            </button>';
-                            
-                        $superbtn2 = '<button type="button" onclick="view_detail('.$id.')" class="btn btn-info btn-circle waves-effect waves-circle waves-float">
-                                <i class="material-icons">remove_red_eye</i>
-                            </button>';
-
-
-                            // CEK PO PL SATU UKURAN FIX
-                            $uk_fix = $this->m_master->get_cek_po_pl($r->id,$r->no_pkb);
-
-                        if ($this->session->userdata('level') == "SuperAdmin" && $r->cek_po == 0 && $uk_fix == 1) {
-                            $aksi = ''.$superbtn.'
-                            <a type="button" onclick="confirmCekPo('.$id.','."".')" class="btn bg-green btn-circle waves-effect waves-circle waves-float">
-                                <i class="material-icons">check</i>
-                            </a>';
-                        }else if ($this->session->userdata('level') == "SuperAdmin" && $r->cek_po == 0 && $uk_fix <> 1) {
-                            $aksi = ''.$superbtn.'
-                            <a type="button" onclick="zonk" class="btn bg-black btn-circle waves-effect waves-circle waves-float">
-                                <i class="material-icons">check</i>
-                            </a>';
-                        }else if ($this->session->userdata('level') == "SuperAdmin" && $r->cek_po == 1) {
-                            $aksi = ''.$superbtn2.'
-                            <a type="button" onclick="vvvv" class="btn bg-blue btn-circle waves-effect waves-circle waves-float">
-                                <i class="material-icons">check</i>
-                            </a>';
-                        }else{
-                            // <a type="button" href="'.$print.'" target="blank" class="btn btn-default btn-circle waves-effect waves-circle waves-float">
-                            //     <i class="material-icons">print</i>
-                            // </a>
-
-                            $aksi = '
-                            <button type="button" onclick="view_detail('.$id.')" class="btn btn-info btn-circle waves-effect waves-circle waves-float">
-                                <i class="material-icons">remove_red_eye</i>
-                            </button>';
-                        }
-                            
-                            
-                        $row[] = $aksi;
-                        $data[] = $row;
-
-                        // $i++;
-                    }
-                }
-
-                $output = array("data" => $data);
-                
-
-            }else if ($jenis == "PL_price_list") {
+            }else if ($jenis == "PL_price_list") { //
                 $i=1;
                 $query = $this->m_master->get_PL_price_list();
                 
@@ -470,11 +386,15 @@ class Master extends CI_Controller {
                         $superbtn = '<button type="button" onclick="view_detail('.$id.')" class="btn btn-info btn-circle waves-effect waves-circle waves-float">
                                 <i class="material-icons">remove_red_eye</i>
                             </button>';
+                        
+                        $btn_edit = '<button type="button" onclick="tampil_edit('.$id.')" class="btn bg-orange btn-circle waves-effect waves-circle waves-float">
+                        <i class="material-icons">edit</i>
+                        </button>';
                             
                         if($r->data_inv == 1){
                             $superbtn .= '';
                         }else{
-                            $superbtn .= '<button type="button" onclick="deleteData('.$id.','."".')" class="btn btn-danger btn-circle waves-effect waves-circle waves-float">
+                            $superbtn .= ' '.$btn_edit.' '.'<button type="button" onclick="deleteData('.$id.','."".')" class="btn btn-danger btn-circle waves-effect waves-circle waves-float">
                             <i class="material-icons">delete</i>
                             </button>';
                         }
@@ -504,7 +424,7 @@ class Master extends CI_Controller {
                 $query = $this->m_master->get_load_inv();
                 
                 if ($query->num_rows() == 0) {
-                    $data[] =  ["","","","","","",""];
+                    $data[] =  ["","","","","","","","",""];
                 }else{
 
                     foreach ($query->result() as $r) {
@@ -519,20 +439,11 @@ class Master extends CI_Controller {
                         $row[] = '
                         <a type="button" class="btn btn-default btn-circle waves-effect waves-circle waves-float">'.$r->jml_timbang.'</a>' ;
 
-                        $superbtn = '<button type="button" onclick="view_detail('.$id.')" class="btn btn-info btn-circle waves-effect waves-circle waves-float">
-                                <i class="material-icons">remove_red_eye</i>
-                            </button> 
-                        <button type="button" onclick="deleteData('.$id.','."".')" class="btn btn-danger btn-circle waves-effect waves-circle waves-float">
-                                <i class="material-icons">delete</i>
-                            </button>';
+                        $superbtn = '<button style="background:#00B0E4;margin:0;padding:3px 5px;border:0;color:#fff" type="button" onclick="view_detail('.$id.','.$r->no_inv.')">VIEW</button><button style="background:#FF9800;margin:0;padding:3px 5px;border:0;color:#fff" type="button" onclick="tampil_edit('.$id.','.$r->no_inv.')">EDIT</button><button style="background:#FB483A;margin:0;padding:3px 5px;border:0;color:#fff" type="button" onclick="deleteData('.$id.','.$r->no_inv.')">DELETE</button>';
                             
-                        $superbtn2 = '<button type="button" onclick="view_detail('.$id.')" class="btn btn-info btn-circle waves-effect waves-circle waves-float">
-                                <i class="material-icons">remove_red_eye</i>
-                            </button>';
+                        $superbtn2 = '<button style="background:#00B0E4;margin:0;padding:3px 5px;border:0;color:#fff" type="button" onclick="view_detail('.$id.','.$r->no_inv.')">VIEW</button>';
 
-                        $confirmByr = '<a type="button" onclick="confirmByr('.$id.','.$i.')" class="btn bg-green btn-circle waves-effect waves-circle waves-float">
-                            <i class="material-icons">check</i>
-                        </a>';
+                        $confirmByr = '<button style="background:#4CAF50;margin:0;padding:3px 5px;border:0;color:#fff" type="button" onclick="confirmByr('.$id.','.$i.')">OKE</button>';
 
                         if($r->tgl_ctk === NULL && $r->tgl_byr === NULL){
                             $ketPlhbyr = "Belum Cetak";
@@ -545,7 +456,7 @@ class Master extends CI_Controller {
                                 <option value="2">Transfer Bank</option>
                             </select>';
                             $ketTglCtk = '<input type="date" id="plhTglInvc'.$i.'" value="" class="form-control">';
-                            $btn = $superbtn.' '.$confirmByr;
+                            $btn = $superbtn.''.$confirmByr;
                         }else{
                             if($r->via == 1){
                                 $via = "Cash";
@@ -600,6 +511,16 @@ class Master extends CI_Controller {
                         $row[] = $r->alamat;
                         $row[] = $r->npwp;
                         $row[] = $r->no_telp;
+
+                        if($r->laporan == "sma"){
+                            $kett = "SINAR MUKTI ABADI";
+                        }else if($r->laporan == "st"){
+                            $kett = "SINAR TEKNINDO";
+                        }else{
+                            $kett = "-";
+                        }
+
+                        $row[] = $kett;
 
                         $aksi ="";
 
@@ -664,7 +585,7 @@ class Master extends CI_Controller {
                     }
                 }
                 $output = array("data" => $data);
-            }else if ($jenis == "Load_Barang") { //
+            }else if ($jenis == "Load_Barang") {
 
                 $query = $this->m_master->get_load_barang();
 
@@ -777,7 +698,7 @@ class Master extends CI_Controller {
                 $query = $this->m_master->get_load_supplier();
 
                 if ($query->num_rows() == 0) {
-                    $data[] =  ["","",""];
+                    $data[] =  ["","","",""];
                 }else{
                     $i=1;
 
@@ -786,6 +707,14 @@ class Master extends CI_Controller {
                         $row = array();
                         $row[] = $i;
                         $row[] = $r->nama_supplier;
+
+                        if($r->ppn == 0){
+                            $kett = "NON PPN";
+                        }else{
+                            $kett = "PPN 10%";
+                        }
+
+                        $row[] = $kett;
                         $aksi ="";
 
                         $btn_edit = '<button type="button" onclick="tampil_edit('.$id.')" class="btn bg-orange btn-circle waves-effect waves-circle waves-float">
@@ -1089,11 +1018,21 @@ class Master extends CI_Controller {
       echo json_encode($response);
     }
 
+    function loadCustPl(){
+        $searchTerm = $_GET['search'];
+        $id = $_GET['id_m'];
+
+        $response = $this->m_master->listCustPl($searchTerm,$id);
+
+        echo json_encode($response);
+    }
+
     function load_pl(){
         $searchTerm = $_GET['search'];
+        $no_inv = $_GET['no_inv'];
   
         // Get users
-        $response = $this->m_master->list_pl($searchTerm);
+        $response = $this->m_master->list_pl($searchTerm,$no_inv);
   
         echo json_encode($response);
       }
@@ -1159,7 +1098,17 @@ class Master extends CI_Controller {
         $response = $this->m_master->list_supplier_nota($searchTerm);
     
         echo json_encode($response);
-        }
+    }
+    
+    function loadSuppBrng(){
+        $searchTerm = $_GET['search'];
+        $ppn = $_GET['ppn'];
+    
+        // Get users
+        $response = $this->m_master->listSuppBrng($searchTerm,$ppn);
+    
+        echo json_encode($response);
+    }
 
     function load_m_barang_pl(){ //
         $searchTerm = $_GET['search'];
@@ -1171,7 +1120,7 @@ class Master extends CI_Controller {
   
       }
     
-    function update(){ //
+    function update(){
             $jenis      = $_POST['jenis'];
             
             if ($jenis == "Perusahaan") {
@@ -1201,10 +1150,8 @@ class Master extends CI_Controller {
                 $id_lama = $this->input->post('supplier_lama');
                 $cek = $this->m_master->get_data_one("m_supplier","nama_supplier",$id)->num_rows();
 
-                if ($id == $id_lama) {
-                    echo json_encode(array('data' =>  FALSE,'msg' => 'Supplier Sama'));
-                }else if ($cek > 0) {
-                    echo json_encode(array('data' =>  FALSE,'msg' => 'Supplier Sudah Ada'));
+                if ($cek > 0 && $id <> $id_lama) {
+                    echo json_encode(array('data' =>  FALSE,'msg' => 'Supplier Sudah Ada!'));
                 }else{
                     $result= $this->m_master->update_load_supplier();
                     echo json_encode(array('data' =>  TRUE));
@@ -1291,40 +1238,72 @@ class Master extends CI_Controller {
                         echo json_encode(array('data' =>  TRUE,'msg' => 'Berhasil'));
                     }
                 }
-            }else if ($jenis == "PoMaster") {
-                $id      = $this->input->post('kode_barang');
-                $id_lama = $this->input->post('kode_barang_lama');
-
-                if ($id <> $id_lama) {
-                    echo json_encode(array('data' =>  FALSE,'msg' => 'Kode Barang Lain'));
-                }else{
-                    $result= $this->m_master->update_master_po();
-                    echo json_encode(array('data' =>  TRUE));
-                }
-            }else if ($jenis == "PL") {
-                $no_surat      = $this->input->post('no_surat');
-                $no_so      = $this->input->post('no_so');
-                $no_surat_lama      = $this->input->post('no_surat_lama');
-                $no_so_lama      = $this->input->post('no_so_lama');
-
-                $cek = $this->m_master->get_data_one("pl","no_surat",$no_surat)->num_rows();
-
-                $cek2 = $this->m_master->get_data_one("pl","no_so",$no_so)->num_rows();
-                // $cek = $this->m_master->get_data_one("admin", "username", $username)->num_rows();
-                if ($no_surat != $no_surat_lama && $cek > 0 ) {
-                    echo json_encode(array('data' =>  FALSE,'msg' => 'No Surat Jalan Sudah Ada'));
-                }else if ($no_so != $no_so_lama && $cek2 > 0 ) {
-                    echo json_encode(array('data' =>  FALSE,'msg' => 'No SO Sudah Ada'));
-                }else{
-                    $result= $this->m_master->update_pl();
-                    echo json_encode(array('data' =>  TRUE));
-                }
             }else if ($jenis == "PL_pl_barang") {
-                    $result= $this->m_master->update_pl_edit();
-                    echo json_encode(array('data' =>  TRUE));
-            }
+                $no_surat = $this->input->post('no_surat');
+                $no_surat_lama = $this->input->post('no_surat_lama');
+                $no_inv = $this->input->post('no_inv');
+                $kepada = $this->input->post('kepada');
+                $laporan = $this->input->post('laporan');
 
-             
+                $cek = $this->m_master->get_data_one("m_pl_price_list","no_surat",$no_surat)->num_rows();
+                $cek2 = $this->m_master->get_data_one("m_pl_price_list","no_inv",$no_inv)->num_rows();
+
+                $cekInv = $this->m_master->getNoInv($no_inv)->num_rows();
+                $cekInv2 = $this->m_master->getNoInvCustLap($no_inv,$kepada,$laporan)->num_rows();
+
+                // cek no surat jalan
+                if ($cek > 0 && $no_surat != $no_surat_lama) {
+                    echo json_encode(array('data' =>  FALSE,'msg' => 'No Surat Jalan Sudah Ada!'));
+                // jika input no invoice
+                }else if($no_inv != 0){
+                    // cek no invoice sdh cetak nota
+                    if($cek2 > 0){
+                        if($cekInv > 0) {
+                            echo json_encode(array('data' =>  FALSE,'msg' => 'No Invoice Sudah Cetak Nota!'));
+                        }else if($cekInv2 == 0){
+                            echo json_encode(array('data' =>  FALSE,'msg' => 'Periksa Kembali!! Input No. Invoice. Customer dan Laporan Tidak Boleh Berbeda Dari Sebelumnya!!'));
+                        }else{
+                            $result = $this->m_master->update_pl_edit();    
+                            echo json_encode(array('data' =>  TRUE));
+                        }
+                    }else{
+                        $result = $this->m_master->update_pl_edit();    
+                        echo json_encode(array('data' =>  TRUE));
+                    }
+                // tidak input no invoice
+                }else{
+                    $result = $this->m_master->update_pl_edit();    
+                    echo json_encode(array('data' =>  TRUE));
+                }
+            }else if ($jenis = "editPlListBarang"){
+                $result = $this->m_master->updatePListBarang();    
+                echo json_encode(array('data' =>  TRUE));
+            }else{
+                echo json_encode(array('data' =>  false));
+            }
+    }
+
+    function update_inv() {
+        $jenis = $_POST['jenis'];
+
+        if($jenis == "Save_invoice"){
+            $no_nota = $this->input->post('no_nota');
+            $no_nota_lama = $this->input->post('no_nota_lama');
+
+            $cek = $this->m_master->get_data_one("m_invoice","no_nota",$no_nota)->num_rows();
+
+            if ($cek > 0 && $no_nota <> $no_nota_lama) {
+                echo json_encode(array('data' =>  FALSE,'msg' => 'No Nota Sudah Ada!'));
+            }else{
+                $result = $this->m_master->edit_pl_inv();    
+                echo json_encode(array('data' =>  true));
+            }
+        }else if ($jenis = "editInvListBarang"){
+            $result = $this->m_master->updateInvListBarang();    
+            echo json_encode(array('data' =>  TRUE));
+        }else{
+            echo json_encode(array('data' =>  false));
+        }
     }
 
     function destroy_cart(){
@@ -1433,7 +1412,7 @@ class Master extends CI_Controller {
                     <td>'.$items['name'].'</td>
                     <td>'.number_format($stok).'</td>
                     <td>'.$iqty.' '.$items['options']['qty_ket'].'</td>
-                    <td><button type="button" id="'.$items['rowid'].'" class="hapus_cart btn btn-danger btn-xs">Batal</button></td>
+                    <td style="text-align:center"><button type="button" id="'.$items['rowid'].'" class="hapus_cart btn btn-danger btn-xs">Batal</button></td>
                 </tr>
             ';
         }
@@ -1558,13 +1537,28 @@ class Master extends CI_Controller {
 
         $data =  $this->m_master->get_data_one("m_invoice", "id", $id_inv)->row();
 
+        // jika ada no invoice
+        if($data->id_pl == 0){
+            $noInv = "no_inv";
+            $plInv = $data->no_inv;
+        }else{
+            $noInv = "id";
+            $plInv = $data->id_pl;
+        }
+
         // ubah cek inv jadi 1
-        $data_pl_u =  $this->m_master->get_data_one("m_pl_price_list", "id", $data->id_pl)->result();
-        foreach($data_pl_u as $u_pl){
+        $data_pl_u =  $this->m_master->get_data_one("m_pl_price_list", $noInv, $plInv)->result();
+        foreach($data_pl_u as $r){
+            if($r->no_inv == 0){
+                $www = $r->id;
+            }else{
+                $www = $r->no_inv;
+            }
+
             $data = array(
                 'cek_inv' => 1
             );
-            $this->db->where('id', $u_pl->id);
+            $this->db->where($noInv, $www);
             $this->db->update('m_pl_price_list', $data);
         }
 
@@ -1643,25 +1637,55 @@ class Master extends CI_Controller {
             $this->m_master->delete("m_pl_list_barang","id_pl",$id);
 
             echo "1";
-        }else if ($jenis == "hapus_inv") {
-            $data =  $this->m_master->get_data_one("m_invoice", "id", $id)->row();
-            $data_pl =  $this->m_master->get_data_one("m_pl_price_list", "id", $data->id_pl)->row();
-            $detail = $this->m_master->get_data_one("m_pl_list_barang", "id_pl", $data_pl->id)->row();
+        }else if($jenis == "hapusPListBrng"){
+            $data = $this->m_master->get_data_plpl("m_pl_list_barang", "id", $id)->row();
+            
+            // update stok barang
+            $stok = $data->qty + $data->i_qty;
+            $this->db->set("qty", $stok);
+            $this->db->where('id', $data->id_m_brng);
+            $this->db->update('m_barang');
 
-            // ubah data inv jadi 0
-            $data_pl_u =  $this->m_master->get_data_one("m_pl_price_list", "id", $data->id_pl)->result();
-            foreach($data_pl_u as $u_pl){
-                $data = array(
-                    'data_inv' => 0,
-                    'cek_inv' => 0
-                );
-                $this->db->where('id', $u_pl->id);
-                $this->db->update('m_pl_price_list', $data);
+            // delete list barang
+            $this->m_master->delete("m_pl_list_barang","id",$id);
+
+            echo "1";
+        }else if ($jenis == "hapus_inv") {
+            // $data =  $this->m_master->get_data_one("m_invoice", "id", $id)->row();
+            // $data_pl =  $this->m_master->get_data_one("m_pl_price_list", "id", $data->id_pl)->row();
+            // $detail = $this->m_master->get_data_one("m_pl_list_barang", "id_pl", $data_pl->id)->row();
+
+            $no_inv = $_POST['no_inv'];
+            $data =  $this->m_master->get_data_one("m_invoice", "id", $id)->row();
+
+            if($no_inv != "0"){
+                $data_pl =  $this->m_master->get_data_one("m_pl_price_list", "no_inv", $data->no_inv)->row();
+                $detail = $this->m_master->getDataInv($no_inv)->result();
+                $wid = 'no_inv';
+                $www = $no_inv;
+            }else{
+                $data_pl =  $this->m_master->get_data_one("m_pl_price_list", "id", $data->id_pl)->row();
+                $detail = $this->m_master->get_data_plpl("m_pl_list_barang", "id_pl", $data_pl->id)->result();
+                $wid = 'id';
+                $www = $data_pl->id;
             }
 
+            // ubah data inv jadi 0
+            // $data_pl_u =  $this->m_master->get_data_one("m_pl_price_list", "id", $data->id_pl)->result();
+            // foreach($data_pl as $u_pl){
+            // $data = array(
+            //     'data_inv' => 0,
+            //     'cek_inv' => 0
+            // );
+            $this->db->set("data_inv", "0");
+            $this->db->set("cek_inv", "0");
+            $this->db->where($wid, $www);
+            $this->db->update('m_pl_price_list');
+            // }
+
             // update harga list barang jadi 0
-            $detail_u = $this->m_master->get_data_one("m_pl_list_barang", "id_pl", $data_pl->id)->result();
-            foreach($detail_u as $u_l_b){
+            // $detail_u = $this->m_master->get_data_one("m_pl_list_barang", "id_pl", $data_pl->id)->result();
+            foreach($detail as $u_l_b){
                 $this->db->set("harga_invoice", "0");
                 $this->db->where('id_pl', $u_l_b->id_pl);
                 $this->db->update('m_pl_list_barang');
@@ -1717,10 +1741,20 @@ class Master extends CI_Controller {
                 'pt' => $data_pt,
                 'detail' => $detail));
         }else if ($jenis == "view_inv") {
+            $no_inv = $_POST['no_inv'];
             $data =  $this->m_master->get_data_one("m_invoice", "id", $id)->row();
-            $data_pl =  $this->m_master->get_data_one("m_pl_price_list", "id", $data->id_pl)->row();
+
+            if($no_inv != "0"){
+                $data_pl =  $this->m_master->get_data_one("m_pl_price_list", "no_inv", $data->no_inv)->row();
+                $detail = $this->m_master->getDataInv($no_inv)->result();
+            }else{
+                $data_pl =  $this->m_master->get_data_one("m_pl_price_list", "id", $data->id_pl)->row();
+                $detail = $this->m_master->get_data_plpl("m_pl_list_barang", "id_pl", $data_pl->id)->result();
+            }
+
             $data_pt =  $this->m_master->get_data_one("m_perusahaan", "id", $data_pl->id_m_perusahaan)->row();
-            $detail = $this->m_master->get_data_plpl("m_pl_list_barang", "id_pl", $data_pl->id)->result();
+
+            // $detail = $this->m_master->get_data_plpl("m_pl_list_barang", "id_pl", $data_pl->id)->result();
 
             echo json_encode(array(
                 'header' => $data,

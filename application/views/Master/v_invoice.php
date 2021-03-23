@@ -1,6 +1,5 @@
 <section class="content">
   <div class="container-fluid">
-
     <!-- Exportable Table -->
     <div class="row clearfix">
       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -36,14 +35,14 @@
                     <th style="width: 10%;">Tgl Jth Tempo</th>
                     <th style="width: 10%;">No Nota</th>
                     <th style="width: 10%;">No Faktur</th>
-                    <th style="width: 15%;">Customer</th>
-                    <th style="width: 11%;">JML</th>
-                    <th style="width: 11%;">Pilih Bayar</th>
-                    <th style="width: 11%;">Tgl Bayar</th>
-                    <th style="width: 16%;">Aksi</th>
+                    <th style="width: 18%;">Customer</th>
+                    <th style="width: 6%;">JML</th>
+                    <th style="width: 10%;">Pilih Bayar</th>
+                    <th style="width: 10%;">Tgl Bayar</th>
+                    <th style="width: 20%;">Aksi</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody style="vertical-align: center;">
 
                 </tbody>
               </table>
@@ -52,12 +51,24 @@
             <!-- box form -->
             <div class="box-form">
               <div id="judul"></div>
-              <table width="50%">
+              <table width="60%">
                 <tr>
                   <th style="border:0;padding:5px;width:10%"></th>
                   <th style="border:0;padding:5px;width:1%"></th>
                   <th style="border:0;padding:5px;width:21%"></th>
                   <th style="border:0;padding:5px;width:18%"></th>
+                </tr>
+                <tr>
+                  <td>Cetak</td>
+                  <td>:</td>
+                  <td style="padding:0 0 10px">
+                    <select name="" id="ctk_inv" class="form-control">
+                      <option value="">Pilih . . .</option>
+                      <option value="0">Satu Nota</option>
+                      <option value="1">No Invoice</option>
+                    </select>
+                  </td>
+                  <td></td>
                 </tr>
                 <tr>
                   <td>No. Nota</td>
@@ -92,6 +103,7 @@
                   <td colspan="2">
                     <select class="form-control" id="pilih_id_pl" style="width:100%"></select>
                     <input type="hidden" value="" id="id_pl">
+                    <input type="hidden" value="" id="no_nota_lama">
                   </td>
                 </tr>
                 <tr>
@@ -128,6 +140,26 @@
                   <td></td>
                 </tr>
                 <tr>
+                  <td>No. Invoice</td>
+                  <td>:</td>
+                  <td style="padding:0 0 10px">
+                  <input type="text" class="form-control" id="no_inv" autocomplete="off" disabled="true" style="background:#ddd">
+                  </td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>Laporan</td>
+                  <td>:</td>
+                  <td style="background:#ddd">
+                    <select name="" id="laporan" class="form-control" disabled="true">
+                      <option value="0">Pilih...</option>
+                      <option value="sma">Sinar Mukti Abadi</option>
+                      <option value="st">Sinar Teknindo</option>
+                    </select>
+                  </td>
+                  <td></td>
+                </tr>
+                <tr>
                   <td colspan="4">
                     <hr>Dikirim Ke
                     <hr>
@@ -137,7 +169,7 @@
                   <td>UP</td>
                   <td>:</td>
                   <td colspan="2" style="padding:0 0 10px">
-                    <input type="text" class="form-control" id="upup" disabled="true" style="background:#ddd">
+                    <input type="text" class="form-control" id="upup" autocomplete="off">
                   </td>
                 </tr>
                 <tr>
@@ -148,7 +180,7 @@
                   </td>
                 </tr>
                 <tr>
-                  <td>Nama Perusahaan</td>
+                  <td>Nama Instansi</td>
                   <td>:</td>
                   <td colspan="2">
                     <input type="text" class="form-control" id="nama_perusahaan" disabled="true" style="background:#ddd">
@@ -197,18 +229,32 @@
                 </tr>
               </table>
               <br>
-              <table class="table" style="background-color: grey; color:white">
+              <table class="table" style="margin-bottom:0;background-color: grey; color:white">
                 <thead>
                   <tr>
-                    <th style="width:5%;text-align:center">No</th>
-                    <th style="width:15%;text-align:center">Kode Barang</th>
-                    <th style="width:45%;text-align:center">Nama Barang</th>
-                    <th style="width:10%;text-align:center">QTY</th>
-                    <th style="width:10%;text-align:center">Input Harga</th>
+                    <th style="width:5%;text-align:left">No</th>
+                    <th style="width:15%;text-align:left">Kode Barang</th>
+                    <th style="width:45%;text-align:left">Nama Barang</th>
+                    <th style="width:10%;text-align:left">QTY</th>
+                    <th style="width:10%;text-align:left">Input Harga</th>
                     <th style="width:15%;text-align:center">Aksi</th>
                   </tr>
                 </thead>
                 <tbody id="detail_cart">
+                </tbody>
+              </table>
+              <table class="table" style="background:#c0c0c0;color:#333">
+                <thead>
+                  <tr>
+                    <th style="width:5%;padding:0"></th>
+                    <th style="width:15%;padding:0"></th>
+                    <th style="width:45%;padding:0"></th>
+                    <th style="width:10%;padding:0"></th>
+                    <th style="width:10%;padding:0"></th>
+                    <th style="width:15%;padding:0"></th>
+                  </tr>
+                </thead>
+                <tbody id="edit_detail_cart">
                 </tbody>
               </table>
 
@@ -226,57 +272,13 @@
               <a type="button" id="btn-print" target="blank" class="btn btn-default btn-circle waves-effect waves-circle waves-float pull-right" style="display: none">
                 <i class="material-icons">print</i>
               </a>
-
-
             </div>
-
-
           </div>
-
-
         </div>
       </div>
       <!-- #END# Exportable Table -->
     </div>
 </section>
-
-<!-- Large Size -->
-<div class="modal fade" id="modal-view-timbang" tabindex="-1" role="dialog">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content" style="width: 150%; left: -200px">
-      <div class="modal-header">
-        <!-- <h4 class="modal-title" id="largeModalLabel">Modal title</h4> -->
-      </div>
-      <div class="modal-body">
-        <div class="box-add">
-          <table id="datatable-view-timbang" width="100%" class="table table-bordered table-striped table-hover dataTable ">
-            <thead>
-              <tr>
-                <th>Roll Number</th>
-                <th>Tanggal</th>
-                <th>Nama Ker</th>
-                <th>Gramage Label</th>
-                <th>Gramage (GSM)</th>
-                <th>Width (CM)</th>
-                <th>Diameter (CM)</th>
-                <th>Weight (KG)</th>
-                <th>Joint</th>
-              </tr>
-            </thead>
-            <tbody>
-
-            </tbody>
-          </table>
-        </div>
-
-      </div>
-      <div class="modal-footer">
-        <!-- <button type="button" class="btn btn-link waves-effect">SAVE CHANGES</button>
-                  <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CLOSE</button> -->
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- Large Size// -->
 <div class="modal fade" id="modal-tambah" tabindex="-1" role="dialog">
@@ -378,11 +380,11 @@
           <table width="100%" class="table table-bordered table-striped table-hover dataTable ">
             <thead>
               <tr>
-                <th>No</th>
-                <th>Kode Barang</th>
-                <th>Nama Barang</th>
-                <th>QTY</th>
-                <th>Input Harga</th>
+                <th style="width:5%">No</th>
+                <th style="width:15%">Kode Barang</th>
+                <th style="width:40%">Nama Barang</th>
+                <th style="width:20%">QTY</th>
+                <th style="width:20%">Input Harga</th>
               </tr>
             </thead>
             <tbody id="list-timbangan">
@@ -393,8 +395,6 @@
 
       </div>
       <div class="modal-footer">
-        <!-- <button type="button" class="btn btn-link waves-effect">SAVE CHANGES</button>
-                  <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CLOSE</button> -->
       </div>
     </div>
   </div>
@@ -407,13 +407,17 @@
   $(document).ready(function() {
     $(".box-form").hide();
     load_data();
-    load_pl();
+    // load_pl();
 
     $("input.angka").keypress(function(event) { //input text number only
       return /\d/.test(String.fromCharCode(event.keyCode));
     });
+  });
 
-
+  $('#ctk_inv').on('change', function() {
+    // alert( this.value );
+    load_pl(this.value);
+    kosong();
   });
 
   $(".btn-add").click(function() {
@@ -467,17 +471,21 @@
   }
 
   function simpan() {
+    idid = $("#idid").val();
     id_pl = $("#id_pl").val();
 
     tgl_jt = $("#tgl_jt").val();
     no_nota = $("#no_nota").val();
+    no_nota_lama = $("#no_nota_lama").val();
     no_faktur = $("#no_faktur").val();
 
     tgl = $("#tgl").val();
     no_surat = $("#no_surat").val();
     no_so = $("#no_so").val();
     no_po = $("#no_po").val();
+    no_inv = $("#no_inv").val();
 
+    up = $("#upup").val();
     pimpinan = $("#pimpinan").val();
     nama_perusahaan = $("#nama_perusahaan").val();
     npwp = $("#npwp").val();
@@ -486,24 +494,34 @@
 
     ongkir = $("#ongkir").val();
 
-    cart = $('#detail_cart').html();
+    if(status == "update"){
+      cart = $("#detail_cart").html(`<div></div>`);
+      urrl = 'update_inv'
+    }else{
+      cart = $('#detail_cart').html();
+      urrl = 'insert'
+    }
 
-    if (cart == "" || tgl_jt == "" || tgl == "" || no_nota == "" || no_faktur == "" || no_surat == "" || no_so == "" || no_po == "" || nama_perusahaan == "" || pimpinan == "" || npwp == "" || alamat == "" || no_telp == "" || ongkir == "") {
+    if (cart == "" || tgl_jt == "" || no_nota == "" || no_faktur == "" || no_surat == "" || no_so == "" || no_po == "" || no_inv == "" || up == "" || nama_perusahaan == "" || pimpinan == "" || npwp == "" || alamat == "" || no_telp == "" || ongkir == "") {
       showNotification("alert-info", "Harap Lengkapi Form", "bottom", "center", "", "");
       return;
     }
 
     $("#btn-simpan").prop("disabled", true);
 
-    // alert(id_pl+" "+no_invoice+" "+tgl_jt);
+    // alert(idid+' '+id_pl+' '+no_nota+' '+no_nota_lama+' '+no_faktur+' '+no_inv+' '+up+' '+tgl_jt+' '+ongkir+' '+status);
 
     $.ajax({
       type: "POST",
-      url: '<?php echo base_url(); ?>Master/' + status,
+      url: '<?php echo base_url(); ?>Master/' + urrl,
       data: ({
+        id: idid,
         id_pl: id_pl,
         no_nota: no_nota,
+        no_nota_lama: no_nota_lama,
         no_faktur: no_faktur,
+        no_inv: no_inv,
+        up: up,
         tgl_jt: tgl_jt,
         ongkir: ongkir,
         jenis: "Save_invoice"
@@ -512,11 +530,7 @@
       success: function(data) {
         $("#btn-simpan").prop("disabled", false);
         if (data.data == true) {
-
-          // reloadTable();
           showNotification("alert-success", "Berhasil", "bottom", "center", "", "");
-          // location.reload(true);
-
           kosong();
         } else {
           showNotification("alert-danger", data.msg, "bottom", "center", "", "");
@@ -525,13 +539,22 @@
     });
   }
 
-  function view_detail(id) {
+  function view_detail(id,no_inv) {
+
+    if(no_inv === undefined || no_inv === "undefined"){
+      xno_inv = 0;
+    }else{
+      xno_inv = no_inv;
+    }
+
+    // alert(id+' '+xno_inv);
 
     $.ajax({
         url: '<?php echo base_url('Master/get_edit'); ?>',
         type: 'POST',
         data: {
           id: id,
+          no_inv: xno_inv,
           jenis: "view_inv"
         },
       })
@@ -562,10 +585,130 @@
 
   }
 
-  function deleteData(id, nm) {
+  ///////// E D I T ///////////////
+
+  function tampil_edit(id,no_inv) {
+    $(".box-data").hide();
+    $(".box-form").show();
+    $('.box-form').animateCss('fadeInDown');
+    $("#judul").html('<h3>Form Edit iNVOICE</h3>');
+    $(".btn_list_barang").prop("disabled", true);
+    status = "update";
+
+    // alert(id+' '+no_inv);
+
+    $.ajax({
+        url: '<?php echo base_url('Master/get_edit'); ?>',
+        type: 'POST',
+        data: {
+          id: id,
+          no_inv: no_inv,
+          jenis: "view_inv"
+        },
+      })
+      .done(function(data) {
+        json = JSON.parse(data);
+        $("#btn-simpan").prop("disabled", false);
+
+        $("#idid").val(json.header.id);
+        $("#id_pl").val(json.header.id_pl);
+        $("#ctk_inv").val("")
+        .prop("disabled", true)
+        .attr('style', 'background:#ddd;');
+        $("#pilih_id_pl").val("")
+        .prop("disabled", true)
+        .attr('style', 'background:#ddd;');
+        $("#tgl_jt").val(json.header.tgl_jt);
+        $("#no_inv").val(json.header.no_inv);
+        $("#no_nota").val(json.header.no_nota);
+        $("#no_nota_lama").val(json.header.no_nota);
+        $("#no_faktur").val(json.header.no_faktur);
+
+        if(json.header.no_inv == 0){
+          $("#tgl").val(json.pl.tgl);
+          $("#no_surat").val(json.pl.no_surat);
+          $("#no_so").val(json.pl.no_so);
+          $("#no_po").val(json.pl.no_po);
+        }else{
+          $("#tgl").val("");
+          $("#no_surat").val("-");
+          $("#no_so").val("-");
+          $("#no_po").val("-");
+        }
+
+        $("#laporan").val(json.pl.laporan);
+        $("#upup").val(json.header.up);
+        $("#pimpinan").val(json.pt.pimpinan);
+        $("#nama_perusahaan").val(json.pt.nm_perusahaan);
+        $("#npwp").val(json.pt.npwp);
+        $("textarea#alamat").val(json.pt.alamat);
+        $("#no_telp").val(json.pt.no_telp);
+
+        if(json.pl.laporan == "st"){
+          $("#ongkir").val(json.header.ongkir).prop("disabled", false).attr('style', 'background:#fff;');
+        }else{
+          $("#ongkir").val(0).prop("disabled", true).attr('style', 'background:#ddd;');
+        }
+
+        html = '';
+        for (var i = 0 ; i < json.detail.length; i++) {
+          ii = i+1;
+          html += `<tr>
+            <td><b>${ii}</b></td>
+            <td><b>${json.detail[i].kode_barang}</b></td>
+            <td><b>${json.detail[i].nama_barang}</b></td>
+            <td><b>${parseInt(json.detail[i].i_qty)}</td>
+            <td><input type="text" class="angka form-control" id="i_hrg_edit${i}" placeholder="0" autocomplete="off"  onkeypress="return hanyaAngka(event)" value="${json.detail[i].harga_invoice}"></b></td>
+            <td style="text-align:center"><button type="button" onclick="addToCartEdit('${json.detail[i].id_list_barang}','${json.detail[i].id_pl}','${i}')" id="btnn-eedit${i}" class="btn btn-default btn-xs">Edit</button>`;
+        }
+        $("#edit_detail_cart").html(html);
+      })
+  }
+
+  function addToCartEdit(id,id_pl,i) {
+    $("#btn-simpan").prop("disabled", false);
+    $("#i_hrg_edit" + i).prop("disabled", true).attr('style', 'background:#bbb;');
+    $("#btnn-eedit" + i).prop("disabled", true);
+    // $(".btn_list_barang").prop("disabled", true);
+
+    i_hrg = $("#i_hrg_edit" + i).val();
+
+    // alert("ID:"+id+". ID_PL:"+id_pl+". i_qty:"+i_hrg+". idx: "+i);
+
+    if (i_hrg == 0 || i_hrg == "") {
+      swal("Input Harga Tidak Boleh Kosong!", "", "error");
+      $("#i_hrg_edit" + i).prop("disabled", false).attr('style', 'background:#fff;');
+      $("#btnn-eedit" + i).prop("disabled", false);
+    }else {
+      // alert('eksekusi');
+      $.ajax({
+        type: "POST",
+        // url: '<?php echo base_url(); ?>Master/' + status,
+        url: '<?php echo base_url(); ?>Master/update_inv',
+        data: ({
+            id: id,
+            i_hrg: i_hrg,
+            jenis: "editInvListBarang"
+        }),
+        dataType: "json",
+        success: function(data) {
+          $("#btn-simpan").prop("disabled", false);
+          if (data.data == true) {
+            showNotification("alert-success", "Berhasil", "bottom", "center", "", "");
+            // tampil_edit(id_pl);
+          } else {
+            showNotification("alert-danger", "Gagal Edit!", "bottom", "center", "", "");
+          }
+        }
+      });
+    }
+  }
+
+  function deleteData(id,del_no_inv) {
+    // alert(id+' '+del_no_inv);
     swal({
         title: "Apakah Anda Yakin ?",
-        text: nm,
+        text: "",
         type: "warning",
         showCancelButton: true,
         confirmButtonClass: "btn-danger",
@@ -581,6 +724,7 @@
             type: "POST",
             data: {
               id: id,
+              no_inv: del_no_inv,
               jenis: "hapus_inv"
             },
             success: function(data) {
@@ -598,7 +742,6 @@
           swal("", "Data Batal dihapus", "error");
         }
       });
-
   }
 
   function confirmByr(id, i) {
@@ -634,6 +777,9 @@
     $("#btn-print").hide();
     status = "insert";
 
+    $("#ctk_inv").val("").prop("disabled", false).attr('style', 'background:#fff;');
+    $("#pilih_id_pl").val("").prop("disabled", false).attr('style', 'background:#fff;');
+    $("#idid").val("");
     $("#id_pl").val("");
     $("#tgl_jt").val("");
 
@@ -641,34 +787,41 @@
     $("#no_surat").val("");
     $("#no_so").val("");
     $("#no_po").val("");
+    $("#no_inv").val("");
     $("#no_nota").val("");
+    $("#no_nota_lama").val("");
     $("#no_faktur").val("");
+    $("#laporan").val("");
 
+    $("#upup").val("");
     $("#nama_perusahaan").val("");
     $("#pimpinan").val("");
     $("#npwp").val("");
     $("#alamat").val("");
     $("#no_telp").val("");
-
-    $("#ongkir").val("");
-
+    
+    $("#ongkir").val("").prop("disabled", true).attr('style', 'background:#ddd;');
+    
     $("#btn-simpan").prop("disabled", false);
     $(".btn_list_barang").prop("disabled", false);
     $("#txt-btn-simpan").html("SIMPAN");
     $('#detail_cart').load("<?php echo base_url(); ?>Master/destroy_cart_inv");
+    $("#edit_detail_cart").html("");
   }
 
   $(".btn-tambah").click(function() {
     id_pl = $("#id_pl").val();
+    data_inv = $("#no_inv").val();
 
-    load_barang(id_pl);
+    load_barang(id_pl,data_inv);
     $("#btn-simpan").prop("disabled", true);
 
     $("#modal-tambah").modal("show");
 
   });
 
-  function load_barang(id_pl) { //
+  function load_barang(id_pl,data_inv) { //
+    // alert(id_pl+' '+data_inv);
     $("#btn-simpan").prop("disabled", true);
     var table = $('#datatable-add').DataTable();
 
@@ -683,6 +836,7 @@
         "url": '<?php echo base_url(); ?>Master/load_data',
         "data": ({
           id_pl: id_pl,
+          no_inv: data_inv,
           jenis: "list_pl_inv"
         }),
         "type": "POST"
@@ -744,7 +898,8 @@
     });
   });
 
-  function load_pl() {
+  function load_pl(load_inv) {
+    // alert(no_inv);
     $('#pilih_id_pl').select2({
       // minimumInputLength: 3,
       allowClear: true,
@@ -756,11 +911,13 @@
         data: function(params) {
           if (params.term == undefined) {
             return {
-              search: ""
+              search: "",
+              no_inv: load_inv
             }
           } else {
             return {
-              search: params.term
+              search: params.term,
+              no_inv: load_inv
             }
           }
 
@@ -779,10 +936,20 @@
     // $("#nama").val(data[0].text);
     $("#id_pl").val(data[0].id);
 
-    $("#tgl").val(data[0].tgl);
-    $("#no_surat").val(data[0].no_surat);
-    $("#no_so").val(data[0].no_so);
-    $("#no_po").val(data[0].no_po);
+    if(data[0].no_inv == 0){
+      $("#tgl").val(data[0].tgl);
+      $("#no_surat").val(data[0].no_surat);
+      $("#no_so").val(data[0].no_so);
+      $("#no_po").val(data[0].no_po);
+    }else{
+      $("#tgl").val("");
+      $("#no_surat").val("-");
+      $("#no_so").val("-");
+      $("#no_po").val("-");
+    }
+
+    $("#no_inv").val(data[0].no_inv);
+    $("#laporan").val(data[0].laporan);
 
     $("#pimpinan").val(data[0].pimpinan);
     $("#upup").val(data[0].up);
@@ -790,6 +957,12 @@
     $("#npwp").val(data[0].npwp);
     $("textarea#alamat").val(data[0].alamat);
     $("#no_telp").val(data[0].no_telp);
+
+    if(data[0].laporan == "st"){
+      $("#ongkir").val("").prop("disabled", false).attr('style', 'background:#fff;');
+    }else{
+      $("#ongkir").val(0).prop("disabled", true).attr('style', 'background:#ddd;');
+    }
   });
 
   function hanyaAngka(evt) {

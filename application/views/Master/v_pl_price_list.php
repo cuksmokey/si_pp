@@ -1,6 +1,5 @@
 <section class="content">
   <div class="container-fluid">
-
     <!-- Exportable Table -->
     <div class="row clearfix">
       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -50,7 +49,7 @@
             <!-- box form -->
             <div class="box-form">
               <div id="judul"></div>
-              <table width="50%">
+              <table width="60%">
                 <tr>
                   <th style="border:0;padding:5px;width:10%"></th>
                   <th style="border:0;padding:5px;width:1%"></th>
@@ -66,23 +65,12 @@
                   <td></td>
                 </tr>
                 <tr>
-                  <td>Laporan</td>
-                  <td>:</td>
-                  <td>
-                    <select name="" id="laporan" class="form-control">
-                      <option value="0">Pilih...</option>
-                      <option value="sma">Sinar Mukti Abadi</option>
-                      <option value="st">Sinar Teknindo</option>
-                    </select>
-                  </td>
-                  <td></td>
-                </tr>
-                <tr>
                   <td>No. Surat Jalan</td>
                   <td>:</td>
                   <td>
                     <input type="text" class="form-control" id="no_surat" autocomplete="off">
                     <input type="hidden" id="idid" value="">
+                    <input type="hidden" id="no_surat_lama" value="">
                   </td>
                   <td></td>
                 </tr>
@@ -97,8 +85,33 @@
                 <tr>
                   <td>No. PO</td>
                   <td>:</td>
-                  <td>
+                  <td style="padding:0 0 10px">
                     <input type="text" class="form-control" id="no_po" autocomplete="off">
+                  </td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>No. Invoice</td>
+                  <td>:</td>
+                  <td>
+                    <input type="text" placeholder="0" class="angka form-control" id="no_inv" maxlength="11" autocomplete="off">
+                  </td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td style="padding:0" colspan="2"><b>NOTE:</b> <br/>- Kosongkan <b>No. Invoice</b> Untuk Cetak Satu <b>Nota Penjualan</b>. <br/>- Samakan <b>No. Invoice, Laporan</b> dan <b>Customer</b> Untuk Cetak Beberapa <b>Nota Penjualan</b>.</td>
+                </tr>
+                <tr>
+                  <td>Laporan</td>
+                  <td>:</td>
+                  <td style="padding:10px 0 0">
+                    <select name="" id="laporan" class="form-control">
+                      <option value="0">Pilih...</option>
+                      <option value="sma">Sinar Mukti Abadi</option>
+                      <option value="st">Sinar Teknindo</option>
+                    </select>
                   </td>
                   <td></td>
                 </tr>
@@ -123,6 +136,11 @@
                     </select>
                 </tr>
                 <tr>
+                  <td></td>
+                  <td></td>
+                  <td style="padding:0" colspan="2"><b>NOTE:</b> Jika Pilih Customer Tidak Tampil. Edit Keterangan Di <b>Master Customer</b>.</td>
+                </tr>
+                <tr>
                   <td>Pimpinan</td>
                   <td>:</td>
                   <td colspan="2">
@@ -130,7 +148,7 @@
                   </td>
                 </tr>
                 <tr>
-                  <td>Nama Perusahaan</td>
+                  <td>Nama Instansi</td>
                   <td>:</td>
                   <td colspan="2">
                     <input type="text" class="form-control" id="nama_perusahaan" disabled="true" style="background:#ddd">
@@ -177,21 +195,34 @@
                 </tr>
               </table>
               <br>
-              <table class="table" style="background-color: grey; color:white">
+              <table class="table" style="margin-bottom:0;background:#808080;color:white">
                 <thead>
                   <tr>
-                    <th style="width:5%;text-align:center">No</th>
-                    <th style="width:15%;text-align:center">Kode Barang</th>
-                    <th style="width:45%;text-align:center">Nama Barang</th>
-                    <th style="width:10%;text-align:center">Sisa Stok</th>
-                    <th style="width:10%;text-align:center">Input QTY</th>
+                    <th style="width:5%;text-align:left">No</th>
+                    <th style="width:15%;text-align:left">Kode Barang</th>
+                    <th style="width:45%;text-align:left">Nama Barang</th>
+                    <th style="width:10%;text-align:left">Sisa Stok</th>
+                    <th style="width:10%;text-align:left">Input QTY</th>
                     <th style="width:15%;text-align:center">Aksi</th>
                   </tr>
                 </thead>
                 <tbody id="detail_cart">
                 </tbody>
               </table>
-
+              <table class="table" style="background:#c0c0c0;color:#333">
+                <thead>
+                  <tr>
+                    <th style="width:5%;padding:0"></th>
+                    <th style="width:15%;padding:0"></th>
+                    <th style="width:45%;padding:0"></th>
+                    <th style="width:10%;padding:0"></th>
+                    <th style="width:10%;padding:0"></th>
+                    <th style="width:15%;padding:0"></th>
+                  </tr>
+                </thead>
+                <tbody id="edit_detail_cart">
+                </tbody>
+              </table>
               <button type="button" class="btn-kembali btn btn-dark btn-circle waves-effect waves-circle waves-float">
                 <i class="material-icons">arrow_back</i>
               </button>
@@ -206,57 +237,13 @@
               <a type="button" id="btn-print" target="blank" class="btn btn-default btn-circle waves-effect waves-circle waves-float pull-right" style="display: none">
                 <i class="material-icons">print</i>
               </a>
-
-
             </div>
-
-
           </div>
-
-
         </div>
       </div>
       <!-- #END# Exportable Table -->
     </div>
 </section>
-
-<!-- Large Size -->
-<div class="modal fade" id="modal-view-timbang" tabindex="-1" role="dialog">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content" style="width: 150%; left: -200px">
-      <div class="modal-header">
-        <!-- <h4 class="modal-title" id="largeModalLabel">Modal title</h4> -->
-      </div>
-      <div class="modal-body">
-        <div class="box-add">
-          <table id="datatable-view-timbang" width="100%" class="table table-bordered table-striped table-hover dataTable ">
-            <thead>
-              <tr>
-                <th>Roll Number</th>
-                <th>Tanggal</th>
-                <th>Nama Ker</th>
-                <th>Gramage Label</th>
-                <th>Gramage (GSM)</th>
-                <th>Width (CM)</th>
-                <th>Diameter (CM)</th>
-                <th>Weight (KG)</th>
-                <th>Joint</th>
-              </tr>
-            </thead>
-            <tbody>
-
-            </tbody>
-          </table>
-        </div>
-
-      </div>
-      <div class="modal-footer">
-        <!-- <button type="button" class="btn btn-link waves-effect">SAVE CHANGES</button>
-                  <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CLOSE</button> -->
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- Large Size// -->
 <div class="modal fade" id="modal-tambah" tabindex="-1" role="dialog">
@@ -352,6 +339,13 @@
               <div id="txt-no_telp"></div>
             </td>
           </tr>
+          <tr>
+            <td align="left" width="8%">No Invoice</td>
+            <td align="" width="1%">:</td>
+            <td align="left" width="10%" colspan="5">
+              <div id="txt-no_inv"></div>
+            </td>
+          </tr>
         </table>
 
         <div class="box-add">
@@ -387,13 +381,17 @@
   $(document).ready(function() {
     $(".box-form").hide();
     load_data();
-    load_perusahaan();
+    // load_perusahaan();
 
     $("input.angka").keypress(function(event) { //input text number only
       return /\d/.test(String.fromCharCode(event.keyCode));
     });
+  });
 
-
+  $('#laporan').on('change', function() {
+    // alert( this.value );
+    load_perusahaan(this.value);
+    // kosong();
   });
 
   $(".btn-add").click(function() {
@@ -454,8 +452,15 @@
     tgl = $("#tgl").val();
     laporan = $("#laporan").val();
     no_surat = $("#no_surat").val();
+    no_surat_lama = $("#no_surat_lama").val();
     no_so = $("#no_so").val();
     no_po = $("#no_po").val();
+    get_inv = $("#no_inv").val();
+    if(get_inv == 0 || get_inv == ""){
+      no_inv = 0;
+    }else{
+      no_inv = get_inv;
+    }
 
     upup = $("#upup").val();
     kepada = $("#id_kepada").val();
@@ -465,9 +470,13 @@
     alamat = $("#alamat").val();
     no_telp = $("#no_telp").val();
 
-    cart = $('#detail_cart').html();
+    if(status == "update"){
+      cart = $("#detail_cart").html(`<div></div>`);
+    }else{
+      cart = $('#detail_cart').html();
+    }
 
-    if (cart == "" || tgl == "" || laporan == 0 || no_surat == "" || no_so == "" || no_po == "" || nama_perusahaan == "" || pimpinan == "" || npwp == "" || alamat == "" || no_telp == "" || upup == "") {
+    if (cart == "" || tgl == "" || laporan == 0 || no_surat == "" || no_so == "" || no_po == "" || kepada == "" || nama_perusahaan == "" || pimpinan == "" || npwp == "" || alamat == "" || no_telp == "" || upup == "") {
       showNotification("alert-info", "Harap Lengkapi Form", "bottom", "center", "", "");
       return;
     }
@@ -483,8 +492,10 @@
         tgl: tgl,
         laporan: laporan,
         no_surat: no_surat,
+        no_surat_lama: no_surat_lama,
         no_so: no_so,
         no_po: no_po,
+        no_inv: no_inv,
         upup: upup,
         kepada: kepada,
         jenis: "PL_pl_barang"
@@ -525,6 +536,8 @@
         $("#txt-no_surat").html(json.header.no_surat);
         $("#txt-no_so").html(json.header.no_so);
         $("#txt-no_po").html(json.header.no_po);
+        $("#txt-no_inv").html(json.header.no_inv);
+
         $("#txt-up").html(json.header.up);
         $("#txt-nm_perusahaan").html(json.pt.nm_perusahaan);
         // $("#txt-nama").html(json.pt.pimpinan);
@@ -545,6 +558,164 @@
 
       })
 
+  }
+
+  ///////// E D I T ///////////////
+
+  function tampil_edit(id) {
+    $(".box-data").hide();
+    $(".box-form").show();
+    $('.box-form').animateCss('fadeInDown');
+    $("#judul").html('<h3>Form Edit Packing List</h3>');
+    // $(".btn_list_barang").prop("disabled", true);
+    status = "update";
+
+    // alert(id);
+    // view_edit(id);
+
+    $.ajax({
+        url: '<?php echo base_url('Master/get_edit'); ?>',
+        type: 'POST',
+        data: {
+          id: id,
+          // jenis: "edit_pl"
+          jenis: "PL_pl_pl"
+        },
+      })
+      .done(function(data) {
+        json = JSON.parse(data);
+        $("#btn-simpan").prop("disabled", false);
+
+        $("#idid").val(json.header.id);
+        $("#tgl").val(json.header.tgl);
+        $("#laporan").val(json.header.laporan);
+        $("#no_surat").val(json.header.no_surat);
+        $("#no_surat_lama").val(json.header.no_surat);
+        $("#no_so").val(json.header.no_so);
+        $("#no_po").val(json.header.no_po);
+        $("#no_inv").val(json.header.no_inv);
+        $("#no_nota").val(json.header.no_nota);
+
+        $("#upup").val(json.header.up);
+        $("#kepada").val(json.pt.id);
+        $("#id_kepada").val(json.pt.id);
+        $("#nama_perusahaan").val(json.pt.nm_perusahaan);
+        $("#pimpinan").val(json.pt.pimpinan);
+        $("#npwp").val(json.pt.npwp);
+        $("#alamat").val(json.pt.alamat);
+        $("#no_telp").val(json.pt.no_telp);
+
+        html = '';
+        for (var i = 0 ; i < json.detail.length; i++) {
+          ii = i+1;
+          html += `<tr>
+            <td><b>${ii}</b></td>
+            <td><b>${json.detail[i].kode_barang}</b></td>
+            <td><b>${json.detail[i].nama_barang}</b></td>
+            <td><b>${parseInt(json.detail[i].qty)}</td>
+            <td><input type="text" class="angka form-control" id="i_qty_edit${i}" placeholder="0" autocomplete="off"  onkeypress="return hanyaAngka(event)" value="${json.detail[i].i_qty}">
+            <input type="hidden" id="qty_edit${i}" value="${json.detail[i].qty}"></b></td>
+            <td style="text-align:center"><button type="button" onclick="addToCartEdit('${json.detail[i].id_list_barang}','${json.detail[i].id_m_brng}','${json.detail[i].id_pl}','${json.detail[i].qty}','${json.detail[i].i_qty}','${i}')" id="btnn-eedit${i}" class="btn btn-default btn-xs">Edit</button> <button type="button" onclick="HapusListBrng('${json.detail[i].id_list_barang}','${json.detail[i].id_pl}','${json.detail[i].kode_barang}','${json.detail[i].nama_barang}')" id="btnn-hhapus${i}" class="btn btn-danger btn-xs">Hapus</button></td>
+          </tr>`;
+
+          // <button type="button" onclick="HapusListBrng('${json.detail[i].id_list_barang}','${json.detail[i].id_pl}','${json.detail[i].kode_barang}','${json.detail[i].nama_barang}')" id="btnn-hhapus${i}" class="btn btn-danger btn-xs">Hapus</button>
+        }
+
+        // $("#detail_cart").html(`<div></div>`);
+        $("#edit_detail_cart").html(html);
+
+      })
+  }
+
+  function addToCartEdit(id,id_m_brng,id_pl,qtyAwal,iqtyAwal,i) {
+    $("#btn-simpan").prop("disabled", false);
+    $("#i_qty_edit" + i).prop("disabled", true).attr('style', 'background:#bbb;');
+    $("#btnn-eedit" + i).prop("disabled", true);
+    $("#btnn-hhapus" + i).prop("disabled", true);
+    // $(".btn_list_barang").prop("disabled", true);
+
+    qty = $("#qty_edit" + i).val();
+    i_qty = $("#i_qty_edit" + i).val();
+
+    stokAwal = parseInt(qtyAwal) + parseInt(iqtyAwal);
+    ss_stok = parseInt(stokAwal) - parseInt(i_qty);
+
+    // alert("ID:"+id+". qty:"+qty+". i_qty:"+i_qty+". stok: "+ss_stok);
+
+    if (i_qty == 0 || i_qty == "") {
+      swal("Input QTY Tidak Boleh Kosong", "", "error");
+      $("#i_qty_edit" + i).prop("disabled", false).attr('style', 'background:#fff;');
+      $("#btnn-eedit" + i).prop("disabled", false);
+      $("#btnn-hhapus" + i).prop("disabled", false);
+    } else if (ss_stok < 0) {
+      swal("Melebihi STOK!!", "", "error");
+      $("#i_qty_edit" + i).prop("disabled", false).attr('style', 'background:#fff;');
+      $("#btnn-eedit" + i).prop("disabled", false);
+      $("#btnn-hhapus" + i).prop("disabled", false);
+    } else {
+      // alert('eksekusi');
+      $.ajax({
+        type: "POST",
+        url: '<?php echo base_url(); ?>Master/' + status,
+        data: ({
+            id: id,
+            id_m_brng: id_m_brng,
+            qty: ss_stok,
+            i_qty: i_qty,
+            jenis: "editPlListBarang"
+        }),
+        dataType: "json",
+        success: function(data) {
+          $("#btn-simpan").prop("disabled", false);
+          if (data.data == true) {
+            showNotification("alert-success", "Berhasil", "bottom", "center", "", "");
+            // tampil_edit(id_pl);
+          } else {
+            showNotification("alert-danger", "Gagal Edit!", "bottom", "center", "", "");
+          }
+        }
+
+      });
+    }
+  }
+
+  function HapusListBrng(id,id_pl,kd,nm){
+    // alert(id+' '+kd+' '+nm);
+    swal({
+        title: "Apakah Anda Yakin ?",
+        text: kd+' - '+nm,
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonClass: "btn-danger",
+        confirmButtonText: "Ya",
+        cancelButtonText: "Batal",
+        closeOnConfirm: false,
+        closeOnCancel: false
+      },
+      function(isConfirm) {
+        if (isConfirm) {
+          $.ajax({
+            url: '<?php echo base_url(); ?>Master/hapus/',
+            type: "POST",
+            data: {
+              id: id,
+              // id_m_brng: id_m_brng,
+              // iqtyAwal: iqtyAwal,
+              jenis: "hapusPListBrng"
+            },
+            success: function(data) {
+              if (data == 1) {
+                swal("Berhasil", "", "success");
+                tampil_edit(id_pl);
+              } else {
+                swal("Data Batal dihapus", "", "error");
+              }
+            }
+          });
+        } else {
+          swal("", "Data Batal dihapus", "error");
+        }
+      });
   }
 
   function deleteData(id, nm) {
@@ -591,14 +762,18 @@
     $("#btn-print").hide();
     status = "insert";
 
+    $("#idid").val("");
     $("#tgl").val("");
     $("#laporan").val("0");
     $("#no_surat").val("");
+    $("#no_surat_lama").val("");
     $("#no_so").val("");
     $("#no_po").val("");
+    $("#no_inv").val("");
     $("#no_nota").val("");
 
     $("#upup").val("");
+    $("#kepada").val("");
     $("#id_kepada").val("");
     $("#nama_perusahaan").val("");
     $("#pimpinan").val("");
@@ -610,6 +785,7 @@
     $(".btn_list_barang").prop("disabled", false);
     $("#txt-btn-simpan").html("SIMPAN");
     $('#detail_cart').load("<?php echo base_url(); ?>Master/destroy_cart_plpl");
+    $("#edit_detail_cart").html("");
   }
 
   function view_timbang(id) {
@@ -645,15 +821,18 @@
   }
 
   $(".btn-tambah").click(function() { //
+    id = $("#idid").val();
 
-    load_barang();
+    load_barang(id);
     $("#btn-simpan").prop("disabled", true);
 
     $("#modal-tambah").modal("show");
 
   });
 
-  function load_barang() {
+  function load_barang(id) {
+    // alert(id);
+
     $("#btn-simpan").prop("disabled", true);
     var table = $('#datatable-add').DataTable();
 
@@ -667,7 +846,7 @@
       "ajax": {
         "url": '<?php echo base_url(); ?>Master/load_data',
         "data": ({
-          // edit_cart:edit_cart,
+          id: id,
           jenis: "list_pl_barang"
         }),
         "type": "POST"
@@ -722,57 +901,6 @@
     }
   }
 
-  // function tampil_plpl(kode_barang,harga_price_list,qty,i_qty_barang){
-
-  //   $("#btn-simpan").prop("disabled",true);
-
-  //   $.ajax({
-  //     url : "<?php echo base_url(); ?>Master/view_edit_cart_pl",
-  //     method : "POST",
-  //     data : {
-  //       kode_barang:kode_barang,
-  //       harga_price_list:harga_price_list,
-  //       qty:qty,
-  //       i_qty_barang:i_qty_barang
-  //       },
-  //     success: function(data){
-  //       $('#detail_cart').html(data);
-  //     }
-  //   });
-  // }
-
-  // function edit_plpl(kode_barang,harga_price_list,qty,i_qty_barang,i){
-  //   qty = $("#qty"+i).val();
-  //   i_qty = $("#i_qty"+i).val();
-
-  //   ss_stok = qty - i_qty;
-
-  //   // alert("STOK :("+qty+"). INPUT=("+i_qty+"). "+i_qty_barang);
-
-  //   $("#btn-simpan").prop("disabled",false);
-
-  //   if(i_qty == 0 || i_qty == ""){
-  //     swal("Input QTY Tidak Boleh Kosong", "", "error");
-  //   }else if(ss_stok < 0){
-  //     swal("Melebihi STOK", "", "error");
-  //   }else{
-  //     $.ajax({
-  //       url : "<?php echo base_url(); ?>Master/save_edit_cart_pl",
-  //       method : "POST",
-  //       data : {
-  //         kode_barang:kode_barang,
-  //         harga_price_list:harga_price_list,
-  //         qty:qty,
-  //         i_qty:i_qty,
-  //         i_qty_barang:i_qty_barang
-  //         },
-  //       success: function(data){
-  //         $('#detail_cart').html(data);
-  //       }
-  //     });
-  //   }
-  // }
-
   $(document).on('click', '.hapus_cart', function() {
     var row_id = $(this).attr("id"); //mengambil row_id dari artibut id
     $.ajax({
@@ -789,7 +917,7 @@
     });
   });
 
-  function load_perusahaan() {
+  function load_perusahaan(load_id) {
 
     $('#kepada').select2({
       // minimumInputLength: 3,
@@ -797,16 +925,18 @@
       placeholder: '--select--',
       ajax: {
         dataType: 'json',
-        url: '<?php echo base_url(); ?>/Master/load_perusahaan',
+        url: '<?php echo base_url(); ?>/Master/loadCustPl',
         delay: 800,
         data: function(params) {
           if (params.term == undefined) {
             return {
-              search: ""
+              search: "",
+              id_m: load_id
             }
           } else {
             return {
-              search: params.term
+              search: params.term,
+              id_m: load_id
             }
           }
 

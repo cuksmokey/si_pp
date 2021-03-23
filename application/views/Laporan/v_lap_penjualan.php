@@ -392,14 +392,15 @@
   function cetak_nota(ctk) {
     jenis = $("#id_pl_nota").val();
     tgl_ctk = $("#tgl_cetak").val();
+    // alert(jenis+' '+tgl_ctk);
 
     if (jenis == "") {
-      showNotification("alert-info", "PILIH PT / PACKING LIST DAHULU !!!", "top", "center", "", "");
+      showNotification("alert-danger", "PILIH INVOICE DAHULU!", "top", "center", "", "");
       return;
     }
 
     if (tgl_ctk == "" || tgl_ctk == 0) {
-      showNotification("alert-info", "Pilih Tanggal Cetak", "top", "center", "", "");
+      showNotification("alert-danger", "Pilih Tanggal Cetak!", "top", "center", "", "");
       return;
     }
 
@@ -449,22 +450,12 @@
     tgl1 = $("#tgl1_rekap_barang").val();
     tgl2 = $("#tgl2_rekap_barang").val();
     jenis = $("#id_cust").val();
-    // pt = $("#logo_rekap_sj").val(); 
-
-    // if (pt == 0 || pt == "" || pt == null){
-    //   showNotification("alert-info", "PILIH PT DAHULU !!!", "bottom", "center", "", ""); return;
-    // }
 
     if (jenis == 0 || jenis == "" || jenis == null) {
       xjenis = 0;
-      // showNotification("alert-info", "PILIH CUSTOMER !!!", "bottom", "center", "", ""); return;
     } else {
       xjenis = jenis;
     }
-
-    // if (jenis == "sj"){
-    //   showNotification("alert-info", "COMING SOON", "bottom", "center", "", ""); return;
-    // }    
 
     if (tgl1 == "") {
       showNotification("alert-info", "Pilih Tanggal Mulai", "bottom", "right", "", "");

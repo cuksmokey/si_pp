@@ -498,7 +498,7 @@ class Laporan extends CI_Controller {
         
     }
 
-    function Nota_Penjualan(){ //
+    function Nota_Penjualan(){
     // CETAK NOTA PENJUALAN
     //
     $jenis = $_GET['jenis'];
@@ -508,18 +508,39 @@ class Laporan extends CI_Controller {
 
     $html = '';
 
-    $sql_kop = $this->db->query("SELECT b.no_surat,b.no_po,b.up,b.laporan,a.tgl_jt,c.nm_perusahaan,c.npwp,c.alamat,a.* FROM m_invoice a
-    INNER JOIN m_pl_price_list b ON a.id_pl=b.id
+    // $sql_kop = $this->db->query("SELECT b.no_surat,b.no_po,b.up,b.laporan,a.tgl_jt,c.nm_perusahaan,c.npwp,c.alamat,a.* FROM m_invoice a
+    // INNER JOIN m_pl_price_list b ON a.id_pl=b.id
+    // INNER JOIN m_perusahaan c ON b.id_m_perusahaan=c.id
+    // WHERE a.id='$jenis'")->row();
+    $sql_kop = $this->db->query("SELECT b.no_surat,b.no_po,b.laporan,a.tgl_jt,c.nm_perusahaan,c.npwp,c.alamat,a.* FROM m_invoice a
+    INNER JOIN m_pl_price_list b ON a.id_pl=b.id OR a.id_pl = 0 AND a.no_inv=b.no_inv
     INNER JOIN m_perusahaan c ON b.id_m_perusahaan=c.id
     WHERE a.id='$jenis'")->row();
 
+    // kondisi jika ada no invoice
+    if($sql_kop->id_pl == 0){
+        $wPlInv = "d.no_inv='$sql_kop->no_inv'" ;
+        $noInv = "no_inv";
+        $plInv = $sql_kop->no_inv;
+    }else{
+        $wPlInv = "a.id_pl='$sql_kop->id_pl'";
+        $noInv = "id";
+        $plInv = $sql_kop->id_pl;
+    }
+
     // update tanggal cetak
-    $data_pl_u =  $this->m_master->get_data_one("m_pl_price_list", "id", $sql_kop->id_pl)->result();
+    $data_pl_u =  $this->m_master->get_data_one("m_pl_price_list", $noInv, $plInv)->result();
     foreach($data_pl_u as $r){
+        if($r->no_inv == 0){
+            $www = $r->id;
+        }else{
+            $www = $r->no_inv;
+        }
+
         $data = array(
             'tgl_ctk' => $tgl_ctk
         );
-        $this->db->where('id', $r->id);
+        $this->db->where($noInv, $www);
         $this->db->update('m_pl_price_list', $data);
     }
 
@@ -638,7 +659,9 @@ class Laporan extends CI_Controller {
         $sql_isi = $this->db->query("SELECT c.nama_barang,a.*FROM m_pl_list_barang a
         INNER JOIN m_pl_price_list b ON a.id_pl=b.id
         INNER JOIN m_barang c ON a.id_m_barang=c.id
-        WHERE a.id_pl='$sql_kop->id_pl'
+        INNER JOIN m_invoice d ON d.id_pl=b.id OR d.id_pl = 0 AND d.no_inv=b.no_inv
+        -- WHERE a.id_pl='$sql_kop->id_pl'
+        WHERE $wPlInv
         ORDER BY c.nama_barang ASC");
 
         $ii = 0;
@@ -1045,7 +1068,8 @@ class Laporan extends CI_Controller {
         $judul = 'DAFTAR HUTANG DAN CASH PER SUPPLIER TGL '.$ttgl;
 
         if($ctk == 0){
-            $this->m_fungsi->mPDFB($html);
+            $this->m_fungsi->mPDFP($html);
+            // $this->m_fungsi->mPDFB($html);
         }else if($ctk == 1){
             header("Content-type: application/octet-stream");
             header("Content-Disposition: attachment; filename=$judul.xls");
@@ -1193,7 +1217,7 @@ class Laporan extends CI_Controller {
 
         // ambil data
         $sql = $this->db->query("SELECT b.tgl_ctk,SUM(c.qty * c.harga_invoice) AS hrg_inv,a.ongkir,b.laporan,d.nm_perusahaan,a.* FROM m_invoice a
-        INNER JOIN m_pl_price_list b ON b.id=a.id_pl
+        INNER JOIN m_pl_price_list b ON b.id=a.id_pl OR a.id_pl = 0 AND a.no_inv=b.no_inv
         INNER JOIN m_pl_list_barang c ON b.id=c.id_pl
         INNER JOIN m_perusahaan d ON b.id_m_perusahaan=d.id
         WHERE a.tgl_byr BETWEEN '$tgl1' AND '$tgl2' $where
@@ -1286,7 +1310,7 @@ class Laporan extends CI_Controller {
 
         // ambil data
         $sql = $this->db->query("SELECT b.tgl_ctk,SUM(c.qty * c.harga_invoice) AS hrg_inv,a.ongkir,b.laporan,d.nm_perusahaan,a.* FROM m_invoice a
-        INNER JOIN m_pl_price_list b ON b.id=a.id_pl
+        INNER JOIN m_pl_price_list b ON b.id=a.id_pl OR a.id_pl = 0 AND a.no_inv=b.no_inv
         INNER JOIN m_pl_list_barang c ON b.id=c.id_pl
         INNER JOIN m_perusahaan d ON b.id_m_perusahaan=d.id
         WHERE a.tgl_byr BETWEEN '$tgl1' AND '$tgl2'
@@ -1301,11 +1325,11 @@ class Laporan extends CI_Controller {
         <tr>
             <th style="border:1px solid #000;padding:5px;width:5%">No</th>
             <th style="border:1px solid #000;padding:5px;width:14%">Tgl Bayar</th>
-            <th style="border:1px solid #000;padding:5px;width:19%">Customer</th>
+            <th style="border:1px solid #000;padding:5px;width:23%">Customer</th>
             <th style="border:1px solid #000;padding:5px;width:12%">Nominal</th>
-            <th style="border:1px solid #000;padding:5px;width:12%">Via</th>
-            <th style="border:1px solid #000;padding:5px;width:20%">No Nota</th>
-            <th style="border:1px solid #000;padding:5px;width:18%">Keterangan</th>
+            <th style="border:1px solid #000;padding:5px;width:14%">Via</th>
+            <th style="border:1px solid #000;padding:5px;width:16%">No Nota</th>
+            <th style="border:1px solid #000;padding:5px;width:16%">Keterangan</th>
         </tr>';
 
         $i = 0;
@@ -1382,7 +1406,7 @@ class Laporan extends CI_Controller {
 
         // ambil data
         $sql = $this->db->query("SELECT b.tgl_ctk,SUM(c.qty * c.harga_invoice) AS hrg_inv,a.ongkir,b.laporan,d.nm_perusahaan,a.* FROM m_invoice a
-        INNER JOIN m_pl_price_list b ON b.id=a.id_pl
+        INNER JOIN m_pl_price_list b ON b.id=a.id_pl OR a.id_pl = 0 AND a.no_inv=b.no_inv
         INNER JOIN m_pl_list_barang c ON b.id=c.id_pl
         INNER JOIN m_perusahaan d ON b.id_m_perusahaan=d.id
         WHERE b.tgl_ctk BETWEEN '$tgl1' AND '$tgl2' AND a.tgl_byr IS NULL $where
