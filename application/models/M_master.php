@@ -164,14 +164,17 @@ class M_master extends CI_Model{
             a.tgl AS tgl,
             b.kode_barang AS kode_barang,
             b.nama_barang AS nama_barang,
-            a.harga_invoice AS harga_invoice,
-            a.qty AS i_qty,
+            -- a.harga_invoice AS harga_invoice,
+            -- a.qty AS i_qty,
+            SUM(a.harga_invoice) AS harga_invoice,
+            SUM(a.qty) AS i_qty,
             a.qty_ket AS qty_ket,
             a.id_pl AS id_pl
         FROM m_pl_list_barang a 
         INNER JOIN m_barang b ON a.id_m_barang = b.id
         INNER JOIN m_pl_price_list c ON c.id = a.id_pl
         WHERE c.no_inv='$no_inv'
+        GROUP BY b.id
         ORDER BY b.nama_barang ASC";
         return $this->db->query($query);
     }
@@ -247,10 +250,11 @@ class M_master extends CI_Model{
             $where = "a.no_inv='$no_inv'";
         }
 
-        $query = "SELECT c.kode_barang,c.nama_barang,b.qty,b.qty_ket,b.id AS id_pl_list_barang,a.* FROM m_pl_price_list a
+        $query = "SELECT c.kode_barang,c.nama_barang,SUM(b.qty) AS qty,b.qty_ket,b.id AS id_pl_list_barang,a.* FROM m_pl_price_list a
         INNER JOIN m_pl_list_barang b ON a.id=b.id_pl
         INNER JOIN m_barang c ON b.id_m_barang=c.id
-        WHERE $where";
+        WHERE $where
+        GROUP BY c.id";
         return $this->db->query($query);
     }
 
@@ -278,7 +282,7 @@ class M_master extends CI_Model{
         INNER JOIN m_pl_price_list b ON a.id_pl=b.id OR a.id_pl = 0 AND a.no_inv=b.no_inv
         INNER JOIN m_perusahaan c ON b.id_m_perusahaan=c.id
         INNER JOIN m_pl_list_barang d ON b.id = d.id_pl
-        WHERE b.data_inv = '1'
+        WHERE b.data_inv = '1' AND d.harga_invoice != '0'
         GROUP BY a.id
         ORDER BY a.id DESC";
         return $this->db->query($query);
@@ -651,7 +655,7 @@ class M_master extends CI_Model{
         return $result;
     }
 
-    function insert_load_supplier(){
+    function insert_load_supplier(){ //
         $data = array(
             'nama_supplier' => $_POST['supplier'],
             'ppn' => $_POST['ppn'],

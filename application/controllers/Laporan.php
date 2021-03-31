@@ -656,23 +656,23 @@ class Laporan extends CI_Controller {
         </tr>';
 
         // isinya
-        $sql_isi = $this->db->query("SELECT c.nama_barang,a.*FROM m_pl_list_barang a
+        $sql_isi = $this->db->query("SELECT c.nama_barang,SUM(a.qty) AS i_qty,SUM(a.harga_invoice) AS i_harga_invoice,a.*FROM m_pl_list_barang a
         INNER JOIN m_pl_price_list b ON a.id_pl=b.id
         INNER JOIN m_barang c ON a.id_m_barang=c.id
         INNER JOIN m_invoice d ON d.id_pl=b.id OR d.id_pl = 0 AND d.no_inv=b.no_inv
-        -- WHERE a.id_pl='$sql_kop->id_pl'
         WHERE $wPlInv
+        GROUP BY c.id
         ORDER BY c.nama_barang ASC");
 
         $ii = 0;
         $sub_tot = 0;
         foreach($sql_isi->result() as $r){
             $ii++;
-            $tot_hrg = $r->qty * $r->harga_invoice;
+            $tot_hrg = $r->i_qty * $r->i_harga_invoice;
             $html .= '<tr>
                 <td style="border:1px solid #000;padding:5px 3px;text-align:center">'.$ii.'</td>
                 <td style="border:1px solid #000;padding:5px 3px">'.$r->nama_barang.'</td>
-                <td style="border:1px solid #000;border-width:1px 0 1px 1px;padding:5px 3px" colspan="2">'.$r->qty.' '.$r->qty_ket.'</td>
+                <td style="border:1px solid #000;border-width:1px 0 1px 1px;padding:5px 3px" colspan="2">'.$r->i_qty.' '.$r->qty_ket.'</td>
                 <td style="border:1px solid #000;padding:5px 3px;text-align:right">'.number_format($r->harga_invoice).'</td>
                 <td style="border:1px solid #000;padding:5px 3px;text-align:right">'.number_format($tot_hrg).'</td>
             </tr>';

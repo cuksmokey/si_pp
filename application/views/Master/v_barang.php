@@ -75,9 +75,16 @@
                       <tr>
                         <td width="30%"><input type="text" id="id1" class="form-control" maxlength="5" autocomplete="off"></td>
                         <td style="text-align: center;" width="1%">/</td>
-                        <td width="64%"><input type="text" id="id2" class="form-control" maxlength="15" autocomplete="off"></td>
+                        <td width="70%"><input type="text" id="id2" class="form-control" maxlength="15" autocomplete="off"></td>
+                        <td>
                       </tr>
                     </table>
+                  </td>
+                  <td>
+                    <button onclick="cariKodeBarang()" type="button" class="btn btn-sm waves-effect" style="background:#287FB8;color:#fff">
+                    <i class="material-icons">search</i>
+                    <b><span>CARI</span></b>
+                    </button>
                   </td>
                 </tr>
                 <tr>
@@ -273,26 +280,30 @@
   </tbody>
 </table>
 
-              <!-- <button type="button" class="btn-kembali btn btn-dark btn-sm waves-effect waves-circle waves-float"> -->
+              <!-- <button type="button" class="btn-kembali btn btn-dark btn-sm waves-effect waves-circle waves-float">&nbsp;&nbsp;&nbsp;&nbsp; -->
               <br>
               <button type="button" class="btn-kembali btn btn-dark btn-default btn-sm waves-effect">
                 <i class="material-icons">arrow_back</i>
                 <b><span>BACK</span></b>
-              </button> &nbsp;&nbsp;&nbsp;&nbsp;
-              <button onclick="simpan()" id="btn-simpan" type="button" class="btn bg-light-green btn-sm waves-effect">
-                <i class="material-icons">save</i>
-                <b><span id="txt-btn-simpan">SIMPAN</span></b>
-              </button> &nbsp;&nbsp;&nbsp;&nbsp;
+              </button>
               <button onclick="kosong()" type="button" class="btn btn-default btn-sm waves-effect">
                 <i class="material-icons">note_add</i>
                 <b><span>TAMBAH DATA</span></b>
               </button>
+              <button onclick="btnAksi('edit')" type="button" class="btn btn-sm waves-effect" style="background:#FF9800;color:#AF4800">
+                <i class="material-icons">edit</i>
+                <b><span>EDIT</span></b>
+              </button>
+              <button onclick="btnAksi('add')" type="button" class="btn btn-sm waves-effect" style="background:#8BC34A;color:#1B630A">
+                <i class="material-icons">add</i>
+                <b><span>ADD QTY</span></b>
+              </button> 
+              <button onclick="simpan()" id="btn-simpan" type="button" class="btn btn-sm waves-effect" style="background:#287FB8;color:#FFF">
+                <i class="material-icons">save</i>
+                <b><span id="txt-btn-simpan">SIMPAN</span></b>
+              </button>
             </div>
-
-
           </div>
-
-
         </div>
       </div>
       <!-- #END# Exportable Table -->
@@ -434,7 +445,7 @@
     return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
   }
 
-  function view_detail(id,opsi){
+  function view_detail(id,opsi){ //
     
     $.ajax({
         url: '<?php echo base_url('Master/get_edit'); ?>',
@@ -521,8 +532,53 @@
     qty_plus = Number.parseInt(k_plus_qty);
     qty_edit = Number.parseInt(k_edit_qty);
 
-    if (tgl == "" || kode_barang == "" || kb1 == "" || kb2 == "" || nama_barang == "" || merek == "" || spesifikasi == "" || ppn=="" || supplier_note == "" || i_qty == "" || qty_ket == "" || qty_ket == 0 || no_nota == "" || status_plus == "" || status_plus == 0 || tgl_byr == "") {
-      showNotification("alert-info", "Harap Lengkapi Form", "bottom", "center", "", "");
+    // if (tgl == "" || kode_barang == "" || kb1 == "" || kb2 == "" || nama_barang == "" || merek == "" || spesifikasi == "" || ppn=="" || supplier_note == "" || i_qty == "" || qty_ket == "" || qty_ket == 0 || no_nota == "" || status_plus == "" || status_plus == 0 || tgl_byr == "") {
+    //   showNotification("alert-info", "Harap Lengkapi Form", "bottom", "center", "", "");
+    //   return;
+    // }
+
+    if(tgl == ""){
+      showNotification("alert-danger", "Tanggal Masuk Kosong!", "top", "center", "", "");
+      return;
+    }
+    if(kode_barang == "" || kb1 == "" || kb2 == ""){
+      showNotification("alert-danger", "Kode Barang Kosong!", "top", "center", "", "");
+      return;
+    }
+    if(nama_barang == ""){
+      showNotification("alert-danger", "Nama Barang Kosong!", "top", "center", "", "");
+      return;
+    }
+    if(merek == ""){
+      showNotification("alert-danger", "Merek Kosong!", "top", "center", "", "");
+      return;
+    }
+    if(spesifikasi == ""){
+      showNotification("alert-danger", "Spesifikasi Kosong!", "top", "center", "", "");
+      return;
+    }
+    if(ppn == ""){
+      showNotification("alert-danger", "Pilih Pajak!", "top", "center", "", "");
+      return;
+    }
+    if(supplier == ""){
+      showNotification("alert-danger", "Pilih Supplier!", "top", "center", "", "");
+      return;
+    }
+    if(i_qty == ""){
+      showNotification("alert-danger", "QTY Kosong!", "top", "center", "", "");
+      return;
+    }
+    if(qty_ket == "" || qty_ket == 0){
+      showNotification("alert-danger", "KET Kosong!", "top", "center", "", "");
+      return;
+    }
+    if(status_plus == "" || status_plus == 0){
+      showNotification("alert-danger", "Pilih Status!", "top", "center", "", "");
+      return;
+    }
+    if(tgl_byr == ""){
+      showNotification("alert-danger", "Pilih Tanggal Bayar!", "top", "center", "", "");
       return;
     }
 
@@ -560,11 +616,13 @@
         // $("#btn-simpan").prop("disabled", true);
         if (data.data == true) {
 
-          reloadTable();
-          view_detail(id);
+          cariKodeBarang();
+          // plus_qty(id);
+          // view_detail(id);
+          // view_detail(kode_barang);
           showNotification("alert-success", data.msg, "bottom", "center", "", "");
 
-          status = 'update';
+          // status = 'update';
           $("#btn-simpan").prop("disabled", true);
 
         } else {
@@ -574,13 +632,76 @@
       }
     });
   }
+  //////////////  C A R I  //////////////////
+
+  function cariKodeBarang(){
+    cariKdB = $("#id1").val() + "/" + $("#id2").val();
+    kb1 = $("#id1").val();
+    kb2 = $("#id2").val();
+
+    if(cariKdB == "" || kb1 == "" || kb2 == ""){
+      showNotification("alert-info", "Kode Barang Kosong!", "bottom", "center", "", "");
+      return;
+    }
+
+    // alert(cariKdB);
+    $.ajax({
+      url: '<?php echo base_url('Master/get_edit'); ?>',
+      type: 'POST',
+      data: {
+        id: cariKdB,
+        jenis: "cari_barang"
+      },
+      success: function(data) {
+        json = JSON.parse(data);
+
+        if (json.data == 'error') {
+          showNotification("alert-danger", "Kode Barang Tidak Ada!!", "top", "center", "", "");
+        }else{
+          plus_qty(json.id);
+          // alert(json.id);
+        }
+      }
+    })
+  }
+
+  ////////////// BTN EDIT, ADD QTY  //////////////////
+
+  function btnAksi(opsi){
+    id = $("#id").val();
+
+    if(id == ""){
+      showNotification("alert-danger", "Barang Kosong!", "top", "center", "", "");
+      return;
+    }
+
+    // alert(id);
+    $.ajax({
+        url: '<?php echo base_url('Master/get_edit'); ?>',
+        type: 'POST',
+        data: {
+          id: id,
+          jenis: "edit_barang"
+        },
+      })
+      .done(function(data) {
+        json = JSON.parse(data);
+        view_detail(json.id);
+
+        if(opsi == 'edit'){
+          tampil_edit(json.id);
+        }else if(opsi == 'add'){
+          plus_qty(json.id);
+        }
+      })
+  }
 
   ///////// E D I T ///////////////
 
   function tampil_edit(id) {
     $(".box-data").hide();
     $(".box-form").show();
-    $('.box-form').animateCss('fadeInDown');
+    // $('.box-form').animateCss('fadeInDown');
     $("#judul").html('<h3>Form Edit Data Barang</h3>');
     $("#supplier").val("");
     $("#supplier_note").val("");
@@ -614,6 +735,7 @@
         $("#id").val(json.id);
         $("#id_m_barang_plus").val(json.id_m_barang_plus);
 
+        $("#ppn").val(json.ppn);
         $("#tgl").val(json.tgl).prop("disabled", false).attr('style', 'background:#fff;');
         $("#tgl_lama").val(json.tgl);
         $("#kode_barang_lama").val(json.kode_barang);
@@ -654,7 +776,7 @@
   function plus_qty(id) { //
     $(".box-data").hide();
     $(".box-form").show();
-    $('.box-form').animateCss('fadeInDown');
+    // $('.box-form').animateCss('fadeInDown');
     $("#judul").html('<h3>Form Edit Data Barang</h3>');
     $("#supplier").val("");
     $("#supplier_note").val("");
@@ -671,6 +793,7 @@
         type: 'POST',
         data: {
           id: id,
+          // id: kd_barang,
           jenis: "edit_barang"
         },
       })
@@ -688,6 +811,7 @@
         $("#id").val(json.id);
         $("#id_m_barang_plus").val(json.id_m_barang_plus);
 
+        $("#ppn").val(json.ppn);
         $("#tgl").val(json.tgl).prop("disabled", false).attr('style', 'background:#fff;');
         $("#tgl_lama").val(json.tgl);
         $("#id_supplier").val(json.id_m_nota);

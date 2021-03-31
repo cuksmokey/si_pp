@@ -147,7 +147,7 @@ class Master extends CI_Controller {
                 if ($cek > 0 ) {
                     echo json_encode(array('data' =>  FALSE,'msg' => 'Supplier Sudah Ada'));
                 }else{
-                    $result     = $this->m_master->insert_load_supplier();    
+                    $result = $this->m_master->insert_load_supplier();    
                     echo json_encode(array('data' =>  TRUE));
                 }
             }else if ($jenis == "Simpan_Admin") {
@@ -496,7 +496,7 @@ class Master extends CI_Controller {
                 $query = $this->m_master->get_perusahaan();
 
                 if ($query->num_rows() == 0) {
-                    $data[] =  ["","","","","","",""];
+                    $data[] =  ["","","","","","","",""];
                 }else{
                     $i=1;
 
@@ -1723,6 +1723,15 @@ class Master extends CI_Controller {
         }else if ($jenis == "edit_nota") {
             $data =  $this->m_master->get_data_ij("m_nota", "id", $id)->row();
             echo json_encode($data);
+        }else if ($jenis == "cari_barang") {
+            $cek = $this->m_master->get_data_one("m_barang", "kode_barang", $id)->num_rows();
+            $data = $this->m_master->get_data_one("m_barang", "kode_barang", $id)->row();
+
+            if ($cek == 0) {
+                echo json_encode(array('data' => 'error'));
+            }else{
+                echo json_encode($data);
+            }
         }else if ($jenis == "PoMaster") {
             $data =  $this->m_master->get_data_one("po_master", "id", $id)->row();
             echo json_encode($data);

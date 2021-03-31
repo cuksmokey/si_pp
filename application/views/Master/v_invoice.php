@@ -859,7 +859,7 @@
 
     harga_inv = $("#harga_inv" + i).val();
 
-    // alert("ID:"+id+". qty:"+qty+". i_qty:"+i_qty+". stok: "+ss_stok);
+    // alert("id:"+id+". qty:"+qty+". harga_inv:"+harga_inv);
 
     if (harga_inv == 0 || harga_inv == "") {
       swal("Input Harga Tidak Boleh Kosong", "", "error");
