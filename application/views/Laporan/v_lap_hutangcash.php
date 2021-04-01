@@ -28,6 +28,17 @@
         <th style="border:0;width:12%"></th>
       </tr>
       <tr>
+        <td>Pilih Nota</td>
+        <td>:</td>
+        <td colspan="2" style="padding:0 0 8px">
+          <select name="" id="plh_nota" class="form-control" style="width:100%">
+            <option value="">Pilih . . .</option>
+            <option value="pernota">Per Nota</option>
+            <option value="allnota">Keseluruhan Nota</option>
+          </select>
+        </td>
+      </tr>
+      <tr>
         <td>Pilih</td>
         <td>:</td>
         <td colspan="3"><select class="form-control" id="supplier" style="width:100%"></select></td>
@@ -39,6 +50,11 @@
           <input type="text" id="supplier_note" autocomplete="off" class="form-control" disabled="true" style="background:#ddd">
           <input type="hidden" value="" id="id_supplier">
         </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td style="padding:0 0 5px" colspan="3"><b>NOTE:</b> Kolom Supplier Kosong, Cetak Semua Supplier</td>
       </tr>
       <tr>
         <td>Pilih Tanggal</td>
@@ -105,10 +121,10 @@
           }
         },
         processResults: function (data, page) {
-        return {
-          results: data
-        };
-      },
+          return {
+            results: data
+          };
+        },
       }
     });
  }
@@ -122,28 +138,29 @@
   
    // cetak barang
    function cetak_barang(ctk,jenis){
-    if(jenis == 0){
-      tgl1 = $("#tgl1").val();
-      tgl2 = $("#tgl2").val();
-      id_supplier = $("#sid_supplier").val();
-    }else if(jenis == 1){
-      tgl1 = $("#stgl1").val();
-      tgl2 = $("#stgl2").val();
-      id_supplier = $("#id_supplier").val();
+    plh_nota = $("#plh_nota").val();
+    tgl1 = $("#stgl1").val();
+    tgl2 = $("#stgl2").val();
+    id_supplier = $("#id_supplier").val();
 
-      if (id_supplier == "" || id_supplier == 0){
-        showNotification("alert-info", "Pilih Supplier Dahulu", "bottom", "right", "", ""); return;
-      }
+    if (id_supplier == 0 || id_supplier == "" || id_supplier == null){
+      xid_supplier = 0;
+    }else{
+      xid_supplier = id_supplier;
+    }
+
+    if(plh_nota == ""){
+      showNotification("alert-danger", "Pilih Nota Dahulu!", "top", "center", "", ""); return;
     }
 
     if (tgl1 == ""){
-      showNotification("alert-info", "Pilih Tanggal Mulai", "bottom", "right", "", ""); return;
+      showNotification("alert-danger", "Pilih Tanggal Mulai", "top", "center", "", ""); return;
     }else if (tgl2 == ""){
-      showNotification("alert-info", "Pilih Tanggal Akhir", "bottom", "right", "", ""); return;
+      showNotification("alert-danger", "Pilih Tanggal Akhir", "top", "center", "", ""); return;
     }
 
     var url    = "<?php echo base_url('Laporan/HutangCashSupplier?'); ?>";
-    window.open(url+'tgl1='+tgl1+'&tgl2='+tgl2+'&jenis='+id_supplier+'&ctk='+ctk, '_blank');
+    window.open(url+'nota='+plh_nota+'&tgl1='+tgl1+'&tgl2='+tgl2+'&jenis='+xid_supplier+'&ctk='+ctk, '_blank');
 
    }
 

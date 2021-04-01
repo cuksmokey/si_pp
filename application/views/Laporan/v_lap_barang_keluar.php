@@ -27,6 +27,7 @@
         <td style="padding:0 0 5px" colspan="3">
         <select name="" id="laporan" class="form-control">
           <option value="0">Pilih...</option>
+          <option value="all">Semua Laporan</option>
           <option value="sma">Sinar Mukti Abadi</option>
           <option value="st">Sinar Teknindo</option>
         </select>

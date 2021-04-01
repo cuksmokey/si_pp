@@ -28,6 +28,19 @@
     <th style="border:0;width:12%"></th>
   </tr>
   <tr>
+    <td>Laporan</td>
+    <td>:</td>
+    <td style="padding:0 0 8px" colspan="2">
+      <select name="" id="laporan" class="form-control">
+        <option value="1">Pilih...</option>
+        <option value="">Semua Laporan</option>
+        <option value="sma">Sinar Mukti Abadi</option>
+        <option value="st">Sinar Teknindo</option>
+      </select>
+    </td>
+    <td></td>
+  </tr>
+  <tr>
     <td>Pilih</td>
     <td>:</td>
     <td colspan="3"><select class="form-control" id="pilih_cust" style="width:100%"></select></td>
@@ -82,29 +95,38 @@
 <script>
 
   $(document).ready(function() {
-    load_p_cust();
+    // load_p_cust();
+  });
+
+  $('#laporan').on('change', function() {
+    // alert( this.value );
+    load_p_cust(this.value);
+    // kosong();
   });
 
   //#####################################################################
 
   // load nota 
-  function load_p_cust(){
+  function load_p_cust(load_id){
   $('#pilih_cust').select2({
     // minimumInputLength: 3,
     allowClear: true,
     placeholder: 'SELECT',
     ajax: {
       dataType: 'json',
-      url      : '<?php echo base_url(); ?>/Master/laod_p_cust',
+      // url: '<?php echo base_url(); ?>/Master/laod_p_cust',
+      url: '<?php echo base_url(); ?>/Master/loadCustPl',
       delay: 800,
       data: function(params) {
         if (params.term == undefined) {
           return {
-            search: ""
+            search: "",
+            id_m: load_id
           }  
         }else{
           return {
-            search: params.term
+            search: params.term,
+            id_m: load_id
           }
         }
       },
@@ -121,13 +143,14 @@
   $('#pilih_cust').on('change', function() {
     data = $('#pilih_cust').select2('data');
     $("#id_cust").val(data[0].id);
-    $("#text_cust").val(data[0].nm_perusahaan);
+    $("#text_cust").val(data[0].nama_perusahaan);
   });
 
   function cetak_rekap(ctk){
     tgl1 = $("#tgl1_rekap_barang").val(); 
     tgl2 = $("#tgl2_rekap_barang").val(); 
     jenis = $("#id_cust").val(); 
+    laporan = $("#laporan").val();
 
     if (jenis == 0 || jenis == "" || jenis == null){
       xjenis = 0;
@@ -135,13 +158,22 @@
       xjenis = jenis;
     }
 
+    if (laporan == "1" || laporan == 1){
+      showNotification("alert-danger", "Pilih Laporan!", "bottom", "center", "", ""); return;
+    }
+    if (laporan == ""){
+      xlap = 0;
+    }else{
+      xlap = laporan;
+    }
+
     if (tgl1 == ""){
-      showNotification("alert-info", "Pilih Tanggal Mulai", "bottom", "right", "", ""); return;
+      showNotification("alert-danger", "Pilih Tanggal Mulai", "bottom", "center", "", ""); return;
     }else if (tgl2 == ""){
-      showNotification("alert-info", "Pilih Tanggal Akhir", "bottom", "right", "", ""); return;
+      showNotification("alert-danger", "Pilih Tanggal Akhir", "bottom", "center", "", ""); return;
     }
 
     var url    = "<?php echo base_url('Laporan/Piutang?'); ?>";
-    window.open(url+'ctk='+ctk+'&tgl1='+tgl1+'&tgl2='+tgl2+'&jenis='+xjenis, '_blank');
+    window.open(url+'ctk='+ctk+'&tgl1='+tgl1+'&tgl2='+tgl2+'&jenis='+xjenis+'&lap='+xlap, '_blank');
   }
 </script>

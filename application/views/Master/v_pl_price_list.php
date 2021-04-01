@@ -857,7 +857,7 @@
         "emptyTable": "Tidak ada data.."
       },
       "order": [
-        [0, "asc"]
+        [0, "desc"]
       ]
     });
   }

@@ -128,15 +128,17 @@ class Master extends CI_Controller {
                 $id = $this->input->post('kode_barang');
                 $cek = $this->m_master->get_data_one("m_barang","kode_barang",$id)->num_rows();
 
-                $status_plus = $this->input->post('status_plus');
-                $harga = $this->input->post('harga');
+                // $status_plus = $this->input->post('status_plus');
+                // $harga = $this->input->post('harga');
                 
                 if ($cek > 0 ) {
                     echo json_encode(array('data' =>  FALSE,'msg' => 'Kode Barang Sudah Dipakai'));
-                }else if(($harga == 0 || $harga == "") && $status_plus == "Cash"){
-                    echo json_encode(array('data' =>  FALSE,'msg' => 'Pembayaran Cash, Harga Tidak Boleh Kosong!'));
-                }else{
-                    $result     = $this->m_master->insert_load_barang();    
+                }
+                // else if(($harga == 0 || $harga == "") && $status_plus == "Cash"){
+                //     echo json_encode(array('data' =>  FALSE,'msg' => 'Pembayaran Cash, Harga Tidak Boleh Kosong!'));
+                // }
+                else{
+                    $result = $this->m_master->insert_load_barang();    
                     echo json_encode(array('data' =>  TRUE,'msg' => 'Berhasil'));
                 }
             }else if ($jenis == "Simpan_Supplier") {
@@ -439,11 +441,11 @@ class Master extends CI_Controller {
                         $row[] = '
                         <a type="button" class="btn btn-default btn-circle waves-effect waves-circle waves-float">'.$r->jml_timbang.'</a>' ;
 
-                        $superbtn = '<button style="background:#00B0E4;margin:0;padding:3px 5px;border:0;color:#fff" type="button" onclick="view_detail('.$id.','.$r->no_inv.')">VIEW</button><button style="background:#FF9800;margin:0;padding:3px 5px;border:0;color:#fff" type="button" onclick="tampil_edit('.$id.','.$r->no_inv.')">EDIT</button><button style="background:#FB483A;margin:0;padding:3px 5px;border:0;color:#fff" type="button" onclick="deleteData('.$id.','.$r->no_inv.')">DELETE</button>';
+                        $superbtn = '<button style="background:#00B0E4;margin:0;padding:3px 6px;border:0;color:#fff" type="button" onclick="view_detail('.$id.','.$r->no_inv.')">VIEW</button><button style="background:#FF9800;margin:0;padding:3px 6px;border:0;color:#fff" type="button" onclick="tampil_edit('.$id.','.$r->no_inv.')">EDIT</button><button style="background:#FB483A;margin:0;padding:3px 6px;border:0;color:#fff" type="button" onclick="deleteData('.$id.','.$r->no_inv.')">DELETE</button>';
                             
-                        $superbtn2 = '<button style="background:#00B0E4;margin:0;padding:3px 5px;border:0;color:#fff" type="button" onclick="view_detail('.$id.','.$r->no_inv.')">VIEW</button>';
+                        $superbtn2 = '<button style="background:#00B0E4;margin:0;padding:3px 6px;border:0;color:#fff" type="button" onclick="view_detail('.$id.','.$r->no_inv.')">VIEW</button>';
 
-                        $confirmByr = '<button style="background:#4CAF50;margin:0;padding:3px 5px;border:0;color:#fff" type="button" onclick="confirmByr('.$id.','.$i.')">OKE</button>';
+                        $confirmByr = '<button style="background:#4CAF50;margin:0;padding:3px 6px;border:0;color:#fff" type="button" onclick="confirmByr('.$id.','.$i.')">OKE</button>';
 
                         if($r->tgl_ctk === NULL && $r->tgl_byr === NULL){
                             $ketPlhbyr = "Belum Cetak";
@@ -1202,8 +1204,8 @@ class Master extends CI_Controller {
                 $qty_plus = $this->input->post('qty_plus');
                 $qty_edit = $this->input->post('qty_edit');
 
-                $status_plus = $this->input->post('status_plus');
-                $harga = $this->input->post('harga');
+                // $status_plus = $this->input->post('status_plus');
+                // $harga = $this->input->post('harga');
 
                 if($opsi == "edit"){
                     if($cek > 0 && $kode_barang <> $kd_lama){
@@ -1212,9 +1214,11 @@ class Master extends CI_Controller {
                         echo json_encode(array('data' =>  FALSE,'msg' => 'Tanggal Masuk Tidak Boleh Lebih Kecil Dari Tanggal Masuk Pembelian Sebelumnya!'));
                     }else if ($tgl_byr < $tgl) {
                         echo json_encode(array('data' =>  FALSE,'msg' => 'Tanggal Bayar Tidak Boleh Lebih Kecil Dari Tanggal Masuk!'));
-                    }else if(($harga == 0 || $harga == "") && $status_plus == "Cash"){
-                        echo json_encode(array('data' =>  FALSE,'msg' => 'Pembayaran Cash, Harga Tidak Boleh Kosong!'));
-                    }else if($qty_edit == 0){
+                    }
+                    // else if(($harga == 0 || $harga == "") && $status_plus == "Cash"){
+                    //     echo json_encode(array('data' =>  FALSE,'msg' => 'Pembayaran Cash, Harga Tidak Boleh Kosong!'));
+                    // }
+                    else if($qty_edit == 0){
                         $this->m_master->delete("m_barang_plus","id",$idMBP);
                         $this->m_master->update_load_barang();
                         echo json_encode(array('data' =>  TRUE,'msg' => 'Berhasil'));
@@ -1231,9 +1235,11 @@ class Master extends CI_Controller {
                         echo json_encode(array('data' =>  FALSE,'msg' => 'Tanggal Bayar Tidak Boleh Lebih Kecil Dari Tanggal Masuk!'));
                     }else if ($tgl_byr < $tgl_byr_lama) {
                         echo json_encode(array('data' =>  FALSE,'msg' => 'Tanggal Bayar Tidak Boleh Lebih Kecil Dari Tanggal Pembayaran Sebelumnya!'));
-                    }else if(($harga == 0 || $harga == "") && $status_plus == "Cash"){
-                        echo json_encode(array('data' =>  FALSE,'msg' => 'Pembayaran Cash, Harga Tidak Boleh Kosong!'));
-                    }else{
+                    }
+                    // else if(($harga == 0 || $harga == "") && $status_plus == "Cash"){
+                    //     echo json_encode(array('data' =>  FALSE,'msg' => 'Pembayaran Cash, Harga Tidak Boleh Kosong!'));
+                    // }
+                    else{
                         $this->m_master->update_load_barang();
                         echo json_encode(array('data' =>  TRUE,'msg' => 'Berhasil'));
                     }

@@ -521,7 +521,13 @@
       k_edit_qty = ee_plus_qty;
     }
 
-    harga = i_harga.split(".").join("");
+    ii_harga = i_harga.split(".").join("");
+
+    if(ii_harga == ""){
+      harga = 0
+    }else{
+      harga = ii_harga
+    }
 
     if(qty_lama <= 0){
       qty = Number.parseInt(k_qty) + Number.parseInt(k_plus_qty);
@@ -537,10 +543,6 @@
     //   return;
     // }
 
-    if(tgl == ""){
-      showNotification("alert-danger", "Tanggal Masuk Kosong!", "top", "center", "", "");
-      return;
-    }
     if(kode_barang == "" || kb1 == "" || kb2 == ""){
       showNotification("alert-danger", "Kode Barang Kosong!", "top", "center", "", "");
       return;
@@ -565,20 +567,24 @@
       showNotification("alert-danger", "Pilih Supplier!", "top", "center", "", "");
       return;
     }
-    if(i_qty == ""){
-      showNotification("alert-danger", "QTY Kosong!", "top", "center", "", "");
+    if(tgl == ""){
+      showNotification("alert-danger", "Tanggal Masuk Kosong!", "top", "center", "", "");
       return;
     }
-    if(qty_ket == "" || qty_ket == 0){
-      showNotification("alert-danger", "KET Kosong!", "top", "center", "", "");
+    if(tgl_byr == ""){
+      showNotification("alert-danger", "Pilih Tanggal Bayar!", "top", "center", "", "");
       return;
     }
     if(status_plus == "" || status_plus == 0){
       showNotification("alert-danger", "Pilih Status!", "top", "center", "", "");
       return;
     }
-    if(tgl_byr == ""){
-      showNotification("alert-danger", "Pilih Tanggal Bayar!", "top", "center", "", "");
+    if(qty_ket == "" || qty_ket == 0){
+      showNotification("alert-danger", "KET Kosong!", "top", "center", "", "");
+      return;
+    }
+    if(i_qty == ""){
+      showNotification("alert-danger", "QTY Kosong!", "top", "center", "", "");
       return;
     }
 
@@ -640,7 +646,7 @@
     kb2 = $("#id2").val();
 
     if(cariKdB == "" || kb1 == "" || kb2 == ""){
-      showNotification("alert-info", "Kode Barang Kosong!", "bottom", "center", "", "");
+      showNotification("alert-danger", "Kode Barang Kosong!", "top", "center", "", "");
       return;
     }
 

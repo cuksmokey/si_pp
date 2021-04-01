@@ -228,7 +228,8 @@ class M_master extends CI_Model{
     function get_pl_barang(){
         $query = "SELECT b.qty_ket,a.* FROM m_barang a
         INNER JOIN m_barang_plus b ON a.id_m_barang_plus=b.id
-        ORDER BY kode_barang ASC, nama_barang ASC";
+        -- ORDER BY kode_barang ASC, nama_barang ASC
+        ORDER BY a.id DESC";
         return $this->db->query($query);
     }
 
@@ -236,7 +237,8 @@ class M_master extends CI_Model{
         $query = "SELECT b.qty_ket,a.* FROM m_barang a
         INNER JOIN m_barang_plus b ON a.id_m_barang_plus=b.id
         WHERE NOT EXISTS (SELECT*FROM m_pl_list_barang c WHERE id_pl='$ids' AND a.id=c.id_m_barang)
-        ORDER BY kode_barang ASC, nama_barang ASC";
+        -- ORDER BY kode_barang ASC, nama_barang ASC
+        ORDER BY a.id DESC";
         return $this->db->query($query);
     }
 
@@ -263,7 +265,8 @@ class M_master extends CI_Model{
         FROM m_price_list a
         INNER JOIN m_barang b ON a.kode_barang = b.kode_barang
         INNER JOIN m_pl_list_barang c ON a.kode_barang = c.kode_barang
-        GROUP BY a.id,a.kode_barang,a.nama_barang,a.harga_price_list,b.qty,c.qty";
+        GROUP BY a.id,a.kode_barang,a.nama_barang,a.harga_price_list,b.qty,c.qty
+        ORDER BY ";
         return $this->db->query($query);
     }
 
@@ -555,7 +558,8 @@ class M_master extends CI_Model{
         INNER JOIN m_nota b ON a.id_m_nota=b.id
         INNER JOIN m_supplier c ON b.id_supplier=c.id
         INNER JOIN m_barang_plus d ON a.id_m_barang_plus=d.id
-        ORDER BY a.nama_barang";
+        -- ORDER BY a.nama_barang
+        ORDER BY a.id DESC";
         return $this->db->query($query);
     }
 
@@ -1170,7 +1174,7 @@ class M_master extends CI_Model{
         INNER JOIN m_nota c ON b.id_m_nota=c.id
         INNER JOIN m_supplier d ON c.id_supplier=d.id
         WHERE a.tgl_bayar BETWEEN '$date_now' AND '$date_last'
-        ORDER BY d.nama_supplier ASC,c.no_nota ASC,a.id_m_barang ASC,a.tgl_bayar DESC";
+        ORDER BY a.tgl_bayar DESC,d.nama_supplier ASC,c.no_nota ASC";
         return $this->db->query($query);
     }
  

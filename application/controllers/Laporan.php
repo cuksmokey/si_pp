@@ -377,11 +377,11 @@ class Laporan extends CI_Controller {
         
         $html .= '<table cellspacing="0" style="font-size:11px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;font-family:Arial !important">
             <tr>
-                <th style="border:0;width:17%;padding:0"></th>
+                <th style="border:0;width:15%;padding:0"></th>
                 <th style="border:0;width:1%;padding:0"></th>
-                <th style="border:0;width:27%;padding:0"></th>
-                <th style="border:0;width:10%;padding:0"></th>
-                <th style="border:0;width:45%;padding:0"></th>
+                <th style="border:0;width:51%;padding:0"></th>
+                <th style="border:0;width:8%;padding:0"></th>
+                <th style="border:0;width:25%;padding:0"></th>
             </tr>
             <tr>
                 <td style="background:url('.$jpg.')'.$top.' center no-repeat;border:0;padding:'.$px.';z-index:2" colspan="3"></td>
@@ -416,19 +416,21 @@ class Laporan extends CI_Controller {
 
         $html .= '<tr>
             <th style="padding:2px;border:0;width:5%"></th>
-            <th style="padding:2px;border:0;width:45%"></th>
-            <th style="padding:2px;border:0;width:25%"></th>
-            <th style="padding:2px;border:0;width:25%"></th>
+            <th style="padding:2px;border:0;width:30%"></th>
+            <th style="padding:2px;border:0;width:15%"></th>
+            <th style="padding:2px;border:0;width:30%"></th>
+            <th style="padding:2px;border:0;width:10%"></th>
+            <th style="padding:2px;border:0;width:10%"></th>
         </tr>
         <tr>
             <td style="padding:5px 0;border:1px solid #000;text-align:center;font-weight:bold">No</td>
-            <td style="padding:5px 0;border:1px solid #000;text-align:center;font-weight:bold">Nama Barang</td>
-            <td style="padding:5px 0;border:1px solid #000;text-align:center;font-weight:bold">Quantity</td>
+            <td style="padding:5px 0;border:1px solid #000;text-align:center;font-weight:bold" colspan="3">Nama Barang</td>
+            <td style="padding:5px 0;border:1px solid #000;text-align:center;font-weight:bold">Qty</td>
             <td style="padding:5px 0;border:1px solid #000;text-align:center;font-weight:bold">Satuan</td>
         </tr>';
 
         // isinya
-        $sql_isi = $this->db->query("SELECT b.nama_barang,a.* FROM m_pl_list_barang a
+        $sql_isi = $this->db->query("SELECT b.nama_barang,b.merek,b.spesifikasi,a.* FROM m_pl_list_barang a
         INNER JOIN m_barang b ON a.id_m_barang = b.id
         WHERE id_pl='$jenis'
         GROUP BY b.kode_barang");
@@ -437,25 +439,25 @@ class Laporan extends CI_Controller {
         foreach($sql_isi->result() as $r){
             $i++;
             $html .= '<tr>
-                <td style="padding:5px;border:1px solid #000;text-align:center;font-weight:bold">'.$i.'</td>
-                <td style="padding:5px;border:1px solid #000">'.$r->nama_barang.'</td>
-                <td style="padding:5px;border:1px solid #000;text-align:center">'.$r->qty.'</td>
-                <td style="padding:5px;border:1px solid #000;text-align:center">'.$r->qty_ket.'</td>
+                <td style="vertical-align:middle;padding:5px;border:1px solid #000;text-align:center">'.$i.'</td>
+                <td style="vertical-align:middle;padding:5px;border:1px solid #000" colspan="3">'.$r->nama_barang.' '.$r->merek.' '.$r->spesifikasi.'</td>
+                <td style="vertical-align:middle;padding:5px 2px;border:1px solid #000;text-align:center">'.$r->qty.'</td>
+                <td style="vertical-align:middle;padding:5px 2px;border:1px solid #000;text-align:center">'.$r->qty_ket.'</td>
             </tr>';
         }
 
         $count = $sql_isi->num_rows();
 
         if($count == 1) {
-                $cc = 1;
-                $xx = 2;
+            $cc = 1;
+            $xx = 2;
         }
         
         if($count == $cc) {
             for($i = 0; $i < $xx; $i++){
                 $html .= '<tr>
                 <td style="padding:5px;border:1px solid #000;padding:11px 0"></td>
-                <td style="padding:5px;border:1px solid #000;padding:11px 0"></td>
+                <td style="padding:5px;border:1px solid #000;padding:11px 0" colspan="3"></td>
                 <td style="padding:5px;border:1px solid #000;padding:11px 0"></td>
                 <td style="padding:5px;border:1px solid #000;padding:11px 0"></td>';
             }
@@ -489,18 +491,12 @@ class Laporan extends CI_Controller {
             </tr>
         </table>';
 
-            // $this->m_fungsi->_mpdf2('',$html,10,10,10,'P');
-            $this->m_fungsi->mPDF($html);
-
-            // $mpdf = new \Mpdf\Mpdf();
-            // $mpdf->WriteHTML($html);
-            // $mpdf->Output();
-        
+            // $this->m_fungsi->mPDF($html);        
+            $this->m_fungsi->mPDFP2($html);        
     }
 
     function Nota_Penjualan(){
     // CETAK NOTA PENJUALAN
-    //
     $jenis = $_GET['jenis'];
     $ctk = $_GET['ctk'];
     $tgl_ctk = $_GET['tgl_ctk'];
@@ -641,22 +637,24 @@ class Laporan extends CI_Controller {
         $html .= '<table cellspacing="0" style="font-size:11px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;font-family:Arial !important">
         <tr>
         <th style="border:0;width:5%;padding:0"></th>
-        <th style="border:0;width:42%;padding:0"></th>
-        <th style="border:0;width:8%;padding:0"></th>
-        <th style="border:0;width:8%;padding:0"></th>
-        <th style="border:0;width:17%;padding:0"></th>
-        <th style="border:0;width:20%;padding:0"></th>
+        <th style="border:0;width:22%;padding:0"></th>
+        <th style="border:0;width:11%;padding:0"></th>
+        <th style="border:0;width:22%;padding:0"></th>
+        <th style="border:0;width:5%;padding:0"></th>
+        <th style="border:0;width:5%;padding:0"></th>
+        <th style="border:0;width:15%;padding:0"></th>
+        <th style="border:0;width:15%;padding:0"></th>
         </tr>
         <tr>
-        <td style="border:1px solid #000;padding:5px 3px;text-align:center;font-weight:bold">NO</td>
-        <td style="border:1px solid #000;padding:5px 3px;text-align:center;font-weight:bold">Nama Barang</td>
-        <td style="border:1px solid #000;padding:5px 3px;text-align:center;font-weight:bold" colspan="2">Quantity</td>
+        <td style="border:1px solid #000;padding:5px 3px;text-align:center;font-weight:bold">No</td>
+        <td style="border:1px solid #000;padding:5px 3px;text-align:center;font-weight:bold" colspan="3">Nama Barang</td>
+        <td style="border:1px solid #000;padding:5px 3px;text-align:center;font-weight:bold" colspan="2">Qty</td>
         <td style="border:1px solid #000;padding:5px 3px;text-align:center;font-weight:bold">Satuan (Rp.)</td>
         <td style="border:1px solid #000;padding:5px 3px;text-align:center;font-weight:bold">Jumlah (Rp.)</td>
         </tr>';
 
         // isinya
-        $sql_isi = $this->db->query("SELECT c.nama_barang,SUM(a.qty) AS i_qty,SUM(a.harga_invoice) AS i_harga_invoice,a.*FROM m_pl_list_barang a
+        $sql_isi = $this->db->query("SELECT c.nama_barang,c.merek,c.spesifikasi,SUM(a.qty) AS i_qty,SUM(a.harga_invoice) AS i_harga_invoice,a.*FROM m_pl_list_barang a
         INNER JOIN m_pl_price_list b ON a.id_pl=b.id
         INNER JOIN m_barang c ON a.id_m_barang=c.id
         INNER JOIN m_invoice d ON d.id_pl=b.id OR d.id_pl = 0 AND d.no_inv=b.no_inv
@@ -670,11 +668,11 @@ class Laporan extends CI_Controller {
             $ii++;
             $tot_hrg = $r->i_qty * $r->i_harga_invoice;
             $html .= '<tr>
-                <td style="border:1px solid #000;padding:5px 3px;text-align:center">'.$ii.'</td>
-                <td style="border:1px solid #000;padding:5px 3px">'.$r->nama_barang.'</td>
-                <td style="border:1px solid #000;border-width:1px 0 1px 1px;padding:5px 3px" colspan="2">'.$r->i_qty.' '.$r->qty_ket.'</td>
-                <td style="border:1px solid #000;padding:5px 3px;text-align:right">'.number_format($r->harga_invoice).'</td>
-                <td style="border:1px solid #000;padding:5px 3px;text-align:right">'.number_format($tot_hrg).'</td>
+                <td style="vertical-align:middle;border:1px solid #000;padding:5px 2px;text-align:center">'.$ii.'</td>
+                <td style="vertical-align:middle;border:1px solid #000;padding:5px 3px" colspan="3">'.$r->nama_barang.' '.$r->merek.' '.$r->spesifikasi.'</td>
+                <td style="vertical-align:middle;border:1px solid #000;border-width:1px 0 1px 1px;padding:5px 2px;text-align:center" colspan="2">'.$r->i_qty.' '.$r->qty_ket.'</td>
+                <td style="vertical-align:middle;border:1px solid #000;padding:5px 3px;text-align:right">'.number_format($r->harga_invoice).'</td>
+                <td style="vertical-align:middle;border:1px solid #000;padding:5px 3px;text-align:right">'.number_format($tot_hrg).'</td>
             </tr>';
 
             $sub_tot += $tot_hrg;
@@ -691,14 +689,14 @@ class Laporan extends CI_Controller {
             $ppn = round($sub_tot * 0.1);
             $tot_all = round($sub_tot + $ppn);
             $rs = '2';
-            $t_td = '<td style="border:0;padding:5px 5px 5px 0" colspan="4">Klaten, '.$this->m_fungsi->tanggal_format_indonesia($tgl_ctk).'</td>';
+            $t_td = '<td style="border:0;padding:5px 5px 5px 0" colspan="6">Klaten, '.$this->m_fungsi->tanggal_format_indonesia($tgl_ctk).'</td>';
         }
 
         // fungsi terbilang
         $html .= '<tr>
-        <td style="border:0;padding:3px 3px 0 0" colspan="4" rowspan="'.$rs.'">Terbilang : <b><i>'.ucwords($this->m_fungsi->terbilang($tot_all)).'</i></b></td>
-        <td style="border:1px solid #000;padding:5px">Sub Total</td>
-        <td style="border:1px solid #000;padding:5px;text-align:right">'.number_format($sub_tot).'</td>
+        <td style="border:0;padding:3px 3px 0 0" colspan="6" rowspan="'.$rs.'">Terbilang : <b><i>'.ucwords($this->m_fungsi->terbilang($tot_all)).'</i></b></td>
+        <td style="border:1px solid #000;padding:5px;text-align:right;font-weight:bold">Sub Total</td>
+        <td style="border:1px solid #000;padding:5px;text-align:right;font-weight:bold">'.number_format($sub_tot).'</td>
         </tr>';
 
         // ppn
@@ -709,37 +707,36 @@ class Laporan extends CI_Controller {
             <br/>Atas Nama : Niken Pangastuti - Cabang Pasar Legi';
         }else if($sql_kop->laporan == "sma") {
             $html .='<tr>
-            <td style="border:1px solid #000;padding:4px 5px">PPN</td>
-            <td style="border:1px solid #000;padding:4px 5px;text-align:right">'.number_format($ppn).'</td>
+            <td style="border:1px solid #000;padding:4px 5px;text-align:right;font-weight:bold">PPN</td>
+            <td style="border:1px solid #000;padding:4px 5px;text-align:right;font-weight:bold">'.number_format($ppn).'</td>
             </tr>';
         }
 
         // ongkir + total all
         if($sql_kop->laporan == "st"){
+            if($sql_kop->ongkir == 0){
+                $ongkirr = '-';
+            }else{
+                $ongkirr = number_format($sql_kop->ongkir);
+            }
+
             $html .='<tr>
             '.$t_td.'
-                <td style="border:1px solid #000;padding:4px 5px">Ongkir</td>
-                <td style="border:1px solid #000;padding:4px 5px;text-align:right">'.number_format($sql_kop->ongkir).'</td>
+                <td style="border:1px solid #000;padding:4px 5px;text-align:right;font-weight:bold">Ongkir</td>
+                <td style="border:1px solid #000;padding:4px 5px;text-align:right;font-weight:bold">'.$ongkirr.'</td>
             </tr>';
             $html.='<tr>
-                <td style="border:0;padding:0" colspan="4" rowspan="2">'.$nm_ttd.'</td>
-                <td style="border:1px solid #000;padding:4px 5px">Total</td>
-                <td style="border:1px solid #000;padding:4px 5px;text-align:right">'.number_format($tot_all).'</td>
+                <td style="border:0;padding:0" colspan="6" rowspan="2">'.$nm_ttd.'</td>
+                <td style="border:1px solid #000;padding:4px 5px;text-align:right;font-weight:bold">Grand Total</td>
+                <td style="border:1px solid #000;padding:4px 5px;text-align:right;font-weight:bold">'.number_format($tot_all).'</td>
             </tr>';
         }else if($sql_kop->laporan == "sma"){
             $html .='<tr>
             '.$t_td.'
-            <td style="border:1px solid #000;padding:4px 5px">Total</td>
-            <td style="border:1px solid #000;padding:4px 5px;text-align:right">'.number_format($tot_all).'</td>
+            <td style="border:1px solid #000;padding:4px 5px;text-align:right;font-weight:bold">Grand Total</td>
+            <td style="border:1px solid #000;padding:4px 5px;text-align:right;font-weight:bold">'.number_format($tot_all).'</td>
             </tr>';
         }
-
-        // total all
-        // $html.='<tr>
-        //     <td style="border:0;padding:0" colspan="4" rowspan="2">'.$nm_ttd.'</td>
-        //     <td style="border:1px solid #000;padding:5px">Total</td>
-        //     <td style="border:1px solid #000;padding:5px;text-align:right">Rp. '.number_format($tot_all).'</td>
-        // </tr>';
 
         # # # # # # # # # # # # # TANDA TANGAN # # # # # # # # # # # # # 
 
@@ -751,7 +748,7 @@ class Laporan extends CI_Controller {
             </tr>';
 
             $html .= '<tr>
-            <td style="border:0;padding:3px 0 0;text-align:center" colspan="2">Penerima</td>
+            <td style="border:0;padding:3px 0 0;text-align:center" colspan="4">Penerima</td>
             <td style="border:0;padding:3px 0 0;text-align:center" colspan="4">Hormat Kami,</td>
             </tr>
             <tr>
@@ -759,7 +756,7 @@ class Laporan extends CI_Controller {
             <td style="border:0;padding:40px 0" colspan="4"></td>
             </tr>
             <tr>
-            <td style="border:0;padding:0 0 5px;text-align:center" colspan="2">_____________________</td>
+            <td style="border:0;padding:0 0 5px;text-align:center" colspan="4">_____________________</td>
             <td style="border:0;padding:0 0 5px;text-align:center" colspan="4">Niken Pangastuti</td>
             </tr>
             ';
@@ -772,21 +769,21 @@ class Laporan extends CI_Controller {
             </tr>';
 
             $html .='<tr>
-            <td style="border:0;padding:0;color:#fff" colspan="4">.</td>
+            <td style="border:0;padding:0;color:#fff" colspan="6">.</td>
             <td style="border:0;padding:0" colspan="2" rowspan="2">'.$no_faktur.'</td>
             </tr>
             <tr>
             <td style="border:0;padding:0" colspan="3"></td>
             </tr>
             <tr>
-            <td style="border:0;padding:55px 0 0" colspan="6">'.$nm_ttd.'</td>
+            <td style="border:0;padding:55px 0 0" colspan="8">'.$nm_ttd.'</td>
             </tr>';
         }
 
         $html .= '</table>';
 
-        // $this->m_fungsi->_mpdf2('',$html,10,10,10,'P');
-        $this->m_fungsi->mPDF($html);
+        // $this->m_fungsi->mPDF($html);
+        $this->m_fungsi->mPDFP2($html);
     }
 
     function print_update_po(){
@@ -970,27 +967,47 @@ class Laporan extends CI_Controller {
     }
 
     function HutangCashSupplier(){
+        $plh_nota = $_GET['nota'];
         $tgl1 = $_GET['tgl1'];
         $tgl2 = $_GET['tgl2'];
         $jenis = $_GET['jenis'];
         $ctk = $_GET['ctk'];
         $html = '';
 
-        $date_now = date('Y-m-d');
+        if($plh_nota == "pernota"){
+            $harga = "SUM(a.harga) AS sumharga";
+            $group = "GROUP BY a.id_m_nota,a.tgl_bayar,a.status";
+        }else{
+            $harga = "a.harga AS sumharga";
+            $group = "";
+        }
 
+        if($jenis == 0){
+            $where = '';
+        }else{
+            $where = $jenis;
+        }
+
+        $sql_isi = $this->db->query("SELECT c.nama_supplier,b.no_nota,$harga,a.* FROM m_barang_plus a
+        INNER JOIN m_nota b ON a.id_m_nota=b.id
+        INNER JOIN m_supplier c ON b.id_supplier=c.id
+        INNER JOIN m_barang d ON a.id_m_barang=d.id
+        WHERE c.id LIKE '%$where%'
+        $group
+        ORDER BY b.no_nota ASC,a.tgl_bayar ASC,a.status ASC");
+
+        if($jenis == 0){
+            $kopp = 'SEMUA SUPPLIER';
+        }else{
+            $kopp = $sql_isi->row()->nama_supplier;
+        }
+
+        $date_now = date('Y-m-d');
         if($tgl1 == $tgl2){
             $ttgl = $this->m_fungsi->tanggal_format_indonesia($tgl1);
         }else{
             $ttgl = $this->m_fungsi->tanggal_format_indonesia($tgl1).' S/D '.$this->m_fungsi->tanggal_format_indonesia($tgl2);
         }
-
-        $sql_isi = $this->db->query("SELECT c.nama_supplier,b.no_nota,SUM(a.harga) AS sumharga,a.* FROM m_barang_plus a
-        INNER JOIN m_nota b ON a.id_m_nota=b.id
-        INNER JOIN m_supplier c ON b.id_supplier=c.id
-        INNER JOIN m_barang d ON a.id_m_barang=d.id
-        WHERE c.id='$jenis'
-        GROUP BY a.id_m_nota,a.tgl_bayar,a.status
-        ORDER BY b.no_nota ASC");
 
         // K O P
         $html .='<table cellspacing="0" style="font-size:11px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;font-family:Arial !important">
@@ -998,7 +1015,7 @@ class Laporan extends CI_Controller {
             <th style="border:0;padding:0 5px" colspan="6">PEMBELIAN DAFTAR HUTANG DAN CASH PER SUPPLIER</th>
         </tr>
         <tr>
-            <th style="border:0;padding:0 5px" colspan="6">'.$sql_isi->row()->nama_supplier.'</th>
+            <th style="border:0;padding:0 5px" colspan="6">'.$kopp.'</th>
         </tr>
         <tr>
             <th style="border:0;padding:0 5px 10px" colspan="6">TANGGAL : '.strtoupper($ttgl).'</th>
@@ -1251,14 +1268,8 @@ class Laporan extends CI_Controller {
         </tr>';
 
         $i = 0;
+        $items = 0;
         foreach($sql->result() as $r){
-
-            if($r->laporan == "st" || $r->laporan == "") {
-                $tot_all = round($r->hrg_inv + $r->ongkir);
-            }else if($r->laporan == "sma") {
-                $ppn = round($r->hrg_inv * 0.1);
-                $tot_all = round($r->hrg_inv + $ppn);
-            }
 
             if($r->via == 1){
                 $via = "Cash";
@@ -1266,6 +1277,33 @@ class Laporan extends CI_Controller {
                 $via = "Transfer Bank";
             }else{
                 $via = "-";
+            }
+
+            // sql total inv
+            $tinv = $this->db->query("SELECT SUM(c.qty) AS s_qty,SUM(c.harga_invoice) AS s_hrg_inv,a.ongkir,b.laporan FROM m_invoice a
+            INNER JOIN m_pl_price_list b ON b.id=a.id_pl OR a.id_pl = 0 AND a.no_inv=b.no_inv
+            INNER JOIN m_pl_list_barang c ON b.id=c.id_pl
+            INNER JOIN m_perusahaan d ON b.id_m_perusahaan=d.id
+            WHERE a.id='$r->id'
+            GROUP BY c.id_m_barang
+            ORDER BY a.id ASC");
+            
+            foreach($tinv->result() as $q) {
+                $item = $q->s_qty * $q->s_hrg_inv;
+                $items += $item;
+            }
+
+            if($r->no_inv == 0){
+                $hrginv = $r->hrg_inv;
+            }else{
+                $hrginv = $items;
+            }
+
+            if($r->laporan == "st" || $r->laporan == "") {
+                $tot_all = round($hrginv + $r->ongkir);
+            }else if($r->laporan == "sma") {
+                $ppn = round($hrginv * 0.1);
+                $tot_all = round($hrginv + $ppn);
             }
             
             $i++;
@@ -1333,14 +1371,8 @@ class Laporan extends CI_Controller {
         </tr>';
 
         $i = 0;
+        $items = 0;
         foreach($sql->result() as $r){
-
-            if($r->laporan == "st" || $r->laporan == "") {
-                $tot_all = round($r->hrg_inv + $r->ongkir);
-            }else if($r->laporan == "sma") {
-                $ppn = round($r->hrg_inv * 0.1);
-                $tot_all = round($r->hrg_inv + $ppn);
-            }
 
             if($r->via == 1){
                 $via = "Cash";
@@ -1348,6 +1380,33 @@ class Laporan extends CI_Controller {
                 $via = "Transfer Bank";
             }else{
                 $via = "-";
+            }
+
+            // sql total inv
+            $tinv = $this->db->query("SELECT SUM(c.qty) AS s_qty,SUM(c.harga_invoice) AS s_hrg_inv,a.ongkir,b.laporan FROM m_invoice a
+            INNER JOIN m_pl_price_list b ON b.id=a.id_pl OR a.id_pl = 0 AND a.no_inv=b.no_inv
+            INNER JOIN m_pl_list_barang c ON b.id=c.id_pl
+            INNER JOIN m_perusahaan d ON b.id_m_perusahaan=d.id
+            WHERE a.id='$r->id'
+            GROUP BY c.id_m_barang
+            ORDER BY a.id ASC");
+            
+            foreach($tinv->result() as $q) {
+                $item = $q->s_qty * $q->s_hrg_inv;
+                $items += $item;
+            }
+
+            if($r->no_inv == 0){
+                $hrginv = $r->hrg_inv;
+            }else{
+                $hrginv = $items;
+            }
+
+            if($r->laporan == "st" || $r->laporan == "") {
+                $tot_all = round($hrginv + $r->ongkir);
+            }else if($r->laporan == "sma") {
+                $ppn = round($hrginv * 0.1);
+                $tot_all = round($hrginv + $ppn);
             }
 
             $i++;
@@ -1385,15 +1444,28 @@ class Laporan extends CI_Controller {
         }
     }
 
-    function Piutang(){
+    function Piutang(){ //
         $jenis = $_GET['jenis'];
         $tgl1 = $_GET['tgl1'];
         $tgl2 = $_GET['tgl2'];
         $ctk = $_GET['ctk'];
+        $lap = $_GET['lap'];
         $html = '';
 
-        if($jenis <> 0){
+        // if($jenis <> 0){
+        //     $where = "AND d.id='$jenis'";
+        // }else{
+        //     $where = "";
+        // }
+
+        if($lap == "sma" && $jenis == 0){
+            $where = "AND d.laporan='sma'";
+        }else if($lap == "st" && $jenis == 0){
+            $where = "AND d.laporan='st'";
+        }else if(($lap == "sma" || $lap == "st") && $jenis != 0){
             $where = "AND d.id='$jenis'";
+        }else if($lap == 0 && $jenis == 0){
+            $where = "";
         }else{
             $where = "";
         }
@@ -1429,25 +1501,46 @@ class Laporan extends CI_Controller {
 
         // ISI
         $i = 0;
+        $items = 0;
         $tot_kel = 0;
         foreach($sql->result() as $r){
-
-            if($r->laporan == "st" || $r->laporan == "") {
-                $tot_all = round($r->hrg_inv + $r->ongkir);
-            }else if($r->laporan == "sma") {
-                $ppn = round($r->hrg_inv * 0.1);
-                $tot_all = round($r->hrg_inv + $ppn);
-            }
-
             $i++;
             $html .='<tr>
                 <td style="border:1px solid #000;padding:5px 2px;text-align:center">'.$i.'</td>
                 <td style="border:1px solid #000;padding:5px">'.$r->nm_perusahaan.'</td>
                 <td class="str" style="border:1px solid #000;padding:5px">'.$r->no_nota.'</td>
                 <td style="border:1px solid #000;padding:5px 2px;text-align:center">'.$this->m_fungsi->TglIndSingkat($r->tgl_ctk).'</td>
-                <td style="border:1px solid #000;padding:5px 2px;text-align:center">'.$this->m_fungsi->TglIndSingkat($r->tgl_jt).'</td>
-                <td class="str" style="border:1px solid #000;padding:5px;text-align:right">'.number_format($tot_all).'</td>
-            </tr>';
+                <td style="border:1px solid #000;padding:5px 2px;text-align:center">'.$this->m_fungsi->TglIndSingkat($r->tgl_jt).'</td>';
+
+            // sql total inv
+            $tinv = $this->db->query("SELECT SUM(c.qty) AS s_qty,SUM(c.harga_invoice) AS s_hrg_inv,a.ongkir,b.laporan FROM m_invoice a
+            INNER JOIN m_pl_price_list b ON b.id=a.id_pl OR a.id_pl = 0 AND a.no_inv=b.no_inv
+            INNER JOIN m_pl_list_barang c ON b.id=c.id_pl
+            INNER JOIN m_perusahaan d ON b.id_m_perusahaan=d.id
+            WHERE a.id='$r->id'
+            GROUP BY c.id_m_barang
+            ORDER BY a.id ASC");
+            
+            foreach($tinv->result() as $q) {
+                $item = $q->s_qty * $q->s_hrg_inv;
+                $items += $item;
+            }
+
+            if($r->no_inv == 0){
+                $hrginv = $r->hrg_inv;
+            }else{
+                $hrginv = $items;
+            }
+
+            if($r->laporan == "st" || $r->laporan == "") {
+                $tot_all = round($hrginv + $r->ongkir);
+            }else if($r->laporan == "sma") {
+                $ppn = round($hrginv * 0.1);
+                $tot_all = round($hrginv + $ppn);
+            }
+
+            $html .= '<td class="str" style="border:1px solid #000;padding:5px;text-align:right">'.number_format($tot_all).'</td>';
+            $html .= '</tr>';
 
             $tot_kel += $tot_all;
         }
@@ -1493,6 +1586,8 @@ class Laporan extends CI_Controller {
             $lapp = "SINAR MUKTI ABADI";
         }else if($lap == "st"){
             $lapp = "SINAR TEKNINDO";
+        }else{
+            $lapp = "SEMUA LAPORAN";
         }
 
         if($tgl1 == $tgl2){
@@ -1542,13 +1637,19 @@ class Laporan extends CI_Controller {
             <td style="border:1px solid #000;padding:5px;font-weight:bold;text-align:center">ket</td>
         </tr>';
 
+        if($lap == "sma" || $lap == "st"){
+            $laplap = "AND b.laporan = '$lap'";
+        }else{
+            $laplap = "";
+        }
+
         // ambil data
         $sql = $this->db->query("SELECT b.laporan,d.nama_barang,d.merek,d.spesifikasi,c.nm_perusahaan,e.harga,e.status,a.* FROM m_pl_list_barang a
         INNER JOIN m_pl_price_list b ON a.id_pl=b.id
         INNER JOIN m_perusahaan c ON b.id_m_perusahaan=c.id
         INNER JOIN m_barang d ON a.id_m_barang=d.id
         INNER JOIN m_barang_plus e ON d.id_m_barang_plus=e.id
-        WHERE a.tgl BETWEEN '$tgl1' AND '$tgl2' AND b.laporan = '$lap'");
+        WHERE a.tgl BETWEEN '$tgl1' AND '$tgl2' $laplap");
 
         $ii = 0;
         foreach($sql->result() as $r){
