@@ -176,6 +176,14 @@
                   </td>
                 </tr>
                 <tr>
+                  <td>Tgl Jth Tempo</td>
+                  <td>:</td>
+                  <td>
+                    <input type="date" id="tgl_jt_tempo" value="" class="form-control">
+                    <input type="hidden" value="" id="status_plus_lama">
+                  </td>
+                </tr>
+                <!-- <tr>
                   <td>Tgl Bayar</td>
                   <td>:</td>
                   <td>
@@ -183,7 +191,7 @@
                     <input type="hidden" value="" id="tgl_byr_lama">
                     <input type="hidden" value="" id="status_plus_lama">
                   </td>
-                </tr>
+                </tr> -->
                 <tr>
                   <td>Status</td>
                   <td>:</td>
@@ -266,14 +274,15 @@
   <thead>
     <tr>
       <th style="background:#aaa;width:5%">No</th>
-      <th style="background:#aaa;width:12%">Tgl Masuk</th>
-      <th style="background:#aaa;width:12%">Tgl Bayar</th>
+      <th style="background:#aaa;width:10%">Tgl Masuk</th>
+      <th style="background:#aaa;width:10%">Tgl Jth Tempo</th>
+      <th style="background:#aaa;width:10%">Tgl Bayar</th>
       <th style="background:#aaa;width:12%">Supplier</th>
       <th style="background:#aaa;width:12%">No Nota</th>
-      <th style="background:#aaa;width:11%">QTY</th>
-      <th style="background:#aaa;width:11%">KET</th>
-      <th style="background:#aaa;width:12%">Harga</th>
-      <th style="background:#aaa;width:12%">Pembayaran</th>
+      <th style="background:#aaa;width:10%">QTY</th>
+      <th style="background:#aaa;width:10%">KET</th>
+      <th style="background:#aaa;width:10%">Harga</th>
+      <th style="background:#aaa;width:10%">Pembayaran</th>
     </tr>
   </thead>
   <tbody id="detail_cart">
@@ -322,14 +331,15 @@
               <thead>
                 <tr>
                   <th style="width:5%">No</th>
-                  <th style="width:12%">Tgl Masuk</th>
-                  <th style="width:12%">Tgl Bayar</th>
+                  <th style="width:10%">Tgl Masuk</th>
+                  <th style="width:10%">Jth Tempo</th>
+                  <th style="width:10%">Tgl Bayar</th>
                   <th style="width:12%">Supplier</th>
                   <th style="width:12%">No Nota</th>
-                  <th style="width:11%">QTY</th>
-                  <th style="width:11%">KET</th>
-                  <th style="width:12%">Harga</th>
-                  <th style="width:12%">Pembayaran</th>
+                  <th style="width:10%">QTY</th>
+                  <th style="width:10%">KET</th>
+                  <th style="width:10%">Harga</th>
+                  <th style="width:10%">Pembayaran</th>
                 </tr>
               </thead>
               <tbody id="list-timbangan">
@@ -458,7 +468,19 @@
         for (var i = 0 ; i < json.header.length; i++) {
           ii = i+1;
 
-          html +='<tr><td>'+ii+'</td><td>'+json.header[i].tgl_masuk+'</td><td>'+json.header[i].tgl_bayar+'</td><td>'+json.header[i].nama_supplier+'</td><td>'+json.header[i].no_nota+'</td><td>'+json.header[i].qty_plus+'</td><td>'+json.header[i].qty_ket+'</td><td>'+formatNumber(json.header[i].harga)+'</td><td>'+json.header[i].status+'</td></tr>';
+          if(typeof json.header[i].tgl_jt_tempo === 'object'){
+            tgl_jt_tempo = '-';
+          }else{
+            tgl_jt_tempo = json.header[i].tgl_jt_tempo
+          }
+
+          if(typeof json.header[i].tgl_bayar === 'object'){
+            tgl_bayar = '-';
+          }else{
+            tgl_bayar = json.header[i].tgl_bayar
+          }
+
+          html +='<tr><td>'+ii+'</td><td>'+json.header[i].tgl_masuk+'</td><td>'+tgl_jt_tempo+'</td><td>'+tgl_bayar+'</td><td>'+json.header[i].nama_supplier+'</td><td>'+json.header[i].no_nota+'</td><td>'+json.header[i].qty_plus+'</td><td>'+json.header[i].qty_ket+'</td><td>'+formatNumber(json.header[i].harga)+'</td><td>'+json.header[i].status+'</td></tr>';
         }
 
         if(opsi == "2"){
@@ -492,8 +514,9 @@
     merek = $("#merek").val();
     spesifikasi = $("#spesifikasi").val();
 
-    tgl_byr = $("#tgl_byr").val();
-    tgl_byr_lama = $("#tgl_byr_lama").val();
+    // tgl_byr = $("#tgl_byr").val();
+    tgl_jt_tempo = $("#tgl_jt_tempo").val();
+    // tgl_byr_lama = $("#tgl_byr_lama").val();
     status_plus = $("#status_plus").val();
     status_plus_lama = $("#status_plus_lama").val();
 
@@ -571,8 +594,12 @@
       showNotification("alert-danger", "Tanggal Masuk Kosong!", "top", "center", "", "");
       return;
     }
-    if(tgl_byr == ""){
-      showNotification("alert-danger", "Pilih Tanggal Bayar!", "top", "center", "", "");
+    // if(tgl_byr == ""){
+    //   showNotification("alert-danger", "Pilih Tanggal Bayar!", "top", "center", "", "");
+    //   return;
+    // }
+    if(tgl_jt_tempo == ""){
+      showNotification("alert-danger", "Pilih Tanggal Jatuh Tempo!", "top", "center", "", "");
       return;
     }
     if(status_plus == "" || status_plus == 0){
@@ -608,8 +635,9 @@
         qty: qty,
         qty_plus: qty_plus,
         qty_edit: qty_edit,
-        tgl_byr: tgl_byr,
-        tgl_byr_lama: tgl_byr_lama,
+        tgl_jt_tempo: tgl_jt_tempo,
+        // tgl_byr: tgl_byr,
+        // tgl_byr_lama: tgl_byr_lama,
         status_plus: status_plus,
         status_plus_lama: status_plus_lama,
         qty_ket: qty_ket,
@@ -754,8 +782,9 @@
         $("#merek").val(json.merek).prop("disabled", false).attr('style', 'background:#fff;');
         $("#spesifikasi").val(json.spesifikasi).prop("disabled", false).attr('style', 'background:#fff;');
 
-        $("#tgl_byr").val(json.tgl_bayar);
-        $("#tgl_byr_lama").val(json.tgl_bayar);
+        // $("#tgl_byr").val(json.tgl_bayar);
+        $("#tgl_jt_tempo").val(json.tgl_jt_tempo);
+        // $("#tgl_byr_lama").val(json.tgl_bayar);
         $("#status_plus").val(json.status);
         $("#status_plus_lama").val(json.status);
 
@@ -828,8 +857,9 @@
         $("#merek").val(json.merek).prop("disabled", true).attr('style', 'background:#ddd;');
         $("#spesifikasi").val(json.spesifikasi).prop("disabled", true).attr('style', 'background:#ddd;');
 
-        $("#tgl_byr").val(json.tgl_bayar);
-        $("#tgl_byr_lama").val(json.tgl_bayar);
+        // $("#tgl_byr").val(json.tgl_bayar);
+        $("#tgl_jt_tempo").val(json.tgl_jt_tempo);
+        // $("#tgl_byr_lama").val(json.tgl_bayar);
         $("#status_plus").val(json.status);
         $("#status_plus_lama").val(json.status);
         $("#qty_plus_lama").val(json.qty);
@@ -910,8 +940,9 @@
     $("#qty_ket").val("0").prop("disabled", false).attr('style', 'background:#fff;');
     $("#harga").val("").prop("disabled", false).attr('style', 'background:#fff;');
 
-    $("#tgl_byr").val("").prop("disabled", false).attr('style', 'background:#fff;');
-    $("#tgl_byr_lama").val("");
+    // $("#tgl_byr").val("").prop("disabled", false).attr('style', 'background:#fff;');
+    $("#tgl_jt_tempo").val("").prop("disabled", false).attr('style', 'background:#fff;');
+    // $("#tgl_byr_lama").val("");
     $("#status_plus").val("0").prop("disabled", false).attr('style', 'background:#fff;');
     $("#status_plus_lama").val("0");
 

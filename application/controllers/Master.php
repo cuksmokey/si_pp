@@ -421,7 +421,7 @@ class Master extends CI_Controller {
                 $output = array("data" => $data);
                 
 
-            }else if ($jenis == "pl_inv") {
+            }else if ($jenis == "pl_inv") { //
                 $i=1;
                 $query = $this->m_master->get_load_inv();
                 
@@ -947,34 +947,38 @@ class Master extends CI_Controller {
                 $query = $this->m_master->get_jatuh_tempo();
 
                 if ($query->num_rows() == 0) {
-                    $data[] =  ["","","","","","","","",""];
+                    $data[] =  ["","","","","","",""];
                 }else{
 
                     $i=1;
 
                     foreach ($query->result() as $r) {
-                        // $id = "'$r->id'";
+                        $id = "'$r->id'";
                         $row = array();
                         $row[] = $i;
                         $row[] = $r->nama_supplier;
                         $row[] = $r->no_nota;
-                        $row[] = $r->kode_barang;
-                        $row[] = $r->nama_barang;
-                        $row[] = $r->qty_plus;
                         $row[] = 'Rp. '.number_format($r->harga);
                         $row[] = $r->status;
-
-                        $date_now = date('Y-m-d');
                         
-                        if($r->tgl_bayar == $date_now && $r->status == "Kredit"){
+                        $date_now = date('Y-m-d');
+                        if($r->tgl_jt_tempo == $date_now && $r->status == "Kredit"){
+                            $style = 'style="color:#94151B;font-weight:bold"';
+                        }else if($r->tgl_jt_tempo <= $date_now && $r->status == "Kredit"){
                             $style = 'style="color:#f00;font-weight:bold"';
-                        }else if($r->tgl_bayar >= $date_now && $r->status == "Kredit"){
+                        }else if($r->tgl_jt_tempo >= $date_now && $r->status == "Kredit"){
                             $style = 'style="color:#ff8c00;font-weight:bold"';
+                        }else if($r->status == "Cash"){
+                            $style = 'style="color:#4CAF50;font-weight:bold"';
                         }else{
-                            $style = 'style="color:#0f0;font-weight:bold"';
+                            $style = 'style="color:#4CAF50;font-weight:bold"';
                         }
 
-                        $row[] = '<div '.$style.'>'.$this->m_fungsi->tanggal_format_indonesia($r->tgl_bayar).'</div>';
+                        $row[] = '<div '.$style.'>'.$this->m_fungsi->tanggal_format_indonesia($r->tgl_jt_tempo).'</div>';
+
+                        $row[] = '<input type="date" id="plhTglPbJthTp'.$i.'" value="" class="form-control">';
+
+                        $row[] = '<button style="background:#00B0E4;margin:0;padding:3px 6px;border:0;color:#fff" type="button" onclick="view_detail('.$id.')">VIEW</button><button style="background:#4CAF50;margin:0;padding:3px 6px;border:0;color:#fff" type="button" onclick="confirmByr('.$id.','.$i.')">OKE</button>';
                         
                         $data[] = $row;
                             
@@ -1199,8 +1203,8 @@ class Master extends CI_Controller {
                 $idMBP = $this->input->post('id_m_barang_plus');
                 $tgl = $this->input->post('tgl');
                 $tgl_lama = $this->input->post('tgl_lama');
-                $tgl_byr = $this->input->post('tgl_byr');
-                $tgl_byr_lama = $this->input->post('tgl_byr_lama');
+                // $tgl_byr = $this->input->post('tgl_byr');
+                // $tgl_byr_lama = $this->input->post('tgl_byr_lama');
                 $qty_plus = $this->input->post('qty_plus');
                 $qty_edit = $this->input->post('qty_edit');
 
@@ -1212,10 +1216,10 @@ class Master extends CI_Controller {
                         echo json_encode(array('data' =>  FALSE,'msg' => 'Kode Barang Sudah Ada!'));
                     }else if ($tgl < $tgl_lama) {
                         echo json_encode(array('data' =>  FALSE,'msg' => 'Tanggal Masuk Tidak Boleh Lebih Kecil Dari Tanggal Masuk Pembelian Sebelumnya!'));
-                    }else if ($tgl_byr < $tgl) {
-                        echo json_encode(array('data' =>  FALSE,'msg' => 'Tanggal Bayar Tidak Boleh Lebih Kecil Dari Tanggal Masuk!'));
                     }
-                    // else if(($harga == 0 || $harga == "") && $status_plus == "Cash"){
+                    // else if ($tgl_byr < $tgl) {
+                    //     echo json_encode(array('data' =>  FALSE,'msg' => 'Tanggal Bayar Tidak Boleh Lebih Kecil Dari Tanggal Masuk!'));
+                    // }else if(($harga == 0 || $harga == "") && $status_plus == "Cash"){
                     //     echo json_encode(array('data' =>  FALSE,'msg' => 'Pembayaran Cash, Harga Tidak Boleh Kosong!'));
                     // }
                     else if($qty_edit == 0){
@@ -1231,12 +1235,12 @@ class Master extends CI_Controller {
                         echo json_encode(array('data' =>  FALSE,'msg' => 'Tambah QTY Tidak Boleh Kosong'));
                     }else if ($tgl < $tgl_lama) {
                         echo json_encode(array('data' =>  FALSE,'msg' => 'Tanggal Masuk Tidak Boleh Lebih Kecil Dari Tanggal Masuk Pembelian Sebelumnya!'));
-                    }else if ($tgl_byr < $tgl) {
-                        echo json_encode(array('data' =>  FALSE,'msg' => 'Tanggal Bayar Tidak Boleh Lebih Kecil Dari Tanggal Masuk!'));
-                    }else if ($tgl_byr < $tgl_byr_lama) {
-                        echo json_encode(array('data' =>  FALSE,'msg' => 'Tanggal Bayar Tidak Boleh Lebih Kecil Dari Tanggal Pembayaran Sebelumnya!'));
                     }
-                    // else if(($harga == 0 || $harga == "") && $status_plus == "Cash"){
+                    // else if ($tgl_byr < $tgl) {
+                    //     echo json_encode(array('data' =>  FALSE,'msg' => 'Tanggal Bayar Tidak Boleh Lebih Kecil Dari Tanggal Masuk!'));
+                    // }else if ($tgl_byr < $tgl_byr_lama) {
+                    //     echo json_encode(array('data' =>  FALSE,'msg' => 'Tanggal Bayar Tidak Boleh Lebih Kecil Dari Tanggal Pembayaran Sebelumnya!'));
+                    // }else if(($harga == 0 || $harga == "") && $status_plus == "Cash"){
                     //     echo json_encode(array('data' =>  FALSE,'msg' => 'Pembayaran Cash, Harga Tidak Boleh Kosong!'));
                     // }
                     else{
@@ -1536,6 +1540,18 @@ class Master extends CI_Controller {
         echo "1";
     }
 
+    function cPembJthTempo() {
+        $id = $_POST['id'];
+        $tglJthTmp = $_POST['tglJthTmp'];
+        
+        // update tgl bayar barang
+        $this->db->set("tgl_bayar", $tglJthTmp);
+        $this->db->where('id', $id);
+        $this->db->update('m_barang_plus');
+
+        echo json_encode(array('msg' => true));
+    }
+
     function confirmBayarInv(){
         $id_inv = $_POST['id'];
         $tgl_byr = $_POST['tglByrInv'];
@@ -1741,7 +1757,10 @@ class Master extends CI_Controller {
         }else if ($jenis == "PoMaster") {
             $data =  $this->m_master->get_data_one("po_master", "id", $id)->row();
             echo json_encode($data);
-        }else if ($jenis == "list_barang_plus") { //
+        }else if ($jenis == "list_barang_tempo") {
+            $data =  $this->m_master->get_data_pjt($id)->result();
+            echo json_encode($data);
+        }else if ($jenis == "list_barang_plus") {
             $data =  $this->m_master->get_data_bp("m_barang_plus", "id_m_barang", $id)->result();
             echo json_encode(array('header' => $data));
         }else if ($jenis == "PL_pl_pl") {

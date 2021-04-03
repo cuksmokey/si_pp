@@ -1050,28 +1050,35 @@ class Laporan extends CI_Controller {
                 <td style="border:1px solid #000;padding:4px 3px;">'.$r->no_nota.'</td>
                 <td style="border:1px solid #000;padding:4px 3px;text-align:right">Rp. '.number_format($r->sumharga).'</td>';
             
-            $t_tglbyr = $this->m_fungsi->TglIndSingkat($r->tgl_bayar);
+            if($r->tgl_bayar == null || $r->tgl_bayar == "") {
+                $tttt = '-';
+            }else{
+                $tttt = $this->m_fungsi->TglIndSingkat($r->tgl_bayar);
+            }
+            
+            $t_tglbyr = $tttt;
+            $t_tglJtTemp = $this->m_fungsi->TglIndSingkat($r->tgl_jt_tempo);
 
-            if($r->tgl_bayar == $date_now && $r->status == "Kredit"){
+            if($r->tgl_jt_tempo == $date_now && $r->status == "Kredit"){
                 $style = 'color:#ff8c00;font-weight:bold';
-                $c_tglbayar = '-';
-                $c_tgltempo = $t_tglbyr;
-            }else if($r->tgl_bayar <= $date_now && $r->status == "Kredit"){
+                $c_tglbayar = $t_tglbyr;
+                $c_tgltempo = $t_tglJtTemp;
+            }else if($r->tgl_jt_tempo <= $date_now && $r->status == "Kredit"){
                 $style = 'color:#f00;font-weight:bold';
-                $c_tglbayar = '-';
-                $c_tgltempo = $t_tglbyr;
-            }else if($r->tgl_bayar >= $date_now && $r->status == "Kredit"){
+                $c_tglbayar = $t_tglbyr;
+                $c_tgltempo = $t_tglJtTemp;
+            }else if($r->tgl_jt_tempo >= $date_now && $r->status == "Kredit"){
                 $style = 'color:#000;font-weight:bold';
-                $c_tglbayar = '-';
-                $c_tgltempo = $t_tglbyr;
+                $c_tglbayar = $t_tglbyr;
+                $c_tgltempo = $t_tglJtTemp;
             }else if($r->status == "Cash"){
                 $style = 'color:#080;font-weight:bold';
                 $c_tglbayar = $t_tglbyr;
-                $c_tgltempo = '-';
+                $c_tgltempo = $t_tglJtTemp;
             }else{
                 $style = 'color:#080;font-weight:bold';
                 $c_tglbayar = $t_tglbyr;
-                $c_tgltempo = '-';
+                $c_tgltempo = $t_tglJtTemp;
             }
             
             $html .='<td style="border:1px solid #000;padding:4px 3px;text-align:center">'.$c_tglbayar.'</td>

@@ -119,11 +119,18 @@ class M_master extends CI_Model{
     }
 
     function get_data_ijb($table,$kolom,$id){ //
-        $query = "SELECT c.nama_supplier,b.no_nota,d.tgl_bayar,d.qty_plus,d.qty_ket,d.harga,d.status,c.ppn,a.* FROM $table a
+        $query = "SELECT c.nama_supplier,b.no_nota,d.tgl_jt_tempo,d.tgl_bayar,d.qty_plus,d.qty_ket,d.harga,d.status,c.ppn,a.* FROM $table a
         INNER JOIN m_nota b ON a.id_m_nota=b.id
         INNER JOIN m_supplier c ON b.id_supplier=c.id
         INNER JOIN m_barang_plus d ON a.id_m_barang_plus=d.id
         WHERE a.$kolom='$id'";
+        return $this->db->query($query);
+    }
+
+    function get_data_pjt($id){
+        $query = "SELECT b.nama_barang,b.merek,b.spesifikasi,a.* FROM m_barang_plus a
+        INNER JOIN m_barang b ON a.id_m_barang=b.id
+        WHERE a.id='$id'";
         return $this->db->query($query);
     }
 
@@ -620,7 +627,6 @@ class M_master extends CI_Model{
     function insert_load_barang(){ //
         $data = array(
             'tgl' => $_POST['tgl'],
-            // 'tgl_bayar' => $_POST['tgl_byr'],
             'id_m_nota' => $_POST['supplier'],
             'kode_barang' => $_POST['kode_barang'],
             'nama_barang' => $_POST['nama_barang'],
@@ -628,9 +634,6 @@ class M_master extends CI_Model{
             'spesifikasi' => $_POST['spesifikasi'],
             'qty' => $_POST['qty'],
             'ppn' => $_POST['ppn'],
-            // 'qty_ket' => $_POST['qty_ket'],
-            // 'harga' => $_POST['harga'],
-            // 'status' => $_POST['status_plus'],
             'created_by' => $this->session->userdata('username')
         );
         $result= $this->db->insert("m_barang",$data);
@@ -639,7 +642,8 @@ class M_master extends CI_Model{
         $id = $this->db->query("SELECT id FROM m_barang WHERE kode_barang = '$kd'")->row();
         $data_plus = array(
             'tgl_masuk' => $_POST['tgl'],
-            'tgl_bayar' => $_POST['tgl_byr'],
+            'tgl_jt_tempo' => $_POST['tgl_jt_tempo'],
+            // 'tgl_bayar' => $_POST['tgl_byr'],
             'id_m_barang' => $id->id,
             'id_m_nota' => $_POST['supplier'],
             'qty_plus' => $_POST['qty'],
@@ -771,12 +775,9 @@ class M_master extends CI_Model{
         if($_POST['qty_plus'] == 0){
             $this->db->set('id_m_nota', $_POST['supplier']);
             $this->db->set('tgl_masuk', $_POST['tgl']);
-            $this->db->set('tgl_bayar', $_POST['tgl_byr']);
-            // if($opsi == "uptok"){
-            //     $this->db->set('qty_plus', $_POST['qty_plus_lama']);
-            // }else if($opsi == "updel"){
+            $this->db->set('tgl_jt_tempo', $_POST['tgl_jt_tempo']);
+            // $this->db->set('tgl_bayar', $_POST['tgl_byr']);
             $this->db->set('qty_plus', $_POST['qty_edit']);
-            // }
             $this->db->set('qty_ket', $_POST['qty_ket']);
             $this->db->set('harga', $_POST['harga']);
             $this->db->set('status', $_POST['status_plus']);
@@ -790,7 +791,8 @@ class M_master extends CI_Model{
             $data_plus = array(
                 'id_m_nota' => $_POST['supplier'],
                 'tgl_masuk' => $_POST['tgl'],
-                'tgl_bayar' => $_POST['tgl_byr'],
+                'tgl_jt_tempo' => $_POST['tgl_jt_tempo'],
+                // 'tgl_bayar' => $_POST['tgl_byr'],
                 'id_m_barang' => $_POST['id'],
                 'qty_plus' => $_POST['qty_plus'],
                 'qty_ket' => $_POST['qty_ket'],
@@ -1158,23 +1160,28 @@ class M_master extends CI_Model{
         
         // ambil tanggal bayar terakhir 
         // num_rows()
-        $sql_last = $this->db->query("SELECT tgl_bayar FROM m_barang_plus")->num_rows();
+        $sql_last = $this->db->query("SELECT tgl_jt_tempo FROM m_barang_plus")->num_rows();
 
         if($sql_last == 0){
             $date_last = $date_now;
         }else{
-            $get_last = $this->db->query("SELECT tgl_bayar FROM m_barang_plus ORDER BY tgl_bayar DESC LIMIT 1")->row();
-            $date_last = $get_last->tgl_bayar;   
+            $get_last = $this->db->query("SELECT tgl_jt_tempo FROM m_barang_plus ORDER BY tgl_jt_tempo DESC LIMIT 1")->row();
+            $date_last = $get_last->tgl_jt_tempo;   
         }
 
-        // $date_last = $this->db->query("SELECT tgl_bayar FROM m_barang_plus ORDER BY tgl_bayar DESC LIMIT 1")->row();
+        // $query = "SELECT d.nama_supplier,c.no_nota,b.kode_barang,b.nama_barang,a.* FROM m_barang_plus a
+        // INNER JOIN m_barang b ON a.id_m_barang=b.id
+        // INNER JOIN m_nota c ON b.id_m_nota=c.id
+        // INNER JOIN m_supplier d ON c.id_supplier=d.id
+        // WHERE a.tgl_bayar BETWEEN '$date_now' AND '$date_last'
+        // ORDER BY a.tgl_bayar DESC,d.nama_supplier ASC,c.no_nota ASC";
 
         $query = "SELECT d.nama_supplier,c.no_nota,b.kode_barang,b.nama_barang,a.* FROM m_barang_plus a
         INNER JOIN m_barang b ON a.id_m_barang=b.id
-        INNER JOIN m_nota c ON b.id_m_nota=c.id
+        INNER JOIN m_nota c ON a.id_m_nota=c.id
         INNER JOIN m_supplier d ON c.id_supplier=d.id
-        WHERE a.tgl_bayar BETWEEN '$date_now' AND '$date_last'
-        ORDER BY a.tgl_bayar DESC,d.nama_supplier ASC,c.no_nota ASC";
+        WHERE a.tgl_jt_tempo BETWEEN '2021-01-01' AND '$date_last' AND a.tgl_bayar IS NULL
+        ORDER BY a.tgl_jt_tempo ASC,d.nama_supplier ASC,c.no_nota ASC";
         return $this->db->query($query);
     }
  
