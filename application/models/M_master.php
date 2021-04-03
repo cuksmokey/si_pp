@@ -1181,7 +1181,7 @@ class M_master extends CI_Model{
         INNER JOIN m_nota c ON a.id_m_nota=c.id
         INNER JOIN m_supplier d ON c.id_supplier=d.id
         WHERE a.tgl_jt_tempo BETWEEN '2021-01-01' AND '$date_last' AND a.tgl_bayar IS NULL
-        ORDER BY a.tgl_jt_tempo ASC,d.nama_supplier ASC,c.no_nota ASC";
+        ORDER BY a.status DESC,a.tgl_jt_tempo ASC,d.nama_supplier ASC,c.no_nota ASC";
         return $this->db->query($query);
     }
  
