@@ -222,7 +222,7 @@
                       <option value="PSG">PSG</option>
                       <option value="Meter">Meter</option>
                       <option value="Roll">Roll</option>
-                      <option value="Roll">Pack</option>
+                      <option value="Pack">Pack</option>
                     </select>
                   </td>
                 </tr>
