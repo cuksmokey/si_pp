@@ -161,14 +161,15 @@ class Laporan extends CI_Controller {
         INNER JOIN m_nota b ON a.id_m_nota=b.id
         INNER JOIN m_supplier c ON b.id_supplier=c.id
         INNER JOIN m_barang d ON a.id_m_barang=d.id $where $wtgl
-        GROUP BY a.id_m_nota
+        -- GROUP BY a.id_m_nota
+        GROUP BY a.id_m_nota,a.tgl_masuk,a.tgl_jt_tempo
         ORDER BY a.id_m_nota ASC");
 
         foreach($sqlPerSupplier->result() as $r) {
             $html .= '<tr>
                 <td style="border:1px solid #000;background:#ddd;padding:5px;font-weight:bold" colspan="3">Nama Supplier : '.$r->nama_supplier.'</td>
                 <td style="border:1px solid #000;background:#ddd;padding:5px;font-weight:bold" colspan="2">No. Nota : '.$r->no_nota.'</td>
-                <td style="border:1px solid #000;background:#ddd;padding:5px;font-weight:bold" colspan="3"></td>
+                <td style="border:1px solid #000;background:#ddd;padding:5px;font-weight:bold" colspan="3">Tanggal Nota : '.$this->m_fungsi->tanggal_format_indonesia($r->tgl_masuk).'</td>
             </tr>
             <tr>
                 <td style="border:1px solid #000;background:#ddd;padding:5px;font-weight:bold;text-align:center">No</td>
@@ -181,39 +182,46 @@ class Laporan extends CI_Controller {
                 <td style="border:1px solid #000;background:#ddd;padding:5px;font-weight:bold;text-align:center">Harga Total</td>
             </tr>';
 
-            // AMBIL ISI DATA PER NOTA SUPPLIER
-            $getIsiPerSupplier = $this->db->query("SELECT d.nama_barang,d.merek,d.spesifikasi,a.* FROM m_barang_plus a
-            INNER JOIN m_nota b ON a.id_m_nota=b.id
-            INNER JOIN m_supplier c ON b.id_supplier=c.id
-            INNER JOIN m_barang d ON a.id_m_barang=d.id
-            WHERE a.id_m_nota='$r->id_m_nota'
-            ORDER BY d.nama_barang ASC");
-
-            $ii = 0;
-            $totTot = 0;
-            foreach($getIsiPerSupplier->result() as $r){
-                $ii++;
-                $tot = $r->qty_plus * $r->harga;
-
-                $html .= '<tr>
-                    <td style="border:1px solid #000;padding:5px;text-align:center">'.$ii.'</td>
-                    <td style="border:1px solid #000;padding:5px">'.$r->nama_barang.'</td>
-                    <td style="border:1px solid #000;padding:5px">'.$r->merek.'</td>
-                    <td style="border:1px solid #000;padding:5px">'.$r->spesifikasi.'</td>
-                    <td style="border:1px solid #000;padding:5px">'.number_format($r->qty_plus).'</td>
-                    <td style="border:1px solid #000;padding:5px">'.$r->qty_ket.'</td>
-                    <td style="border:1px solid #000;padding:5px;text-align:right">Rp. '.number_format($r->harga).'</td>
-                    <td style="border:1px solid #000;padding:5px;text-align:right">Rp. '.number_format($tot).'</td>
-                </tr>';
-
-                $totTot += $tot;
+            // AMBIL TANGGAL JATUH TEMPO
+            $getTglJtTempo = $this->db->query("SELECT a.* FROM m_barang_plus a
+            WHERE id_m_nota='$r->id_m_nota' AND tgl_masuk='$r->tgl_masuk' AND tgl_jt_tempo='$r->tgl_jt_tempo'
+            GROUP BY tgl_jt_tempo ASC");
+            
+            foreach($getTglJtTempo->result() as $r1){
+                // AMBIL ISI DATA PER NOTA SUPPLIER
+                $getIsiPerSupplier = $this->db->query("SELECT d.nama_barang,d.merek,d.spesifikasi,a.* FROM m_barang_plus a
+                INNER JOIN m_nota b ON a.id_m_nota=b.id
+                INNER JOIN m_supplier c ON b.id_supplier=c.id
+                INNER JOIN m_barang d ON a.id_m_barang=d.id
+                WHERE a.id_m_nota='$r1->id_m_nota' AND a.tgl_masuk='$r1->tgl_masuk' AND a.tgl_jt_tempo='$r1->tgl_jt_tempo'
+                ORDER BY d.nama_barang ASC");
+    
+                $ii = 0;
+                $totTot = 0;
+                foreach($getIsiPerSupplier->result() as $r2){
+                    $ii++;
+                    $tot = $r2->qty_plus * $r2->harga;
+    
+                    $html .= '<tr>
+                        <td style="border:1px solid #000;padding:5px;text-align:center">'.$ii.'</td>
+                        <td style="border:1px solid #000;padding:5px">'.$r2->nama_barang.'</td>
+                        <td style="border:1px solid #000;padding:5px">'.$r2->merek.'</td>
+                        <td style="border:1px solid #000;padding:5px">'.$r2->spesifikasi.'</td>
+                        <td style="border:1px solid #000;padding:5px">'.number_format($r2->qty_plus).'</td>
+                        <td style="border:1px solid #000;padding:5px">'.$r2->qty_ket.'</td>
+                        <td style="border:1px solid #000;padding:5px;text-align:right">Rp. '.number_format($r2->harga).'</td>
+                        <td style="border:1px solid #000;padding:5px;text-align:right">Rp. '.number_format($tot).'</td>
+                    </tr>';
+    
+                    $totTot += $tot;
+                }
             }
 
             // TOTAL PEMBELIAN
             $html .= '<tr>
-                <td style="border:1px solid #000;padding:5px" colspan="3"></td>
-                <td style="border:1px solid #000;padding:5px;font-weight:bold;text-align:right" colspan="4">Total Pembelian</td>
-                <td style="border:1px solid #000;padding:5px;font-weight:bold;text-align:right">Rp. '.number_format($totTot).'</td>
+                <td style="border:1px solid #000;padding:5px" colspan="3">Jatuh Tempo : '.$this->m_fungsi->tanggal_format_indonesia($r1->tgl_jt_tempo).'</td>
+                <td style="border:1px solid #000;padding:5px;font-weight:bold;text-align:right;font-style:italic" colspan="4">Total Pembelian</td>
+                <td style="border:1px solid #000;padding:5px;font-weight:bold;text-align:right;font-style:italic">Rp. '.number_format($totTot).'</td>
             </tr>';
         }
 
@@ -977,9 +985,11 @@ class Laporan extends CI_Controller {
         if($plh_nota == "pernota"){
             $harga = "SUM(a.harga) AS sumharga";
             $group = "GROUP BY a.id_m_nota,a.tgl_bayar,a.status";
+            $tkop = 'PER NOTA';
         }else{
             $harga = "a.harga AS sumharga";
             $group = "";
+            $tkop = '';
         }
 
         if($jenis == 0){
@@ -994,7 +1004,7 @@ class Laporan extends CI_Controller {
         INNER JOIN m_barang d ON a.id_m_barang=d.id
         WHERE c.id LIKE '%$where%'
         $group
-        ORDER BY b.no_nota ASC,a.tgl_bayar ASC,a.status ASC");
+        ORDER BY b.no_nota ASC,a.tgl_jt_tempo ASC,a.tgl_bayar ASC,a.status ASC");
 
         if($jenis == 0){
             $kopp = 'SEMUA SUPPLIER';
@@ -1015,7 +1025,7 @@ class Laporan extends CI_Controller {
             <th style="border:0;padding:0 5px" colspan="6">PEMBELIAN DAFTAR HUTANG DAN CASH PER SUPPLIER</th>
         </tr>
         <tr>
-            <th style="border:0;padding:0 5px" colspan="6">'.$kopp.'</th>
+            <th style="border:0;padding:0 5px" colspan="6">'.$kopp.' '.$tkop.'</th>
         </tr>
         <tr>
             <th style="border:0;padding:0 5px 10px" colspan="6">TANGGAL : '.strtoupper($ttgl).'</th>

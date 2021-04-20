@@ -149,6 +149,9 @@
                                 </li>
                                 <?php if ($this->session->userdata('otoritas') == "Pembelian") { ?>
                                     <li>
+                                        <a href="<?php echo base_url('Master/KodeBarang') ?>">Kode Barang</a>
+                                    </li>
+                                    <li>
                                         <a href="<?php echo base_url('Master/Barang') ?>">Barang</a>
                                     </li>
                                 <?php }
@@ -175,7 +178,15 @@
                             <span>Price List</span>
                         </a>
                     </li> -->
-                    <?php if ($this->session->userdata('otoritas') == "Penjualan") { ?>
+                    <?php if ($this->session->userdata('otoritas') == "Pembelian") { ?>
+                        <li>
+                            <a href="<?php echo base_url('Master/Price_List') ?>">
+                                <i class="material-icons">list</i>
+                                <span>Price List</span>
+                            </a>
+                        </li>
+                    <?php }
+                    if ($this->session->userdata('otoritas') == "Penjualan") { ?>
                         <li>
                             <a href="<?php echo base_url('Master/PlPackingList') ?>">
                                 <i class="material-icons">list</i>

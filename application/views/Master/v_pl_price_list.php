@@ -91,7 +91,7 @@
                   <td></td>
                 </tr>
                 <tr>
-                  <td>No. Invoice</td>
+                  <td>Kode Packing</td>
                   <td>:</td>
                   <td>
                     <input type="text" placeholder="0" class="angka form-control" id="no_inv" maxlength="11" autocomplete="off">
@@ -101,7 +101,7 @@
                 <tr>
                   <td></td>
                   <td></td>
-                  <td style="padding:0" colspan="2"><b>NOTE:</b> <br/>- Kosongkan <b>No. Invoice</b> Untuk Cetak Satu <b>Nota Penjualan</b>. <br/>- Samakan <b>No. Invoice, Laporan</b> dan <b>Customer</b> Untuk Cetak Beberapa <b>Nota Penjualan</b>.</td>
+                  <td style="padding:0" colspan="2"><b>NOTE:</b> <br/>- Kosongkan <b>Kode Packing</b> Untuk Cetak Satu <b>Nota Penjualan</b>. <br/>- Samakan <b>Kode Packing, Laporan</b> dan <b>Customer</b> Untuk Cetak Beberapa <b>Nota Penjualan</b>.</td>
                 </tr>
                 <tr>
                   <td>Laporan</td>
@@ -589,6 +589,7 @@
         $("#idid").val(json.header.id);
         $("#tgl").val(json.header.tgl);
         $("#laporan").val(json.header.laporan);
+        load_perusahaan(json.header.laporan);
         $("#no_surat").val(json.header.no_surat);
         $("#no_surat_lama").val(json.header.no_surat);
         $("#no_so").val(json.header.no_so);

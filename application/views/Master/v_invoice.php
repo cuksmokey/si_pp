@@ -65,7 +65,7 @@
                     <select name="" id="ctk_inv" class="form-control">
                       <option value="">Pilih . . .</option>
                       <option value="0">Satu Nota</option>
-                      <option value="1">No Invoice</option>
+                      <option value="1">Kode Packing</option>
                     </select>
                   </td>
                   <td></td>

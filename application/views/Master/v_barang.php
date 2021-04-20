@@ -68,6 +68,21 @@
                   <td style="padding:10px"></td>
                 </tr>
                 <tr>
+                  <td>Pilih Kode</td>
+                  <td>:</td>
+                  <td>
+                    <select class="form-control" id="kd_barang" style="width:100%">
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Kode Barang</td>
+                  <td>:</td>
+                  <td>
+                    <input type="text" id="kd_barang_note" autocomplete="off" class="form-control" disabled="true" style="background:#ddd">
+                  </td>
+                </tr>
+                <!-- <tr>
                   <td>Kode Barang</td>
                   <td>:</td>
                   <td style="vertical-align: top;">
@@ -91,12 +106,12 @@
                   <td></td>
                   <td></td>
                   <td style="padding:0 0 5px;vertical-align:top" colspan="2"><b>NOTE:</b> Penulisan <b>Kode Barang</b> dan <b>Nama Barang</b> Sebisa Mungkin Tanpa Menggunakan Simbol!<br>Simbol Kode Barang yang diperbolehkan hanya: <b>/</b>, <b>-</b>, dan <b>_</b></td>
-                </tr>
+                </tr> -->
                 <tr>
                   <td>Nama Barang</td>
                   <td>:</td>
                   <td>
-                    <input type="text" id="nama_barang" autocomplete="off" class="form-control">
+                    <input type="text" id="nama_barang" autocomplete="off" class="form-control" disabled="true" style="background:#ddd">
                     <input type="hidden" value="" id="id">
                     <input type="hidden" value="" id="kode_barang_lama">
                     <input type="hidden" value="" id="id_m_barang_plus">
@@ -105,23 +120,23 @@
                   </td>
                   <!-- <td style="padding:5px"><b>NOTE:</b> Simbol Nama Barang yang diperbolehkan hanya: <b>-</b> , <b>_</b> ,dan <b>titik</b>(<b>.</b>)</td> -->
                 </tr>
-                <tr>
+                <!-- <tr>
                   <td></td>
                   <td></td>
                   <td style="padding:0 0 5px;vertical-align:top" colspan="2"><b>NOTE:</b> Simbol <b>Nama Barang</b> yang diperbolehkan hanya: <b>-</b> , <b>_</b> ,dan <b>titik</b>(<b>.</b>)</td>
-                </tr>
+                </tr> -->
                 <tr>
                   <td>Merek</td>
                   <td>:</td>
                   <td>
-                    <input type="text" id="merek" autocomplete="off" class="form-control">
+                    <input type="text" id="merek" autocomplete="off" class="form-control" disabled="true" style="background:#ddd">
                   </td>
                 </tr>
                 <tr>
                   <td>Spesifikasi</td>
                   <td>:</td>
                   <td>
-                    <input type="text" id="spesifikasi" autocomplete="off" class="form-control">
+                    <input type="text" id="spesifikasi" autocomplete="off" class="form-control" disabled="true" style="background:#ddd">
                   </td>
                 </tr>
                 <tr>
@@ -253,7 +268,7 @@
                 <tr>
                   <td></td>
                   <td></td>
-                  <td style="padding:0 0 5px;vertical-align:top" colspan="2"><b>NOTE :</b><br>1. <b>Edit QTY</b> Hanya Bisa di Riwayat Pembelian Terkhir.<br>2. Kosongkan Kolom <b>Edit QTY</b> untuk <b>Hapus</b> Riwayat Pembelian Terakhir.<br>3. Jika <b>QTY Barang</b> lebih Kecil daripada <b>QTY Riwayat Pembelian Terakhir</b> tidak bisa <b>Edit QTY</b></td>
+                  <td style="padding:0 0 5px;vertical-align:top" colspan="2"><b>NOTE :</b><br>1. <b>Edit Data</b> Hanya Bisa di Riwayat Pembelian Terkhir.<br>2. Kosongkan Kolom <b>Edit QTY</b> untuk <b>Hapus</b> Riwayat Pembelian Terakhir.<br>3. Jika <b>QTY Barang</b> lebih Kecil daripada <b>QTY Riwayat Pembelian Terakhir</b> tidak bisa <b>Edit QTY</b></td>
                 </tr>
                 <tr>
                   <td>Harga</td>
@@ -261,13 +276,14 @@
                   <td>
                     <input type="text" id="harga" placeholder="0" autocomplete="off" class="form-control" onkeypress="return hanyaAngka(event)">
                   </td>
+                  <td style="font-style:italic;font-size:12px;padding:0 0 0 5px">*Harga bisa kosong</td>
                 </tr>
                 <tr>
                   <td style="padding:10px"></td>
                 </tr>
-                <tr>
+                <!-- <tr>
                   <td colspan="5"><b>NOTE : TANGGAL MASUK, SUPPLIER, NO NOTA TIDAK ADA DATA YANG TEREKAM!! <br>Jika Data Tidak Sesuai, Bisa di Edit Terlebih Dahulu. ( Edit Data Hanya Bisa di Pembelian Terakhir!! ) <br><br><b>RIWAYAT PEMBELIAN :</b></td>
-                </tr>
+                </tr> -->
               </table>
 
 <table class="table" style="background:#ddd">
@@ -275,14 +291,15 @@
     <tr>
       <th style="background:#aaa;width:5%">No</th>
       <th style="background:#aaa;width:10%">Tgl Masuk</th>
-      <th style="background:#aaa;width:10%">Tgl Jth Tempo</th>
+      <th style="background:#aaa;width:10%">Jth Tempo</th>
       <th style="background:#aaa;width:10%">Tgl Bayar</th>
       <th style="background:#aaa;width:12%">Supplier</th>
       <th style="background:#aaa;width:12%">No Nota</th>
-      <th style="background:#aaa;width:10%">QTY</th>
-      <th style="background:#aaa;width:10%">KET</th>
-      <th style="background:#aaa;width:10%">Harga</th>
-      <th style="background:#aaa;width:10%">Pembayaran</th>
+      <th style="background:#aaa;width:8%">QTY</th>
+      <th style="background:#aaa;width:8%">KET</th>
+      <th style="background:#aaa;width:8%">Harga</th>
+      <th style="background:#aaa;width:8%">PPN</th>
+      <th style="background:#aaa;width:8%">Pembayaran</th>
     </tr>
   </thead>
   <tbody id="detail_cart">
@@ -336,10 +353,11 @@
                   <th style="width:10%">Tgl Bayar</th>
                   <th style="width:12%">Supplier</th>
                   <th style="width:12%">No Nota</th>
-                  <th style="width:10%">QTY</th>
-                  <th style="width:10%">KET</th>
-                  <th style="width:10%">Harga</th>
-                  <th style="width:10%">Pembayaran</th>
+                  <th style="width:8%">QTY</th>
+                  <th style="width:8%">KET</th>
+                  <th style="width:8%">Harga</th>
+                  <th style="width:8%">PPN</th>
+                  <th style="width:8%">Pembayaran</th>
                 </tr>
               </thead>
               <tbody id="list-timbangan">
@@ -360,9 +378,10 @@
   $(document).ready(function() {
     $(".box-form").hide();
     load_data();
-    // load_supplier();
+    loadKodeBarang();
 
-    $("input.angka").keypress(function(event) { //input text number only
+    //input text number only
+    $("input.angka").keypress(function(event) {
       return /\d/.test(String.fromCharCode(event.keyCode));
     });
   });
@@ -371,33 +390,6 @@
     // alert( this.value );
     load_supplier(this.value);
     // kosong();
-  });
-
-  $("#id1").on({
-    keydown: function(e) {
-      if (e.which === 32)
-        return false;
-    },
-    keyup: function() {
-      this.value = this.value.toUpperCase();
-    },
-    change: function() {
-      this.value = this.value.replace(/\s/g, "");
-    }
-  });
-
-  $("#id2").on({
-    keydown: function(e) {
-      if (e.which === 32)
-        return false;
-    },
-    keyup: function() {
-      this.value = this.value.toUpperCase();
-    },
-    change: function() {
-      this.value = this.value.replace(/\s/g, "");
-
-    }
   });
 
   $(".btn-add").click(function() {
@@ -451,6 +443,46 @@
     });
   }
 
+  function loadKodeBarang() {
+
+$('#kd_barang').select2({
+  allowClear: true,
+  placeholder: 'SELECT',
+  ajax: {
+    dataType: 'json',
+    url: '<?php echo base_url(); ?>/Master/cariNewKdBarang',
+    delay: 800,
+    data: function(params) {
+      if (params.term == undefined) {
+        return {
+          search: "",
+        }
+      } else {
+        return {
+          search: params.term,
+        }
+      }
+    },
+    processResults: function(data, page) {
+      return {
+        results: data
+      };
+    },
+  }
+});
+}
+
+$('#kd_barang').on('change', function() {
+  data = $('#kd_barang').select2('data');
+  $("#id").val(data[0].id);
+  $("#kd_barang_note").val(data[0].kode_barang);
+  $("#nama_barang").val(data[0].nama_barang);
+  $("#merek").val(data[0].merek);
+  $("#spesifikasi").val(data[0].spesifikasi);
+  cariKodeBarang();
+  // alert(data[0].id)
+});
+
   function formatNumber(num) {
     return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
   }
@@ -480,7 +512,13 @@
             tgl_bayar = json.header[i].tgl_bayar
           }
 
-          html +='<tr><td>'+ii+'</td><td>'+json.header[i].tgl_masuk+'</td><td>'+tgl_jt_tempo+'</td><td>'+tgl_bayar+'</td><td>'+json.header[i].nama_supplier+'</td><td>'+json.header[i].no_nota+'</td><td>'+json.header[i].qty_plus+'</td><td>'+json.header[i].qty_ket+'</td><td>'+formatNumber(json.header[i].harga)+'</td><td>'+json.header[i].status+'</td></tr>';
+          if(json.header[i].ppn == 0){
+            ppnn = 'NO PPN';
+          }else{
+            ppnn = 'PPN 10%';
+          }
+
+          html +='<tr><td>'+ii+'</td><td>'+json.header[i].tgl_masuk+'</td><td>'+tgl_jt_tempo+'</td><td>'+tgl_bayar+'</td><td>'+json.header[i].nama_supplier+'</td><td>'+json.header[i].no_nota+'</td><td>'+json.header[i].qty_plus+'</td><td>'+json.header[i].qty_ket+'</td><td>'+formatNumber(json.header[i].harga)+'</td><td>'+ppnn+'</td><td>'+json.header[i].status+'</td></tr>';
         }
 
         if(opsi == "2"){
@@ -510,9 +548,6 @@
     kb1 = $("#id1").val();
     kb2 = $("#id2").val();
     kode_barang_lama = $("#kode_barang_lama").val();
-    nama_barang = $("#nama_barang").val();
-    merek = $("#merek").val();
-    spesifikasi = $("#spesifikasi").val();
 
     // tgl_byr = $("#tgl_byr").val();
     tgl_jt_tempo = $("#tgl_jt_tempo").val();
@@ -561,12 +596,11 @@
     qty_plus = Number.parseInt(k_plus_qty);
     qty_edit = Number.parseInt(k_edit_qty);
 
-    // if (tgl == "" || kode_barang == "" || kb1 == "" || kb2 == "" || nama_barang == "" || merek == "" || spesifikasi == "" || ppn=="" || supplier_note == "" || i_qty == "" || qty_ket == "" || qty_ket == 0 || no_nota == "" || status_plus == "" || status_plus == 0 || tgl_byr == "") {
-    //   showNotification("alert-info", "Harap Lengkapi Form", "bottom", "center", "", "");
+    // if(kode_barang == "" || kb1 == "" || kb2 == ""){
+    //   showNotification("alert-danger", "Kode Barang Kosong!", "top", "center", "", "");
     //   return;
     // }
-
-    if(kode_barang == "" || kb1 == "" || kb2 == ""){
+    if(id == ""){
       showNotification("alert-danger", "Kode Barang Kosong!", "top", "center", "", "");
       return;
     }
@@ -594,10 +628,6 @@
       showNotification("alert-danger", "Tanggal Masuk Kosong!", "top", "center", "", "");
       return;
     }
-    // if(tgl_byr == ""){
-    //   showNotification("alert-danger", "Pilih Tanggal Bayar!", "top", "center", "", "");
-    //   return;
-    // }
     if(tgl_jt_tempo == ""){
       showNotification("alert-danger", "Pilih Tanggal Jatuh Tempo!", "top", "center", "", "");
       return;
@@ -629,9 +659,9 @@
         supplier: supplier,
         kode_barang: kode_barang,
         kode_barang_lama: kode_barang_lama,
-        nama_barang: nama_barang,
-        merek: merek,
-        spesifikasi: spesifikasi,
+        // nama_barang: nama_barang,
+        // merek: merek,
+        // spesifikasi: spesifikasi,
         qty: qty,
         qty_plus: qty_plus,
         qty_edit: qty_edit,
@@ -647,18 +677,10 @@
       }),
       dataType: "json",
       success: function(data) {
-        // $("#btn-simpan").prop("disabled", true);
         if (data.data == true) {
-
           cariKodeBarang();
-          // plus_qty(id);
-          // view_detail(id);
-          // view_detail(kode_barang);
           showNotification("alert-success", data.msg, "bottom", "center", "", "");
-
-          // status = 'update';
           $("#btn-simpan").prop("disabled", true);
-
         } else {
           showNotification("alert-danger", data.msg, "bottom", "center", "", "");
           $("#btn-simpan").prop("disabled", false);
@@ -666,14 +688,13 @@
       }
     });
   }
+
   //////////////  C A R I  //////////////////
 
   function cariKodeBarang(){
-    cariKdB = $("#id1").val() + "/" + $("#id2").val();
-    kb1 = $("#id1").val();
-    kb2 = $("#id2").val();
+    ididid = $("#id").val();
 
-    if(cariKdB == "" || kb1 == "" || kb2 == ""){
+    if(ididid == ""){
       showNotification("alert-danger", "Kode Barang Kosong!", "top", "center", "", "");
       return;
     }
@@ -683,17 +704,18 @@
       url: '<?php echo base_url('Master/get_edit'); ?>',
       type: 'POST',
       data: {
-        id: cariKdB,
+        id: ididid,
         jenis: "cari_barang"
       },
       success: function(data) {
         json = JSON.parse(data);
-
-        if (json.data == 'error') {
+        console.log(json)
+        if(json.data == 'error') {
           showNotification("alert-danger", "Kode Barang Tidak Ada!!", "top", "center", "", "");
+        }else if(json.data == 'kosong'){
+          kosong(json[0].id);
         }else{
           plus_qty(json.id);
-          // alert(json.id);
         }
       }
     })
@@ -735,7 +757,6 @@
   function tampil_edit(id) {
     $(".box-data").hide();
     $(".box-form").show();
-    // $('.box-form').animateCss('fadeInDown');
     $("#judul").html('<h3>Form Edit Data Barang</h3>');
     $("#supplier").val("");
     $("#supplier_note").val("");
@@ -759,28 +780,24 @@
         json = JSON.parse(data);
         $("#btn-simpan").prop("disabled", false);
 
-        a = json.kode_barang.split("/");
-
-        // $("#supplier").val("").prop("disabled", true).attr('style', 'background:#ddd;');
-
-        $("#id1").val(a[0]).prop("disabled", false).attr('style', 'background:#fff;');
-        $("#id2").val(a[1]).prop("disabled", false).attr('style', 'background:#fff;');
-
         $("#id").val(json.id);
         $("#id_m_barang_plus").val(json.id_m_barang_plus);
 
-        $("#ppn").val(json.ppn);
-        $("#tgl").val(json.tgl).prop("disabled", false).attr('style', 'background:#fff;');
+        $("#tgl").val(json.tgl_masuk).prop("disabled", false).attr('style', 'background:#fff;');
         $("#tgl_lama").val(json.tgl);
         $("#kode_barang_lama").val(json.kode_barang);
+
         $("#ppn").val(json.ppn);
+        load_supplier(json.ppn);
+
         $("#id_supplier").val(json.id_m_nota);
         $("#supplier_note").val(json.nama_supplier);
         $("#no_nota").val(json.no_nota);
 
-        $("#nama_barang").val(json.nama_barang).prop("disabled", false).attr('style', 'background:#fff;');
-        $("#merek").val(json.merek).prop("disabled", false).attr('style', 'background:#fff;');
-        $("#spesifikasi").val(json.spesifikasi).prop("disabled", false).attr('style', 'background:#fff;');
+        $("#kd_barang_note").val(json.kode_barang).prop("disabled", true).attr('style', 'background:#ddd;');
+        $("#nama_barang").val(json.nama_barang).prop("disabled", true).attr('style', 'background:#ddd;');
+        $("#merek").val(json.merek).prop("disabled", true).attr('style', 'background:#ddd;');
+        $("#spesifikasi").val(json.spesifikasi).prop("disabled", true).attr('style', 'background:#ddd;');
 
         // $("#tgl_byr").val(json.tgl_bayar);
         $("#tgl_jt_tempo").val(json.tgl_jt_tempo);
@@ -828,7 +845,6 @@
         type: 'POST',
         data: {
           id: id,
-          // id: kd_barang,
           jenis: "edit_barang"
         },
       })
@@ -836,23 +852,18 @@
         json = JSON.parse(data);
         $("#btn-simpan").prop("disabled", false);
 
-        a = json.kode_barang.split("/");
-
-        // $("#supplier").val("").prop("disabled", true).attr('style', 'background:#ddd;');
-
-        $("#id1").val(a[0]).prop("disabled", true).attr('style', 'background:#ddd;');
-        $("#id2").val(a[1]).prop("disabled", true).attr('style', 'background:#ddd;');
-
         $("#id").val(json.id);
         $("#id_m_barang_plus").val(json.id_m_barang_plus);
 
         $("#ppn").val(json.ppn);
-        $("#tgl").val(json.tgl).prop("disabled", false).attr('style', 'background:#fff;');
+        load_supplier(json.ppn);
+        $("#tgl").val(json.tgl_masuk).prop("disabled", false).attr('style', 'background:#fff;');
         $("#tgl_lama").val(json.tgl);
         $("#id_supplier").val(json.id_m_nota);
         $("#supplier_note").val(json.nama_supplier);
         $("#no_nota").val(json.no_nota);
 
+        $("#kd_barang_note").val(json.kode_barang).prop("disabled", true).attr('style', 'background:#ddd;');
         $("#nama_barang").val(json.nama_barang).prop("disabled", true).attr('style', 'background:#ddd;');
         $("#merek").val(json.merek).prop("disabled", true).attr('style', 'background:#ddd;');
         $("#spesifikasi").val(json.spesifikasi).prop("disabled", true).attr('style', 'background:#ddd;');
@@ -892,6 +903,7 @@
             type: "POST",
             data: {
               id: id,
+              kode: null,
               jenis: "hapus_barang"
             },
             success: function(data) {
@@ -910,22 +922,30 @@
 
   }
 
-  function kosong() {
-
+  function kosong(idmbp = "") {
+    // alert(idmbp)
     status = "insert";
     opsi = "";
 
-    $("#id").val("");
-    $("#id_m_barang_plus").val("");
+    if(idmbp != ""){
+      $("#kd_barang_note").prop("disabled", true).attr('style', 'background:#ddd;');
+      $("#nama_barang").prop("disabled", true).attr('style', 'background:#ddd;');
+      $("#merek").prop("disabled", true).attr('style', 'background:#ddd;');
+      $("#spesifikasi").prop("disabled", true).attr('style', 'background:#ddd;');
+    }else{
+      $("#id").val("");
+      $("#id_m_barang_plus").val("");
+      $("#kd_barang_note").val("").prop("disabled", true).attr('style', 'background:#ddd;');
+      $("#nama_barang").val("").prop("disabled", true).attr('style', 'background:#ddd;');
+      $("#merek").val("").prop("disabled", true).attr('style', 'background:#ddd;');
+      $("#spesifikasi").val("").prop("disabled", true).attr('style', 'background:#ddd;');
+    }
 
     $("#tgl").val("").prop("disabled", false).attr('style', 'background:#fff;');
     $("#tgl_lama").val("");
     $("#id1").val("").prop("disabled", false).attr('style', 'background:#fff;');
     $("#id2").val("").prop("disabled", false).attr('style', 'background:#fff;');
     $("#kode_barang_lama").val("");
-    $("#nama_barang").val("").prop("disabled", false).attr('style', 'background:#fff;');
-    $("#merek").val("").prop("disabled", false).attr('style', 'background:#fff;');
-    $("#spesifikasi").val("").prop("disabled", false).attr('style', 'background:#fff;');
 
     $("#ppn").val("");
     $("#id_supplier").val("");
@@ -940,27 +960,22 @@
     $("#qty_ket").val("0").prop("disabled", false).attr('style', 'background:#fff;');
     $("#harga").val("").prop("disabled", false).attr('style', 'background:#fff;');
 
-    // $("#tgl_byr").val("").prop("disabled", false).attr('style', 'background:#fff;');
     $("#tgl_jt_tempo").val("").prop("disabled", false).attr('style', 'background:#fff;');
-    // $("#tgl_byr_lama").val("");
     $("#status_plus").val("0").prop("disabled", false).attr('style', 'background:#fff;');
     $("#status_plus_lama").val("0");
 
     $("#btn-simpan").prop("disabled", false);
-    $("#txt-btn-simpan").html("SIMPAN");
-
     $("#detail_cart").html("");
+    
   }
 
   function load_supplier(ppn) {
 
     $('#supplier').select2({
-      // minimumInputLength: 3,
       allowClear: true,
       placeholder: 'SELECT',
       ajax: {
         dataType: 'json',
-        // url: '<?php echo base_url(); ?>/Master/laod_supplier_nota',
         url: '<?php echo base_url(); ?>/Master/loadSuppBrng',
         delay: 800,
         data: function(params) {
@@ -1009,14 +1024,12 @@
       rupiah = split[0].substr(0, sisa),
       ribuan = split[0].substr(sisa).match(/\d{3}/gi);
 
-    // tambahkan titik jika yang di input sudah menjadi angka ribuan
     if (ribuan) {
       separator = sisa ? '.' : '';
       rupiah += separator + ribuan.join('.');
     }
 
     return rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-    // return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
   }
 
   let qty = document.getElementById('qty');

@@ -17,7 +17,7 @@
                               <table width="100%">
                                 <tr>
                                   <td align="left">
-                                  <?php if ($this->session->userdata('level') <> "User") { ?>
+                                  <?php if ($this->session->userdata('level') <> "User" || $this->session->userdata('level') <> "Admin") { ?>
                                     <button type="button" class="btn-add btn btn-default btn-sm waves-effect">
                                         <i class="material-icons">library_add</i>
                                         <b><span>New</span></b>
@@ -32,12 +32,12 @@
                                     <thead>
                                         <tr>
                                             <th>No</th>
-                                            <th>Tanggal</th>
+                                            <!-- <th>Tanggal</th> -->
                                             <th>Kode Barang</th>
                                             <th>Nama Barang</th>
                                             <th>Merek</th>
                                             <th>Spesifikasi</th>
-                                            <th>Supplier</th>
+                                            <!-- <th>Supplier</th> -->
                                             <th>Harga Price List</th>
                                             <th width="15%">Aksi</th>
                                         </tr>

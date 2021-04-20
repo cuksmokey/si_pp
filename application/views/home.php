@@ -51,15 +51,17 @@
       <div class="modal-header"></div>
         <div class="modal-body">
           <div class="box-add">
-            <div>ITEM :</div>
+            <div style="font-weight:bold;font-style:italic">*Laporan Lebih Detail : Laporan -> Pembelian -> Barang</div>
             <table  width="100%" class="table table-bordered table-striped table-hover dataTable ">
               <thead>
                 <tr>
-                  <th style="width:30%">Nama Barang</th>
-                  <th style="width:25%">Merek</th>
-                  <th style="width:25%">Spesifikasi</th>
+                  <th style="width:20%">Nama Barang</th>
+                  <th style="width:20%">Merek</th>
+                  <th style="width:20%">Spesifikasi</th>
                   <th style="width:10%">Qty</th>
                   <th style="width:10%">Satuan</th>
+                  <th style="width:10%">Harga Satuan</th>
+                  <th style="width:10%">Harga Total</th>
                 </tr>
               </thead>
               <tbody id="list-timbangan">
@@ -99,14 +101,14 @@
                responsive: true,
                "pageLength": 10,
                "language": {
-                       "emptyTable":     "Tidak ada data.."
+                       "emptyTable": "Tidak ada data.."
                    },
                "order": [[ 0, "asc" ]]
                });
     }
 
     function view_detail(id){
-    
+    // alert(id)
     $.ajax({
         url: '<?php echo base_url('Master/get_edit'); ?>',
         type: 'POST',
@@ -114,12 +116,31 @@
     })
     .done(function(data) {
         json = JSON.parse(data);
+
+        let idr = new Intl.NumberFormat();
         html = '';
+        tottot = 0;
         for (var i = 0 ; i < json.length; i++) {
           ii = i+1;
+          harga_tot = json[i].qty_plus * json[i].harga;
+          
+          html +=`<tr>
+            <td>${json[i].nama_barang}</td>
+            <td>${json[i].merek}</td>
+            <td>${json[i].spesifikasi}</td>
+            <td>${json[i].qty_ket}</td>
+            <td>${idr.format(json[i].qty_plus)}</td>
+            <td style="text-align:right">Rp. ${idr.format(json[i].harga)}</td>
+            <td style="text-align:right">Rp. ${idr.format(harga_tot)}</td>
+          </tr>`;
 
-          html +='<tr><td>'+json[i].nama_barang+'</td><td>'+json[i].merek+'</td><td>'+json[i].spesifikasi+'</td><td>'+json[i].qty_plus+'</td><td>'+json[i].qty_ket+'</td></tr>';
+          tottot += harga_tot;
         }
+
+        html += `<tr>
+          <td colspan="6" style="text-align:right;font-weight:bold">Total Pembelian</td>
+          <td style="text-align:right;font-weight:bold">Rp. ${idr.format(tottot)}</td>
+        </tr>`
 
         $("#modal-view-detail").modal("show");
         $("#list-timbangan").html(html);
@@ -129,11 +150,12 @@
   }
 
     function confirmByr(id, i) {
-    tglJthTmp = $("#plhTglPbJthTp" + i).val();
+    pTglTemp = $("#pTglTemp" + i).val();
+    pTglBayar = $("#plhTglPbJthTp" + i).val();
 
-    // alert("ID:"+id+". ii:"+i+". tglJthTmp:"+tglJthTmp);
+    // alert(pTglTemp+" ID:"+id+". ii:"+i+". tglJthTmp:"+pTglBayar);
 
-    if(tglJthTmp == 0 || tglJthTmp == "") {
+    if(pTglBayar == 0 || pTglBayar == "") {
       swal("Pilih Tanggal Bayar Terlebih Dahulu!", "", "error");
     } else {
       $.ajax({
@@ -141,11 +163,11 @@
         method: "POST",
         data: {
           id: id,
-          tglJthTmp: tglJthTmp
+          pTglTemp: pTglTemp,
+          pTglBayar: pTglBayar
         },
         success: function(data) {
           swal("Berhasil Terbayar", "", "success");
-        //   reloadTable();
           load_data();
         }
       });

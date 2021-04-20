@@ -73,6 +73,13 @@ class Master extends CI_Controller {
         $this->load->view('footer');
     }
 
+    public function KodeBarang()
+    {
+        $this->load->view('header');
+        $this->load->view('Master/v_kode_barang');
+        $this->load->view('footer');
+    }
+
     public function Etalase() {
         $this->load->view('header');
         $this->load->view('Master/v_etalase');
@@ -125,22 +132,8 @@ class Master extends CI_Controller {
                     echo json_encode(array('data' =>  TRUE));
                 }
             }else if ($jenis == "Simpan_Barang") { //
-                $id = $this->input->post('kode_barang');
-                $cek = $this->m_master->get_data_one("m_barang","kode_barang",$id)->num_rows();
-
-                // $status_plus = $this->input->post('status_plus');
-                // $harga = $this->input->post('harga');
-                
-                if ($cek > 0 ) {
-                    echo json_encode(array('data' =>  FALSE,'msg' => 'Kode Barang Sudah Dipakai'));
-                }
-                // else if(($harga == 0 || $harga == "") && $status_plus == "Cash"){
-                //     echo json_encode(array('data' =>  FALSE,'msg' => 'Pembayaran Cash, Harga Tidak Boleh Kosong!'));
-                // }
-                else{
-                    $result = $this->m_master->insert_load_barang();    
-                    echo json_encode(array('data' =>  TRUE,'msg' => 'Berhasil'));
-                }
+                $result = $this->m_master->insert_load_barang();    
+                echo json_encode(array('data' =>  TRUE,'msg' => 'Berhasil'));
             }else if ($jenis == "Simpan_Supplier") {
                 $id = $this->input->post('supplier');
 
@@ -238,6 +231,30 @@ class Master extends CI_Controller {
                     echo json_encode(array('data' =>  TRUE));
                 }
             }
+    }
+
+    function simpanKdBarang() {
+        $status = $this->input->post('status');
+        $kode_barang = $this->input->post('kode_barang');
+        $kode_barang_lama = $this->input->post('kode_barang_lama');
+        $cek = $this->m_master->get_data_one("m_barang","kode_barang",$kode_barang)->num_rows();
+
+        if($status == 'insert'){
+            if ($cek > 0 ) {
+                echo json_encode(array('data' =>  FALSE,'msg' => 'Kode Barang Sudah Dipakai'));
+            }
+            else{
+                $result = $this->m_master->insertKdBarang();    
+                echo json_encode(array('data' =>  TRUE,'msg' => 'Berhasil'));
+            }
+        }else if($status == 'update'){
+            if($cek > 0 && $kode_barang <> $kode_barang_lama){
+                echo json_encode(array('data' =>  FALSE,'msg' => 'Kode Barang Sudah Dipakai'));
+            }else{
+                $result = $this->m_master->updateKdBarang();    
+                echo json_encode(array('data' =>  TRUE,'msg' => 'Berhasil'));
+            }
+        }
     }
 
     function insert_file(){
@@ -550,7 +567,7 @@ class Master extends CI_Controller {
                 $query = $this->m_master->get_load_price_list();
 
                 if ($query->num_rows() == 0) {
-                    $data[] =  ["","","","","","","","",""];
+                    $data[] =  ["","","","","","",""];
                 }else{
                     $i=1;
 
@@ -558,12 +575,12 @@ class Master extends CI_Controller {
                         $id = "'$r->id'";
                         $row = array();
                         $row[] = $i;
-                        $row[] = $this->m_fungsi->tanggal_format_indonesia($r->tgl);
+                        // $row[] = $this->m_fungsi->tanggal_format_indonesia($r->tgl);
                         $row[] = $r->kode_barang;
                         $row[] = $r->nama_barang;
                         $row[] = $r->merek;
                         $row[] = $r->spesifikasi;
-                        $row[] = $r->nama_supplier;
+                        // $row[] = $r->nama_supplier;
                         $row[] = "Rp. ".number_format($r->harga_price_list);
 
                         $aksi ="";
@@ -589,10 +606,15 @@ class Master extends CI_Controller {
                 $output = array("data" => $data);
             }else if ($jenis == "Load_Barang") {
 
-                $query = $this->m_master->get_load_barang();
+                // $query = $this->m_master->get_load_barang();
+                $query = $this->m_master->getLoadBarang();
 
                 if ($query->num_rows() == 0) {
-                    $data[] =  ["","","","","","","","","",""];
+                    if($options == "Etalase"){
+                        $data[] =  ["","","","","","",""];
+                    }else{
+                        $data[] =  ["","","","","",""];
+                    }
                 }else{
                     $i=1;
 
@@ -600,9 +622,6 @@ class Master extends CI_Controller {
                         $id = "'$r->id'";
                         $row = array();
                         $row[] = $i;
-                        // $row[] = $this->m_fungsi->tanggal_format_indonesia($r->tgl);
-                        // $row[] = $r->nama_supplier;
-                        // $row[] = $r->no_nota;
                         if($options == "Etalase"){
                             $row[] = $r->kode_barang;
                             $row[] = $r->nama_barang;
@@ -610,8 +629,6 @@ class Master extends CI_Controller {
                             $row[] = $r->spesifikasi;
                             $row[] = number_format($r->qty);
                             $row[] = $r->qty_ket;
-                            // $row[] = number_format($r->qty)." ".$r->qty_ket;
-                            // $row[] = "Rp. ".number_format($r->harga);
                         }else{
                             $row[] = $r->kode_barang;
                             $row[] = $r->nama_barang;
@@ -650,47 +667,44 @@ class Master extends CI_Controller {
                     }
                 }
                 $output = array("data" => $data);
-            }else if ($jenis == "PoMaster") {
+            }else if ($jenis == "loadKodeBarang") {
 
-                $query = $this->m_master->get_po_master();
+                $query = $this->m_master->getKodeBarang();
 
                 if ($query->num_rows() == 0) {
-                    $data[] =  ["","","","","","","",""];
+                    $data[] =  ["","","","","",""];
                 }else{
                     $i=1;
 
                     foreach ($query->result() as $r) {
                         $id = "'$r->id'";
-
                         $row = array();
                         $row[] = $i;
-                        $row[] = $r->nm_perusahaan;
-                        $row[] = $r->tgl;
-                        $row[] = $r->nama_barang;
-                        $row[] = $r->qty;
-                        $row[] = $r->no_po;
 
+                        $row[] = $r->kode_barang;
+                        $row[] = $r->nama_barang;
+                        $row[] = $r->merek;
+                        $row[] = $r->spesifikasi;
                         $aksi ="";
 
-                        if ($this->session->userdata('level') == "SuperAdmin") {
+                        $btn_edit = '<button type="button" onclick="tampil_edit('.$id.')" class="btn bg-orange btn-circle waves-effect waves-circle waves-float">
+                        <i class="material-icons">edit</i>
+                        </button>';
 
-                            $aksi = '   
-                            <button type="button" onclick="tampil_edit('.$id.')" class="btn bg-orange btn-circle waves-effect waves-circle waves-float">
-                                <i class="material-icons">edit</i>
-                            </button>
-                          <button type="button" onclick="deleteData('.$id.','."".')" class="btn btn-danger btn-circle waves-effect waves-circle waves-float">
-                                <i class="material-icons">delete</i>
-                            </button>';
+                        $btn_hapus = '<button type="button" onclick="deleteData('.$id.','."".')" class="btn btn-danger btn-circle waves-effect waves-circle waves-float">
+                        <i class="material-icons">delete</i>
+                        </button>';
 
-                            $row[] = $aksi;
-                            $data[] = $row;
-                            
+                        if ($this->session->userdata('level') == "Developer" || $this->session->userdata('level') == "SuperAdmin") {
+                            $aksi = $btn_edit.' '.$btn_hapus;
+                        }else if ($this->session->userdata('level') == "Admin") {
+                            $aksi = $btn_edit;
                         }else{
                             $aksi .='-';
-                            $row[] = $aksi;
-                            $data[] = $row;
                         }
-                            
+                        $row[] = $aksi;
+
+                        $data[] = $row;
                         $i++;
                     }
                 }
@@ -947,7 +961,7 @@ class Master extends CI_Controller {
                 $query = $this->m_master->get_jatuh_tempo();
 
                 if ($query->num_rows() == 0) {
-                    $data[] =  ["","","","","","",""];
+                    $data[] =  ["","","","","","","",""];
                 }else{
 
                     $i=1;
@@ -958,7 +972,7 @@ class Master extends CI_Controller {
                         $row[] = $i;
                         $row[] = $r->nama_supplier;
                         $row[] = $r->no_nota;
-                        $row[] = 'Rp. '.number_format($r->harga);
+                        $row[] = 'Rp. '.number_format($r->nota_terbilang);
                         $row[] = $r->status;
                         
                         $date_now = date('Y-m-d');
@@ -974,11 +988,11 @@ class Master extends CI_Controller {
                             $style = 'style="color:#4CAF50;font-weight:bold"';
                         }
 
-                        $row[] = '<div '.$style.'>'.$this->m_fungsi->tanggal_format_indonesia($r->tgl_jt_tempo).'</div>';
+                        $row[] = '<div '.$style.'>'.$this->m_fungsi->tanggal_format_indonesia($r->tgl_jt_tempo).'</div><input type="hidden" value="'.$r->tgl_jt_tempo.'" id="pTglTemp'.$i.'">';
 
                         $row[] = '<input type="date" id="plhTglPbJthTp'.$i.'" value="" class="form-control">';
 
-                        $row[] = '<button style="background:#00B0E4;margin:0;padding:3px 6px;border:0;color:#fff" type="button" onclick="view_detail('.$id.')">VIEW</button><button style="background:#4CAF50;margin:0;padding:3px 6px;border:0;color:#fff" type="button" onclick="confirmByr('.$id.','.$i.')">OKE</button>';
+                        $row[] = '<button style="background:#00B0E4;margin:0;padding:3px 6px;border:0;color:#fff" type="button" onclick="view_detail('.$r->id_m_nota.')">VIEW</button><button style="background:#4CAF50;margin:0;padding:3px 6px;border:0;color:#fff" type="button" onclick="confirmByr('.$r->id_m_nota.','.$i.')">OKE</button>';
                         
                         $data[] = $row;
                             
@@ -1105,6 +1119,15 @@ class Master extends CI_Controller {
     
         echo json_encode($response);
     }
+
+    function cariNewKdBarang(){
+        $searchTerm = $_GET['search'];
+    
+        // Get users
+        $response = $this->m_master->listNKdBarang($searchTerm);
+    
+        echo json_encode($response);
+    }
     
     function loadSuppBrng(){
         $searchTerm = $_GET['search'];
@@ -1212,9 +1235,10 @@ class Master extends CI_Controller {
                 // $harga = $this->input->post('harga');
 
                 if($opsi == "edit"){
-                    if($cek > 0 && $kode_barang <> $kd_lama){
-                        echo json_encode(array('data' =>  FALSE,'msg' => 'Kode Barang Sudah Ada!'));
-                    }else if ($tgl < $tgl_lama) {
+                    // if($cek > 0 && $kode_barang <> $kd_lama){
+                    //     echo json_encode(array('data' =>  FALSE,'msg' => 'Kode Barang Sudah Ada!'));
+                    // }else
+                    if ($tgl < $tgl_lama) {
                         echo json_encode(array('data' =>  FALSE,'msg' => 'Tanggal Masuk Tidak Boleh Lebih Kecil Dari Tanggal Masuk Pembelian Sebelumnya!'));
                     }
                     // else if ($tgl_byr < $tgl) {
@@ -1542,13 +1566,17 @@ class Master extends CI_Controller {
 
     function cPembJthTempo() {
         $id = $_POST['id'];
-        $tglJthTmp = $_POST['tglJthTmp'];
+        $pTglTemp = $_POST['pTglTemp'];
+        $pTglBayar = $_POST['pTglBayar'];
         
         // update tgl bayar barang
-        $this->db->set("tgl_bayar", $tglJthTmp);
-        $this->db->where('id', $id);
-        $this->db->update('m_barang_plus');
-
+        $data =  $this->m_master->cByrJthTempo($id);
+        foreach($data->result() as $r){
+            $this->db->set("tgl_bayar", $pTglBayar);
+            $this->db->where('id', $r->id);
+            $this->db->update('m_barang_plus');
+        }
+        
         echo json_encode(array('msg' => true));
     }
 
@@ -1627,8 +1655,17 @@ class Master extends CI_Controller {
             $return = $this->m_master->delete("m_price_list","id",$id);
             echo "1";
         }else if ($jenis == "hapus_barang") {
-            $this->m_master->delete("m_barang","id",$id);
-            $this->m_master->delete("m_barang_plus","id_m_barang",$id);
+            $kode = $_POST['kode'];
+            if($kode == true){
+                $this->m_master->delete("m_barang","id",$id);
+            }else{
+                $this->m_master->delete("m_barang_plus","id_m_barang",$id);
+
+                // reset 0 id barang plus
+                $this->db->set("id_m_barang_plus", 0);
+                $this->db->where('id', $id);
+                $this->db->update('m_barang');
+            }
             echo "1";
         }else if ($jenis == "hapus_supplier") {
             $return = $this->m_master->delete("m_supplier","id",$id);
@@ -1733,6 +1770,9 @@ class Master extends CI_Controller {
         }else if ($jenis == "edit_price_list") {
             $data =  $this->m_master->get_data_ijpl("m_price_list", "id", $id)->row();
             echo json_encode($data);
+        }else if ($jenis == "editKdBarang") { //
+            $data =  $this->m_master->get_data_one("m_barang", "id", $id)->row();
+            echo json_encode($data);
         }else if ($jenis == "edit_barang") { //
             $data =  $this->m_master->get_data_ijb("m_barang", "id", $id)->row();
             echo json_encode($data);
@@ -1746,11 +1786,14 @@ class Master extends CI_Controller {
             $data =  $this->m_master->get_data_ij("m_nota", "id", $id)->row();
             echo json_encode($data);
         }else if ($jenis == "cari_barang") {
-            $cek = $this->m_master->get_data_one("m_barang", "kode_barang", $id)->num_rows();
-            $data = $this->m_master->get_data_one("m_barang", "kode_barang", $id)->row();
+            $cek = $this->m_master->get_data_one("m_barang", "id", $id)->num_rows();
+            $data = $this->m_master->get_data_one("m_barang", "id", $id)->row();
+            $mbp = $this->m_master->get_data_one("m_barang_plus", "id", $data->id_m_barang_plus)->num_rows();
 
             if ($cek == 0) {
                 echo json_encode(array('data' => 'error'));
+            }else if($mbp == 0){
+                echo json_encode(array('data' => 'kosong',$data));
             }else{
                 echo json_encode($data);
             }
@@ -1800,6 +1843,31 @@ class Master extends CI_Controller {
         
     }
 
+    function cariKdBarang() {
+        $status = $this->input->post('status');
+        $ckb = $this->input->post('ckb');
+        $kd_lama = $this->input->post('kode_barang_lama');
+        $cek =  $this->m_master->get_data_one("m_barang", "kode_barang", $ckb)->num_rows();
+
+        if($status == 'insert'){
+            if ($cek == 0) {
+                echo json_encode(array('data' => 'oke'));
+            }else{
+                echo json_encode(array('data' => 'error'));
+            }
+        }else if($status == 'update'){
+            // echo json_encode(array('data' => 'kosong'));
+            if($ckb == $kd_lama){
+                echo json_encode(array('data' => 'oke'));
+            }if($cek == 0 && $ckb <> $kd_lama){
+                echo json_encode(array('data' => 'oke'));
+            }else if ($cek == 0) {
+                echo json_encode(array('data' => 'oke'));
+            }else{
+                echo json_encode(array('data' => 'error'));
+            }
+        }
+    }
 
 }
 
