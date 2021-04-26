@@ -477,7 +477,7 @@ class Laporan extends CI_Controller {
         if($sql_kop->laporan == "sma"){
             $atn = 'Andreas Purwanto';
         }else if($sql_kop->laporan == "st"){
-            $atn = 'Novan Krisna';
+            $atn = 'Reza Agus';
         }
 
         $html .= '<table cellspacing="0" style="font-size:11px !important;color:#000;border-collapse:collapse;vertical-align:top;width:100%;text-align:center;font-family:Arial !important">
