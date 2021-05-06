@@ -1035,22 +1035,14 @@ class Laporan extends CI_Controller {
         </tr>
         <tr>
             <th style="border:1px solid #000;padding:5px;width:5%">No</th>
-            <th style="border:1px solid #000;padding:5px;width:18%">No Nota</th>
-            <th style="border:1px solid #000;padding:5px;width:19%">Nota Terbilang</th>
-            <th style="border:1px solid #000;padding:5px;width:18%">Tgl Bayar</th>
-            <th style="border:1px solid #000;padding:5px;width:18%">Tgl Jth Tempo</th>
-            <th style="border:1px solid #000;padding:5px;width:22%">Ket</th>
+            <th style="border:1px solid #000;padding:5px;width:17%">No Nota</th>
+            <th style="border:1px solid #000;padding:5px;width:17%">Supplier</th>
+            <th style="border:1px solid #000;padding:5px;width:16%">Nota Terbilang</th>
+            <th style="border:1px solid #000;padding:5px;width:14%">Tgl Bayar</th>
+            <th style="border:1px solid #000;padding:5px;width:14%">Tgl Jth Tempo</th>
+            <th style="border:1px solid #000;padding:5px;width:14%">Ket</th>
         </tr>
         ';
-
-        // ambil data
-        // $sql_isi = $this->db->query("SELECT c.no_nota,a.* FROM m_barang_plus a
-        // INNER JOIN m_barang b ON b.id=a.id_m_barang
-        // INNER JOIN m_nota c ON b.id_m_nota=c.id
-        // INNER JOIN m_supplier d ON c.id_supplier=d.id
-        // WHERE a.tgl_bayar BETWEEN '$tgl1' AND '$tgl2' AND d.id='$jenis'
-        // ORDER BY a.tgl_bayar ASC,b.nama_barang ASC");
-        
 
         $i = 0;
         foreach($sql_isi->result() as $r){
@@ -1058,6 +1050,7 @@ class Laporan extends CI_Controller {
             $html .='<tr>
                 <td style="border:1px solid #000;padding:4px 3px;text-align:center">'.$i.'</td>
                 <td style="border:1px solid #000;padding:4px 3px;">'.$r->no_nota.'</td>
+                <td style="border:1px solid #000;padding:4px 3px;">'.$r->nama_supplier.'</td>
                 <td style="border:1px solid #000;padding:4px 3px;text-align:right">Rp. '.number_format($r->sumharga).'</td>';
             
             if($r->tgl_bayar == null || $r->tgl_bayar == "") {
