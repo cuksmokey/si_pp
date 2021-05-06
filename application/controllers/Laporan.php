@@ -441,7 +441,8 @@ class Laporan extends CI_Controller {
         $sql_isi = $this->db->query("SELECT b.nama_barang,b.merek,b.spesifikasi,a.* FROM m_pl_list_barang a
         INNER JOIN m_barang b ON a.id_m_barang = b.id
         WHERE id_pl='$jenis'
-        GROUP BY b.kode_barang");
+        GROUP BY b.kode_barang
+        ORDER BY b.merek ASC");
 
         $i = 0;
         foreach($sql_isi->result() as $r){
@@ -668,7 +669,7 @@ class Laporan extends CI_Controller {
         INNER JOIN m_invoice d ON d.id_pl=b.id OR d.id_pl = 0 AND d.no_inv=b.no_inv
         WHERE $wPlInv
         GROUP BY c.id
-        ORDER BY c.nama_barang ASC");
+        ORDER BY c.merek ASC");
 
         $ii = 0;
         $sub_tot = 0;
