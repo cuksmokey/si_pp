@@ -677,7 +677,7 @@ class Laporan extends CI_Controller {
             $tot_hrg = $r->i_qty * $r->i_harga_invoice;
             $html .= '<tr>
                 <td style="vertical-align:middle;border:1px solid #000;padding:5px 2px;text-align:center">'.$ii.'</td>
-                <td style="vertical-align:middle;border:1px solid #000;padding:5px 3px" colspan="3">'.$r->nama_barang.' '.$r->merek.' '.$r->spesifikasi.'</td>
+                <td style="vertical-align:middle;border:1px solid #000;padding:5px 3px" colspan="3">'.$r->merek.' '.$r->nama_barang.' '.$r->spesifikasi.'</td>
                 <td style="vertical-align:middle;border:1px solid #000;border-width:1px 0 1px 1px;padding:5px 2px;text-align:center" colspan="2">'.$r->i_qty.' '.$r->qty_ket.'</td>
                 <td style="vertical-align:middle;border:1px solid #000;padding:5px 3px;text-align:right">'.number_format($r->harga_invoice).'</td>
                 <td style="vertical-align:middle;border:1px solid #000;padding:5px 3px;text-align:right">'.number_format($tot_hrg).'</td>
