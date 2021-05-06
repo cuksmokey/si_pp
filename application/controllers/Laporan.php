@@ -448,7 +448,7 @@ class Laporan extends CI_Controller {
             $i++;
             $html .= '<tr>
                 <td style="vertical-align:middle;padding:5px;border:1px solid #000;text-align:center">'.$i.'</td>
-                <td style="vertical-align:middle;padding:5px;border:1px solid #000" colspan="3">'.$r->nama_barang.' '.$r->merek.' '.$r->spesifikasi.'</td>
+                <td style="vertical-align:middle;padding:5px;border:1px solid #000" colspan="3">'.$r->merek.' '.$r->nama_barang.' '.$r->spesifikasi.'</td>
                 <td style="vertical-align:middle;padding:5px 2px;border:1px solid #000;text-align:center">'.$r->qty.'</td>
                 <td style="vertical-align:middle;padding:5px 2px;border:1px solid #000;text-align:center">'.$r->qty_ket.'</td>
             </tr>';
