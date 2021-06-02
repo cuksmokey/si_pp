@@ -327,13 +327,13 @@ class Master extends CI_Controller {
 
                         $row = array();
                         $row[] = $r->kode_barang;
-                        $row[] = $r->nama_barang;
+                        $row[] = $r->merek.' '.$r->nama_barang.' '.$r->spesifikasi;
                         $row[] = '<div style="text-align:right">'.$r->qty.'</div>';
                         $row[] = '<input type="text" class="angka form-control" id="i_qty'.$i.'" placeholder="0" autocomplete="off"  onkeypress="return hanyaAngka(event)">
                         <input type="hidden" id="qty'.$i.'" value="'.$r->qty.'">';
                         $row[] = $r->qty_ket;
 
-                        $aksi = '<a type="button" onclick="addToCart('."'".$id."'".','."'".$r->kode_barang."'".','."'".$r->nama_barang."'".','."'".$r->qty."'".','."'".$r->qty_ket."'".','."'".$i."'".')" class="btn bg-brown btn-circle waves-effect waves-circle waves-float">
+                        $aksi = '<a type="button" onclick="addToCart('."'".$id."'".','."'".$r->kode_barang."'".','."'".$r->nama_barang."'".','."'".$r->merek."'".','."'".$r->spesifikasi."'".','."'".$r->qty."'".','."'".$r->qty_ket."'".','."'".$i."'".')" class="btn bg-brown btn-circle waves-effect waves-circle waves-float">
                         <i class="material-icons">check</i>
                             </a>';
 
@@ -613,7 +613,7 @@ class Master extends CI_Controller {
                     if($options == "Etalase"){
                         $data[] =  ["","","","","","",""];
                     }else{
-                        $data[] =  ["","","","","",""];
+                        $data[] =  ["","","","","","",""];
                     }
                 }else{
                     $i=1;
@@ -634,6 +634,7 @@ class Master extends CI_Controller {
                             $row[] = $r->nama_barang;
                             $row[] = $r->merek;
                             $row[] = $r->spesifikasi;
+                            $row[] = number_format($r->qty);
                             $aksi ="";
 
                             $btn_edit = '<button type="button" onclick="tampil_edit('.$id.')" class="btn bg-orange btn-circle waves-effect waves-circle waves-float">
@@ -1416,7 +1417,9 @@ class Master extends CI_Controller {
                 'kode_barang' => $_POST['kode_barang'],
                 'i_qty' => $_POST['i_qty'],
                 'qty' => $_POST['qty'],
-                'qty_ket' => $_POST['qty_ket']
+                'qty_ket' => $_POST['qty_ket'],
+                'merek' => $_POST['merek'],
+                'spesifikasi' => $_POST['spesifikasi']
             )
         );
         $this->cart->insert($data);
@@ -1443,7 +1446,7 @@ class Master extends CI_Controller {
                 <tr>
                     <td>'.$no.'</td>
                     <td>'.$items['options']['kode_barang'].'</td>
-                    <td>'.$items['name'].'</td>
+                    <td>'.$items['options']['merek'].' '.$items['name'].' '.$items['options']['spesifikasi'].'</td>
                     <td>'.number_format($stok).'</td>
                     <td>'.$iqty.' '.$items['options']['qty_ket'].'</td>
                     <td style="text-align:center"><button type="button" id="'.$items['rowid'].'" class="hapus_cart btn btn-danger btn-xs">Batal</button></td>

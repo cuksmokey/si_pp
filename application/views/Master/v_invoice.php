@@ -574,7 +574,7 @@
         html = '';
         for (var i = 0; i < json.detail.length; i++) {
           ii = i + 1;
-          html += '<tr><td><b>' + ii + '</b></td><td><b>' + json.detail[i].kode_barang + '</b></td><td><b>' + json.detail[i].nama_barang + '</b></td><td><b>' + json.detail[i].i_qty + ' ' + json.detail[i].qty_ket + '</b></td><td><b>Rp. ' + idr.format(json.detail[i].harga_invoice) + '</b></td></tr>';
+          html += '<tr><td><b>' + ii + '</b></td><td><b>' + json.detail[i].kode_barang + '</b></td><td><b>' + json.detail[i].merek +' '+ json.detail[i].nama_barang +' '+ json.detail[i].spesifikasi + '</b></td><td><b>' + json.detail[i].i_qty + ' ' + json.detail[i].qty_ket + '</b></td><td><b>Rp. ' + idr.format(json.detail[i].harga_invoice) + '</b></td></tr>';
         }
 
         $("#list-timbangan").html(html);
@@ -656,7 +656,7 @@
           html += `<tr>
             <td><b>${ii}</b></td>
             <td><b>${json.detail[i].kode_barang}</b></td>
-            <td><b>${json.detail[i].nama_barang}</b></td>
+            <td><b>${json.detail[i].merek} ${json.detail[i].nama_barang} ${json.detail[i].spesifikasi}</b></td>
             <td><b>${parseInt(json.detail[i].i_qty)}</td>
             <td><input type="text" class="angka form-control" id="i_hrg_edit${i}" placeholder="0" autocomplete="off"  onkeypress="return hanyaAngka(event)" value="${json.detail[i].harga_invoice}"></b></td>
             <td style="text-align:center"><button type="button" onclick="addToCartEdit('${json.detail[i].id_list_barang}','${json.detail[i].id_pl}','${i}')" id="btnn-eedit${i}" class="btn btn-default btn-xs">Edit</button>`;

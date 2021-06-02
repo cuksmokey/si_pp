@@ -42,10 +42,10 @@
                     <th style="width:10%;">Kode Barang</th>
                     <th style="width:24%;">Nama Barang</th>
                     <th style="width:20%;">Merek</th>
-                    <th style="width:20%;">Spesifikasi</th>
-                    <!-- <th>Qty</th> -->
+                    <th style="width:15%;">Spesifikasi</th>
+                    <th style="width:10%;">Qty</th>
                     <!-- <th>Harga</th> -->
-                    <th style="width:20%;">Aksi</th>
+                    <th style="width:15%;">Aksi</th>
                   </tr>
                 </thead>
                 <tbody>

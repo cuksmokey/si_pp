@@ -410,6 +410,8 @@
     $(".box-data").show();
     $('.box-data').animateCss('fadeIn');
     load_data();
+    $('#detail_cart').load("<?php echo base_url(); ?>Master/destroy_cart_plpl");
+    $("#edit_detail_cart").html("");
   });
 
   function reloadTable() {
@@ -549,7 +551,7 @@
         html = '';
         for (var i = 0; i < json.detail.length; i++) {
           ii = i + 1;
-          html += '<tr><td><b>' + ii + '</b></td><td><b>' + json.detail[i].kode_barang + '</b></td><td><b>' + json.detail[i].nama_barang + '</b></td><td><b>' + json.detail[i].qty + ' ' + json.detail[i].qty_ket + '</b></td><td><b>' + json.detail[i].i_qty + '</b></td></tr>';
+          html += '<tr><td><b>' + ii + '</b></td><td><b>' + json.detail[i].kode_barang + '</b></td><td><b>' + json.detail[i].merek +' '+ json.detail[i].nama_barang +' '+ json.detail[i].spesifikasi + '</b></td><td><b>' + json.detail[i].qty + ' ' + json.detail[i].qty_ket + '</b></td><td><b>' + json.detail[i].i_qty + '</b></td></tr>';
         }
 
         $("#list-timbangan").html(html);
@@ -612,7 +614,7 @@
           html += `<tr>
             <td><b>${ii}</b></td>
             <td><b>${json.detail[i].kode_barang}</b></td>
-            <td><b>${json.detail[i].nama_barang}</b></td>
+            <td><b>${json.detail[i].merek} ${json.detail[i].nama_barang} ${json.detail[i].spesifikasi}</b></td>
             <td><b>${parseInt(json.detail[i].qty)}</td>
             <td><input type="text" class="angka form-control" id="i_qty_edit${i}" placeholder="0" autocomplete="off"  onkeypress="return hanyaAngka(event)" value="${json.detail[i].i_qty}">
             <input type="hidden" id="qty_edit${i}" value="${json.detail[i].qty}"></b></td>
@@ -863,7 +865,7 @@
     });
   }
 
-  function addToCart(id, kode_barang, nama_barang, qty, qty_ket, i) {
+  function addToCart(id, kode_barang, nama_barang, merek, spesifikasi, qty, qty_ket, i) {
     $("#btn-simpan").prop("disabled", false);
     $("#i_qty" + i).prop("disabled", true).attr('style', 'background:#ddd;');
     $(".btn_list_barang").prop("disabled", true);
@@ -889,6 +891,8 @@
           id_barang: id,
           kode_barang: kode_barang,
           nama_barang: nama_barang,
+          merek: merek,
+          spesifikasi: spesifikasi,
           qty: qty,
           qty_ket: qty_ket,
           i_qty: i_qty
