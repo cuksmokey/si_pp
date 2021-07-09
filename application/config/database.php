@@ -76,13 +76,20 @@ $query_builder = TRUE;
 $db['default'] = array(
 	'dsn'	=> '',
 	'hostname' => 'localhost',
+	// local
 	// 'username' => 'root',
 	// 'password' => '',
 	// 'database' => 'cbcbsipp',
-	'username' => 'sinf6933_sinarmukti',
-	'password' => 'sinarmukti',
-	'database' => 'sinf6933_sipp_fix',
-	// 'database' => 'sinf6933_si_pp_v2',
+	
+	// sm 1
+	// 'username' => 'sinf6933_sinarmukti',
+	// 'password' => 'sinarmukti',
+	// 'database' => 'sinf6933_sipp_fix',
+	
+	// sm 2
+	'username' => 'sinr6728_sma',
+	'password' => 'DBsmaPassword',
+	'database' => 'sinr6728_db_sma',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
