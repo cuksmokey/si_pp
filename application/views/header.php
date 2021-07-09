@@ -97,10 +97,8 @@
                     <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?php echo $this->session->userdata('nm_user'); ?></div>
                     <div class="email"><?php echo $this->session->userdata('username'); ?></div>
                     <div class="btn-group user-helper-dropdown">
-                        <i class="material-icons" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Logout</i>
-                        <ul class="dropdown-menu pull-right">
-
-                            <li><a href="<?php echo base_url('Login/logout') ?>">Logout</a></li>
+                        <ul class="uloutcuk">
+                            <li class="outcuk"><a href="<?php echo base_url('Login/logout') ?>">Logout</a></li>
                         </ul>
                     </div>
                 </div>
