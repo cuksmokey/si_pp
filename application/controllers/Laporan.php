@@ -699,8 +699,8 @@ class Laporan extends CI_Controller {
             $html .= '';
             $t_td = '';
         }else if($sql_kop->laporan == "sma") {
-			// $ppn = round($sub_tot * 0.1);
-			$ppn = round($sub_tot * 1.11);
+	// $ppn = round($sub_tot * 0.1);
+	$ppn = round($sub_tot * 0.11);
             $tot_all = round($sub_tot + $ppn);
             $rs = '2';
             $t_td = '<td style="border:0;padding:5px 5px 5px 0" colspan="6">Klaten, '.$this->m_fungsi->tanggal_format_indonesia($tgl_ctk).'</td>';
