@@ -81,15 +81,10 @@ $db['default'] = array(
 	// 'password' => '',
 	// 'database' => 'cbcbsipp',
 	
-	// sm 1
-	// 'username' => 'sinf6933_sinarmukti',
-	// 'password' => 'sinarmukti',
-	// 'database' => 'sinf6933_sipp_fix',
-	
-	// sm 2
-	'username' => 'sinr6728_sma',
+	// sm
+	'username' => 'sink6889_sipp',
 	'password' => 'DBsmaPassword',
-	'database' => 'sinr6728_db_sma',
+	'database' => 'sink6889_si_pp',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
