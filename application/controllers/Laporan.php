@@ -370,16 +370,12 @@ class Laporan extends CI_Controller {
 
         // KOP
         if($sql_kop->laporan == "sma" || $sql_kop->laporan == ""){
-            // $jpg = "http://localhost/si_pp/assets/images/logo_sma.jpg";
-            // $jpg = "http://sinarmuktiabadi.com/assets/images/logo_sma.jpg";
-            $jpg = "http://sinarmuktiabadi.com/assets/images/logo_sma.jpg";
+            $jpg = "https://sinarmuktiabadi.com/assets/images/logo_sma.jpg";
             $top = 'top';
             $px = '0 0 70px';
             $dd = '5px 0';
         }else if($sql_kop->laporan == "st"){
-            // $jpg = "http://localhost/si_pp/assets/images/logo_st.jpg";
-            // $jpg = "http://sinarmuktiabadi.com/assets/images/logo_st.jpg"; sinarmukti.com
-            $jpg = "http://sinarmuktiabadi.com/assets/images/logo_st.jpg";
+            $jpg = "https://sinarmuktiabadi.com/assets/images/logo_st.jpg";
             $top = 'top';
             $px = '0 0 80px';
             $dd = '0';
@@ -503,7 +499,7 @@ class Laporan extends CI_Controller {
         </table>';
 
             // $this->m_fungsi->mPDF($html);        
-            $this->m_fungsi->mPDFP2($html);        
+            $this->m_fungsi->mPDFP2($html);
     }
 
     function Nota_Penjualan(){
@@ -553,15 +549,11 @@ class Laporan extends CI_Controller {
 
     // KOP
     if($sql_kop->laporan == "sma" || $sql_kop->laporan == ""){
-        // $jpg = "http://localhost/si_pp/assets/images/logo_sma.jpg";
-        // $jpg = "http://sinarmuktiabadi.com/assets/images/logo_sma.jpg";
-        $jpg = "http://sinarmuktiabadi.com/assets/images/logo_sma.jpg";
+        $jpg = "https://sinarmuktiabadi.com/assets/images/logo_sma.jpg";
         $top = 'top';
         $px = '0 0 70px';
     }else if($sql_kop->laporan == "st"){
-        // $jpg = "http://localhost/si_pp/assets/images/logo_st.jpg";
-        // $jpg = "http://sinarmuktiabadi.com/assets/images/logo_st.jpg";
-        $jpg = "http://sinarmuktiabadi.com/assets/images/logo_st.jpg";
+        $jpg = "https://sinarmuktiabadi.com/assets/images/logo_st.jpg";
         $top = 'top';
         $px = '0 0 80px';
     }

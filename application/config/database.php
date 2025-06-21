@@ -82,9 +82,9 @@ $db['default'] = array(
 	// 'database' => 'cbcbsipp',
 	
 	// sm
-	'username' => 'sink6889_sipp',
-	'password' => 'DBsmaPassword',
-	'database' => 'sink6889_si_pp',
+	'username' => 'u810069238_sipp',
+	'password' => '4LFKPM@p',
+	'database' => 'u810069238_sipp',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
