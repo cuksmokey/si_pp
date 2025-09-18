@@ -77,14 +77,14 @@ $db['default'] = array(
 	'dsn'	=> '',
 	'hostname' => 'localhost',
 	// local
-	'username' => 'root',
-	'password' => '',
-	'database' => 'si_pp',
+	// 'username' => 'root',
+	// 'password' => '',
+	// 'database' => 'si_pp',
 	
 	// sm
-	// 'username' => 'u810069238_sipp',
-	// 'password' => '4LFKPM@p',
-	// 'database' => 'u810069238_sipp',
+	'username' => 'u810069238_sipp',
+	'password' => '4LFKPM@p',
+	'database' => 'u810069238_sipp',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
