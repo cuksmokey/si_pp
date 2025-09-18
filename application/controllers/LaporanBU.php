@@ -8,8 +8,8 @@ class Laporan extends CI_Controller {
         if($this->session->userdata('status') != "login"){
             redirect(base_url("Login"));
         }
-        $this->load->model('M_master');
-        $this->load->model('M_fungsi');
+        $this->load->model('m_master');
+        $this->load->model('m_fungsi');
 
         $this->db = $this->load->database('default', TRUE);
 
